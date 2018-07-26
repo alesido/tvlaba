@@ -1,0 +1,302 @@
+{
+  "sid": "9bda5e27a54428d5a85c49c04bc85ecd",
+  "sid_name": "PATKER_SSID",
+  "ip_addr": "178.150.235.10",
+  "room_n": 1,
+  "max_rooms": 1,
+  "max_devices": 5,
+  "device": "android",
+  "model_id": 24,
+  "account": {
+    "login": "20172017",
+    "packet_name": "Base,Demo,Base Asia,HD,Turkey,Armenia,Azerbayjan,Israel,Base+,Armenia Light,Base Light,ShantTV,Base 2,Base 3,Premium+,Ren TV,USA local,Economy US,Economy IL,Arm Econom,Iran,Georgia,Sport,Premium,Base Israel,Panarmenian,Megogo",
+    "packet_expire": 1559829229
+  },
+  "services": {
+    "vod": 1,
+    "archive": 1,
+    "tshift": 1,
+    "megogo": 1
+  },
+  "contacts": {
+    "name": "moi-dom.tv",
+    "phone": "+18882364058",
+    "email": "info@moidom.tv",
+    "address": "Glendale"
+  },
+  "settings": {
+    "timeshift": {
+      "value": 0,
+      "list": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    "timezone": {
+      "value": 0
+    },
+    "language": {
+      "value": "en",
+      "list": [
+        {
+          "id": "ru",
+          "name": "Русский"
+        },
+        {
+          "id": "en",
+          "name": "English"
+        }
+      ]
+    },
+    "stream_server": {
+      "value": "5.254.76.34",
+      "list": [
+        {
+          "ip": "5.254.76.34",
+          "descr": "USA 1",
+          "speed_test": [
+            {
+              "type": "small",
+              "file_size": 10485760,
+              "url_http": "http://ca1.moidom.tv:9595/spdtest/file10M"
+            },
+            {
+              "type": "medium",
+              "file_size": 104857600,
+              "url_http": "http://ca1.moidom.tv:9595/spdtest/file100M"
+            }
+          ]
+        },
+        {
+          "ip": "185.37.148.42",
+          "descr": "Middle Asia",
+          "speed_test": [
+            {
+              "type": "small",
+              "file_size": 10485760,
+              "url_http": "http://il1.moidom.tv:9595/spdtest/file10M"
+            },
+            {
+              "type": "medium",
+              "file_size": 104857600,
+              "url_http": "http://il1.moidom.tv:9595/spdtest/file100M"
+            }
+          ]
+        },
+        {
+          "ip": "37.221.175.106",
+          "descr": "USA 2",
+          "speed_test": [
+            {
+              "type": "small",
+              "file_size": 10485760,
+              "url_http": "http://ca3.moidom.tv:9595/spdtest/file10M"
+            },
+            {
+              "type": "medium",
+              "file_size": 104857600,
+              "url_http": "http://ca3.moidom.tv:9595/spdtest/file100M"
+            }
+          ]
+        }
+      ]
+    },
+    "http_caching": {
+      "value": 1500,
+      "list": [
+        500,
+        1500,
+        3000,
+        5000
+      ]
+    },
+    "bitrate": {
+      "value": 1500,
+      "list": [
+        1500
+      ],
+      "names": [
+        {
+          "val": 1500,
+          "title": "Standard"
+        }
+      ]
+    },
+    "device_model": {
+      "name": "device_model",
+      "value": -1,
+      "list": [
+        {
+          "id": -1,
+          "name": "auto"
+        },
+        {
+          "id": 0,
+          "name": "base"
+        },
+        {
+          "id": 5,
+          "name": "EW421B"
+        },
+        {
+          "id": 6,
+          "name": "ETV421S"
+        },
+        {
+          "id": 7,
+          "name": "MX3"
+        },
+        {
+          "id": 9,
+          "name": "414K"
+        },
+        {
+          "id": 10,
+          "name": "MXQ"
+        },
+        {
+          "id": 11,
+          "name": "M8Splus"
+        },
+        {
+          "id": 12,
+          "name": "M12"
+        },
+        {
+          "id": 13,
+          "name": "minix"
+        },
+        {
+          "id": 15,
+          "name": "EM95X"
+        },
+        {
+          "id": 16,
+          "name": "Dolamee D5"
+        },
+        {
+          "id": 17,
+          "name": "A95X"
+        },
+        {
+          "id": 18,
+          "name": "R9"
+        },
+        {
+          "id": 19,
+          "name": "MXR"
+        },
+        {
+          "id": 20,
+          "name": "X96"
+        },
+        {
+          "id": 21,
+          "name": "H905"
+        },
+        {
+          "id": 23,
+          "name": "Zidoo"
+        },
+        {
+          "id": 24,
+          "name": "H905_ANTON"
+        },
+        {
+          "id": 25,
+          "name": "IPHONE X"
+        }
+      ]
+    },
+    "rc_codes": [
+      {
+        "code": 136,
+        "func": "aspect_ratio"
+      },
+      {
+        "code": 135,
+        "func": "fav_add"
+      },
+      {
+        "code": 67,
+        "func": "fav_del"
+      },
+      {
+        "code": 87,
+        "func": "next_day"
+      },
+      {
+        "code": 88,
+        "func": "prev_day"
+      },
+      {
+        "code": 20,
+        "func": "prog_minus"
+      },
+      {
+        "code": 93,
+        "func": "prog_minus"
+      },
+      {
+        "code": 19,
+        "func": "prog_plus"
+      },
+      {
+        "code": 92,
+        "func": "prog_plus"
+      },
+      {
+        "code": 183,
+        "func": "prog_pre"
+      },
+      {
+        "code": 89,
+        "func": "rewind_left"
+      },
+      {
+        "code": 21,
+        "func": "rewind_left"
+      },
+      {
+        "code": 90,
+        "func": "rewind_right"
+      },
+      {
+        "code": 22,
+        "func": "rewind_right"
+      },
+      {
+        "code": 137,
+        "func": "track_select"
+      },
+      {
+        "code": 5061,
+        "func": "tv_mode"
+      },
+      {
+        "code": 140,
+        "func": "vod_mode"
+      },
+      {
+        "code": 87,
+        "func": "rewind_right_5"
+      },
+      {
+        "code": 88,
+        "func": "rewind_left_5"
+      }
+    ]
+  },
+  "servertime": 1532291752
+}

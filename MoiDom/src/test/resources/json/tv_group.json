@@ -1,0 +1,156 @@
+{
+  "lang": "en",
+  "template": "android_1",
+  "groups_icons": [
+    {
+      "size": "120x120",
+      "base_url": "http://iptv.moi-dom.tv/img/group_icons/120x120/",
+      "formats": [
+        "png"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "name": "General",
+      "color": "Silver",
+      "icon_path": "0/1",
+      "channels_count": 38
+    },
+    {
+      "id": 4,
+      "name": "Entertainment",
+      "color": "#6666ef",
+      "icon_path": "0/4",
+      "channels_count": 12
+    },
+    {
+      "id": 3,
+      "name": "News",
+      "color": "#00ef00",
+      "icon_path": "0/3",
+      "channels_count": 8
+    },
+    {
+      "id": 8,
+      "name": "Sport",
+      "color": "#ef6666",
+      "icon_path": "0/8",
+      "channels_count": 19
+    },
+    {
+      "id": 10,
+      "name": "Movies / TV Shows",
+      "color": "#8888ef",
+      "icon_path": "0/10",
+      "channels_count": 38
+    },
+    {
+      "id": 5,
+      "name": "Kids / Cartoons",
+      "color": "#efef00",
+      "icon_path": "0/5",
+      "channels_count": 18
+    },
+    {
+      "id": 2,
+      "name": "Educational",
+      "color": "#ef0000",
+      "icon_path": "0/2",
+      "channels_count": 26
+    },
+    {
+      "id": 7,
+      "name": "Comedy",
+      "color": "#00efef",
+      "icon_path": "0/7",
+      "channels_count": 3
+    },
+    {
+      "id": 15,
+      "name": "Armenian",
+      "color": "#ef0000",
+      "icon_path": "0/15",
+      "channels_count": 46
+    },
+    {
+      "id": 9,
+      "name": "Ukrainian",
+      "color": "#66ef66",
+      "icon_path": "0/9",
+      "channels_count": 15
+    },
+    {
+      "id": 16,
+      "name": "Georgian",
+      "color": "#6666ef",
+      "icon_path": "0/16",
+      "channels_count": 10
+    },
+    {
+      "id": 14,
+      "name": "Israel",
+      "color": "#efef00",
+      "icon_path": "0/14",
+      "channels_count": 6
+    },
+    {
+      "id": 17,
+      "name": "Turkish",
+      "color": "#00ef00",
+      "icon_path": "0/17",
+      "channels_count": 27
+    },
+    {
+      "id": 18,
+      "name": "Azerbayjan",
+      "color": "#66ef66",
+      "icon_path": "0/18",
+      "channels_count": 8
+    },
+    {
+      "id": 20,
+      "name": "Mid Asia",
+      "color": "#efef00",
+      "icon_path": "0/20",
+      "channels_count": 12
+    },
+    {
+      "id": 6,
+      "name": "Music",
+      "color": "#ef00ef",
+      "icon_path": "0/6",
+      "channels_count": 16
+    },
+    {
+      "id": 11,
+      "name": "Adult",
+      "color": "#ef4444",
+      "icon_path": "0/11",
+      "channels_count": 16
+    },
+    {
+      "id": 13,
+      "name": "Test HD",
+      "color": "#efefef",
+      "icon_path": "0/13",
+      "channels_count": 18
+    },
+    {
+      "id": 21,
+      "name": "Premium ",
+      "color": "Red",
+      "icon_path": "0/21",
+      "channels_count": 29
+    },
+    {
+      "id": 19,
+      "name": "Iran",
+      "color": "#6666ef",
+      "icon_path": "0/19",
+      "channels_count": 10
+    }
+  ],
+  "servertime": 1532291753
+}

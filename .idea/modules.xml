@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Data/Data.iml" filepath="$PROJECT_DIR$/Data/Data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DataTv/DataTv.iml" filepath="$PROJECT_DIR$/DataTv/DataTv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Domain/Domain.iml" filepath="$PROJECT_DIR$/Domain/Domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DomainTv/DomainTv.iml" filepath="$PROJECT_DIR$/DomainTv/DomainTv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DomainUser/DomainUser.iml" filepath="$PROJECT_DIR$/DomainUser/DomainUser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DomainVod/DomainVod.iml" filepath="$PROJECT_DIR$/DomainVod/DomainVod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MoiDom/MoiDom.iml" filepath="$PROJECT_DIR$/MoiDom/MoiDom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Presentation/Presentation.iml" filepath="$PROJECT_DIR$/Presentation/Presentation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PresentationTv/PresentationTv.iml" filepath="$PROJECT_DIR$/PresentationTv/PresentationTv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PresentationVod/PresentationVod.iml" filepath="$PROJECT_DIR$/PresentationVod/PresentationVod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Remote/Remote.iml" filepath="$PROJECT_DIR$/Remote/Remote.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TvLabA.iml" filepath="$PROJECT_DIR$/TvLabA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tv/tv.iml" filepath="$PROJECT_DIR$/tv/tv.iml" />
+    </modules>
+  </component>
+</project>

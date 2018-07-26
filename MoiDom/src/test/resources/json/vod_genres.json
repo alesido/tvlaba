@@ -1,0 +1,140 @@
+{
+  "genres": [
+    {
+      "id": "0",
+      "name": "general",
+      "count": "39"
+    },
+    {
+      "id": "1",
+      "name": "fantasy",
+      "count": "171"
+    },
+    {
+      "id": "2",
+      "name": "anime",
+      "count": 0
+    },
+    {
+      "id": "3",
+      "name": "biographical",
+      "count": "4"
+    },
+    {
+      "id": "4",
+      "name": "western",
+      "count": "19"
+    },
+    {
+      "id": "5",
+      "name": "war",
+      "count": "63"
+    },
+    {
+      "id": "6",
+      "name": "detective",
+      "count": "145"
+    },
+    {
+      "id": "7",
+      "name": "child",
+      "count": "2"
+    },
+    {
+      "id": "8",
+      "name": "documentary",
+      "count": "5"
+    },
+    {
+      "id": "9",
+      "name": "drama",
+      "count": "768"
+    },
+    {
+      "id": "10",
+      "name": "historycal",
+      "count": "7"
+    },
+    {
+      "id": "11",
+      "name": "comedy",
+      "count": "560"
+    },
+    {
+      "id": "12",
+      "name": "concert",
+      "count": 0
+    },
+    {
+      "id": "13",
+      "name": "crime",
+      "count": "325"
+    },
+    {
+      "id": "14",
+      "name": "melodrama",
+      "count": "219"
+    },
+    {
+      "id": "15",
+      "name": "music",
+      "count": "23"
+    },
+    {
+      "id": "16",
+      "name": "musical",
+      "count": "1"
+    },
+    {
+      "id": "17",
+      "name": "animation",
+      "count": "159"
+    },
+    {
+      "id": "18",
+      "name": "adventure",
+      "count": "367"
+    },
+    {
+      "id": "19",
+      "name": "family",
+      "count": "171"
+    },
+    {
+      "id": "20",
+      "name": "tvseries",
+      "count": "108"
+    },
+    {
+      "id": "21",
+      "name": "sport",
+      "count": 0
+    },
+    {
+      "id": "22",
+      "name": "thriller",
+      "count": "554"
+    },
+    {
+      "id": "23",
+      "name": "horrors",
+      "count": "146"
+    },
+    {
+      "id": "24",
+      "name": "fiction",
+      "count": "242"
+    },
+    {
+      "id": "25",
+      "name": "action",
+      "count": "552"
+    },
+    {
+      "id": "26",
+      "name": "armenian",
+      "count": "58"
+    }
+  ],
+  "servertime": 1532295257
+}

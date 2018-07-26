@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Data" />
+            <option value="$PROJECT_DIR$/DataTv" />
+            <option value="$PROJECT_DIR$/Domain" />
+            <option value="$PROJECT_DIR$/DomainTv" />
+            <option value="$PROJECT_DIR$/DomainUser" />
+            <option value="$PROJECT_DIR$/DomainVod" />
+            <option value="$PROJECT_DIR$/MoiDom" />
+            <option value="$PROJECT_DIR$/Presentation" />
+            <option value="$PROJECT_DIR$/PresentationTv" />
+            <option value="$PROJECT_DIR$/PresentationVod" />
+            <option value="$PROJECT_DIR$/Remote" />
+            <option value="$PROJECT_DIR$/mobile" />
+            <option value="$PROJECT_DIR$/tv" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

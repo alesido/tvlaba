@@ -1,0 +1,71 @@
+{
+  "film": {
+    "id": 273164,
+    "is_tv_show": "0",
+    "project_id": 1,
+    "id_mb": 1,
+    "id_tmdb": 441701,
+    "enabled": 1,
+    "dt_create": 1532287601,
+    "dt_modify": 1532287616,
+    "viewed": 3,
+    "name": "Veronica",
+    "name_orig": "Verónica",
+    "description": "Madrid, 1990s. After making a Ouija with friends, a teenager is besieged by dangerous supernatural presences that threaten to harm her whole family. Inspired by terrifying police files never solved.",
+    "poster": "/vodimg_en/film_273164.jpg",
+    "lenght": 105,
+    "year": 2017,
+    "director": "Paco Plaza",
+    "scenario": "Fernando Navarro, Paco Plaza",
+    "actors": "Sandra Escacena, Bruna González, Claudia Placer, Iván Chavero",
+    "rate_imdb": 0,
+    "rate_kinopoisk": 0,
+    "rate_mpaa": 0,
+    "country": "Spain",
+    "studio": "Apaches Entertainment",
+    "awards": "",
+    "budget": 0,
+    "images": "",
+    "vis": "on",
+    "pass_protect": "",
+    "genre_str": "drama,horrors",
+    "rate_blood": 0,
+    "rate_violence": 0,
+    "rate_obscene": 0,
+    "rate_porn": 0,
+    "rate_horror": 0,
+    "videos": [
+      {
+        "id": 7751,
+        "id_content": 273164,
+        "num": 0,
+        "title": " ",
+        "format": "auto",
+        "url": "veronica-2017-bdremux-1080p-exkinoray.mp4",
+        "size": 0,
+        "codec": "h264",
+        "lenght": 0,
+        "width": 0,
+        "height": 0,
+        "track1_codec": "",
+        "track1_lang": "",
+        "track2_codec": "",
+        "track2_lang": "",
+        "track3_codec": "",
+        "track3_lang": "",
+        "exist": 1
+      }
+    ],
+    "genres": [
+      {
+        "id": 9,
+        "name": "drama"
+      },
+      {
+        "id": 23,
+        "name": "horrors"
+      }
+    ]
+  },
+  "servertime": 1532295257
+}
