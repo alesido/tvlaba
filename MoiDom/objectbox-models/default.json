@@ -1,0 +1,76 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:472920663739370055",
+      "lastPropertyId": "5:4196410947035009514",
+      "name": "UserAccountEntity",
+      "properties": [
+        {
+          "id": "1:446151245140478987",
+          "name": "id"
+        },
+        {
+          "id": "2:5203123158733560290",
+          "indexId": "1:8822211323858088067",
+          "name": "loginName"
+        },
+        {
+          "id": "3:6372516461855708387",
+          "name": "loginPassword"
+        },
+        {
+          "id": "4:7582161641482099039",
+          "name": "languageCode"
+        },
+        {
+          "id": "5:4196410947035009514",
+          "name": "parentCode"
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:1603089710432994114",
+          "name": "subscriptions"
+        }
+      ]
+    },
+    {
+      "id": "2:133165557016640118",
+      "lastPropertyId": "4:8963905442414523196",
+      "name": "SubscriptionEntity",
+      "properties": [
+        {
+          "id": "1:2001232902521314317",
+          "name": "id"
+        },
+        {
+          "id": "2:5498016901010607306",
+          "name": "serviceId"
+        },
+        {
+          "id": "3:5763151241020225315",
+          "name": "status"
+        },
+        {
+          "id": "4:8963905442414523196",
+          "name": "expirationDate"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:133165557016640118",
+  "lastIndexId": "1:8822211323858088067",
+  "lastRelationId": "1:1603089710432994114",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

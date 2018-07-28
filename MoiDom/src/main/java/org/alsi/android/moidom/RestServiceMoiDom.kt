@@ -2,15 +2,15 @@ package org.alsi.android.moidom
 
 import io.reactivex.Single
 import okhttp3.ResponseBody
-import org.alsi.android.moidom.model.LoginResponse
-import org.alsi.android.moidom.model.SettingsSetResponse
-import org.alsi.android.moidom.model.tv.ChannelListResponse
-import org.alsi.android.moidom.model.tv.GetTvGroupResponse
-import org.alsi.android.moidom.model.tv.GetUrlResponse
-import org.alsi.android.moidom.model.vod.GetVodUrlResponse
-import org.alsi.android.moidom.model.vod.VodGenresResponse
-import org.alsi.android.moidom.model.vod.VodInfoResponse
-import org.alsi.android.moidom.model.vod.VodListResponse
+import org.alsi.android.moidom.model.remote.LoginResponse
+import org.alsi.android.moidom.model.remote.SettingsSetResponse
+import org.alsi.android.moidom.model.remote.tv.ChannelListResponse
+import org.alsi.android.moidom.model.remote.tv.GetTvGroupResponse
+import org.alsi.android.moidom.model.remote.tv.GetUrlResponse
+import org.alsi.android.moidom.model.remote.vod.GetVodUrlResponse
+import org.alsi.android.moidom.model.remote.vod.VodGenresResponse
+import org.alsi.android.moidom.model.remote.vod.VodInfoResponse
+import org.alsi.android.moidom.model.remote.vod.VodListResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query

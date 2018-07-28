@@ -1,11 +1,12 @@
-package org.alsi.android.moidom.model.vod
+package org.alsi.android.moidom.model.remote
 
 import org.alsi.android.moidom.model.base.BaseResponse
 import org.alsi.android.moidom.model.base.RequestError
 
 
-data class GetVodUrlResponse(
-        val url: String,
+data class SettingsSetResponse(
+        val text: String,
+        val code: Int,
         override val error: RequestError?,
         override val servertime: Int
 

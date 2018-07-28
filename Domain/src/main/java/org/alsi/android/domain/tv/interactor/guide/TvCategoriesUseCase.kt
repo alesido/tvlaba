@@ -5,6 +5,7 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.interactor.ObservableUseCase
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
+import org.alsi.android.domain.implementation.model.IconSet
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
 import javax.inject.Inject
@@ -24,14 +25,12 @@ open class TvCategoriesUseCase @Inject constructor(
         }
     }
 }
-//
-//open class TvCategoryIconsUseCase @Inject constructor(
-//        private val tvChannelRepository: TvChannelRepository,
-//        postExecutionThread: PostExecutionThread)
-//    : ObservableUseCase<IconSet, Nothing>(postExecutionThread)
-//{
-//    override fun buildUseCaseObservable(params: Nothing?): Observable<IconSet> {
-//        return tvChannelRepository.getCategoryIcons()
-//    }
-//
-//}
+
+open class TvCategoryIconsUseCase @Inject constructor(
+        private val tvChannelRepository: TvChannelRepository,
+        postExecutionThread: PostExecutionThread)
+    : ObservableUseCase<IconSet, Nothing>(postExecutionThread) {
+    override fun buildUseCaseObservable(params: Nothing?): Observable<IconSet> {
+        return Observable.just(null) //tvChannelRepository.getCategoryIcons()
+    }
+}

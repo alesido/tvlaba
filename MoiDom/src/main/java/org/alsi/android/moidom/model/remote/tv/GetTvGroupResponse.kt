@@ -1,4 +1,4 @@
-package org.alsi.android.moidom.model.tv
+package org.alsi.android.moidom.model.remote.tv
 
 import org.alsi.android.moidom.model.base.BaseResponse
 import org.alsi.android.moidom.model.base.RequestError

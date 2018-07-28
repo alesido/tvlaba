@@ -1,4 +1,4 @@
-package org.alsi.android.moidom
+package org.alsi.android.moidom.model
 
 import com.google.gson.Gson
 import io.reactivex.observers.TestObserver
@@ -11,7 +11,8 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.junit.Assert.fail
 import okhttp3.mockwebserver.MockResponse
-import org.alsi.android.moidom.model.LoginResponse
+import org.alsi.android.moidom.RestServiceMoiDom
+import org.alsi.android.moidom.model.remote.LoginResponse
 import org.alsi.android.remote.retrofit.error.RetrofitException
 import org.junit.Test
 import java.io.File
@@ -23,6 +24,8 @@ import java.util.concurrent.TimeUnit
  * place (in call adapter)
  *
  * - to develop technique for testing of REST API model offline
+ *
+ * - to test login response data model including error model
  *
  */
 @RunWith(JUnit4::class)

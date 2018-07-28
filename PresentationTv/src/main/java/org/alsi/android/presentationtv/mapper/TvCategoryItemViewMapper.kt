@@ -5,8 +5,8 @@ import co.joebirch.presentation.mapper.Mapper
 import io.reactivex.observers.DisposableObserver
 import org.alsi.android.domain.implementation.model.IconSet
 import org.alsi.android.domain.implementation.model.IconType
-import org.alsi.android.domaintv.interactor.TvCategoryIconsUseCase
-import org.alsi.android.domaintv.model.TvChannelCategory
+import org.alsi.android.domain.tv.interactor.guide.TvCategoryIconsUseCase
+import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.presentation.mapper.getDrawableIdentifierByName
 import org.alsi.android.presentationtv.model.TvCategoryItemViewModel
 import javax.inject.Inject
@@ -23,8 +23,8 @@ open class TvCategoryItemViewMapper @Inject constructor(
 
     override fun mapToView(type: TvChannelCategory): TvCategoryItemViewModel {
         return when(iconSet?.kind) {
-            IconType.LOCAL_VECTOR -> TvCategoryItemViewModel(type.id, type.title, getDrawableIdentifierByName(type.logoReference))
-            IconType.LOCAL_RASTER -> TvCategoryItemViewModel(type.id, type.title, getDrawableIdentifierByName(type.logoReference))
+            IconType.LOCAL_VECTOR -> TvCategoryItemViewModel(type.id, type.title, getDrawableIdentifierByName(type.logoReference)?: 0)
+            IconType.LOCAL_RASTER -> TvCategoryItemViewModel(type.id, type.title, getDrawableIdentifierByName(type.logoReference)?: 0)
             IconType.REMOTE_RASTER -> TvCategoryItemViewModel(type.id, type.title, Uri.parse(type.logoReference))
             null -> TvCategoryItemViewModel(type.id, type.title)
         }
