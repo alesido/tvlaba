@@ -18,9 +18,10 @@ data class UserAccountEntity (
         var loginName: String,
         var loginPassword: String,
 
-        var languageCode: String,
-        var parentCode: String
+        var languageCode: String
 ) {
-//    @Backlink
+    lateinit var parentCode: String
+
+    @Backlink
     lateinit var subscriptions: ToMany<SubscriptionEntity>
 }

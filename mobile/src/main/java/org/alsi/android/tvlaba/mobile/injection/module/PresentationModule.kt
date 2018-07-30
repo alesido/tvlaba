@@ -18,7 +18,6 @@ abstract class PresentationModule {
     @ViewModelKey(TvCategoryBrowseViewModel::class)
     abstract fun bindTvCategoryBrowseViewModel(viewModel: TvCategoryBrowseViewModel) : ViewModel
 
-
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

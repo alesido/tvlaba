@@ -40,6 +40,7 @@ ext {
     retrofitVersion = '2.3.0'
     glideVersion = '4.0.0'
     timberVersion = '4.5.1'
+    objectboxVersion = '2.0.0'
 
     //Testing
     jUnitVersion = '4.12'
@@ -59,7 +60,7 @@ ext {
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
-            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
             jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
@@ -70,7 +71,7 @@ ext {
     ]
 
     dataDependencies = [
-            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}",
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
@@ -95,7 +96,7 @@ ext {
     ]
 
     remoteDependencies = [
-            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}",
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlinReflect:      "org.jetbrains.kotlin:kotlin-reflect:${kotlinReflectVersion}",
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
@@ -112,7 +113,7 @@ ext {
 
     remoteTestDependencies = [
             junit:              "junit:junit:${jUnitVersion}",
-            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlin_version}",
+            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
             assertj:            "org.assertj:assertj-core:${assertJVersion}",
             mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
             mockWebServer:      "com.squareup.okhttp3:mockwebserver:${okHttpMockWebServerVersion}"
@@ -126,7 +127,7 @@ ext {
             archExtensions:     "android.arch.lifecycle:extensions:${archCompVersion}",
             archCompiler:       "android.arch.lifecycle:compiler:${archCompVersion}",
 
-            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}",
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
 
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
@@ -142,7 +143,7 @@ ext {
 
     presentationTestDependencies = [
             junit:              "junit:junit:${jUnitVersion}",
-            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlin_version}",
+            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
             assertj:            "org.assertj:assertj-core:${assertJVersion}",
             mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
             robolectric:        "org.robolectric:robolectric:${robolectricVersion}",
@@ -157,7 +158,11 @@ ext {
             supportDesign:      "com.android.support:design:${supportLibraryVersion}",
             constraintLayout:   "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
 
-            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+            archRuntime:        "android.arch.lifecycle:runtime:${archCompVersion}",
+            archExtensions:     "android.arch.lifecycle:extensions:${archCompVersion}",
+            archCompiler:       "android.arch.lifecycle:compiler:${archCompVersion}",
+
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
 
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
@@ -183,7 +188,7 @@ ext {
 
     uiTestDependencies = [
             junit:              "junit:junit:${jUnitVersion}",
-            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlin_version}",
+            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
             assertj:            "org.assertj:assertj-core:${assertJVersion}",
             mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
             supportRunner:      "com.android.support.test:runner:${androidSupportRunnerVersion}",

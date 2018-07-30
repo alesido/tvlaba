@@ -4,6 +4,7 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Convert
 import io.objectbox.converter.PropertyConverter
+import io.objectbox.relation.ToOne
 import org.alsi.android.domain.user.model.SubscriptionStatus
 import org.alsi.android.moidom.framework.objectbox.LocalDateConverter
 import org.joda.time.LocalDate
@@ -17,8 +18,10 @@ import org.joda.time.LocalDate
         var status: StatusProperty,
 
         @Convert(converter = LocalDateConverter::class, dbType = Long::class)
-        var expirationDate: LocalDate
-)
+        var expirationDate: LocalDate?
+) {
+    lateinit var userAccount : ToOne<UserAccountEntity>
+}
 
 enum class StatusProperty(val id: Long, val reference: SubscriptionStatus) {
     UNKNOWN(0L, SubscriptionStatus.UNKNOWN),

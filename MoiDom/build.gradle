@@ -61,6 +61,7 @@ dependencies {
     def remoteDependencies = rootProject.ext.remoteDependencies
     def remoteTestDependencies = rootProject.ext.remoteTestDependencies
 
+    implementation project(':Domain')
     implementation project(':Data')
     implementation project(':Remote')
 

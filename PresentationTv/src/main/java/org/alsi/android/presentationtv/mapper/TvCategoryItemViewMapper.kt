@@ -9,9 +9,8 @@ import org.alsi.android.domain.tv.interactor.guide.TvCategoryIconsUseCase
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.presentation.mapper.getDrawableIdentifierByName
 import org.alsi.android.presentationtv.model.TvCategoryItemViewModel
-import javax.inject.Inject
 
-open class TvCategoryItemViewMapper @Inject constructor(
+open class TvCategoryItemViewMapper (
         getIconsUseCase: TvCategoryIconsUseCase)
     : Mapper<TvCategoryItemViewModel, TvChannelCategory> {
 

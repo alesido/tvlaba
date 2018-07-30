@@ -30,11 +30,16 @@
           "name": "parentCode"
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "1:1603089710432994114",
+          "name": "subscriptions"
+        }
+      ]
     },
     {
       "id": "2:133165557016640118",
-      "lastPropertyId": "5:499453388765884094",
+      "lastPropertyId": "4:8963905442414523196",
       "name": "SubscriptionEntity",
       "properties": [
         {
@@ -52,18 +57,13 @@
         {
           "id": "4:8963905442414523196",
           "name": "expirationDate"
-        },
-        {
-          "id": "5:499453388765884094",
-          "indexId": "2:7914187977337219515",
-          "name": "userAccountId"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "2:133165557016640118",
-  "lastIndexId": "2:7914187977337219515",
+  "lastIndexId": "1:8822211323858088067",
   "lastRelationId": "1:1603089710432994114",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
@@ -71,8 +71,6 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [],
-  "retiredRelationUids": [
-    1603089710432994114
-  ],
+  "retiredRelationUids": [],
   "version": 1
 }

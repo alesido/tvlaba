@@ -11,5 +11,5 @@ class ServiceSubscription(
         val id: Long,
         val serviceId: Long,
         val status: SubscriptionStatus,
-        val expirationDate: LocalDate
+        val expirationDate: LocalDate?
 )

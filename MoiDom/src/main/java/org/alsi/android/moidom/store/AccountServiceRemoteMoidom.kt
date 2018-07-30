@@ -8,8 +8,7 @@ import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.moidom.BuildConfig
 import org.alsi.android.moidom.RestServiceMoiDom
 import org.alsi.android.moidom.mapper.AccountMapperMoidom
-import org.alsi.android.moidom.mapper.SubscriptionMapperMoidom
-import org.alsi.android.moidom.model.remote.LoginResponse
+import org.alsi.android.moidom.store.internal.InternalStoreMoidom
 import javax.inject.Inject
 
 /**

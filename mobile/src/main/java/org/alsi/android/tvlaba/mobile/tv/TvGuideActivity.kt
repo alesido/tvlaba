@@ -17,12 +17,14 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvCategoryItemViewModel
 import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoryItem
 import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoryItemViewMapper
+import timber.log.Timber
 import javax.inject.Inject
 
 class TvGuideActivity : AppCompatActivity() {
 
     @Inject lateinit var adapter: TvCategoriesAdapter
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+//    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
     @Inject lateinit var mapper: TvCategoryItemViewMapper
     private lateinit var browseViewModel : TvCategoryBrowseViewModel
 
@@ -57,7 +59,11 @@ class TvGuideActivity : AppCompatActivity() {
                 progress.visibility = View.VISIBLE
                 categoriesListView.visibility = View.GONE
             }
+            else -> {
+                Timber.d("Unknown data state")
+            }
         }
+
     }
 
     private fun setupScreenForSuccess(categories: List<TvCategoryItem>?) {

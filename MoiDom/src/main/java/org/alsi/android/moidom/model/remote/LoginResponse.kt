@@ -1,6 +1,7 @@
 package org.alsi.android.moidom.model.remote
 
 import org.alsi.android.moidom.model.base.BaseResponse
+import org.alsi.android.remote.retrofit.json.IntEnablingMap
 import org.alsi.android.moidom.model.base.RequestError
 
 
@@ -23,13 +24,7 @@ data class LoginResponse(
 
 ): BaseResponse() {
 
-    data class Services(
-            val vod: Int,
-            val archive: Int,
-            val tshift: Int,
-            val megogo: Int
-    )
-
+    class Services : IntEnablingMap()
 
     data class Settings(
             val timeshift: Timeshift,

@@ -24,7 +24,7 @@ class AccountMapperMoidom: EntityMapper<UserAccountEntity, UserAccount> {
 
     override fun mapToEntity(domain: UserAccount): UserAccountEntity {
         val entity = with(domain) {
-            UserAccountEntity(id, loginName, loginPassword, parentCode, languageCode)
+            UserAccountEntity(id, loginName, loginPassword, languageCode)
         }
         for (subscription in domain.subscriptions) {
             entity.subscriptions.add(subscriptionMapper.mapToEntity(subscription))

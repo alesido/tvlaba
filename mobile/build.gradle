@@ -59,9 +59,9 @@ dependencies {
     implementation uiDependencies.constraintLayout
 
     //Architecture Components
-    implementation presentationDependencies.archRuntime
-    implementation presentationDependencies.archExtensions
-    kapt presentationDependencies.archCompiler
+    implementation uiDependencies.archRuntime
+    implementation uiDependencies.archExtensions
+    kapt uiDependencies.archCompiler
 
     //Kotlin
     implementation uiDependencies.kotlin
