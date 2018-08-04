@@ -1,11 +1,10 @@
-package org.alsi.android.data.account
+package org.alsi.android.data.repository.account
 
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.domain.user.model.UserAccount
 
 /** Contract on remote data store for service user/subscriber account.
- *
  */
 interface AccountDataRemote
 {

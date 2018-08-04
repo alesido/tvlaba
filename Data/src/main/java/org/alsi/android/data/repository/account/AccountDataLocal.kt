@@ -1,4 +1,4 @@
-package org.alsi.android.data.account
+package org.alsi.android.data.repository.account
 
 import io.reactivex.Completable
 import io.reactivex.Single

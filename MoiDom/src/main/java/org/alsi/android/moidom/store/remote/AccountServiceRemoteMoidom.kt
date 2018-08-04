@@ -1,12 +1,11 @@
-package org.alsi.android.moidom.store
+package org.alsi.android.moidom.store.remote
 
 import android.os.Build
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.alsi.android.data.account.AccountDataRemote
+import org.alsi.android.data.repository.account.AccountDataRemote
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.moidom.BuildConfig
-import org.alsi.android.moidom.RestServiceMoiDom
 import org.alsi.android.moidom.mapper.AccountMapperMoidom
 import org.alsi.android.moidom.store.internal.InternalStoreMoidom
 import javax.inject.Inject
@@ -15,7 +14,7 @@ import javax.inject.Inject
  * Created on 7/26/18.
  */
 class AccountServiceRemoteMoidom @Inject constructor(
-        private val remoteService: RestServiceMoiDom,
+        private val remoteService: RestServiceMoidom,
         private val internalStore: InternalStoreMoidom
 ): AccountDataRemote {
 
@@ -25,8 +24,8 @@ class AccountServiceRemoteMoidom @Inject constructor(
         return remoteService.login(
                 loginName,
                 loginPassword,
-                settings = RestServiceMoiDom.QUERY_PARAM_LOGIN_SETTINGS_DEFAULT,
-                deviceTypeAndroid = RestServiceMoiDom.QUERY_PARAM_DEVICE_TYPE,
+                settings = RestServiceMoidom.QUERY_PARAM_LOGIN_SETTINGS_DEFAULT,
+                deviceTypeAndroid = RestServiceMoidom.QUERY_PARAM_DEVICE_TYPE,
                 appBuildNumber = BuildConfig.VERSION_CODE,
                 androidSdkNumber = Build.VERSION.SDK_INT,
                 deviceSerialNumber = "UNKNOWN",

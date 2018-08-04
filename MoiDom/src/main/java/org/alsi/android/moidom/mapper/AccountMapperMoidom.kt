@@ -1,6 +1,6 @@
 package org.alsi.android.moidom.mapper
 
-import org.alsi.android.data.mapper.EntityMapper
+import org.alsi.android.data.framework.mapper.EntityMapper
 import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.moidom.model.local.user.UserAccountEntity

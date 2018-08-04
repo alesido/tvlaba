@@ -14,5 +14,5 @@ abstract class UiModule {
     abstract fun bindPostExecutionThread(uiThread: UiThread): PostExecutionThread
 
     @ContributesAndroidInjector
-    abstract fun contributesBrowseActivity(): TvGuideActivity
+    abstract fun contributesTvGuideActivity(): TvGuideActivity
 }

@@ -3,7 +3,7 @@ package org.alsi.android.domain.tv.repository.guide
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.alsi.android.domain.context.model.ServiceRepository
+import org.alsi.android.domain.streaming.model.DirectoryRepository
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 
@@ -14,7 +14,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannelCategory
  */
 
 @Suppress("unused")
-interface TvChannelRepository : ServiceRepository
+interface TvChannelRepository : DirectoryRepository
 {
     // region Categories
 

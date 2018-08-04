@@ -23,15 +23,14 @@ import javax.inject.Inject
 class TvGuideActivity : AppCompatActivity() {
 
     @Inject lateinit var adapter: TvCategoriesAdapter
-//    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
     @Inject lateinit var mapper: TvCategoryItemViewMapper
     private lateinit var browseViewModel : TvCategoryBrowseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tv_guide_activity)
-        AndroidInjection.inject(this)
 
         browseViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvCategoryBrowseViewModel::class.java)
@@ -44,9 +43,7 @@ class TvGuideActivity : AppCompatActivity() {
         super.onStart()
         browseViewModel.getLiveData().observe(this,
                 Observer<Resource<List<TvCategoryItemViewModel>>> {
-                    it?.let {
-                        handleDataState(it)
-                    }
+                    if (it != null) handleDataState(it)
         })
     }
 

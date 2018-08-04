@@ -3,8 +3,6 @@ package org.alsi.android.datatv.store
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.alsi.android.domain.context.model.ServiceRepository
-import org.alsi.android.domain.context.model.ServiceSession
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
@@ -15,13 +13,6 @@ class TvChannelDataRepository @Inject constructor(
         private val local: TvChannelLocalStore)
     : TvChannelRepository
 {
-    /** Reconfigure data store to continue with another session data
-     *
-     */
-    override fun withSession(session: ServiceSession): ServiceRepository {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     /** Preload all frequently accessed data to the database
      *
      *  Assumed that the categories and channels are independent record sets, so it isn't of a big

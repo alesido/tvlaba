@@ -2,8 +2,8 @@ package org.alsi.android.datatv.store
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.alsi.android.domaintv.model.TvChannel
-import org.alsi.android.domaintv.model.TvChannelCategory
+import org.alsi.android.domain.tv.model.guide.TvChannel
+import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 
 /** Contract for remote data store of a TV Streaming Service.
  *

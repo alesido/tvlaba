@@ -1,4 +1,4 @@
-package org.alsi.android.data.store
+package org.alsi.android.data.framework.store
 
 import io.reactivex.Completable
 import io.reactivex.Single

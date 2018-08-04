@@ -23,7 +23,7 @@ ext {
 
     //Dependency Injection
     javaxInjectVersion = '1'
-    daggerVersion = '2.11'
+    daggerVersion = '2.16'
 
     //RX
     rxJavaVersion = '2.0.2'
@@ -61,6 +61,10 @@ ext {
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
+            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger:             "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
             jodaTime:           "joda-time:joda-time:${jodaTimeVersion}"
     ]
 
@@ -76,6 +80,11 @@ ext {
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
+
+            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger:             "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
 
             gson:               "com.google.code.gson:gson:${gsonVersion}",
             okHttp:             "com.squareup.okhttp3:okhttp:${okHttpVersion}",
@@ -101,6 +110,10 @@ ext {
             kotlinReflect:      "org.jetbrains.kotlin:kotlin-reflect:${kotlinReflectVersion}",
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
+            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger:             "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
             appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
             androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
             gson:               "com.google.code.gson:gson:${gsonVersion}",

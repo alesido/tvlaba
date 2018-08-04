@@ -15,6 +15,11 @@ dependencies {
     implementation dataDependencies.javaxInject
     implementation dataDependencies.rxKotlin
 
+    implementation dataDependencies.dagger
+    implementation dataDependencies.daggerSupport
+    kapt dataDependencies.daggerCompiler
+    kapt dataDependencies.daggerProcessor
+
     testImplementation dataTestDependencies.junit
     testImplementation dataTestDependencies.kotlinJUnit
     testImplementation dataTestDependencies.mockito

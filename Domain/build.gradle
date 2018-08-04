@@ -10,9 +10,17 @@ dependencies {
 
     implementation domainDependencies.javaxAnnotation
     implementation domainDependencies.javaxInject
+
     implementation domainDependencies.rxKotlin
     implementation domainDependencies.kotlin
-    compile domainDependencies.jodaTime
+
+    implementation domainDependencies.dagger
+    implementation domainDependencies.daggerSupport
+    kapt domainDependencies.daggerCompiler
+    kapt domainDependencies.daggerProcessor
+
+
+    compile domainDependencies.jodaTime // "implementation" does not work here
 
     testImplementation domainTestDependencies.junit
     testImplementation domainTestDependencies.mockito

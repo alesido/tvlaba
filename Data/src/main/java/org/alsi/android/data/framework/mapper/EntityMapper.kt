@@ -1,4 +1,4 @@
-package org.alsi.android.data.mapper
+package org.alsi.android.data.framework.mapper
 
 interface EntityMapper<E, D> {
 

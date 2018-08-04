@@ -1,12 +1,12 @@
-package org.alsi.android.data.repository
+package org.alsi.android.data.framework.repository
 
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import org.alsi.android.data.mapper.EntityMapper
-import org.alsi.android.data.store.DataCacheSingleType
-import org.alsi.android.data.store.DataRemoteSingleType
-import org.alsi.android.data.store.DataStoreFactory
+import org.alsi.android.data.framework.mapper.EntityMapper
+import org.alsi.android.data.framework.store.DataCacheSingleType
+import org.alsi.android.data.framework.store.DataRemoteSingleType
+import org.alsi.android.data.framework.store.DataStoreFactory
 import javax.inject.Inject
 
 
@@ -45,8 +45,8 @@ class DataRepositoryRemoteWithCache<E,D> @Inject constructor(
                 .flatMap {
                     cache.save(it).andThen(Observable.just(it))
                 }
-                .map {
-                    it.map {
+                .map { list ->
+                    list.map {
                         mapper.mapFromEntity(it)
                     }
                 }
@@ -61,13 +61,11 @@ class DataRepositoryRemoteWithCache<E,D> @Inject constructor(
                 .flatMap {
                     cache.save(it).andThen(Observable.just(it))
                 }
-                .map {
-                    it.map {
-                        mapper.mapFromEntity(it)
-                    }
+                .map {list -> list.map {mapper.mapFromEntity(it) }
                 }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun findById(itemId: Long): Single<D> {
         return Single.just(null)
 //        return getCacheState()

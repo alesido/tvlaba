@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.alsi.android.moidom.RestServiceMoiDom
+import org.alsi.android.moidom.store.remote.RestServiceMoidom
 import org.alsi.android.moidom.model.remote.LoginResponse
 import org.alsi.android.remote.retrofit.RetrofitServiceBuilder
 import org.alsi.android.remote.retrofit.error.RetrofitException
@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit
 class LoginApiTest {
 
     private lateinit var mockServer: MockWebServer
-    private lateinit var moiDomService: RestServiceMoiDom
+    private lateinit var moiDomService: RestServiceMoidom
 
     @Before
     fun setUp() {
@@ -41,7 +41,7 @@ class LoginApiTest {
         mockServer.start()
 
         val gson = GsonBuilder().registerTypeAdapter(IntEnablingMap::class.java, JsonDeserializerForIntEnablingMap()).create()
-        moiDomService = RetrofitServiceBuilder(RestServiceMoiDom::class.java, mockServer.url("/").toString())
+        moiDomService = RetrofitServiceBuilder(RestServiceMoidom::class.java, mockServer.url("/").toString())
                 .enableRxErrorHandlingCallAdapterFactory()
                 .setGson(gson).enableLogging().build()
     }

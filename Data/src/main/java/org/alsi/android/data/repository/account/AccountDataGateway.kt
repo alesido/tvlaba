@@ -1,16 +1,16 @@
-package org.alsi.android.data.account
+package org.alsi.android.data.repository.account
 
 import io.reactivex.Completable
-import org.alsi.android.domain.user.repository.AccountService
+import org.alsi.android.domain.user.repository.AccountDataService
 import javax.inject.Inject
 
 /**
  *  Gateway between higher level service/repository and concrete service(s)
  *  for authentication, authorization and user account data operations.
  */
-class AccountGateway @Inject constructor(
+open class AccountDataGateway(
         private val remote: AccountDataRemote,
-        private val local: AccountDataLocal): AccountService
+        private val local: AccountDataLocal): AccountDataService
 {
     override fun login(loginName: String, loginPassword: String) = remote.login(loginName, loginPassword)
 

@@ -8,9 +8,9 @@ dependencies {
     def dataDependencies = rootProject.ext.dataDependencies
     def dataTestDependencies = rootProject.ext.dataTestDependencies
 
-    implementation project(':Domain')
-    implementation project(':DomainTv')
-    implementation project(':Data')
+    compile project(':Domain')
+    compile project(':DomainTv')
+    compile project(':Data')
 
     implementation dataDependencies.javaxAnnotation
     implementation dataDependencies.kotlin

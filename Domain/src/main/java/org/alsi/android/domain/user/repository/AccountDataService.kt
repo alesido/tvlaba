@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.UserAccount
 
-interface AccountService
+interface AccountDataService
 {
     fun login(loginName: String, loginPassword: String): Single<UserAccount>
 

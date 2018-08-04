@@ -61,9 +61,9 @@ dependencies {
     def remoteDependencies = rootProject.ext.remoteDependencies
     def remoteTestDependencies = rootProject.ext.remoteTestDependencies
 
-    implementation project(':Domain')
-    implementation project(':Data')
-    implementation project(':Remote')
+    api project(':Domain')
+    api project(':Data')
+    api project(':Remote')
 
     implementation remoteDependencies.kotlin
     implementation remoteDependencies.rxKotlin
@@ -72,6 +72,11 @@ dependencies {
     implementation remoteDependencies.javaxInject
     implementation remoteDependencies.javaxAnnotation
     implementation remoteDependencies.appCompatV7
+
+    implementation remoteDependencies.dagger
+    implementation remoteDependencies.daggerSupport
+    kapt remoteDependencies.daggerCompiler
+    kapt remoteDependencies.daggerProcessor
 
     implementation remoteDependencies.gson
     implementation remoteDependencies.okHttp
