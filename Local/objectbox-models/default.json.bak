@@ -1,0 +1,76 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2312380529869918852",
+      "lastPropertyId": "5:3296976293602802684",
+      "name": "UserAccountEntity",
+      "properties": [
+        {
+          "id": "1:6905912384517656670",
+          "name": "parentCode"
+        },
+        {
+          "id": "2:8935402635139068629",
+          "name": "id"
+        },
+        {
+          "id": "3:3338168980972012110",
+          "indexId": "1:9177577641245810274",
+          "name": "loginName"
+        },
+        {
+          "id": "4:9215816898936996617",
+          "name": "loginPassword"
+        },
+        {
+          "id": "5:3296976293602802684",
+          "name": "languageCode"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:4778480088802719991",
+      "lastPropertyId": "5:2307170903947306182",
+      "name": "SubscriptionEntity",
+      "properties": [
+        {
+          "id": "1:8272572561211106474",
+          "name": "id"
+        },
+        {
+          "id": "2:1436076750736580229",
+          "name": "serviceId"
+        },
+        {
+          "id": "3:7418450975132552450",
+          "name": "status"
+        },
+        {
+          "id": "4:7381691834817454487",
+          "name": "expirationDate"
+        },
+        {
+          "id": "5:2307170903947306182",
+          "indexId": "2:1094242775961301239",
+          "name": "userAccountId"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:4778480088802719991",
+  "lastIndexId": "2:1094242775961301239",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
