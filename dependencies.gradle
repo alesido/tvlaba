@@ -133,6 +133,28 @@ ext {
     ]
 
 
+    localDependencies = [
+            kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
+            rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            kotlinReflect:      "org.jetbrains.kotlin:kotlin-reflect:${kotlinReflectVersion}",
+            javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
+            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger:             "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
+            appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
+    ]
+
+    localTestDependencies = [
+            junit:              "junit:junit:${jUnitVersion}",
+            kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
+            assertj:            "org.assertj:assertj-core:${assertJVersion}",
+            mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
+            mockWebServer:      "com.squareup.okhttp3:mockwebserver:${okHttpMockWebServerVersion}"
+    ]
+
     presentationDependencies = [
             appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
 

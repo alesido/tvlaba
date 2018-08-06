@@ -1,13 +1,13 @@
-package org.alsi.android.moidom.store.internal.mapper
+package org.alsi.android.moidom.mapper
 
 import org.alsi.android.domain.streaming.model.StreamingService
 import org.alsi.android.domain.streaming.model.StreamingServiceRegistry
 import org.alsi.android.moidom.Moidom
-import org.alsi.android.moidom.store.remote.RestServiceMoidom
-import org.alsi.android.moidom.model.local.user.StatusProperty
-import org.alsi.android.moidom.model.local.user.SubscriptionEntity
-import org.alsi.android.moidom.model.local.user.UserAccountEntity
-import org.alsi.android.moidom.model.remote.LoginResponse
+import org.alsi.android.moidom.store.RestServiceMoidom
+import org.alsi.android.local.model.user.StatusProperty
+import org.alsi.android.local.model.user.SubscriptionEntity
+import org.alsi.android.local.model.user.UserAccountEntity
+import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.remote.mapper.SourceDataMapper
 import javax.inject.Inject
 

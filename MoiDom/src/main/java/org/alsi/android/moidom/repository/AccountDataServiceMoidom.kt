@@ -1,11 +1,11 @@
 package org.alsi.android.moidom.repository
 
 import org.alsi.android.data.repository.account.AccountDataGateway
-import org.alsi.android.moidom.store.AccountStoreLocalMoidom
-import org.alsi.android.moidom.store.remote.AccountServiceRemoteMoidom
+import org.alsi.android.local.store.AccountStoreLocalDelegate
+import org.alsi.android.moidom.store.AccountServiceRemoteMoidom
 import javax.inject.Inject
 
 class AccountDataServiceMoidom @Inject constructor(
         remote: AccountServiceRemoteMoidom,
-        local: AccountStoreLocalMoidom)
+        local: AccountStoreLocalDelegate)
     : AccountDataGateway(remote, local)

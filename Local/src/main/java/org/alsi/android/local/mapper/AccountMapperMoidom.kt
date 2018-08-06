@@ -1,13 +1,10 @@
-package org.alsi.android.moidom.mapper
+package org.alsi.android.local.mapper
 
 import org.alsi.android.data.framework.mapper.EntityMapper
 import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.UserAccount
-import org.alsi.android.moidom.model.local.user.UserAccountEntity
+import org.alsi.android.local.model.user.UserAccountEntity
 
-/**
- * Created on 7/27/18.
- */
 class AccountMapperMoidom: EntityMapper<UserAccountEntity, UserAccount> {
 
     private val subscriptionMapper = SubscriptionMapperMoidom()

@@ -4,8 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.alsi.android.moidom.store.remote.RestServiceMoidom
-import org.alsi.android.moidom.model.remote.LoginResponse
+import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.retrofit.RetrofitServiceBuilder
 import org.alsi.android.remote.retrofit.error.RetrofitException
 import org.alsi.android.remote.retrofit.json.IntEnablingMap

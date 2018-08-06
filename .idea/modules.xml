@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/DomainTv/DomainTv.iml" filepath="$PROJECT_DIR$/DomainTv/DomainTv.iml" />
       <module fileurl="file://$PROJECT_DIR$/DomainUser/DomainUser.iml" filepath="$PROJECT_DIR$/DomainUser/DomainUser.iml" />
       <module fileurl="file://$PROJECT_DIR$/DomainVod/DomainVod.iml" filepath="$PROJECT_DIR$/DomainVod/DomainVod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Local/Local.iml" filepath="$PROJECT_DIR$/Local/Local.iml" />
       <module fileurl="file://$PROJECT_DIR$/MoiDom/MoiDom.iml" filepath="$PROJECT_DIR$/MoiDom/MoiDom.iml" />
       <module fileurl="file://$PROJECT_DIR$/Presentation/Presentation.iml" filepath="$PROJECT_DIR$/Presentation/Presentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/PresentationTv/PresentationTv.iml" filepath="$PROJECT_DIR$/PresentationTv/PresentationTv.iml" />

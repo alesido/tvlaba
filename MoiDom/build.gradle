@@ -64,6 +64,7 @@ dependencies {
     api project(':Domain')
     api project(':Data')
     api project(':Remote')
+    api project(':Local')
 
     implementation remoteDependencies.kotlin
     implementation remoteDependencies.rxKotlin

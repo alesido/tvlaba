@@ -1,11 +1,8 @@
-package org.alsi.android.moidom.framework.objectbox
+package org.alsi.android.local.framework.objectbox
 
 import io.objectbox.converter.PropertyConverter
 import org.joda.time.LocalDate
 
-/**
- * Created on 7/27/18.
- */
 class LocalDateConverter: PropertyConverter<LocalDate, Long> {
 
     override fun convertToDatabaseValue(entityProperty: LocalDate?): Long {
