@@ -18,7 +18,9 @@ data class UserAccountEntity (
         var loginName: String,
         var loginPassword: String,
 
-        var languageCode: String
+        var languageCode: String,
+
+        var timeShiftSettingHours: Int
 ) {
     lateinit var parentCode: String
 

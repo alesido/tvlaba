@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:2312380529869918852",
-      "lastPropertyId": "5:3296976293602802684",
+      "lastPropertyId": "6:2616707537095600517",
       "name": "UserAccountEntity",
       "properties": [
         {
@@ -28,6 +28,10 @@
         {
           "id": "5:3296976293602802684",
           "name": "languageCode"
+        },
+        {
+          "id": "6:2616707537095600517",
+          "name": "timeShiftSettingHours"
         }
       ],
       "relations": []
@@ -63,7 +67,7 @@
     },
     {
       "id": "3:8075741870348031678",
-      "lastPropertyId": "4:2233177869299910248",
+      "lastPropertyId": "5:8267310697452508319",
       "name": "TvChannelEntity",
       "properties": [
         {
@@ -82,13 +86,17 @@
           "id": "4:2233177869299910248",
           "indexId": "3:578982744183955796",
           "name": "categoryId"
+        },
+        {
+          "id": "5:8267310697452508319",
+          "name": "number"
         }
       ],
       "relations": []
     },
     {
       "id": "4:358898967036465",
-      "lastPropertyId": "3:8358453925702231839",
+      "lastPropertyId": "4:8076109827830152806",
       "name": "TvChannelCategoryEntity",
       "properties": [
         {
@@ -102,12 +110,32 @@
         {
           "id": "3:8358453925702231839",
           "name": "logoReference"
+        },
+        {
+          "id": "4:8076109827830152806",
+          "name": "logoIconType"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:496918075873641003",
+      "lastPropertyId": "2:1213164237547574928",
+      "name": "TvFavoriteChannelEntity",
+      "properties": [
+        {
+          "id": "1:687191689473975124",
+          "name": "tvChannelId"
+        },
+        {
+          "id": "2:1213164237547574928",
+          "name": "userAccountId"
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "4:358898967036465",
+  "lastEntityId": "5:496918075873641003",
   "lastIndexId": "3:578982744183955796",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

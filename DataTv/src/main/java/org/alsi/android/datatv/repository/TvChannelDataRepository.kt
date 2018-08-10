@@ -1,28 +1,29 @@
-package org.alsi.android.datatv.store
+package org.alsi.android.datatv.repository
 
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.alsi.android.datatv.store.TvChannelLocalStore
+import org.alsi.android.datatv.store.TvChannelRemoteStore
+import org.alsi.android.datatv.store.TvChannelRemoteStoreFeature
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
-import javax.inject.Inject
 
-class TvChannelDataRepository @Inject constructor(
+/** Repository for TV channels directory comprised of categories and channels accessed remotely
+ *  and stored locally for frequent access (cache with querying).
+ *
+ *  NOTE Some server API's have just a single method to get both categories and channels (Novoe TV).
+ *  Others have separate methods for that (Moi Dom TV). Some API's, like Kingmod, require
+ *  channels and categories to be preloaded. It is better to take care about that at the API
+ *  implementation level. Here it is hard to figure out the general case. Thus, - no preload
+ *  methods, etc.
+ */
+open class TvChannelDataRepository(
         private val remote: TvChannelRemoteStore,
         private val local: TvChannelLocalStore)
     : TvChannelRepository
 {
-    /** Preload all frequently accessed data to the database
-     *
-     *  Assumed that the categories and channels are independent record sets, so it isn't of a big
-     *  importance in which order they loaded and stored
-     */
-    override fun preload(): Completable {
-        return remote.getCategories().flatMap { local.putCategories(it)
-            remote.getChannels() }.flatMapCompletable { local.putChannels(it) }
-    }
-
     // region Categories
 
     override fun getCategories(): Observable<List<TvChannelCategory>> = local.getCategories()
@@ -34,7 +35,7 @@ class TvChannelDataRepository @Inject constructor(
 
     override fun getChannels(categoryId: Long): Observable<List<TvChannel>> = local.getChannels(categoryId)
 
-    override fun findChannelByNumber(channelNumber: Int): Single<TvChannel> = local.findChannelByNumber(channelNumber)
+    override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> = local.findChannelByNumber(channelNumber)
 
     /** ... not clear how to notify view model on the update completion, via remembered channels list observable?
      * depends on whether domain logic will manage updates

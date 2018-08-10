@@ -63,6 +63,7 @@ dependencies {
 
     api project(':Domain')
     api project(':Data')
+    api project(':DataTv')
     api project(':Remote')
     api project(':Local')
 
@@ -92,5 +93,4 @@ dependencies {
     implementation remoteTestDependencies.mockito
     implementation remoteTestDependencies.assertj
     implementation remoteTestDependencies.mockWebServer
-
 }

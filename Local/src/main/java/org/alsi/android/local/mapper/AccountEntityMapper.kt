@@ -5,9 +5,9 @@ import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.user.UserAccountEntity
 
-class AccountMapperMoidom: EntityMapper<UserAccountEntity, UserAccount> {
+class AccountEntityMapper: EntityMapper<UserAccountEntity, UserAccount> {
 
-    private val subscriptionMapper = SubscriptionMapperMoidom()
+    private val subscriptionMapper = SubscriptionEntityMapper()
 
     override fun mapFromEntity(entity: UserAccountEntity): UserAccount {
         val subscriptions : MutableList<ServiceSubscription> = mutableListOf()
@@ -15,13 +15,13 @@ class AccountMapperMoidom: EntityMapper<UserAccountEntity, UserAccount> {
             subscriptions.add(subscriptionMapper.mapFromEntity(subscriptionEntity))
         }
         return with(entity) {
-            UserAccount(id, loginName, loginPassword, parentCode, languageCode, subscriptions)
+            UserAccount(id, loginName, loginPassword, parentCode, languageCode, timeShiftSettingHours, subscriptions)
         }
     }
 
     override fun mapToEntity(domain: UserAccount): UserAccountEntity {
         val entity = with(domain) {
-            UserAccountEntity(id, loginName, loginPassword, languageCode)
+            UserAccountEntity(id, loginName, loginPassword, languageCode, timeShiftSettingHours)
         }
         for (subscription in domain.subscriptions) {
             entity.subscriptions.add(subscriptionMapper.mapToEntity(subscription))

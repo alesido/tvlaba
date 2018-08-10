@@ -15,10 +15,10 @@ data class TvChannelEntity (
         @Convert(converter = UriConverter::class, dbType = String::class)
         var logoUri: URI,
 
+        var number: Int,
+
         var title: String
 
 ) {
     lateinit var category: ToOne<TvChannelCategoryEntity>
 }
-
-// class TvChannel (val id: Long, val categoryId: Long, val logoUri: URI, val number: Long, val title: String)

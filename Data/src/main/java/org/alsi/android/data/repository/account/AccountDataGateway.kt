@@ -2,11 +2,11 @@ package org.alsi.android.data.repository.account
 
 import io.reactivex.Completable
 import org.alsi.android.domain.user.repository.AccountDataService
-import javax.inject.Inject
 
 /**
- *  Gateway between higher level service/repository and concrete service(s)
- *  for authentication, authorization and user account data operations.
+ *  This is a gateway between higher level account data service/repository and
+ *  concrete service(s)  for authentication, authorization and user
+ *  account data operations.
  */
 open class AccountDataGateway(
         private val remote: AccountDataRemote,

@@ -14,7 +14,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannelCategory
  */
 
 @Suppress("unused")
-interface TvChannelRepository : DirectoryRepository
+interface TvChannelRepository
 {
     // region Categories
 
@@ -28,7 +28,7 @@ interface TvChannelRepository : DirectoryRepository
     fun getChannels(categoryId: Long): Observable<List<TvChannel>>
 
     fun getChannelsUpdate(channelIds: List<Long>): Completable // assumed that the subscribed views will receive updates
-    fun findChannelByNumber(channelNumber: Int): Single<TvChannel>
+    fun findChannelByNumber(channelNumber: Int): Single<TvChannel?>
 
     // endregion
     // region Favorite Channels
@@ -39,6 +39,4 @@ interface TvChannelRepository : DirectoryRepository
     fun isChannelFavorite(channelId: Long): Single<Boolean>
 
     // endregion
-
-    fun preload(): Completable
 }

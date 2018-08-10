@@ -25,8 +25,8 @@ interface TvChannelLocalStore {
     fun putChannels(channels: List<TvChannel>): Completable
     fun getChannels(): Observable<List<TvChannel>>
     fun getChannels(categoryId: Long): Observable<List<TvChannel>>
-    fun updateChannels(it: List<TvChannel>): Completable
-    fun findChannelByNumber(channelNumber: Int): Single<TvChannel>
+    fun updateChannels(channels: List<TvChannel>): Completable
+    fun findChannelByNumber(channelNumber: Int): Single<TvChannel?>
 
     // endregion
     // region Favorites
@@ -35,6 +35,7 @@ interface TvChannelLocalStore {
     fun removeChannelFromFavorites(channelId: Long): Completable
     fun isChannelFavorite(channelId: Long): Single<Boolean>
     fun toggleChannelFromFavorites(channelId: Long): Completable
+    fun getFavoriteChannels(): Single<List<TvChannel>>
 
     // endregion
 }

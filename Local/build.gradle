@@ -63,6 +63,7 @@ dependencies {
 
     api project(':Domain')
     api project(':Data')
+    api project(':DataTv')
 
     implementation localDependencies.kotlin
     implementation localDependencies.rxKotlin
@@ -76,6 +77,9 @@ dependencies {
     implementation localDependencies.daggerSupport
     kapt localDependencies.daggerCompiler
     kapt localDependencies.daggerProcessor
+
+    implementation localDependencies.objectboxAndroid
+    implementation localDependencies.objectboxKotlin
 
     implementation localTestDependencies.junit
     implementation localTestDependencies.kotlinJUnit

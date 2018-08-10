@@ -145,6 +145,8 @@ ext {
             daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
             appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
             androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
+            objectboxAndroid:   "io.objectbox:objectbox-android:${objectboxVersion}",
+            objectboxKotlin:    "io.objectbox:objectbox-kotlin:${objectboxVersion}",
     ]
 
     localTestDependencies = [

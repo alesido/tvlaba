@@ -6,10 +6,17 @@ import org.alsi.android.domain.streaming.model.StreamingService
 import org.alsi.android.domain.streaming.model.StreamingServiceRegistry
 import org.alsi.android.moidom.Moidom
 import org.alsi.android.moidom.MoidomServiceBuilder
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 class StreamingServicesModule {
+
+    @Singleton @Provides @Named("${Moidom.TAG}.${StreamingService.TV}")
+    fun provideServiceIdMoidomTv(): Long = MOIDOM_TV_ID
+
+    @Singleton @Provides @Named("${Moidom.TAG}.${StreamingService.VOD}")
+    fun provideServiceIdMoidomVod(): Long = MOIDOM_VOD_ID
 
     @Singleton
     @Provides

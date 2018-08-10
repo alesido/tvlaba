@@ -1,14 +1,20 @@
 package org.alsi.android.moidom
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
-import org.alsi.android.domain.streaming.model.DeviceDataRepository
-import org.alsi.android.domain.streaming.model.DirectoryRepository
-import org.alsi.android.domain.streaming.model.SessionRepository
-import org.alsi.android.domain.streaming.model.SettingsRepository
+import io.reactivex.subjects.PublishSubject
+import org.alsi.android.datatv.repository.TvChannelDataRepository
+import org.alsi.android.domain.streaming.model.*
+import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
+import org.alsi.android.local.model.user.UserAccountEntity
+import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
 import org.alsi.android.moidom.repository.*
+import org.alsi.android.moidom.repository.tv.TvProgramRepositoryMoidom
+import org.alsi.android.moidom.repository.tv.TvVideoStreamRepositoryMoidom
 import org.alsi.android.moidom.store.DataServiceFactoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
+import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -22,8 +28,27 @@ class MoidomModule {
         return DataServiceFactoryMoidom.makeRestServiceMoidom()
     }
 
+    @Singleton @Provides fun provideUserAccountSubject(): PublishSubject<UserAccountEntity> = PublishSubject.create()
+
     @Singleton @Provides @Named(Moidom.TV_DIRECTORY_REPOSITORY)
-    fun provideTvDirectoryRepository(): DirectoryRepository = TvDirectoryRepositoryMoidom()
+    fun provideTvDirectoryRepository(
+
+            context: Context,
+            @Named("${Moidom.TAG}.${StreamingService.TV}") moidomTvServiceId: Long,
+            userAccountSubject: PublishSubject<UserAccountEntity>)
+
+            : DirectoryRepository {
+
+        //val tvChannelLocalStore = TvChannelLocalStoreDelegate(moidomTvServiceId)
+
+        return TvDirectoryRepository(
+                moidomTvServiceId,
+                TvChannelDataRepository(
+                        TvChannelRemoteStoreMoidom(),
+                        TvChannelLocalStoreDelegate(moidomTvServiceId)),
+                TvProgramRepositoryMoidom(),
+                TvVideoStreamRepositoryMoidom())
+    }
 
     @Singleton @Provides @Named(Moidom.VOD_DIRECTORY_REPOSITORY)
     fun provideVodDirectoryRepository(): DirectoryRepository = VodDirectoryRepositoryMoidom()

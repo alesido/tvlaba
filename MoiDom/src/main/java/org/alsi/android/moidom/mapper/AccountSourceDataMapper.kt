@@ -25,7 +25,7 @@ class AccountSourceDataMapper @Inject constructor(
     @Inject lateinit var registry: StreamingServiceRegistry
 
     override fun mapFromSource(source: LoginResponse): UserAccountEntity {
-        val entity = UserAccountEntity(0L, loginName, loginPassword, source.settings.language.value)
+        val entity = UserAccountEntity(0L, loginName, loginPassword, source.settings.language.value, source.settings.timeshift.value)
         source.services.entries.forEach {
             val tag = when(it.key) {
                 RestServiceMoidom.TAG_SERVICE_MOIDOM_TV -> "${Moidom.TAG}.${StreamingService.TV}"

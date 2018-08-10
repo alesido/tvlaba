@@ -9,5 +9,6 @@ class UserAccount(
         val loginPassword: String,
         val parentCode: String,
         val languageCode: String,
+        val timeShiftSettingHours: Int,
         val subscriptions: List<ServiceSubscription>
 )

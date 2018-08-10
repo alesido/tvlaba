@@ -24,10 +24,12 @@ import javax.inject.Inject
  * Created on 7/5/18.
  */
 open class TvCategoryBrowseViewModel @Inject constructor(
-        private val categoriesUseCase: TvCategoriesUseCase,
-        private val itemViewMapper: TvCategoryItemViewMapper) : ViewModel()
+        private val categoriesUseCase: TvCategoriesUseCase)
+    : ViewModel()
 {
     private val liveData: MutableLiveData<Resource<List<TvCategoryItemViewModel>>> = MutableLiveData()
+
+    private val itemViewMapper = TvCategoryItemViewMapper()
 
     init {
         fetchChannelCategories()

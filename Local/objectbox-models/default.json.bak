@@ -60,10 +60,63 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:8075741870348031678",
+      "lastPropertyId": "5:8267310697452508319",
+      "name": "TvChannelEntity",
+      "properties": [
+        {
+          "id": "1:379076813861415241",
+          "name": "id"
+        },
+        {
+          "id": "2:3483540935700970322",
+          "name": "logoUri"
+        },
+        {
+          "id": "3:1617835316810708729",
+          "name": "title"
+        },
+        {
+          "id": "4:2233177869299910248",
+          "indexId": "3:578982744183955796",
+          "name": "categoryId"
+        },
+        {
+          "id": "5:8267310697452508319",
+          "name": "number"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:358898967036465",
+      "lastPropertyId": "4:8076109827830152806",
+      "name": "TvChannelCategoryEntity",
+      "properties": [
+        {
+          "id": "1:7495814442517821611",
+          "name": "id"
+        },
+        {
+          "id": "2:2766783503794388819",
+          "name": "title"
+        },
+        {
+          "id": "3:8358453925702231839",
+          "name": "logoReference"
+        },
+        {
+          "id": "4:8076109827830152806",
+          "name": "logoIconType"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:4778480088802719991",
-  "lastIndexId": "2:1094242775961301239",
+  "lastEntityId": "4:358898967036465",
+  "lastIndexId": "3:578982744183955796",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

@@ -5,7 +5,7 @@ import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.local.model.user.StatusProperty
 import org.alsi.android.local.model.user.SubscriptionEntity
 
-class SubscriptionMapperMoidom: EntityMapper<SubscriptionEntity, ServiceSubscription> {
+class SubscriptionEntityMapper: EntityMapper<SubscriptionEntity, ServiceSubscription> {
 
     override fun mapFromEntity(entity: SubscriptionEntity): ServiceSubscription {
         return with(entity) {

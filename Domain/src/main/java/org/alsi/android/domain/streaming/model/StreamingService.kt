@@ -38,7 +38,12 @@ class StreamingServiceRegistry : ArrayList<StreamingService>() {
     }
 }
 
-interface DirectoryRepository
+/** Each directory repository is attached to a certain streaming service.
+ *
+ * Knowing the service ID was primarily acquired to identify separate local
+ * storage for service directory.
+ */
+open class DirectoryRepository(val streamingServiceId: Long)
 
 open class SettingsRepository
 {

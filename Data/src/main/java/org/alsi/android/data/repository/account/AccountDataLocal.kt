@@ -18,8 +18,8 @@ interface AccountDataLocal
     fun getSubscriptions(): Single<List<ServiceSubscription>>
 
     fun setParentCode(code: String): Completable
-    fun setLanguage(currentCode: String): Completable
+    fun setLanguage(code: String): Completable
     fun setTimeShiftSettingHours(hours: Int): Completable
 
-    fun setSubscriptions(subscription: List<ServiceSubscription>): Completable
+    fun setSubscriptions(subscriptions: List<ServiceSubscription>): Completable
 }
