@@ -4,44 +4,62 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.datatv.store.TvChannelRemoteStore
 import org.alsi.android.datatv.store.TvChannelRemoteStoreFeature
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvChannelCategory
+import org.alsi.android.domain.tv.model.guide.*
+import org.alsi.android.moidom.mapper.TvCategoriesSourceDataMapper
+import org.alsi.android.moidom.mapper.TvChannelsSourceDataMapper
+import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
+import org.joda.time.DateTimeZone
+import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
 
-/**
- * Created on 8/6/18.
- */
 class TvChannelRemoteStoreMoidom: TvChannelRemoteStore {
 
-    @Inject lateinit var service: RestServiceMoidom
+    @Inject lateinit var remoteService: RestServiceMoidom
+    @Inject lateinit var remoteSession: RemoteSessionRepositoryMoidom
+
+    private val timeZoneQueryParameter = DateTimeFormat.forPattern("ZZ")
+    .withZone(DateTimeZone.getDefault()).print(0).replace(":", "")
+
+    private val categoriesSourceMapper = TvCategoriesSourceDataMapper()
+    private val channelsSourceMapper = TvChannelsSourceDataMapper()
+
+    override fun getDirectory(): Single<TvChannelDirectory> {
+        return Single.just(TvChannelDirectorySink())
+        .flatMap { sink -> getCategories().map { categories -> sink.categories.addAll(categories); sink } }
+        .flatMap { sink -> getChannels().map { channels -> sink.channels.addAll(channels); sink} }
+        .map { sink -> TvChannelDirectory(sink.categories, sink.channels) }
+    }
 
     override fun getCategories(): Single<List<TvChannelCategory>> {
-//        service.getGroups()
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteSession.getSessionId()
+                .flatMap { sessionId -> remoteService.getGroups(sessionId) }
+                .map { response -> categoriesSourceMapper.mapFromSource(response) }
     }
 
     override fun getChannels(): Single<List<TvChannel>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return remoteSession.getSessionId()
+                .flatMap { sid -> remoteService.getAllChannels(sid, timeZoneQueryParameter) }
+                .map { response -> channelsSourceMapper.mapFromSource(response) }
     }
 
     override fun getChannels(channelIds: List<Long>): Single<List<TvChannel>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return getChannels().map { channels -> channels.filter { it.id in channelIds } }
     }
 
-    override fun addChannelToFavorites(channelId: Long): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    /** This service supports only local favorites storage. */
+    override fun addChannelToFavorites(channelId: Long): Completable = Completable.error(NotImplementedError())
 
-    override fun removeChannelFromFavorites(channelId: Long): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun toggleChannelToBeFavorite(channelId: Long): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    /** This service supports only local favorites storage. */
+    override fun removeChannelFromFavorites(channelId: Long): Completable = Completable.error(NotImplementedError())
 
-    override fun hasFeature(feature: TvChannelRemoteStoreFeature): Single<Boolean> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    /** This service supports only local favorites storage. */
+    override fun toggleChannelToBeFavorite(channelId: Long): Completable = Completable.error(NotImplementedError())
+
+    /** This service supports only local favorites storage. */
+    override fun hasFeature(feature: TvChannelRemoteStoreFeature): Single<Boolean>
+    = Single.just( when(feature) {
+        TvChannelRemoteStoreFeature.FAVORITE_CHANNEL -> false
+        else -> false })
 }

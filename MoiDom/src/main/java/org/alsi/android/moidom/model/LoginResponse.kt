@@ -29,11 +29,11 @@ data class LoginResponse(
     data class Settings(
             val timeshift: Timeshift,
             val timezone: Timezone,
-            val language: Language,
-            val stream_server: StreamServer,
+            val language: Language?,
+            val stream_server: StreamServer?,
             val http_caching: HttpCaching,
             val bitrate: Bitrate,
-            val device_model: DeviceModel,
+            val device_model: DeviceModel?,
             val rc_codes: List<RcCode>
     ) {
 

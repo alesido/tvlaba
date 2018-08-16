@@ -1,6 +1,7 @@
 package org.alsi.android.data.repository.account
 
-import io.reactivex.Completable
+import io.reactivex.Single
+import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.domain.user.repository.AccountDataService
 
 /**
@@ -9,25 +10,17 @@ import org.alsi.android.domain.user.repository.AccountDataService
  *  account data operations.
  */
 open class AccountDataGateway(
-        private val remote: AccountDataRemote,
-        private val local: AccountDataLocal): AccountDataService
-{
-    override fun login(loginName: String, loginPassword: String) = remote.login(loginName, loginPassword)
+        
+        open val remote: AccountDataRemote,
+        open val local: AccountDataLocal)
 
-    override fun changeParentCode(currentCode: String, newCode: String) : Completable
-            = remote.changeParentCode(currentCode, newCode).andThen { local.setParentCode(currentCode) }
+    : AccountDataService {
 
-    override fun setLanguage(languageCode: String) : Completable
-            = remote.setLanguage(languageCode).andThen { local.setLanguage(languageCode) }
-
-    override fun setTimeShiftSettingHours(timeShiftHours: Int): Completable
-            = remote.setTimeShiftSettingHours(timeShiftHours).andThen { local.setTimeShiftSettingHours(timeShiftHours) }
+    override fun login(loginName: String, loginPassword: String): Single<UserAccount>
+            = remote.login(loginName, loginPassword).map { local.addAttachAccount(it); it }
 
     override fun getLoginName() = local.getLoginName()
     override fun getPassword() = local.getPassword()
 
-    override fun getParentCode() = local.getParentCode()
-    override fun getLanguage() = local.getLanguage()
-    override fun getTimeShiftSettingHours() = local.getTimeShiftSettingHours()
     override fun getSubscriptions() = local.getSubscriptions()
 }

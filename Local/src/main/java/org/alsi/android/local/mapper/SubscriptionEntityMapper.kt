@@ -9,14 +9,13 @@ class SubscriptionEntityMapper: EntityMapper<SubscriptionEntity, ServiceSubscrip
 
     override fun mapFromEntity(entity: SubscriptionEntity): ServiceSubscription {
         return with(entity) {
-            ServiceSubscription(id, serviceId, status.reference, expirationDate)
+            ServiceSubscription(serviceId, status.reference, expirationDate)
         }
     }
 
     override fun mapToEntity(domain: ServiceSubscription): SubscriptionEntity {
         return with (domain) {
-            SubscriptionEntity(
-                    id, serviceId,
+            SubscriptionEntity(0L, serviceId,
                     StatusProperty.valueByReference[status]?: StatusProperty.UNKNOWN,
                     expirationDate)
         }

@@ -4,11 +4,12 @@ import android.os.Build
 import android.text.TextUtils
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.subjects.PublishSubject
 import org.alsi.android.data.repository.account.AccountDataRemote
 import org.alsi.android.domain.user.model.UserAccount
-import org.alsi.android.local.mapper.AccountEntityMapper
 import org.alsi.android.moidom.BuildConfig
-import org.alsi.android.moidom.mapper.LoginResponseMapper
+import org.alsi.android.moidom.mapper.AccountSourceDataMapper
+import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.store.RestServiceMoidom
 import java.net.NetworkInterface
 import javax.inject.Inject
@@ -16,12 +17,11 @@ import javax.inject.Inject
 /**
  * Created on 7/26/18.
  */
-class AccountServiceRemoteMoidom @Inject constructor(
-        private val remoteService: RestServiceMoidom,
-        private val loginResponseMapper: LoginResponseMapper)
-    : AccountDataRemote {
+class AccountServiceRemoteMoidom: AccountDataRemote {
 
-    private val accountMapper = AccountEntityMapper()
+    @Inject internal lateinit var remoteService: RestServiceMoidom
+
+    @Inject internal lateinit var loginSubject: PublishSubject<LoginEvent>
 
     override fun login(loginName: String, loginPassword: String): Single<UserAccount> {
         return remoteService.login(
@@ -35,8 +35,11 @@ class AccountServiceRemoteMoidom @Inject constructor(
                 macAddress = getMacAddressToIdentifyDevice("UNKNOWN"),
                 deviceModel = "model",// getDeviceModelName(),
                 manufacturer = Build.MANUFACTURER)
-                .map { data -> loginResponseMapper.importLoginResponseData(data, loginName, loginPassword) }
-                .map { accountEntity -> accountMapper.mapFromEntity(accountEntity) }
+                .map { loginResponse ->
+                    val account = AccountSourceDataMapper(loginName, loginPassword).mapFromSource(loginResponse)
+                    loginSubject.onNext(LoginEvent(account, loginResponse))
+                    account
+                }
     }
 
     override fun changeParentCode(currentCode: String, newCode: String): Completable {

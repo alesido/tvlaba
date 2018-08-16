@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
+import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 
 /** Contract for remote data store of a TV Streaming Service.
  *
@@ -15,10 +16,13 @@ import org.alsi.android.domain.tv.model.guide.TvChannelCategory
  * - remote data store may give a logo icon reference with each category entity; all the
  * references should be of the same type;
  *
- *
  */
 interface TvChannelRemoteStore
 {
+    /** Load data both categories and channels
+     */
+    fun getDirectory(): Single<TvChannelDirectory>
+
     /** Load data of all TV channel categories from a remote data store of a TV video streaming service
      */
     fun getCategories(): Single<List<TvChannelCategory>>

@@ -10,7 +10,7 @@ import java.net.URI
 @Entity
 data class TvChannelEntity (
 
-        @Id var id: Long,
+        @Id(assignable = true) var id: Long,
 
         @Convert(converter = UriConverter::class, dbType = String::class)
         var logoUri: URI,
@@ -21,4 +21,6 @@ data class TvChannelEntity (
 
 ) {
     lateinit var category: ToOne<TvChannelCategoryEntity>
+
+    lateinit var live: ToOne<TvProgramIssueEntity>
 }

@@ -58,9 +58,7 @@ interface RestServiceMoidom {
     @GET("channel_list")
     fun getAllChannels(
             @Query("PATKER_SSID") sid: String,
-            @Query("tz") timeZone: String,
-            @Query("show") selector: String,
-            @Query("protect_code") accessCode: String
+            @Query("tz") timeZone: String
     ): Single<ChannelListResponse>
 
     /**
@@ -152,7 +150,7 @@ interface RestServiceMoidom {
     @GET("vod_info")
     fun getVodInfo(
             @Query("PATKER_SSID") sid: String,
-            @Query("id") vodItemId: String
+            @Query("programId") vodItemId: String
     ): Single<VodInfoResponse>
 
     /**
@@ -234,7 +232,7 @@ interface RestServiceMoidom {
         val QUERY_PARAM_SETTING_NAME_HTTP_CACHING = "http_caching"
         val QUERY_PARAM_SETTING_NAME_STREAM_SERVER = "stream_server"
         val QUERY_PARAM_SETTING_DEVICE_NAME_MODEL = "device_model"
-        val QUERY_PARAM_SETTING_LANGUAGE = "language"
+        val QUERY_PARAM_SETTING_NAME_LANGUAGE = "language"
         val QUERY_PARAM_SETTING_NAME_TIMESHIFT = "timeshift"
         val QUERY_PARAM_SETTING_NAME_TIMEZONE = "timezone"
         val QUERY_PARAM_SETTING_NAME_BITRATE = "bitrate"

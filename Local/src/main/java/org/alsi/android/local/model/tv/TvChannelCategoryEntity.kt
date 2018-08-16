@@ -11,7 +11,7 @@ import org.alsi.android.domain.implementation.model.IconType
 @Entity
 data class TvChannelCategoryEntity(
 
-        @Id var id: Long,
+        @Id(assignable = true) var id: Long,
         var title: String,
 
         @Convert(converter = IconTypeConverter::class, dbType = Long::class)

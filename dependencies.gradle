@@ -121,7 +121,9 @@ ext {
             okHttpLogger:       "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
             retrofit:           "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitGson:  "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
-            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+            retrofitAdapter:    "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
+            objectboxAndroid:   "io.objectbox:objectbox-android:${objectboxVersion}",
+            objectboxKotlin:    "io.objectbox:objectbox-kotlin:${objectboxVersion}",
     ]
 
     remoteTestDependencies = [

@@ -1,6 +1,6 @@
 package org.alsi.android.domain.tv.repository.guide
 
-import org.alsi.android.domain.streaming.model.DirectoryRepository
+import org.alsi.android.domain.streaming.repository.DirectoryRepository
 
 /**
  * Created on 7/18/18.

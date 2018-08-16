@@ -1,8 +1,8 @@
 package org.alsi.android.domain.context.model
 
-import org.alsi.android.domain.streaming.model.StreamingService
-import org.alsi.android.domain.streaming.model.StreamingServiceKind
-import org.alsi.android.domain.streaming.model.StreamingServiceRegistry
+import org.alsi.android.domain.streaming.model.service.StreamingService
+import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
+import org.alsi.android.domain.streaming.model.service.StreamingServiceRegistry
 import javax.inject.Inject
 
 /** Presentation manager maintains list of available presentation contexts and provides view models

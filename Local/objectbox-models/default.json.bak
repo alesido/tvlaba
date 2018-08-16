@@ -5,13 +5,9 @@
   "entities": [
     {
       "id": "1:2312380529869918852",
-      "lastPropertyId": "5:3296976293602802684",
+      "lastPropertyId": "6:2616707537095600517",
       "name": "UserAccountEntity",
       "properties": [
-        {
-          "id": "1:6905912384517656670",
-          "name": "parentCode"
-        },
         {
           "id": "2:8935402635139068629",
           "name": "id"
@@ -24,10 +20,6 @@
         {
           "id": "4:9215816898936996617",
           "name": "loginPassword"
-        },
-        {
-          "id": "5:3296976293602802684",
-          "name": "languageCode"
         }
       ],
       "relations": []
@@ -63,7 +55,7 @@
     },
     {
       "id": "3:8075741870348031678",
-      "lastPropertyId": "5:8267310697452508319",
+      "lastPropertyId": "6:4062720676619842432",
       "name": "TvChannelEntity",
       "properties": [
         {
@@ -86,6 +78,11 @@
         {
           "id": "5:8267310697452508319",
           "name": "number"
+        },
+        {
+          "id": "6:4062720676619842432",
+          "indexId": "10:2616022097780059776",
+          "name": "liveId"
         }
       ],
       "relations": []
@@ -113,17 +110,208 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:496918075873641003",
+      "lastPropertyId": "2:1213164237547574928",
+      "name": "TvFavoriteChannelEntity",
+      "properties": [
+        {
+          "id": "1:687191689473975124",
+          "name": "tvChannelId"
+        },
+        {
+          "id": "2:1213164237547574928",
+          "name": "userAccountId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:8776651702300036457",
+      "lastPropertyId": "2:7845254038162417177",
+      "name": "DeviceModelOptionEntity",
+      "properties": [
+        {
+          "id": "1:5207556220975310350",
+          "name": "id"
+        },
+        {
+          "id": "2:7845254038162417177",
+          "name": "name"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:3767975599030125300",
+      "lastPropertyId": "4:1655810094664136975",
+      "name": "RemoteControlKeyEntity",
+      "properties": [
+        {
+          "id": "1:176463583769594142",
+          "name": "id"
+        },
+        {
+          "id": "2:3063911191913087697",
+          "name": "function"
+        },
+        {
+          "id": "3:6623669695489787601",
+          "name": "keyCode"
+        },
+        {
+          "id": "4:1655810094664136975",
+          "indexId": "4:2870867724284677301",
+          "name": "deviceId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:5135359382625468189",
+      "lastPropertyId": "7:7446864326837710061",
+      "name": "ServiceSettingsEntity",
+      "properties": [
+        {
+          "id": "1:8838736963489183946",
+          "name": "id"
+        },
+        {
+          "id": "2:5537856500777983444",
+          "name": "scopeTypeOrdinal"
+        },
+        {
+          "id": "3:6628255334689868637",
+          "name": "scopeId"
+        },
+        {
+          "id": "4:5388988412134702651",
+          "name": "accountId"
+        },
+        {
+          "id": "5:2109877203146723897",
+          "indexId": "5:381313535510954795",
+          "name": "serverId"
+        },
+        {
+          "id": "6:4323132300512392326",
+          "indexId": "6:416891327484079120",
+          "name": "languageId"
+        },
+        {
+          "id": "7:7446864326837710061",
+          "indexId": "7:8476745212185634466",
+          "name": "deviceId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:5113139528922807573",
+      "lastPropertyId": "3:6744282245704094407",
+      "name": "LanguageOptionEntity",
+      "properties": [
+        {
+          "id": "1:429004855453889308",
+          "name": "id"
+        },
+        {
+          "id": "2:8151271620258672731",
+          "indexId": "8:791570167131944043",
+          "name": "code"
+        },
+        {
+          "id": "3:6744282245704094407",
+          "indexId": "9:3876775973009155870",
+          "name": "name"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:4641782745047131909",
+      "lastPropertyId": "4:4861352893714965726",
+      "name": "ServerOptionEntity",
+      "properties": [
+        {
+          "id": "1:1530171851710155980",
+          "name": "id"
+        },
+        {
+          "id": "2:1651837254093406598",
+          "name": "reference"
+        },
+        {
+          "id": "3:3123752031583329388",
+          "name": "title"
+        },
+        {
+          "id": "4:4861352893714965726",
+          "name": "description"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "11:4806836590412894734",
+      "lastPropertyId": "9:6260830418622603633",
+      "name": "TvProgramIssueEntity",
+      "properties": [
+        {
+          "id": "1:9098303551122431368",
+          "name": "id"
+        },
+        {
+          "id": "2:7822730864353431222",
+          "indexId": "11:6760094197675018877",
+          "name": "channelId"
+        },
+        {
+          "id": "3:7333532046463637694",
+          "name": "programId"
+        },
+        {
+          "id": "4:3806057511361152402",
+          "name": "startMillis"
+        },
+        {
+          "id": "5:749215639226195671",
+          "name": "endMillis"
+        },
+        {
+          "id": "6:819356239654352286",
+          "name": "title"
+        },
+        {
+          "id": "7:1486320700742547207",
+          "name": "isTitleAvailable"
+        },
+        {
+          "id": "8:2535526855586482692",
+          "name": "description"
+        },
+        {
+          "id": "9:6260830418622603633",
+          "name": "videoStreamUri"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:358898967036465",
-  "lastIndexId": "3:578982744183955796",
+  "lastEntityId": "11:4806836590412894734",
+  "lastIndexId": "11:6760094197675018877",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    6905912384517656670,
+    3296976293602802684,
+    2616707537095600517
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

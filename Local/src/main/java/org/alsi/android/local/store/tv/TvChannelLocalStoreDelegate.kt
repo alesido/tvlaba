@@ -6,12 +6,13 @@ import io.objectbox.kotlin.boxFor
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.alsi.android.MyObjectBox
 import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
+import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.local.mapper.tv.TvChannelCategoryEntityMapper
 import org.alsi.android.local.mapper.tv.TvChannelEntityMapper
-import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.local.model.tv.TvChannelCategoryEntity
 import org.alsi.android.local.model.tv.TvChannelEntity
 import org.alsi.android.local.model.tv.TvChannelEntity_
@@ -61,14 +62,28 @@ class TvChannelLocalStoreDelegate(serviceId: Long): TvChannelLocalStore {
         favoriteChannelBox = boxStore.boxFor(TvFavoriteChannelEntity::class.java)
     }
 
+    override fun putDirectory(directory: TvChannelDirectory): Completable {
+        return Completable.fromRunnable {
+            categoryBox.put(directory.categories.map { categoryMapper.mapToEntity(it) })
+            channelBox.put(directory.channels.map { channelMapper.mapToEntity(it) })
+        }
+    }
+
+    override fun getDirectory(): Single<TvChannelDirectory> {
+        return Single.create { TvChannelDirectory(
+                categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) },
+                channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) })
+        }
+    }
+
     override fun putCategories(categories: List<TvChannelCategory>): Completable {
         return Completable.fromRunnable {
             categoryBox.put(categories.map { categoryMapper.mapToEntity(it) })
         }
     }
 
-    override fun getCategories(): Observable<List<TvChannelCategory>> {
-        return Observable.create { categoryBox.all }
+    override fun getCategories(): Single<List<TvChannelCategory>> {
+        return Single.create { categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) } }
     }
 
     override fun findCategoryById(categoryId: Long): Single<TvChannelCategory> {
@@ -79,20 +94,29 @@ class TvChannelLocalStoreDelegate(serviceId: Long): TvChannelLocalStore {
         return Completable.fromRunnable { channelBox.put(channels.map { channelMapper.mapToEntity(it) }) }
     }
 
-    override fun getChannels(): Observable<List<TvChannel>> {
-        return Observable.create { channelBox.all }
+    override fun getChannels(): Single<List<TvChannel>> {
+        return Single.create { channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) } }
     }
 
-    override fun getChannels(categoryId: Long): Observable<List<TvChannel>> {
-        return Observable.create { categoryBox.get(categoryId).channels }
-    }
-
-    override fun updateChannels(channels: List<TvChannel>): Completable {
-        return Completable.fromRunnable { channelBox.put(channels.map { channelMapper.mapToEntity(it) }) }
+    override fun getChannels(categoryId: Long): Single<List<TvChannel>> {
+        return Single.create { categoryBox.get(categoryId).channels }
     }
 
     override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> {
         return Single.create { channelBox.query().equal(TvChannelEntity_.number, channelNumber.toLong()).build().findUnique() }
+    }
+
+    /** Find earliest update time to keep the list part actual. I.e., to have all live program
+     * times and titles correct (actual).
+     */
+    override fun getChannelWindowExpirationMillis(channelIds: List<Long>): Long? {
+        if (channelIds.isEmpty()) return null
+        var earliest: Long = channelBox.get(channelIds[0]).live.target.endMillis?: return null
+        channelBox.get(channelIds).forEach {
+            val thisEndMillis = it.live.target.endMillis?: return@forEach
+            if (thisEndMillis < earliest) earliest = thisEndMillis
+        }
+        return earliest
     }
 
     override fun addChannelToFavorites(channelId: Long): Completable {

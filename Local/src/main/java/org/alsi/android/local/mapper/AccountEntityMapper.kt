@@ -15,13 +15,13 @@ class AccountEntityMapper: EntityMapper<UserAccountEntity, UserAccount> {
             subscriptions.add(subscriptionMapper.mapFromEntity(subscriptionEntity))
         }
         return with(entity) {
-            UserAccount(id, loginName, loginPassword, parentCode, languageCode, timeShiftSettingHours, subscriptions)
+            UserAccount(loginName, loginPassword, subscriptions)
         }
     }
 
     override fun mapToEntity(domain: UserAccount): UserAccountEntity {
         val entity = with(domain) {
-            UserAccountEntity(id, loginName, loginPassword, languageCode, timeShiftSettingHours)
+            UserAccountEntity(0L, loginName, loginPassword)
         }
         for (subscription in domain.subscriptions) {
             entity.subscriptions.add(subscriptionMapper.mapToEntity(subscription))

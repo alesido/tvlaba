@@ -6,7 +6,7 @@ import io.objectbox.annotation.Id
 @Entity
 data class TvFavoriteChannelEntity (
 
-        @Id var tvChannelId: Long,
+        @Id(assignable = true) var tvChannelId: Long,
 
         var userAccountId: Long
 )

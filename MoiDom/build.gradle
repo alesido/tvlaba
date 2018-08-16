@@ -88,6 +88,9 @@ dependencies {
     implementation remoteDependencies.retrofitGson
     implementation remoteDependencies.retrofitAdapter
 
+    implementation remoteDependencies.objectboxAndroid
+    implementation remoteDependencies.objectboxKotlin
+
     implementation remoteTestDependencies.junit
     implementation remoteTestDependencies.kotlinJUnit
     implementation remoteTestDependencies.mockito

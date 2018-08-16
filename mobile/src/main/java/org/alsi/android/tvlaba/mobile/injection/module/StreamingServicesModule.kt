@@ -2,30 +2,36 @@ package org.alsi.android.tvlaba.mobile.injection.module
 
 import dagger.Module
 import dagger.Provides
-import org.alsi.android.domain.streaming.model.StreamingService
-import org.alsi.android.domain.streaming.model.StreamingServiceRegistry
+import org.alsi.android.domain.streaming.model.service.StreamingService
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceRegistry
 import org.alsi.android.moidom.Moidom
-import org.alsi.android.moidom.MoidomServiceBuilder
+import org.alsi.android.moidom.repository.tv.TvServiceMoidom
+import org.alsi.android.moidom.repository.vod.VodServiceMoidom
+import org.alsi.android.tvlaba.mobile.model.StreamingServiceDefaultsMobile
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 class StreamingServicesModule {
 
+    @Singleton @Provides @Named(Moidom.TAG)
+    fun provideProviderIdMoidom(): Long = MOIDOM_ID
+
     @Singleton @Provides @Named("${Moidom.TAG}.${StreamingService.TV}")
     fun provideServiceIdMoidomTv(): Long = MOIDOM_TV_ID
+
 
     @Singleton @Provides @Named("${Moidom.TAG}.${StreamingService.VOD}")
     fun provideServiceIdMoidomVod(): Long = MOIDOM_VOD_ID
 
+    @Singleton @Provides
+    fun provideStreamingServiceDefaults(): StreamingServiceDefaults = StreamingServiceDefaultsMobile()
+
     @Singleton
     @Provides
-    fun provideServiceRegistry(serviceBuilder: MoidomServiceBuilder) = listOf(
-            serviceBuilder.buildTv(MOIDOM_ID, MOIDOM_TV_ID,
-                    "${Moidom.TAG}.${StreamingService.TV}"),
-            serviceBuilder.buildVod(MOIDOM_ID, MOIDOM_VOD_ID,
-                    "${Moidom.TAG}.${StreamingService.VOD}")
-        ) as StreamingServiceRegistry
+    fun provideServiceRegistry(tvServiceMoidom: TvServiceMoidom, vodServiceMoidom: VodServiceMoidom)
+            = listOf(tvServiceMoidom, vodServiceMoidom) as StreamingServiceRegistry
 
     companion object {
         const val MOIDOM_ID = 1L

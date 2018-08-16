@@ -1,13 +1,14 @@
 package org.alsi.android.datatv.repository
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.datatv.store.TvChannelRemoteStore
 import org.alsi.android.datatv.store.TvChannelRemoteStoreFeature
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
+import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
 
 /** Repository for TV channels directory comprised of categories and channels accessed remotely
@@ -19,30 +20,30 @@ import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
  *  implementation level. Here it is hard to figure out the general case. Thus, - no preload
  *  methods, etc.
  */
-open class TvChannelDataRepository(
-        private val remote: TvChannelRemoteStore,
-        private val local: TvChannelLocalStore)
-    : TvChannelRepository
-{
-    // region Categories
+abstract class TvChannelDataRepository(
 
-    override fun getCategories(): Observable<List<TvChannelCategory>> = local.getCategories()
+        val remote: TvChannelRemoteStore,
+        val local: TvChannelLocalStore)
+
+    : TvChannelRepository {
+
+    private val visibilitySubject: PublishSubject<TvChannelListWindow> = PublishSubject.create()
+
+
+    init {
+        visibilitySubject.subscribe { window -> scheduleChannelsUpdate(window) }
+    }
+
+    // region Categories
 
     override fun findCategoryById(categoryId: Long): Single<TvChannelCategory> = local.findCategoryById(categoryId)
 
     // endregion
     // region Channels
 
-    override fun getChannels(categoryId: Long): Observable<List<TvChannel>> = local.getChannels(categoryId)
-
     override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> = local.findChannelByNumber(channelNumber)
 
-    /** ... not clear how to notify view model on the update completion, via remembered channels list observable?
-     * depends on whether domain logic will manage updates
-     */
-    override fun getChannelsUpdate(channelIds: List<Long>): Completable {
-        return remote.getChannels(channelIds).flatMapCompletable { local.updateChannels(it) }
-    }
+    override fun getChannelsVisibilitySubject() = visibilitySubject
 
     // endregion
     // region Favorites

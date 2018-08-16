@@ -11,7 +11,8 @@ import org.joda.time.LocalDate
 
 @Entity data class SubscriptionEntity (
 
-        @Id(assignable = true) var id: Long,
+        @Id var id: Long,
+
         var serviceId : Long,
 
         @Convert(converter = StatusPropertyConverter::class, dbType = Long::class)

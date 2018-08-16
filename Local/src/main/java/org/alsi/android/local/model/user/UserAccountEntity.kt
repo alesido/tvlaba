@@ -16,13 +16,8 @@ data class UserAccountEntity (
 
         @Unique
         var loginName: String,
-        var loginPassword: String,
 
-        var languageCode: String,
-
-        var timeShiftSettingHours: Int
-) {
-    lateinit var parentCode: String
+        var loginPassword: String) {
 
     @Backlink
     lateinit var subscriptions: ToMany<SubscriptionEntity>

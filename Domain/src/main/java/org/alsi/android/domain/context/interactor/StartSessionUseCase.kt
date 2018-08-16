@@ -13,13 +13,14 @@ open class StartSessionUseCase @Inject constructor(
 {
     override fun buildUseCaseCompletable(params: Params?): Completable {
         params?: throw IllegalArgumentException("StartSessionUseCase: Params can't be null!")
-        val service = presentationManager.registry.serviceById[params.serviceId]?:
+//        val service = presentationManager.registry.serviceById[params.serviceId]?:
         throw IllegalArgumentException("StartSessionUseCase: Requested service is not found")
-        return service.account.login(params.loginName, params.loginPassword)
-                .flatMapCompletable {
-                    presentationManager.selectContext(service.id)
-                    Completable.complete()
-                }
+        return Completable.complete()
+//        return service.account.login(params.loginName, params.loginPassword)
+//                .flatMapCompletable {
+//                    presentationManager.selectContext(service.programId)
+//                    Completable.complete()
+//                }
     }
 
     class Params constructor (val loginName: String, val loginPassword: String, val serviceId: Long)
