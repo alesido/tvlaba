@@ -22,7 +22,7 @@ class RemoteSessionRepositoryMoidom {
     private val box: Box<RemoteSessionEntityMoidom> by lazy { store.boxFor(RemoteSessionEntityMoidom::class.java) }
 
     private val loginName: String? by lazy { box.query {
-        order(RemoteSessionEntityMoidom_.startTimestamp, OrderFlags.DESCENDING)}.findFirst()?.loginName }
+        order(RemoteSessionEntityMoidom_.loginTimestampMillis, OrderFlags.DESCENDING)}.findFirst()?.loginName }
 
     init {
         loginSubject.subscribe {
@@ -42,7 +42,7 @@ class RemoteSessionRepositoryMoidom {
 
     fun getStartTimeStamp() = box.query {
         equal(RemoteSessionEntityMoidom_.loginName, loginName?: return null)
-    }.findFirst()?.startTimestamp
+    }.findFirst()?.loginTimestampMillis
 
     companion object {
         const val LOGIN_NAME_GUEST = "guest"

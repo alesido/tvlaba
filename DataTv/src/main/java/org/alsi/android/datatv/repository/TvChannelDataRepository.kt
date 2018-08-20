@@ -20,15 +20,12 @@ import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
  *  implementation level. Here it is hard to figure out the general case. Thus, - no preload
  *  methods, etc.
  */
-abstract class TvChannelDataRepository(
+abstract class TvChannelDataRepository: TvChannelRepository {
 
-        val remote: TvChannelRemoteStore,
-        val local: TvChannelLocalStore)
-
-    : TvChannelRepository {
+    lateinit var remote: TvChannelRemoteStore
+    lateinit var local: TvChannelLocalStore
 
     private val visibilitySubject: PublishSubject<TvChannelListWindow> = PublishSubject.create()
-
 
     init {
         visibilitySubject.subscribe { window -> scheduleChannelsUpdate(window) }
@@ -36,7 +33,7 @@ abstract class TvChannelDataRepository(
 
     // region Categories
 
-    override fun findCategoryById(categoryId: Long): Single<TvChannelCategory> = local.findCategoryById(categoryId)
+    override fun findCategoryById(categoryId: Long): Single<TvChannelCategory?> = local.findCategoryById(categoryId)
 
     // endregion
     // region Channels

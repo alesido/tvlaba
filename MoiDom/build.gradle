@@ -91,9 +91,9 @@ dependencies {
     implementation remoteDependencies.objectboxAndroid
     implementation remoteDependencies.objectboxKotlin
 
-    implementation remoteTestDependencies.junit
-    implementation remoteTestDependencies.kotlinJUnit
-    implementation remoteTestDependencies.mockito
-    implementation remoteTestDependencies.assertj
-    implementation remoteTestDependencies.mockWebServer
+    testImplementation remoteTestDependencies.junit
+    testImplementation remoteTestDependencies.kotlinJUnit
+    testImplementation remoteTestDependencies.mockito
+    testImplementation remoteTestDependencies.assertj
+    testImplementation remoteTestDependencies.mockWebServer
 }

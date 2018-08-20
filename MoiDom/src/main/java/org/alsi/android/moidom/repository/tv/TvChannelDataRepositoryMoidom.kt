@@ -2,25 +2,33 @@ package org.alsi.android.moidom.repository.tv
 
 import android.text.format.DateUtils
 import android.util.Log
+import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
+import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
+import org.alsi.android.moidom.Moidom
+import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 
-class TvChannelDataRepositoryMoidom (
+class TvChannelDataRepositoryMoidom: TvChannelDataRepository() {
 
-        moidomTvServiceId: Long)
+    @field:[Inject Named("${Moidom.TAG}.${StreamingService.TV}")]
+    internal lateinit var moidomServiceBoxStore: BoxStore
 
-    : TvChannelDataRepository( TvChannelRemoteStoreMoidom(),
-        TvChannelLocalStoreDelegate(moidomTvServiceId)) {
+    @Inject
+    internal lateinit var loginSubject: PublishSubject<LoginEvent>
 
     private val directorySubject: BehaviorSubject<TvChannelDirectory> = BehaviorSubject.create()
     private val categoriesSubject: BehaviorSubject<List<TvChannelCategory>> = BehaviorSubject.create()
@@ -32,6 +40,13 @@ class TvChannelDataRepositoryMoidom (
      */
     private var lastCategoriesUpdateMillis = 0L
     private var lastChannelsUpdateMillis = 0L
+
+    init {
+        remote = TvChannelRemoteStoreMoidom()
+        loginSubject.subscribe {
+            local = TvChannelLocalStoreDelegate(moidomServiceBoxStore, it.account.loginName)
+        }
+    }
 
     // region API Override
 
@@ -107,7 +122,7 @@ class TvChannelDataRepositoryMoidom (
     private fun channelProgramDataExpired(channels: List<TvChannel>): Boolean {
         val nowMillis = System.currentTimeMillis()
         for (channel in channels) {
-            channel.live?.time?.let { if (it.endUnixTimeMillis < nowMillis) return true }
+            channel.live.time?.let { if (it.endUnixTimeMillis < nowMillis) return true }
         }
         return false
     }

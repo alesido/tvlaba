@@ -6,14 +6,10 @@ class TvChannel (
 
         val id: Long,
         val categoryId: Long,
-        val logoUri: URI,
         val number: Int,
-        val title: String) {
+        var title: String?,
+        var logoUri: URI?,
+        var live: TvProgramLive,
+        var features: TvChannelFeatures
 
-    var live: TvProgramIssue? = null
-
-    var hasArchive: Boolean = true
-    var hasSchedule: Boolean = true
-    var isPasswordProtected: Boolean = false
-    var hasMultipleLanguageAudioTracks: Boolean = false
-}
+)

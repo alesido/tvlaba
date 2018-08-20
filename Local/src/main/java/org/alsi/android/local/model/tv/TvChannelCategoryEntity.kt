@@ -1,27 +1,22 @@
 package org.alsi.android.local.model.tv
 
-import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.converter.PropertyConverter
-import io.objectbox.relation.ToMany
 import org.alsi.android.domain.implementation.model.IconType
 
 @Entity
 data class TvChannelCategoryEntity(
 
-        @Id(assignable = true) var id: Long,
-        var title: String,
+        @Id(assignable = true) var id: Long = 0L,
+        var title: String? = null,
 
         @Convert(converter = IconTypeConverter::class, dbType = Long::class)
-        var logoIconType: IconTypeProperty,
+        var logoIconType: IconTypeProperty? = null,
 
-        var logoReference: String) {
-
-    @Backlink
-    lateinit var channels: ToMany<TvChannelEntity>
-}
+        var logoReference: String? = null
+)
 
 enum class IconTypeProperty(val id: Long, val value: IconType) {
     UNKNOWN(0L, IconType.UNKNOWN),

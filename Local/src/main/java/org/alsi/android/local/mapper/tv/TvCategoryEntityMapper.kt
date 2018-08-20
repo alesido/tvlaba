@@ -1,16 +1,19 @@
 package org.alsi.android.local.mapper.tv
 
 import org.alsi.android.data.framework.mapper.EntityMapper
+import org.alsi.android.domain.implementation.model.IconType
 import org.alsi.android.domain.implementation.model.TypedIconReference
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.local.model.tv.IconTypeProperty
 import org.alsi.android.local.model.tv.TvChannelCategoryEntity
 
-class TvChannelCategoryEntityMapper: EntityMapper<TvChannelCategoryEntity, TvChannelCategory> {
+class TvCategoryEntityMapper: EntityMapper<TvChannelCategoryEntity, TvChannelCategory> {
 
     override fun mapFromEntity(entity: TvChannelCategoryEntity): TvChannelCategory {
         return with(entity) {
-            TvChannelCategory(id, title, logo = TypedIconReference(logoIconType.value, logoReference))
+            TvChannelCategory(id, title?:(id + 1).toString(),
+                    logo = TypedIconReference(logoIconType?.value?:IconType.UNKNOWN,
+                            logoReference?:""))
         }
     }
 

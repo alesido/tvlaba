@@ -21,7 +21,7 @@ interface TvChannelLocalStore {
      */
     fun putCategories(categories: List<TvChannelCategory>): Completable
     fun getCategories(): Single<List<TvChannelCategory>>
-    fun findCategoryById(categoryId: Long): Single<TvChannelCategory>
+    fun findCategoryById(categoryId: Long): Single<TvChannelCategory?>
 
     // endregion
     // region Channels

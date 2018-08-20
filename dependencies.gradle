@@ -13,8 +13,8 @@ ext {
     constraintLayoutVersion = '1.1.0'
 
     //Kotlin
-    kotlinVersion = '1.2.51'
-    kotlinReflectVersion = '1.2.51'
+    kotlinVersion = '1.2.60'
+    kotlinReflectVersion = '1.2.60'
 
     //Annotations
     javaxAnnotationVersion = '1.0'
@@ -156,7 +156,9 @@ ext {
             kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
             assertj:            "org.assertj:assertj-core:${assertJVersion}",
             mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
-            mockWebServer:      "com.squareup.okhttp3:mockwebserver:${okHttpMockWebServerVersion}"
+            objectboxTestLinux: "io.objectbox:objectbox-linux:${objectboxVersion}",
+            objectboxTestMacOS: "io.objectbox:objectbox-macos:${objectboxVersion}",
+            objectboxTestWindows: "io.objectbox:objectbox-windows:${objectboxVersion}"
     ]
 
     presentationDependencies = [

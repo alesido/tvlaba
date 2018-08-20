@@ -5,10 +5,10 @@ import dagger.Module
 import dagger.Provides
 import io.objectbox.BoxStore
 import io.reactivex.subjects.PublishSubject
-import org.alsi.android.MyObjectBox
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.model.LoginEvent
+import org.alsi.android.moidom.model.tv.MyObjectBox
 import org.alsi.android.moidom.repository.AccountDataServiceMoidom
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.repository.ServiceProviderMoidom
@@ -53,6 +53,13 @@ class MoidomModule {
     @Singleton @Provides fun provideTvServiceMoidom(
             @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long)
             = TvServiceMoidom(serviceId)
+
+    @Named("${Moidom.TAG}.${StreamingService.TV}")
+    @Singleton @Provides fun provideTvServiceLocalStoreMoidom(
+            context: Context,
+            @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long): BoxStore
+            = MyObjectBox.builder().name("${Moidom.TAG}.${StreamingService.TV}.$serviceId")
+            .androidContext(context).build()
 
     @Singleton @Provides fun provideVodServiceMoidom(
             @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long)

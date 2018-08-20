@@ -81,9 +81,12 @@ dependencies {
     implementation localDependencies.objectboxAndroid
     implementation localDependencies.objectboxKotlin
 
-    implementation localTestDependencies.junit
-    implementation localTestDependencies.kotlinJUnit
-    implementation localTestDependencies.mockito
-    implementation localTestDependencies.assertj
-    implementation localTestDependencies.mockWebServer
+    testImplementation localTestDependencies.junit
+    testImplementation localTestDependencies.kotlinJUnit
+    testImplementation localTestDependencies.mockito
+    testImplementation localTestDependencies.assertj
+
+    testImplementation localTestDependencies.objectboxTestLinux
+    testImplementation localTestDependencies.objectboxTestMacOS
+    testImplementation localTestDependencies.objectboxTestWindows
 }

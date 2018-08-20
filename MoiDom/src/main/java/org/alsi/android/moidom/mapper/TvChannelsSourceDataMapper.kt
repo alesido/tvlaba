@@ -1,10 +1,7 @@
 package org.alsi.android.moidom.mapper
 
 import android.text.format.DateUtils
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
-import org.alsi.android.domain.tv.model.guide.TvProgramIssue
-import org.alsi.android.domain.tv.model.guide.TvProgramTimeInterval
+import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.mapper.SourceDataMapper
@@ -17,35 +14,35 @@ class TvChannelsSourceDataMapper: SourceDataMapper<ChannelListResponse, List<TvC
         var channelNumber = 1
         for (group in source.groups) {
             for (src in group.channels) {
+                with (src) {
 
-                val dst = TvChannel(
-                        id = src.id.toLong(),
-                        categoryId = group.id.toLong(),
-                        logoUri = iconPathMapper.uriFromPath(src.icon_path),
-                        number = channelNumber++,
-                        title = src.name)
+                    val channelId = id.toLong()
+                    val channelHasSchedule = epg_progname != RestServiceMoidom.TOKEN_NO_EPG_CHANNEL
 
-                val channelHasSchedule = src.epg_progname != RestServiceMoidom.TOKEN_NO_EPG_CHANNEL
+                    val dst = TvChannel(
 
-                with(dst) {
-                    hasSchedule = channelHasSchedule
-                    hasArchive = src.have_archive == 1
-                    isPasswordProtected = src.protected != null && src.protected == 1
-                    hasMultipleLanguageAudioTracks = src.audiotracks?.isEmpty()?: false
+                            id = channelId,
+                            categoryId = group.id.toLong(),
+                            logoUri = iconPathMapper.uriFromPath(icon_path),
+                            number = channelNumber++,
+                            title = name,
+
+                            live = TvProgramLive(
+                                    time = TvProgramTimeInterval(
+                                            epg_start * DateUtils.SECOND_IN_MILLIS,
+                                            epg_end * DateUtils.SECOND_IN_MILLIS),
+                                    title = epg_progname),
+
+                            features = TvChannelFeatures(
+                                    hasSchedule = channelHasSchedule,
+                                    hasArchive = have_archive == 1,
+                                    isPasswordProtected = protected != null && protected == 1,
+                                    hasMultipleLanguageAudioTracks = audiotracks?.isEmpty()
+                                            ?: false)
+                    )
+
+                    dstChannels.add(dst)
                 }
-
-                val live = TvProgramIssue(channelId = dst.id)
-                with (live) {
-                    time = TvProgramTimeInterval(
-                            src.epg_start * DateUtils.SECOND_IN_MILLIS,
-                            src.epg_end * DateUtils.SECOND_IN_MILLIS)
-                    title = src.epg_progname
-                    isTitleAvailable = channelHasSchedule
-                    disposition = TvProgramDisposition.LIVE
-                }
-                dst.live = live
-
-                dstChannels.add(dst)
             }
         }
         return dstChannels

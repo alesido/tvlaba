@@ -5,7 +5,6 @@ import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import io.objectbox.kotlin.query
 import io.reactivex.Completable
-import okhttp3.internal.Util.equal
 import org.alsi.android.data.repository.settings.SettingsDataLocal
 import org.alsi.android.domain.streaming.model.options.*
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
@@ -45,7 +44,7 @@ class SettingsStoreLocalDelegate(
     }
 
     private fun settingsQuery() = settingsBox.query {
-        equal(ServiceSettingsEntity_.scopeTypeOrdinal, scopeTypeOrdinal)
+        equal(ServiceSettingsEntity_.scopeTypeOrdinal, scopeTypeOrdinal.toLong())
         equal(ServiceSettingsEntity_.scopeId, scopeId)
         equal(ServiceSettingsEntity_.accountId, accountId)
     }

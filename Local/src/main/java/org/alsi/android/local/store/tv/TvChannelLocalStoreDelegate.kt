@@ -2,65 +2,47 @@ package org.alsi.android.local.store.tv
 
 import android.content.Context
 import io.objectbox.Box
+import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
+import io.objectbox.kotlin.query
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
-import org.alsi.android.MyObjectBox
 import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
-import org.alsi.android.local.mapper.tv.TvChannelCategoryEntityMapper
+import org.alsi.android.local.mapper.tv.TvCategoryEntityMapper
 import org.alsi.android.local.mapper.tv.TvChannelEntityMapper
-import org.alsi.android.local.model.tv.TvChannelCategoryEntity
-import org.alsi.android.local.model.tv.TvChannelEntity
-import org.alsi.android.local.model.tv.TvChannelEntity_
-import org.alsi.android.local.model.tv.TvFavoriteChannelEntity
-import org.alsi.android.local.model.user.UserAccountEntity
+import org.alsi.android.local.model.tv.*
 import javax.inject.Inject
 
-/**
- * NOTE It doesn't make sense to store separate categories-channels for each user account.
+/** Delegate for local TV channels store belonging to a service.
+ *
+ * DECISION It is decided, in favor of access speed, to have separate store files for services.
+ *
+ * NOTE While it doesn't make sense to store separate categories and channels set for each user,
+ * it's a must to have different records set for channel favorites.
  * Though, there are own storage for each services.
  */
-class TvChannelLocalStoreDelegate(serviceId: Long): TvChannelLocalStore {
+class TvChannelLocalStoreDelegate(
 
-    @Inject lateinit var context: Context
-    @Inject lateinit var userAccountObservable: Observable<UserAccountEntity>
+        serviceBoxStore: BoxStore,
+        private val userLoginName: String = "")
 
-    private var userAccountId: Long = 0L
+    : TvChannelLocalStore {
 
-    private val categoryMapper = TvChannelCategoryEntityMapper()
+    @Inject
+    lateinit var context: Context
+
+    private val categoryBox: Box<TvChannelCategoryEntity> = serviceBoxStore.boxFor()
+    private val channelBox: Box<TvChannelEntity> = serviceBoxStore.boxFor()
+    private val programBox: Box<TvProgramLiveEntity> = serviceBoxStore.boxFor()
+    private val favoriteChannelBox: Box<TvFavoriteChannelEntity> = serviceBoxStore.boxFor()
+
+    private val categoryMapper = TvCategoryEntityMapper()
     private val channelMapper = TvChannelEntityMapper()
 
-    private val categoryBox: Box<TvChannelCategoryEntity>
-    private val channelBox: Box<TvChannelEntity>
-    private lateinit var favoriteChannelBox: Box<TvFavoriteChannelEntity>
-
-    init {
-        val boxStore = MyObjectBox.builder()
-                .name("$STORE_FILE_NAME_PREFIX.$serviceId")
-                .androidContext(context)
-                .build()
-
-        categoryBox = boxStore.boxFor()
-        channelBox = boxStore.boxFor()
-
-        setFavoriteChannelStore(context, serviceId, userAccountId)
-
-        userAccountObservable.subscribe { userAccountEntity ->
-            setFavoriteChannelStore(context, serviceId, userAccountEntity.id)
-        }
-    }
-
-    private fun setFavoriteChannelStore(context: Context, serviceId: Long, userAccountId: Long) {
-        val boxStore = MyObjectBox.builder()
-                .name("$STORE_FILE_NAME_PREFIX.$serviceId.$userAccountId")
-                .androidContext(context)
-                .build()
-        favoriteChannelBox = boxStore.boxFor(TvFavoriteChannelEntity::class.java)
-    }
+    // region Directory
 
     override fun putDirectory(directory: TvChannelDirectory): Completable {
         return Completable.fromRunnable {
@@ -69,12 +51,14 @@ class TvChannelLocalStoreDelegate(serviceId: Long): TvChannelLocalStore {
         }
     }
 
-    override fun getDirectory(): Single<TvChannelDirectory> {
-        return Single.create { TvChannelDirectory(
+    override fun getDirectory(): Single<TvChannelDirectory> = Single.fromCallable {
+        TvChannelDirectory(
                 categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) },
                 channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) })
-        }
     }
+
+    // endregion
+    // region Categories
 
     override fun putCategories(categories: List<TvChannelCategory>): Completable {
         return Completable.fromRunnable {
@@ -82,28 +66,33 @@ class TvChannelLocalStoreDelegate(serviceId: Long): TvChannelLocalStore {
         }
     }
 
-    override fun getCategories(): Single<List<TvChannelCategory>> {
-        return Single.create { categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) } }
+    override fun getCategories(): Single<List<TvChannelCategory>> = Single.fromCallable {
+        categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) }
     }
 
-    override fun findCategoryById(categoryId: Long): Single<TvChannelCategory> {
-        return Single.create { categoryBox.get(categoryId) }
+    override fun findCategoryById(categoryId: Long): Single<TvChannelCategory?> = Single.fromCallable {
+        categoryMapper.mapFromEntity(categoryBox.get(categoryId))
     }
 
-    override fun putChannels(channels: List<TvChannel>): Completable {
-        return Completable.fromRunnable { channelBox.put(channels.map { channelMapper.mapToEntity(it) }) }
+    // endregion
+    // region Channels
+
+    override fun putChannels(channels: List<TvChannel>): Completable = Completable.fromRunnable {
+        channelBox.put(channels.map { channelMapper.mapToEntity(it) })
     }
 
-    override fun getChannels(): Single<List<TvChannel>> {
-        return Single.create { channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) } }
+    override fun getChannels(): Single<List<TvChannel>> = Single.fromCallable {
+        channelBox.all.map { channel ->  channelMapper.mapFromEntity(channel) }
     }
 
-    override fun getChannels(categoryId: Long): Single<List<TvChannel>> {
-        return Single.create { categoryBox.get(categoryId).channels }
+    override fun getChannels(categoryId: Long): Single<List<TvChannel>> = Single.fromCallable {
+        channelBox.query { equal(TvChannelEntity_.categoryId, categoryId) }.find()
+                .map { channel -> channelMapper.mapFromEntity(channel) }
     }
 
-    override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> {
-        return Single.create { channelBox.query().equal(TvChannelEntity_.number, channelNumber.toLong()).build().findUnique() }
+    override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> = Single.fromCallable {
+        val found = channelBox.query { equal(TvChannelEntity_.number, channelNumber.toLong()) }.findUnique()
+        found?.let { channelMapper.mapFromEntity(it) }
     }
 
     /** Find earliest update time to keep the list part actual. I.e., to have all live program
@@ -111,44 +100,54 @@ class TvChannelLocalStoreDelegate(serviceId: Long): TvChannelLocalStore {
      */
     override fun getChannelWindowExpirationMillis(channelIds: List<Long>): Long? {
         if (channelIds.isEmpty()) return null
-        var earliest: Long = channelBox.get(channelIds[0]).live.target.endMillis?: return null
-        channelBox.get(channelIds).forEach {
-            val thisEndMillis = it.live.target.endMillis?: return@forEach
-            if (thisEndMillis < earliest) earliest = thisEndMillis
-        }
-        return earliest
+        val window = programBox.query {
+            `in`(TvProgramLiveEntity_.channelId, channelIds.toLongArray())
+            order(TvProgramLiveEntity_.endMillis, 0)
+        }.find()
+        return if (window.size > 0) window[0].endMillis else null
     }
 
+    // endregion
+    // region Favorites
+
     override fun addChannelToFavorites(channelId: Long): Completable {
-        return Completable.fromRunnable { favoriteChannelBox.put(TvFavoriteChannelEntity(channelId, userAccountId)) }
+        return Completable.fromRunnable {
+            findFavoriteChannel(channelId)?:
+            favoriteChannelBox.put(TvFavoriteChannelEntity(0L, channelId, userLoginName)) }
     }
 
     override fun removeChannelFromFavorites(channelId: Long): Completable {
-        return Completable.fromRunnable { favoriteChannelBox.remove(channelId) }
+        return Completable.fromRunnable {
+            findFavoriteChannel(channelId)?.let { favoriteChannelBox.remove(it.id) }
+        }
     }
 
     override fun isChannelFavorite(channelId: Long): Single<Boolean> {
-        return Single.create { favoriteChannelBox.get(channelId) != null }
+        return Single.create { findFavoriteChannel(channelId) != null }
     }
 
     override fun toggleChannelFromFavorites(channelId: Long): Completable {
         return Completable.fromRunnable {
-            if (favoriteChannelBox.get(channelId) != null)
-                favoriteChannelBox.remove(channelId)
-            else
-                favoriteChannelBox.put(TvFavoriteChannelEntity(channelId, userAccountId))
+            findFavoriteChannel(channelId)?.let {
+                favoriteChannelBox.remove(it.id)
+            }?: favoriteChannelBox.put(TvFavoriteChannelEntity(0L, channelId, userLoginName))
         }
     }
 
-    override fun getFavoriteChannels(): Single<List<TvChannel>> {
-        return Single.create { _ ->
-            val favoriteIds: List<Long> = favoriteChannelBox.all.map { it.tvChannelId }
-            val favoriteChannels = channelBox.query().filter { it.id in favoriteIds }.build().find()
-            favoriteChannels.map { channelMapper.mapFromEntity(it) }
-        }
+    override fun getFavoriteChannels(): Single<List<TvChannel>> = Single.fromCallable {
+        val favoriteIds: List<Long> = favoriteChannelBox.query {
+            equal(TvFavoriteChannelEntity_.userLoginName, userLoginName)
+        }.find().map { it.channelId }
+        val favoriteChannels = channelBox.query().filter { it.id in favoriteIds }.build().find()
+        favoriteChannels.map { channelMapper.mapFromEntity(it) }
     }
 
-    companion object {
-        val STORE_FILE_NAME_PREFIX = TvChannelLocalStoreDelegate::class.simpleName?:"TvChannelLocalStoreDelegate"
+    private fun findFavoriteChannel(channelId: Long): TvFavoriteChannelEntity? {
+        return favoriteChannelBox.query {
+            equal(TvFavoriteChannelEntity_.channelId, channelId)
+            equal(TvFavoriteChannelEntity_.userLoginName, userLoginName)
+        }.findUnique()
     }
+
+    // endregion
 }

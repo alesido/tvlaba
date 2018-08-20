@@ -61,8 +61,8 @@ class LoginApiTest {
             assert(data.account.login == "20172017")
             assert(data.account.packet_expire == 1559829229)
             assert(data.services["archive"] == 1)
-            assert(data.settings.language.value == "en")
-            assert(data.settings.stream_server.value == "5.254.76.34")
+            assert(data.settings.language?.value == "en")
+            assert(data.settings.stream_server?.value == "5.254.76.34")
             assert(data.settings.bitrate.value == 1500)
         }?: fail()
     }
@@ -90,7 +90,7 @@ class LoginApiTest {
         mockServer.enqueue(mockResponse)
 
         subscribeLoginRequest(observer)
-        observer.awaitTerminalEvent(300, TimeUnit.SECONDS)
+        observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
 
         val error: RetrofitException? = observer.errors()[0] as? RetrofitException
         error?.let {
