@@ -36,7 +36,6 @@ class TvChannelLocalStoreDelegate(
 
     private val categoryBox: Box<TvChannelCategoryEntity> = serviceBoxStore.boxFor()
     private val channelBox: Box<TvChannelEntity> = serviceBoxStore.boxFor()
-    private val programBox: Box<TvProgramLiveEntity> = serviceBoxStore.boxFor()
     private val favoriteChannelBox: Box<TvFavoriteChannelEntity> = serviceBoxStore.boxFor()
 
     private val categoryMapper = TvCategoryEntityMapper()
@@ -100,11 +99,14 @@ class TvChannelLocalStoreDelegate(
      */
     override fun getChannelWindowExpirationMillis(channelIds: List<Long>): Long? {
         if (channelIds.isEmpty()) return null
-        val window = programBox.query {
-            `in`(TvProgramLiveEntity_.channelId, channelIds.toLongArray())
-            order(TvProgramLiveEntity_.endMillis, 0)
-        }.find()
-        return if (window.size > 0) window[0].endMillis else null
+        var earliestEndMillis: Long? = null
+        for (channelId in channelIds) {
+            val endMillis = channelBox.get(channelId).live.target.endMillis ?: continue
+            if (null == earliestEndMillis || earliestEndMillis > endMillis) {
+                earliestEndMillis = endMillis
+            }
+        }
+        return earliestEndMillis
     }
 
     // endregion
@@ -123,7 +125,7 @@ class TvChannelLocalStoreDelegate(
     }
 
     override fun isChannelFavorite(channelId: Long): Single<Boolean> {
-        return Single.create { findFavoriteChannel(channelId) != null }
+        return Single.fromCallable { findFavoriteChannel(channelId) != null }
     }
 
     override fun toggleChannelFromFavorites(channelId: Long): Completable {

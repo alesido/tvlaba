@@ -40,8 +40,8 @@ object TvChannelTestDataFactory {
 
                         live = TvProgramLive(
                                 time = TvProgramTimeInterval(
-                                        nowMillis - j * DateUtils.MINUTE_IN_MILLIS,
-                                        nowMillis + j * DateUtils.MINUTE_IN_MILLIS),
+                                        nowMillis + j * DateUtils.MINUTE_IN_MILLIS,
+                                        nowMillis + (j + 1) * DateUtils.MINUTE_IN_MILLIS),
                                 title = "Channel #$j @$i live broadcast"),
 
                         features = TvChannelFeatures())
