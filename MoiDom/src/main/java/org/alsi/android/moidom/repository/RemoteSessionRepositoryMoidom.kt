@@ -12,7 +12,7 @@ import org.alsi.android.moidom.model.tv.RemoteSessionEntityMoidom_
 import javax.inject.Inject
 import javax.inject.Named
 
-class RemoteSessionRepositoryMoidom {
+open class RemoteSessionRepositoryMoidom {
 
     @field:[Inject Named(org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME)]
     lateinit var store: BoxStore
@@ -30,7 +30,7 @@ class RemoteSessionRepositoryMoidom {
         }
     }
 
-    fun getSessionId(): Single<String> = Single.create { emitter ->
+    open fun getSessionId(): Single<String> = Single.create { emitter ->
         val sessionId = box.query {
             equal(RemoteSessionEntityMoidom_.loginName, loginName?: LOGIN_NAME_GUEST)
         }.findFirst()?.sessionId

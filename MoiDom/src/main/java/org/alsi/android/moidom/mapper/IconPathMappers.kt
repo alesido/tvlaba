@@ -8,7 +8,7 @@ import java.net.URI
 
 class TvCategoryIconPathMapper(response: GetTvGroupResponse) {
 
-    private val iconParams = response.groups_icons[2]
+    private val iconParams = response.groups_icons[0]
     private val baseUrl = iconParams.base_url
     private val format = iconParams.formats[0]
 

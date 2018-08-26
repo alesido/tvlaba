@@ -51,11 +51,10 @@ class TvChannelApiTest {
 
     @Test
     fun shouldGetCategories() {
-        val observer = TestObserver<GetTvGroupResponse>()
         val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/tv_group.json"))
         mockServer.enqueue(mockResponse)
 
-        moiDomService.getGroups("testSessionId").subscribe(observer)
+        val observer = moiDomService.getGroups("testSessionId").test()
         observer.awaitTerminalEvent(300, TimeUnit.SECONDS)
         observer.assertNoErrors()
 
@@ -69,15 +68,14 @@ class TvChannelApiTest {
 
     @Test
     fun shouldGetChannels() {
-        val observer = TestObserver<ChannelListResponse>()
         val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/channel_list.json"))
         mockServer.enqueue(mockResponse)
 
-        moiDomService.getAllChannels("testSessionId",
+        val observer = moiDomService.getAllChannels("testSessionId",
                 DateTimeFormat.forPattern("ZZ")
                         .withZone(DateTimeZone.getDefault())
                         .print(0).replace(":", ""))
-                .subscribe(observer)
+                .test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
 
