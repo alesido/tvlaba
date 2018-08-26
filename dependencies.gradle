@@ -36,7 +36,7 @@ ext {
     //Libraries
     jodaTimeVersion='2.9.9'
     gsonVersion = '2.8.1'
-    okHttpVersion = '3.8.1'
+    okHttpVersion = '3.11.0'
     retrofitVersion = '2.3.0'
     glideVersion = '4.0.0'
     timberVersion = '4.5.1'
