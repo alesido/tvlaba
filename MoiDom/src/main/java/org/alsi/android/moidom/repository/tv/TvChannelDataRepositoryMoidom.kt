@@ -9,6 +9,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
+import org.alsi.android.datatv.store.TvChannelRemoteStore
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
@@ -25,10 +26,18 @@ import javax.inject.Named
 class TvChannelDataRepositoryMoidom: TvChannelDataRepository() {
 
     @field:[Inject Named("${Moidom.TAG}.${StreamingService.TV}")]
-    internal lateinit var moidomServiceBoxStore: BoxStore
+    lateinit var moidomServiceBoxStore: BoxStore
 
-    @Inject
-    internal lateinit var loginSubject: PublishSubject<LoginEvent>
+    @set:Inject
+    var loginSubject: PublishSubject<LoginEvent>? = null
+        set(value) {
+            field = value
+            value?.subscribe {
+                local = TvChannelLocalStoreDelegate(moidomServiceBoxStore, it.account.loginName)
+            }
+        }
+
+    override var remote: TvChannelRemoteStore = TvChannelRemoteStoreMoidom()
 
     private val directorySubject: BehaviorSubject<TvChannelDirectory> = BehaviorSubject.create()
     private val categoriesSubject: BehaviorSubject<List<TvChannelCategory>> = BehaviorSubject.create()
@@ -40,13 +49,6 @@ class TvChannelDataRepositoryMoidom: TvChannelDataRepository() {
      */
     private var lastCategoriesUpdateMillis = 0L
     private var lastChannelsUpdateMillis = 0L
-
-    init {
-        remote = TvChannelRemoteStoreMoidom()
-        loginSubject.subscribe {
-            local = TvChannelLocalStoreDelegate(moidomServiceBoxStore, it.account.loginName)
-        }
-    }
 
     // region API Override
 

@@ -22,8 +22,8 @@ import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
  */
 abstract class TvChannelDataRepository: TvChannelRepository {
 
-    lateinit var remote: TvChannelRemoteStore
-    lateinit var local: TvChannelLocalStore
+    open lateinit var remote: TvChannelRemoteStore
+    open lateinit var local: TvChannelLocalStore
 
     private val visibilitySubject: PublishSubject<TvChannelListWindow> = PublishSubject.create()
 
