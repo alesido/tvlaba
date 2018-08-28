@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.model.tv.GetTvGroupResponse
 import org.alsi.android.moidom.store.RestServiceMoidom
@@ -92,11 +93,5 @@ class TvChannelApiTest {
     @After
     fun tearDown() {
         mockServer.shutdown()
-    }
-
-    private fun getJson(path : String) : String {
-        val uri = this.javaClass.classLoader.getResource(path)
-        val file = File(uri.path)
-        return String(file.readBytes())
     }
 }

@@ -3,6 +3,7 @@ package org.alsi.android.moidom.store.remote
 import com.google.gson.GsonBuilder
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
+import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.model.tv.GetTvGroupResponse
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
@@ -89,11 +90,5 @@ class TvChannelRemoteStoreMoidomTest {
 
     private fun stubRemoteSession() {
         whenever(remoteSession.getSessionId()).thenReturn(Single.just("testRemoteSessionId"))
-    }
-
-    private fun getJson(path : String) : String {
-        val uri = this.javaClass.classLoader.getResource(path)
-        val file = File(uri.path)
-        return String(file.readBytes())
     }
 }

@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.retrofit.RetrofitServiceBuilder
 import org.alsi.android.remote.retrofit.error.RetrofitException
@@ -103,12 +104,6 @@ class LoginApiTest {
     @After
     fun tearDown() {
         mockServer.shutdown()
-    }
-
-    private fun getJson(path : String) : String {
-        val uri = this.javaClass.classLoader.getResource(path)
-        val file = File(uri.path)
-        return String(file.readBytes())
     }
 
     private fun subscribeLoginRequest(observer: TestObserver<LoginResponse>) {

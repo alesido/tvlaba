@@ -7,6 +7,7 @@ import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.moidom.model.LoginEvent
@@ -106,12 +107,6 @@ class TvChannelDataRepositoryMoidomTest {
 
     private fun stubRemoteSession() {
         whenever(remoteSession.getSessionId()).thenReturn(Single.just("testRemoteSessionId"))
-    }
-
-    private fun getJson(path : String) : String {
-        val uri = this.javaClass.classLoader.getResource(path)
-        val file = File(uri.path)
-        return String(file.readBytes())
     }
 
     companion object {
