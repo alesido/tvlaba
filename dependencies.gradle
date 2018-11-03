@@ -1,20 +1,20 @@
 ext {
 
     //Android
-    androidBuildToolsVersion = "27.0.3"
+    androidBuildToolsVersion = "28.0.3"
     androidMinSdkVersion = 19
-    androidTargetSdkVersion = 27
-    androidCompileSdkVersion = 27
+    androidTargetSdkVersion = 28
+    androidCompileSdkVersion = 28
 
     //Support & Compatibility
-    supportLibraryVersion = '27.1.1'
+    supportLibraryVersion = '28.0.0'
 
     //Layouts
-    constraintLayoutVersion = '1.1.0'
+    constraintLayoutVersion = '1.1.2'
 
     //Kotlin
-    kotlinVersion = '1.2.60'
-    kotlinReflectVersion = '1.2.60'
+    kotlinVersion = '1.3.0'
+    kotlinReflectVersion = '1.3.0'
 
     //Annotations
     javaxAnnotationVersion = '1.0'
@@ -26,9 +26,9 @@ ext {
     daggerVersion = '2.16'
 
     //RX
-    rxJavaVersion = '2.0.2'
-    rxKotlinVersion = '2.1.0'
-    rxAndroidVersion = '2.0.1'
+    rxJavaVersion = '2.2.3'
+    rxKotlinVersion = '2.3.0'
+    rxAndroidVersion = '2.1.0'
 
     //Architecture components
     archCompVersion = '1.1.1'
