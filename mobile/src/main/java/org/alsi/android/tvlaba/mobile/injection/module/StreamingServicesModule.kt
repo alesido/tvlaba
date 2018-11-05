@@ -31,7 +31,7 @@ class StreamingServicesModule {
     @Singleton
     @Provides
     fun provideServiceRegistry(tvServiceMoidom: TvServiceMoidom, vodServiceMoidom: VodServiceMoidom)
-            = listOf(tvServiceMoidom, vodServiceMoidom) as StreamingServiceRegistry
+            = StreamingServiceRegistry(listOf(tvServiceMoidom, vodServiceMoidom))
 
     companion object {
         const val MOIDOM_ID = 1L

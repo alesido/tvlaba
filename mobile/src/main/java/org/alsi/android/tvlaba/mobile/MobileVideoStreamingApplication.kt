@@ -2,9 +2,7 @@ package org.alsi.android.tvlaba.mobile
 
 import android.app.Activity
 import android.app.Application
-import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-
 import dagger.android.HasActivityInjector
 import org.alsi.android.tvlaba.mobile.injection.DaggerApplicationComponent
 import timber.log.Timber

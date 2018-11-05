@@ -25,7 +25,7 @@ class TvCategoriesAdapter @Inject constructor() : RecyclerView.Adapter<TvCategor
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
-    inner class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
         fun bind(item: TvCategoryItem) {
             itemTitleView.text = item.title
             with(item) {

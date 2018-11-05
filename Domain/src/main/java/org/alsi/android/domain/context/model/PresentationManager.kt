@@ -29,7 +29,7 @@ import javax.inject.Inject
  *  cursor and session related settings.
  *
  */
-class PresentationManager @Inject constructor(val registry: StreamingServiceRegistry)
+class PresentationManager @Inject constructor(private val registry: StreamingServiceRegistry)
 {
     /** List of contexts available to switch to.
      */
@@ -51,7 +51,7 @@ class PresentationManager @Inject constructor(val registry: StreamingServiceRegi
 
     /** Use Case creating context will use this method to set/update context
      */
-    fun selectContext(serviceId: Long) {
+    private fun selectContext(serviceId: Long) {
         registry.serviceById[serviceId]?.let {
             contexts[it.kind] = it
         }
