@@ -14,6 +14,7 @@ dependencies {
     implementation domainDependencies.javaxAnnotation
     implementation domainDependencies.javaxInject
     implementation domainDependencies.rxKotlin
+    implementation domainDependencies.rxJava
     implementation domainDependencies.kotlin
     implementation domainDependencies.jodaTime
 
