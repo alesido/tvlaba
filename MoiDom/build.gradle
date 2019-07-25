@@ -50,6 +50,10 @@ android {
             jvmArgs '-noverify'
         }
     }
+    buildTypes {
+        release {
+        }
+    }
 }
 
 kapt {
@@ -68,6 +72,7 @@ dependencies {
 
     implementation remoteDependencies.kotlin
     implementation remoteDependencies.rxKotlin
+    implementation remoteDependencies.rxJava
     implementation remoteDependencies.kotlinReflect
 
     implementation remoteDependencies.javaxInject

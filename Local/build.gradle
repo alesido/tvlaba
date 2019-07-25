@@ -6,8 +6,8 @@ apply plugin: 'io.objectbox'
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
-    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
-    buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
 
     defaultConfig {
@@ -23,8 +23,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
     }
 
     packagingOptions {
@@ -50,6 +50,10 @@ android {
             jvmArgs '-noverify'
         }
     }
+    buildTypes {
+        release {
+        }
+    }
 }
 
 kapt {
@@ -66,6 +70,7 @@ dependencies {
 
     implementation localDependencies.kotlin
     implementation localDependencies.rxKotlin
+    implementation localDependencies.rxJava
     implementation localDependencies.kotlinReflect
 
     implementation localDependencies.javaxInject

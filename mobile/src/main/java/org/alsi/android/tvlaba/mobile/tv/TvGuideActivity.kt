@@ -1,10 +1,10 @@
 package org.alsi.android.tvlaba.mobile.tv
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import dagger.android.AndroidInjection
 import org.alsi.android.presentationtv.model.TvCategoryBrowseViewModel
@@ -35,7 +35,7 @@ class TvGuideActivity : AppCompatActivity() {
         browseViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvCategoryBrowseViewModel::class.java)
 
-        categoriesListView.layoutManager = LinearLayoutManager(this)
+        categoriesListView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         categoriesListView.adapter = adapter
     }
 

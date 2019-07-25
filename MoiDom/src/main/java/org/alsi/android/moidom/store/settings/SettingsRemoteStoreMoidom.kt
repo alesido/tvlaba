@@ -64,7 +64,7 @@ class SettingsRemoteStoreMoidom: SettingsDataRemote {
         return remoteSession.getSessionId().flatMapCompletable { sessionId ->
             remoteService.setSetting(sessionId,
                     RestServiceMoidom.QUERY_PARAM_SETTING_NAME_STREAM_SERVER,
-                    serverTag).toCompletable()
+                    serverTag).ignoreElement()
         }
     }
 
@@ -72,7 +72,7 @@ class SettingsRemoteStoreMoidom: SettingsDataRemote {
         return remoteSession.getSessionId().flatMapCompletable { sessionId ->
             remoteService.setSetting(sessionId,
                     RestServiceMoidom.QUERY_PARAM_SETTING_NAME_LANGUAGE,
-                    languageCode).toCompletable()
+                    languageCode).ignoreElement()
         }
     }
 
@@ -80,7 +80,7 @@ class SettingsRemoteStoreMoidom: SettingsDataRemote {
         return remoteSession.getSessionId().flatMapCompletable { sessionId ->
             remoteService.setSetting(sessionId,
                     RestServiceMoidom.QUERY_PARAM_SETTING_DEVICE_NAME_MODEL,
-                    modelName).toCompletable()
+                    modelName).ignoreElement()
         }
     }
 }

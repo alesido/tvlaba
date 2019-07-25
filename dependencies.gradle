@@ -6,9 +6,6 @@ ext {
     androidTargetSdkVersion = 28
     androidCompileSdkVersion = 28
 
-    //Support & Compatibility
-    supportLibraryVersion = '28.0.0'
-
     //Layouts
     constraintLayoutVersion = '2.0.0-beta2'
 
@@ -31,7 +28,7 @@ ext {
     rxAndroidVersion = '2.1.0'
 
     //Architecture components
-    archCompVersion = '1.1.1'
+    archCompVersion = '2.0.0-rc01'
 
     //Libraries
     jodaTimeVersion='2.9.9'
@@ -50,7 +47,7 @@ ext {
     robolectricVersion = '4.3'
     mockitoVersion = '1.9.5'
     mockitoAndroidVersion = '2.8.9'
-    androidSupportRunnerVersion = '1.0.0'
+    androidSupportRunnerVersion = '1.1.0'
     androidSupportRulesVersion = '1.0.0'
     dexmakerMockitoversion = '2.2.0'
     runnerVersion = '1.0.2'
@@ -78,6 +75,7 @@ ext {
     dataDependencies = [
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -108,6 +106,7 @@ ext {
     remoteDependencies = [
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             kotlinReflect:      "org.jetbrains.kotlin:kotlin-reflect:${kotlinReflectVersion}",
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -115,8 +114,8 @@ ext {
             dagger:             "com.google.dagger:dagger:${daggerVersion}",
             daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
-            appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
+            appCompatV7:        'androidx.appcompat:appcompat:1.0.0',
+            androidAnnotations: "androidx.annotation:annotation:${androidAnnotationsVersion}",
             gson:               "com.google.code.gson:gson:${gsonVersion}",
             okHttp:             "com.squareup.okhttp3:okhttp:${okHttpVersion}",
             okHttpLogger:       "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
@@ -139,6 +138,7 @@ ext {
     localDependencies = [
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             kotlinReflect:      "org.jetbrains.kotlin:kotlin-reflect:${kotlinReflectVersion}",
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -146,8 +146,8 @@ ext {
             dagger:             "com.google.dagger:dagger:${daggerVersion}",
             daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
             daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
-            appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
+            appCompatV7:        'androidx.appcompat:appcompat:1.0.0',
+            androidAnnotations: "androidx.annotation:annotation:${androidAnnotationsVersion}",
             objectboxAndroid:   "io.objectbox:objectbox-android:${objectboxVersion}",
             objectboxKotlin:    "io.objectbox:objectbox-kotlin:${objectboxVersion}",
     ]
@@ -163,11 +163,11 @@ ext {
     ]
 
     presentationDependencies = [
-            appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            appCompatV7:        'androidx.appcompat:appcompat:1.0.0',
 
-            archRuntime:        "android.arch.lifecycle:runtime:${archCompVersion}",
-            archExtensions:     "android.arch.lifecycle:extensions:${archCompVersion}",
-            archCompiler:       "android.arch.lifecycle:compiler:${archCompVersion}",
+            archRuntime:        'androidx.lifecycle:lifecycle-runtime:2.0.0',
+            archExtensions:     'androidx.lifecycle:lifecycle-extensions:2.0.0',
+            archCompiler:       'androidx.lifecycle:lifecycle-compiler:2.0.0',
 
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
 
@@ -180,7 +180,7 @@ ext {
             dagger:             "com.google.dagger:dagger:${daggerVersion}",
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${androidAnnotationsVersion}",
+            androidAnnotations: "androidx.annotation:annotation:${androidAnnotationsVersion}",
     ]
 
 
@@ -190,24 +190,27 @@ ext {
             assertj:            "org.assertj:assertj-core:${assertJVersion}",
             mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
             robolectric:        "org.robolectric:robolectric:${robolectricVersion}",
-            archTesting:        "android.arch.core:core-testing:${archCompVersion}",
+            archTesting:        'androidx.arch.core:core-testing:2.0.0',
+            androidRunner:      "androidx.test.ext:junit:1.1.1",
+            androidRules:       "androidx.test:rules:${androidSupportRulesVersion}",
     ]
 
     uiDependencies = [
-            androidSupportV4:   "com.android.support:support-v4:${supportLibraryVersion}",
-            androidSupportV13:  "com.android.support:support-v13:${supportLibraryVersion}",
-            appCompatV7:        "com.android.support:appcompat-v7:${supportLibraryVersion}",
-            supportRecyclerView:"com.android.support:recyclerview-v7:${supportLibraryVersion}",
-            supportDesign:      "com.android.support:design:${supportLibraryVersion}",
-            constraintLayout:   "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
+            androidSupportV4:   'androidx.legacy:legacy-support-v4:1.0.0',
+            androidSupportV13:  'androidx.legacy:legacy-support-v13:1.0.0',
+            appCompatV7:        'androidx.appcompat:appcompat:1.0.0',
+            supportRecyclerView: 'androidx.recyclerview:recyclerview:1.0.0',
+            supportDesign:      'com.google.android.material:material:1.0.0',
+            constraintLayout:   'androidx.constraintlayout:constraintlayout:1.1.3',
 
-            archRuntime:        "android.arch.lifecycle:runtime:${archCompVersion}",
-            archExtensions:     "android.arch.lifecycle:extensions:${archCompVersion}",
-            archCompiler:       "android.arch.lifecycle:compiler:${archCompVersion}",
+            archRuntime:        'androidx.lifecycle:lifecycle-runtime:2.0.0',
+            archExtensions:     'androidx.lifecycle:lifecycle-extensions:2.0.0',
+            archCompiler:       'androidx.lifecycle:lifecycle-compiler:2.0.0',
 
             kotlin:             "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}",
 
             rxKotlin:           "io.reactivex.rxjava2:rxkotlin:${rxKotlinVersion}",
+            rxJava:             "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
 
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
@@ -217,15 +220,15 @@ ext {
             daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
-            androidAnnotations: "com.android.support:support-annotations:${supportLibraryVersion}",
+            androidAnnotations: 'androidx.annotation:annotation:1.0.0',
             glassfishAnnotation: "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
 
             glide:              "com.github.bumptech.glide:glide:${glideVersion}",
             timber:             "com.jakewharton.timber:timber:${timberVersion}",
 
-            roomRuntime:        "android.arch.persistence.room:runtime:${archCompVersion}",
-            roomCompiler:       "android.arch.persistence.room:compiler:${archCompVersion}",
-            roomRxJava:         "android.arch.persistence.room:rxjava2:${archCompVersion}",
+            roomRuntime:        "androidx.room:room-runtime:${archCompVersion}",
+            roomCompiler:       "androidx.room:room-compiler:${archCompVersion}",
+            roomRxJava:         'androidx.room:room-rxjava2:2.0.0',
     ]
 
 
@@ -234,13 +237,13 @@ ext {
             kotlinJUnit:        "org.jetbrains.kotlin:kotlin-test-junit:${kotlinVersion}",
             assertj:            "org.assertj:assertj-core:${assertJVersion}",
             mockito:            "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
-            supportRunner:      "com.android.support.test:runner:${androidSupportRunnerVersion}",
-            supportRules:       "com.android.support.test:rules:${androidSupportRulesVersion}",
+            supportRunner:      "androidx.test:runner:${androidSupportRunnerVersion}",
+            supportRules:       "androidx.test:rules:${androidSupportRulesVersion}",
             mockitoAndroid:     "org.mockito:mockito-android:${mockitoAndroidVersion}",
-            espressoCore:       "com.android.support.test.espresso:espresso-core:${espressoVersion}",
-            espressoIntents:    "com.android.support.test.espresso:espresso-intents:${espressoVersion}",
-            espressoContrib:    "com.android.support.test.espresso:espresso-contrib:${espressoVersion}",
-            androidRunner:      "com.android.support.test:runner:${runnerVersion}",
-            androidRules:       "com.android.support.test:rules:${runnerVersion}"
+            espressoCore:       'androidx.test.espresso:espresso-core:3.1.0',
+            espressoIntents:    'androidx.test.espresso:espresso-intents:3.1.0',
+            espressoContrib:    'androidx.test.espresso:espresso-contrib:3.1.0',
+            androidRunner:      "androidx.test.ext:junit:1.1.1",
+            androidRules:       "androidx.test:rules:${androidSupportRulesVersion}",
     ]
 }
