@@ -13,10 +13,11 @@ import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
 
-class TvChannelRemoteStoreMoidom: TvChannelRemoteStore {
-
-    @Inject lateinit var remoteService: RestServiceMoidom
-    @Inject lateinit var remoteSession: RemoteSessionRepositoryMoidom
+class TvChannelRemoteStoreMoidom @Inject constructor(
+        private val remoteService: RestServiceMoidom,
+        private val remoteSession: RemoteSessionRepositoryMoidom
+    )
+    : TvChannelRemoteStore {
 
     private val timeZoneQueryParameter = DateTimeFormat.forPattern("ZZ")
     .withZone(DateTimeZone.getDefault()).print(0).replace(":", "")

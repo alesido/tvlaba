@@ -11,6 +11,8 @@ import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
  */
 interface TvChannelLocalStore {
 
+    fun switchUser(userLoginName: String)
+
     fun putDirectory(directory: TvChannelDirectory): Completable
     fun getDirectory(): Single<TvChannelDirectory>
 

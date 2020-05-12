@@ -10,6 +10,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
+import javax.inject.Inject
 
 /** Repository for TV channels directory comprised of categories and channels accessed remotely
  *  and stored locally for frequent access (cache with querying).
@@ -22,8 +23,8 @@ import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
  */
 abstract class TvChannelDataRepository: TvChannelRepository {
 
-    open lateinit var remote: TvChannelRemoteStore
-    open lateinit var local: TvChannelLocalStore
+    @Inject open lateinit var remote: TvChannelRemoteStore
+    @Inject open lateinit var local: TvChannelLocalStore
 
     private val visibilitySubject: PublishSubject<TvChannelListWindow> = PublishSubject.create()
 

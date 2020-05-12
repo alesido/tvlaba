@@ -27,7 +27,7 @@ import javax.inject.Inject
 class TvChannelLocalStoreDelegate(
 
         serviceBoxStore: BoxStore,
-        private val userLoginName: String = "")
+        private var userLoginName: String = "guest")
 
     : TvChannelLocalStore {
 
@@ -40,6 +40,10 @@ class TvChannelLocalStoreDelegate(
 
     private val categoryMapper = TvCategoryEntityMapper()
     private val channelMapper = TvChannelEntityMapper()
+
+    override fun switchUser(userLoginName: String) {
+        this.userLoginName = userLoginName
+    }
 
     // region Directory
 

@@ -9,12 +9,14 @@ import javax.inject.Named
 
 class TvServiceMoidom @Inject constructor(
 
-        @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long)
+        @Named("${Moidom.TAG}.$TV") serviceId: Long,
+        serviceDirectory: TvDirectoryRepositoryMoidom
+    )
 
     : StreamingService(
 
         serviceId,
         kind = StreamingServiceKind.TV,
-        tag = "${Moidom.TAG}.${StreamingService.TV}",
-        directory = TvDirectoryRepositoryMoidom(serviceId),
+        tag = "${Moidom.TAG}.$TV",
+        directory = serviceDirectory,
         session = SessionRepository())

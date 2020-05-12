@@ -9,6 +9,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
+import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.datatv.store.TvChannelRemoteStore
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.model.guide.TvChannel
@@ -24,13 +25,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
-class TvChannelDataRepositoryMoidom: TvChannelDataRepository() {
-
-    /** Moidom service box store is injected as a dependency because it shared with
-     * other service repositories.
-     */
-    @field:[Inject Named("${Moidom.TAG}.${StreamingService.TV}")]
-    lateinit var moidomServiceBoxStore: BoxStore
+class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataRepository() {
 
     /** As soon as the login subject property gets value from dependency injection (on a late init),
      * subscription created and it initializes local store delegate for just logged in user.
@@ -41,13 +36,15 @@ class TvChannelDataRepositoryMoidom: TvChannelDataRepository() {
         set(value) {
             field = value
             value?.subscribe {
-                local = TvChannelLocalStoreDelegate(moidomServiceBoxStore, it.account.loginName)
+                local.switchUser(it.account.loginName)
             }
         }
 
-    /** Remote store property is overridden just to assign more specific type to it.
-     */
-    override var remote: TvChannelRemoteStore = TvChannelRemoteStoreMoidom()
+//    /** Remote store property is overridden just to assign more specific type to it.
+//     */
+//    @Inject
+//    override lateinit var remote: TvChannelRemoteStore
+//    override var remote: TvChannelRemoteStore = TvChannelRemoteStoreMoidom()
 
     /** Directory subject made BehaviourSubject as it returns the last result immediately on subscription.
      */
