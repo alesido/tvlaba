@@ -7,6 +7,7 @@ open class StreamingService (
         val id: Long,
         val kind: StreamingServiceKind,
         val tag: String,
+        //val configuration: SettingsRepository,
         val directory: DirectoryRepository,
         val session: SessionRepository) {
 
