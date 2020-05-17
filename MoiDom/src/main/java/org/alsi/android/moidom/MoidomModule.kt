@@ -7,7 +7,11 @@ import io.objectbox.BoxStore
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.datatv.store.TvChannelRemoteStore
+import org.alsi.android.domain.streaming.model.ServiceProvider
 import org.alsi.android.domain.streaming.model.service.StreamingService
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.local.Local
+import org.alsi.android.local.store.AccountStoreLocalDelegate
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.model.LoginEvent
@@ -27,40 +31,34 @@ import javax.inject.Singleton
 @Module
 class MoidomModule {
 
-    @Singleton @Provides fun provideRestServiceMoiDom() = DataServiceFactoryMoidom.makeRestServiceMoidom()
-
-    @Singleton @Provides @Named(INTERNAL_STORE_NAME)
-    fun provideInternalStoreMoidom(context: Context): BoxStore
-            = MyObjectBox.builder().name(INTERNAL_STORE_NAME).androidContext(context).build()
+    /**
+     * check for MutableList explanation @ https://stackoverflow.com/questions/45384389/why-cant-dagger-process-these-kotlin-generics
+    */
+    @Singleton @Provides @Named(Moidom.TAG) fun provideServicesMoidom(
+            tvServiceMoiDom: TvServiceMoidom, vodServiceMoidom: VodServiceMoidom)
+            : MutableList<StreamingService> = mutableListOf(tvServiceMoiDom, vodServiceMoidom)
 
     @Singleton @Provides fun provideServiceProviderMoidom(
             @Named(Moidom.TAG) id: Long,
             @Named(Moidom.TAG) name: String,
             accountService: AccountDataServiceMoidom,
             settingsRepository: SettingsRepositoryMoidom,
-            @Named(Moidom.TAG) services: List<StreamingService>)
+            @Named(Moidom.TAG) services: MutableList<StreamingService>)
+            : ServiceProvider
             = ServiceProviderMoidom(id, name, accountService, settingsRepository, services)
 
-    @Singleton @Provides fun provideAccountDataServiceMoidom() = AccountDataServiceMoidom()
+    @Singleton @Provides fun provideRestServiceMoiDom() = DataServiceFactoryMoidom.makeRestServiceMoidom()
 
     @Singleton @Provides fun provideLoginEventSubject(): PublishSubject<LoginEvent>
             = PublishSubject.create()
 
+    @Singleton @Provides @Named(INTERNAL_STORE_NAME)
+    fun provideInternalStoreMoidom(context: Context): BoxStore
+            = MyObjectBox.builder().name(INTERNAL_STORE_NAME).androidContext(context).build()
+
     @Singleton @Provides fun provideTvChannelRemoteStore(
             remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom)
             : TvChannelRemoteStore = TvChannelRemoteStoreMoidom(remoteService, remoteSession)
-
-    @Singleton @Provides fun provideRemoteSessionRepositoryMoidom(
-            @Named(INTERNAL_STORE_NAME) store: BoxStore,
-            loginSubject: PublishSubject<LoginEvent>)
-            = RemoteSessionRepositoryMoidom(store, loginSubject)
-
-    @Singleton @Provides fun provideSettingsRepositoryMoidom(@Named(Moidom.TAG) providerId: Long)
-            = SettingsRepositoryMoidom(providerId)
-
-    @Singleton @Provides @Named(Moidom.TAG) fun provideServicesMoidom(
-            tvServiceMoiDom: TvServiceMoidom, vodServiceMoidom: VodServiceMoidom)
-            : List<StreamingService> = listOf(tvServiceMoiDom, vodServiceMoidom)
 
     @Named("${Moidom.TAG}.${StreamingService.TV}")
     @Singleton @Provides fun provideTvServiceLocalStoreMoidom(

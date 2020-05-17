@@ -11,7 +11,7 @@ abstract class ServiceProvider(
         val name: String,
         val accountService: AccountDataService,
         val settingsRepository: SettingsRepository,
-        private val services: List<StreamingService>) {
+        private val services: MutableList<StreamingService>) {
 
     fun serviceByTag(tag: String): StreamingService? {
         services.forEach{ if (it.tag == tag) return it }

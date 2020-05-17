@@ -16,5 +16,5 @@ open class  StartSessionUseCase @Inject constructor(
         return provider.accountService.login(params.loginName, params.loginPassword).ignoreElement()
     }
 
-    class Params constructor (val loginName: String, val loginPassword: String, val serviceId: Long)
+    class Params constructor (val loginName: String, val loginPassword: String)
 }

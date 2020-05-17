@@ -14,7 +14,7 @@ class ServiceProviderMoidom @Inject constructor(
         @Named(Moidom.TAG) name: String,
         accountService: AccountDataServiceMoidom,
         settingsRepository: SettingsRepositoryMoidom,
-        @Named(Moidom.TAG) services: List<StreamingService>)
+        @Named(Moidom.TAG) services: MutableList<StreamingService>)
 
     : ServiceProvider(id, name, accountService, settingsRepository, services) {
 

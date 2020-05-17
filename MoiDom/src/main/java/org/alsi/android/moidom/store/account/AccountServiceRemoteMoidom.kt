@@ -6,22 +6,27 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.data.repository.account.AccountDataRemote
+import org.alsi.android.domain.streaming.model.service.StreamingServiceRegistry
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.moidom.BuildConfig
 import org.alsi.android.moidom.mapper.AccountSourceDataMapper
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.store.RestServiceMoidom
 import java.net.NetworkInterface
+import java.util.*
 import javax.inject.Inject
 
 /**
  * Created on 7/26/18.
  */
-class AccountServiceRemoteMoidom: AccountDataRemote {
+class AccountServiceRemoteMoidom @Inject constructor(
 
-    @Inject internal lateinit var remoteService: RestServiceMoidom
-
-    @Inject internal lateinit var loginSubject: PublishSubject<LoginEvent>
+        private val remoteService: RestServiceMoidom,
+        private val loginSubject: PublishSubject<LoginEvent>,
+        private val serviceRegistry: StreamingServiceRegistry
+)
+    : AccountDataRemote
+{
 
     override fun login(loginName: String, loginPassword: String): Single<UserAccount> {
         return remoteService.login(
@@ -36,7 +41,7 @@ class AccountServiceRemoteMoidom: AccountDataRemote {
                 deviceModel = "model",// getDeviceModelName(),
                 manufacturer = Build.MANUFACTURER)
                 .map { loginResponse ->
-                    val account = AccountSourceDataMapper(loginName, loginPassword).mapFromSource(loginResponse)
+                    val account = AccountSourceDataMapper(loginName, loginPassword, serviceRegistry).mapFromSource(loginResponse)
                     loginSubject.onNext(LoginEvent(account, loginResponse))
                     account
                 }
@@ -59,7 +64,7 @@ class AccountServiceRemoteMoidom: AccountDataRemote {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Build.getSerial() else Build.USER
         }
         catch (x: SecurityException) {
-            TODO("Add request for READ_PHONE_STATE permission to send serial number of the device.")
+            Build.USER
         }
     }
 
@@ -76,7 +81,7 @@ class AccountServiceRemoteMoidom: AccountDataRemote {
     private fun getMacAddress(networkInterfaceName: String): String? {
         try {
             NetworkInterface.getNetworkInterfaces().toList()
-                .first { it.name.toLowerCase() != networkInterfaceName.toLowerCase() }
+                .first { it.name.toLowerCase(Locale.US) != networkInterfaceName.toLowerCase(Locale.US) }
                 .let {
                     val macBytes = it.hardwareAddress ?: return null
                     val builder = StringBuilder()

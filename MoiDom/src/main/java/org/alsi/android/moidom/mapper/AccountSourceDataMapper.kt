@@ -18,11 +18,11 @@ import javax.inject.Inject
 class AccountSourceDataMapper @Inject constructor(
 
         private val loginName: String,
-        private val loginPassword: String)
-
-    : SourceDataMapper<LoginResponse, UserAccount> {
-
-    @Inject lateinit var registry: StreamingServiceRegistry
+        private val loginPassword: String,
+        private val registry: StreamingServiceRegistry
+)
+    : SourceDataMapper<LoginResponse, UserAccount>
+{
 
     override fun mapFromSource(source: LoginResponse): UserAccount {
         val subscriptions: MutableList<ServiceSubscription> = mutableListOf()

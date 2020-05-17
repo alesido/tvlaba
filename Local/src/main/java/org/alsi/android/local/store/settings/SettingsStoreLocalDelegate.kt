@@ -18,16 +18,13 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class SettingsStoreLocalDelegate(
-
         private val scopeTypeOrdinal: Int, // provider (1) or service (2)
-        private val scopeId: Long) // provider ID or service ID depending on the scope type
-
-    : SettingsDataLocal {
-
-    @field:[Inject Named(Local.STORE_NAME)] lateinit var boxStore: BoxStore
-
-    @Inject lateinit var defaults: StreamingServiceDefaults
-
+        private val scopeId: Long, // provider ID or service ID depending on the scope type
+        private val boxStore: BoxStore,
+        private val defaults: StreamingServiceDefaults
+)
+    : SettingsDataLocal
+{
     private val settingsBox by lazy<Box<ServiceSettingsEntity>> { boxStore.boxFor() }
     private val accountBox by lazy<Box<UserAccountEntity>> { boxStore.boxFor() }
     private val serverBox by lazy<Box<ServerOptionEntity>> { boxStore.boxFor() }

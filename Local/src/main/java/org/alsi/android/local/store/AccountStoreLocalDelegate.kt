@@ -18,10 +18,10 @@ import javax.inject.Named
 /**
  *  Assumption. It's supposed that account IDs are unique across the services
  */
-class AccountStoreLocalDelegate: AccountDataLocal
+class AccountStoreLocalDelegate @Inject constructor(
+        @Named(Local.STORE_NAME) val boxStore: BoxStore
+): AccountDataLocal
 {
-    @field:[Inject Named(Local.STORE_NAME)] internal lateinit var boxStore: BoxStore
-
     private var accountId: Long? = null
 
     private val box: Box<UserAccountEntity> = boxStore.boxFor()

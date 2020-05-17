@@ -2,28 +2,20 @@ package org.alsi.android.moidom.repository.tv
 
 import android.text.format.DateUtils
 import android.util.Log
-import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
-import org.alsi.android.datatv.store.TvChannelLocalStore
-import org.alsi.android.datatv.store.TvChannelRemoteStore
-import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
-import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
-import org.alsi.android.moidom.Moidom
 import org.alsi.android.moidom.model.LoginEvent
-import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import org.joda.time.DateTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataRepository() {
 
