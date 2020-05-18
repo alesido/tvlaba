@@ -27,7 +27,22 @@ open class RemoteSessionRepositoryMoidom @Inject constructor(
 
     init {
         disposables.add(loginSubject.subscribe {
-            box.put(RemoteSessionEntityMoidom(0L, it.account.loginName, it.data.sid, System.currentTimeMillis()))
+            val record = box.query {
+                equal(RemoteSessionEntityMoidom_.loginName, it.account.loginName)
+            }.findFirst()
+            if (null == record) {
+                box.put(RemoteSessionEntityMoidom(
+                        0L,
+                        it.account.loginName,
+                        it.data.sid,
+                        System.currentTimeMillis()
+                ))
+            }
+            else {
+                record.sessionId = it.data.sid
+                record.loginTimestampMillis = System.currentTimeMillis()
+                box.put(record)
+            }
         })
     }
 
