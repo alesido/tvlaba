@@ -3,6 +3,7 @@ package org.alsi.android.local.store
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
+import io.objectbox.kotlin.query
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.data.repository.account.AccountDataLocal
@@ -12,6 +13,7 @@ import org.alsi.android.local.Local
 import org.alsi.android.local.mapper.AccountEntityMapper
 import org.alsi.android.local.mapper.SubscriptionEntityMapper
 import org.alsi.android.local.model.user.UserAccountEntity
+import org.alsi.android.local.model.user.UserAccountEntity_
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,14 +31,15 @@ class AccountStoreLocalDelegate @Inject constructor(
     private val accountMapper = AccountEntityMapper()
     private val subscriptionMapper = SubscriptionEntityMapper()
 
-    /** TODO Test if non-existing account added while existing is updated if the source entity has ID = 0L
-     */
-    fun attach(account: UserAccount) {
-        accountId = box.put(accountMapper.mapToEntity(account))
+    private fun attach(account: UserAccount) {
+        val entity = accountMapper.mapToEntity(account)
+        val record = box.query {equal(UserAccountEntity_.loginName, account.loginName)}.findFirst()
+        record?.let{ entity.id = it.id }
+        accountId = box.put(entity)
     }
 
     override fun addAttachAccount(account: UserAccount) {
-        accountId = box.put(accountMapper.mapToEntity(account))
+        attach(account)
     }
 
     override fun getLoginName(): Single<String> {

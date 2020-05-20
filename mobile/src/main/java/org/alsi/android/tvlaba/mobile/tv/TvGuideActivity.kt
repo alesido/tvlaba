@@ -1,22 +1,21 @@
 package org.alsi.android.tvlaba.mobile.tv
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
-import org.alsi.android.presentationtv.model.TvCategoryBrowseViewModel
-import org.alsi.android.tvlaba.R
-import org.alsi.android.tvlaba.mobile.injection.ViewModelFactory
-import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoriesAdapter
 import kotlinx.android.synthetic.main.tv_guide_activity.*
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
+import org.alsi.android.presentationtv.model.TvCategoryBrowseViewModel
 import org.alsi.android.presentationtv.model.TvCategoryItemViewModel
+import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.mobile.injection.ViewModelFactory
+import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoriesAdapter
 import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoryItem
 import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoryItemViewMapper
 import javax.inject.Inject
@@ -56,6 +55,7 @@ class TvGuideActivity : AppCompatActivity() {
             ResourceState.SUCCESS -> {
                 progress.visibility = GONE
                 errorMessageView.visibility = GONE
+                categoriesListView.visibility = VISIBLE
                 setupScreenForSuccess(resource.data?.map { mapper.mapToView(it) })
             }
             ResourceState.LOADING -> {
@@ -81,7 +81,7 @@ class TvGuideActivity : AppCompatActivity() {
         categories?.let {
             adapter.items = it
             adapter.notifyDataSetChanged()
-        }
+         }
     }
 
 }

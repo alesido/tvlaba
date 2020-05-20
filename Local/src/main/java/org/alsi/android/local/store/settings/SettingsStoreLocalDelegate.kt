@@ -7,15 +7,13 @@ import io.objectbox.kotlin.query
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataLocal
 import org.alsi.android.domain.streaming.model.options.*
+import org.alsi.android.domain.streaming.model.options.rc.DeviceModelOption
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.user.model.UserAccount
-import org.alsi.android.local.Local
 import org.alsi.android.local.model.settings.*
 import org.alsi.android.local.model.user.UserAccountEntity
 import org.alsi.android.local.model.user.UserAccountEntity_
-import javax.inject.Inject
-import javax.inject.Named
 
 class SettingsStoreLocalDelegate(
         private val scopeTypeOrdinal: Int, // provider (1) or service (2)
@@ -40,6 +38,9 @@ class SettingsStoreLocalDelegate(
         this.settingsQuery = settingsQuery()
     }
 
+    /**
+     * prepare user settings query
+     */
     private fun settingsQuery() = settingsBox.query {
         equal(ServiceSettingsEntity_.scopeTypeOrdinal, scopeTypeOrdinal.toLong())
         equal(ServiceSettingsEntity_.scopeId, scopeId)
@@ -49,6 +50,9 @@ class SettingsStoreLocalDelegate(
     private fun settingsEntity(): ServiceSettingsEntity
         = settingsQuery.findUnique()?: ServiceSettingsEntity(0L, scopeTypeOrdinal, scopeId, accountId)
 
+    /**
+     * store selected server option
+     */
     override fun setServer(serverTag: String): Completable {
         return Completable.fromRunnable {
             val settingsEntity = settingsEntity()
@@ -57,6 +61,9 @@ class SettingsStoreLocalDelegate(
         }
     }
 
+    /**
+     * store selected language option
+     */
     override fun setLanguage(languageCode: String): Completable {
         return Completable.fromRunnable {
             val settingsEntity = settingsEntity()
@@ -67,6 +74,9 @@ class SettingsStoreLocalDelegate(
         }
     }
 
+    /**
+     * store selected device option
+     */
     override fun setDevice(modelId: String): Completable {
         return Completable.fromRunnable {
             val settingsEntity = settingsEntity()
@@ -75,19 +85,55 @@ class SettingsStoreLocalDelegate(
         }
     }
 
+    /**
+     * export current settings from store
+     */
     override fun values(): StreamingServiceSettings {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val entity = settingsEntity()
+        val server = entity.server.target
+        val language  = entity.language.target
+        val device = entity.device.target
+        return StreamingServiceSettings(
+                server = StreamingServerOption(server.reference, server.title, server.description),
+                language = ServiceLanguageOption(language.code, language.name),
+                device = DeviceModelOption(device.id, device.modelId),
+                timeShiftSettingHours = 0,
+                rc = null)
+        // TODO Implement remote control settings
     }
 
+    /**
+     * export all supported settings from store
+     */
     override fun profile(): StreamingServiceProfile {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return StreamingServiceProfile(
+                servers = serverBox.all.map { StreamingServerOption(it.reference, it.title, it.description) },
+                languages = languageBox.all.map { ServiceLanguageOption(it.code, it.name) },
+                devices = deviceBox.all.map { DeviceModelOption(it.id, it.modelId) }
+        )
     }
 
+    /**
+     * save settings to store
+     */
     override fun setValues(settings: StreamingServiceSettings) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        settings.server?.tag?.let { setServer(it) }
+        settings.language?.code?.let { setLanguage(it) }
+        settings.device?.name?.let { setDevice(it) }
     }
 
+    /**
+     * save all supported settings to store
+     */
     override fun setProfile(profile: StreamingServiceProfile) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val servers = profile.servers.map { ServerOptionEntity(0L, it.tag, it.title, it.description) }
+        serverBox.removeAll()
+        serverBox.put(servers)
+        val languages = profile.languages.map { LanguageOptionEntity(0L, it.code, it.name) }
+        languageBox.removeAll()
+        languageBox.put(languages)
+        val devices = profile.devices.map{ DeviceModelOptionEntity(0L, it.name) }
+        deviceBox.removeAll()
+        deviceBox.put(devices)
     }
 }
