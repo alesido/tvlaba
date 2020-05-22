@@ -1,6 +1,8 @@
-package org.alsi.android.domain.streaming.model.options
+package org.alsi.android.domain.streaming.model.service
 
-import org.alsi.android.domain.streaming.model.options.rc.DeviceModelOption
+import org.alsi.android.domain.streaming.model.options.ServiceLanguageOption
+import org.alsi.android.domain.streaming.model.options.StreamingServerOption
+import org.alsi.android.domain.streaming.model.options.DeviceModelOption
 
 @Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
 /** Streaming service profile for user preferences.

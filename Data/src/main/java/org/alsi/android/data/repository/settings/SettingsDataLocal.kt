@@ -1,7 +1,7 @@
 package org.alsi.android.data.repository.settings
 
 import io.reactivex.Completable
-import org.alsi.android.domain.streaming.model.options.StreamingServiceProfile
+import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 
 interface SettingsDataLocal {

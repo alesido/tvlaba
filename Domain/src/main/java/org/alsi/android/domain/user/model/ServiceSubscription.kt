@@ -14,3 +14,4 @@ class ServiceSubscription(
         val status: SubscriptionStatus,
         val expirationDate: LocalDate?
 )
+// TODO Add optional login name and password

@@ -7,8 +7,9 @@ import io.objectbox.kotlin.query
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataLocal
 import org.alsi.android.domain.streaming.model.options.*
-import org.alsi.android.domain.streaming.model.options.rc.DeviceModelOption
+import org.alsi.android.domain.streaming.model.options.DeviceModelOption
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.settings.*

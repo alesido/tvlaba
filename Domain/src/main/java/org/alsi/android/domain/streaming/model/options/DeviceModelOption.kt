@@ -1,4 +1,4 @@
-package org.alsi.android.domain.streaming.model.options.rc
+package org.alsi.android.domain.streaming.model.options
 
 /**
  * Created on 8/10/18.
