@@ -29,7 +29,7 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
             field = value
             value?.subscribe {
                 local.switchUser(it.account.loginName)
-            }
+            }//?.dispose()
         }
 
 //    /** Remote store property is overridden just to assign more specific type to it.
@@ -69,7 +69,9 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
                 remote.getDirectory()
             }
             else Single.just(directory)
-        }.subscribe { directory -> directorySubject.onNext(directory) }
+        }.subscribe( { directory -> directorySubject.onNext(directory) }, {
+            Log.e(TvChannelDataRepositoryMoidom::class.simpleName, it.toString())
+        })//.dispose()
         return directorySubject
     }
 
@@ -82,7 +84,8 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
                 directory -> directorySubject.onNext(directory) }, {
                 Log.w(TvChannelDataRepositoryMoidom::class.java.simpleName,
                         "Error reading TV channels directory from the local store", it)
-            })
+            })//.dispose()
+            // TODO Dispose the subscription when finished (in the onSuccess call-back?)
         }
     }
 
@@ -115,7 +118,7 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
                 remote.getChannels()
             }
             else Single.just(channels)
-        }.subscribe { channels -> channelsSubject.onNext(channels.filter { it.categoryId == categoryId })}
+        }.subscribe { channels -> channelsSubject.onNext(channels.filter { it.categoryId == categoryId })}.dispose()
         return channelsSubject
     }
 

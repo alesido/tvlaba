@@ -1,5 +1,6 @@
 package org.alsi.android.moidom.repository
 
+import android.util.Log
 import io.objectbox.BoxStore
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -30,7 +31,7 @@ class SettingsRepositoryMoidom @Inject constructor(
     private var subscription: Disposable
 
     init {
-        subscription = loginSubject.subscribe {
+        subscription = loginSubject.subscribe( {
 
             val localMoidom = local as SettingsStoreLocalDelegate
             val remoteMoidom = remote as SettingsRemoteStoreMoidom
@@ -41,7 +42,10 @@ class SettingsRepositoryMoidom @Inject constructor(
 
             localMoidom.setProfile(profile)
             localMoidom.setValues(remoteMoidom.getSourceSettings(it.data, profile))
-        }
+
+        }, {
+            Log.e(SettingsRepositoryMoidom::class.simpleName, "Exception Ignored: $it")
+        })
     }
 
     fun dispose() {
