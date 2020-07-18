@@ -9,6 +9,7 @@ import org.alsi.android.domain.streaming.model.options.DeviceModelOption
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlMap
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
+import org.alsi.android.moidom.mapper.RemoteControlMapper
 import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
@@ -38,10 +39,7 @@ class SettingsRemoteStoreMoidom: SettingsDataRemote {
         val deviceModelName = deviceModelId?.let { profile.deviceById[deviceModelId] }
         val deviceModelSetting = deviceModelName?.let { DeviceModelOption(deviceModelId, deviceModelName) }
 
-        val rcMap = RemoteControlMap()
-        if (source.settings.rc_codes != null) {
-            TODO("Collect RC codes to the mapper")
-        }
+        val rcMap = RemoteControlMapper().mapFromSource(source.settings.rc_codes)
 
         return StreamingServiceSettings(serverSetting, languageSetting, settings.timeshift.value, deviceModelSetting, rcMap)
     }

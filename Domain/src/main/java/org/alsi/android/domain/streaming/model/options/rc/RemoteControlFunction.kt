@@ -75,5 +75,16 @@ enum class RemoteControlFunction {
      */
     DELETE_FAVORITE_CHANNEL,
 
+    /**
+     * Toggle channel to be a favorite, i.e. add/delete to/from the favorites if isn't/is a favorite
+     */
+    TOGGLE_FAVORITE_CHANNEL,
+
+    /**
+     * Open app settings menu
+     */
+    SETTINGS,
+
+
     UNKNOWN
 }
