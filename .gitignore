@@ -4,6 +4,8 @@
 /.idea/workspace.xml
 /.idea/libraries
 /.idea/sonarlint
+/.idea/caches/
+/.idea/shelf/
 .DS_Store
 /build
 /captures
