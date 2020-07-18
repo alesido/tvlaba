@@ -205,7 +205,9 @@ interface RestServiceMoidom {
     ): Single<ResponseBody>
 
     companion object {
-        val SERVICE_URL = "http://iptv.moi-dom.tv/api/json/"
+//        const val SERVICE_URL = "http://iptv.moi-dom.tv/api/json/"
+        const val SERVICE_URL = "https://api.telecola.tv/api/json/"
+
         val UPGRADE_URL = "http://android.moidom.tv/android_new/updatemoidom.php"
 
         val BASE_URL_VOD_POSTERS = "http://iptv.moi-dom.tv/" // http://iptv.moi-dom.tv/img/ico_245x140/74.png
