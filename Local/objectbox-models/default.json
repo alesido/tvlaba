@@ -327,10 +327,31 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "14:5719767438563060086",
+      "lastPropertyId": "3:7563215708925638111",
+      "name": "TvChannelIndexEntity",
+      "properties": [
+        {
+          "id": "1:2028794186714719264",
+          "name": "id"
+        },
+        {
+          "id": "2:4685299920754800124",
+          "indexId": "17:6561147895439641340",
+          "name": "categoryId"
+        },
+        {
+          "id": "3:7563215708925638111",
+          "name": "channelId"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "13:4603470194573394471",
-  "lastIndexId": "16:2922034967181324700",
+  "lastEntityId": "14:5719767438563060086",
+  "lastIndexId": "17:6561147895439641340",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

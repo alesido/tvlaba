@@ -264,11 +264,12 @@
     },
     {
       "id": "12:8544989341801515503",
-      "lastPropertyId": "5:5733608369413208784",
+      "lastPropertyId": "6:4928467624279821840",
       "name": "TvChannelFeaturesEntity",
       "properties": [
         {
           "id": "1:311508341229991225",
+          "indexId": "16:2922034967181324700",
           "name": "channelId"
         },
         {
@@ -286,6 +287,10 @@
         {
           "id": "5:5733608369413208784",
           "name": "hasMultipleLanguageAudioTracks"
+        },
+        {
+          "id": "6:4928467624279821840",
+          "name": "id"
         }
       ],
       "relations": []
@@ -325,7 +330,7 @@
     }
   ],
   "lastEntityId": "13:4603470194573394471",
-  "lastIndexId": "15:2187969593749072192",
+  "lastIndexId": "16:2922034967181324700",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
