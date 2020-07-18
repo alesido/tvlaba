@@ -6,4 +6,8 @@ import org.alsi.android.domain.tv.model.session.TvPlayCursor
 /**
  * Created on 7/18/18.
  */
-class TvServiceSession(val id: Long, val browse: TvBrowseCursor, val play: TvPlayCursor)
+class TvServiceSession(
+        val id: Long,
+        val browse: TvBrowseCursor,
+        val play: TvPlayCursor,
+        val parentCode: String)

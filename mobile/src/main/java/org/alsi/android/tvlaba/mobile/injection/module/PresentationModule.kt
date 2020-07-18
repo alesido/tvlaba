@@ -1,7 +1,7 @@
 package org.alsi.android.tvlaba.mobile.injection.module
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -17,7 +17,6 @@ abstract class PresentationModule {
     @IntoMap
     @ViewModelKey(TvCategoryBrowseViewModel::class)
     abstract fun bindTvCategoryBrowseViewModel(viewModel: TvCategoryBrowseViewModel) : ViewModel
-
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

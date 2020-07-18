@@ -4,6 +4,9 @@ import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import org.alsi.android.domain.DomainModule
+import org.alsi.android.local.LocalModule
+import org.alsi.android.moidom.MoidomModule
 import org.alsi.android.tvlaba.mobile.MobileVideoStreamingApplication
 import org.alsi.android.tvlaba.mobile.injection.module.*
 import javax.inject.Singleton
@@ -14,8 +17,11 @@ import javax.inject.Singleton
         ApplicationModule::class,
         UiModule::class,
         PresentationModule::class,
+        DomainModule::class,
         DataModule::class,
-        RemoteModule::class
+        LocalModule::class,
+        MoidomModule::class,
+        StreamingServicesModule::class
 ])
 
 interface ApplicationComponent {

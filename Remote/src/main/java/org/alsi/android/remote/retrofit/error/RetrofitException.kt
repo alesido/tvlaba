@@ -22,7 +22,7 @@ class RetrofitException(
         private val responseType: Type)
 
     : RuntimeException( exception?.let { when (it) {
-        is HttpException -> it.response().message()
+        is HttpException -> it.response()?.message()
         is IOException -> it.localizedMessage
         else -> it.localizedMessage
     }}, exception) {
@@ -35,7 +35,7 @@ class RetrofitException(
         this.errorKind = Kind.REST_API
         this.apiResponseCode = source.getApiResponseCode()
         this.apiErrorMessage = source.getErrorMessage()
-        this.requestUrl = call.request().url()
+        this.requestUrl = call.request().url
         this.errorData = source
     }
 
@@ -47,7 +47,7 @@ class RetrofitException(
     }
 
     var requestUrl = exception?.let {
-        (it as? HttpException)?.response()?.raw()?.request()?.url()
+        (it as? HttpException)?.response()?.raw()?.request?.url
     }
 
     val errorResponse = exception?.let {

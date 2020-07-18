@@ -2,7 +2,7 @@ package org.alsi.android.presentation.mapper
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 
 /**
  * Created on 7/6/18.

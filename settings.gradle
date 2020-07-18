@@ -1,1 +1,1 @@
-include ':mobile', ':tv', ':DomainTv', ':DomainVod', ':DomainUser', ':PresentationTv', ':PresentationVod', ':Presentation', ':Domain', ':Data', ':DataTv', ':Remote', ':MoiDom'
+include ':mobile', ':tv', ':DomainTv', ':DomainVod', ':DomainUser', ':PresentationTv', ':PresentationVod', ':Presentation', ':Domain', ':Data', ':DataTv', ':Remote', ':MoiDom', ':Local'

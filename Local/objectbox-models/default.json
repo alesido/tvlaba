@@ -1,0 +1,387 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2312380529869918852",
+      "lastPropertyId": "6:2616707537095600517",
+      "name": "UserAccountEntity",
+      "properties": [
+        {
+          "id": "2:8935402635139068629",
+          "name": "id"
+        },
+        {
+          "id": "3:3338168980972012110",
+          "indexId": "1:9177577641245810274",
+          "name": "loginName"
+        },
+        {
+          "id": "4:9215816898936996617",
+          "name": "loginPassword"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:4778480088802719991",
+      "lastPropertyId": "5:2307170903947306182",
+      "name": "SubscriptionEntity",
+      "properties": [
+        {
+          "id": "1:8272572561211106474",
+          "name": "id"
+        },
+        {
+          "id": "2:1436076750736580229",
+          "name": "serviceId"
+        },
+        {
+          "id": "3:7418450975132552450",
+          "name": "status"
+        },
+        {
+          "id": "4:7381691834817454487",
+          "name": "expirationDate"
+        },
+        {
+          "id": "5:2307170903947306182",
+          "indexId": "2:1094242775961301239",
+          "name": "userAccountId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8075741870348031678",
+      "lastPropertyId": "8:3234189361878992317",
+      "name": "TvChannelEntity",
+      "properties": [
+        {
+          "id": "1:379076813861415241",
+          "name": "id"
+        },
+        {
+          "id": "2:3483540935700970322",
+          "name": "logoUri"
+        },
+        {
+          "id": "3:1617835316810708729",
+          "name": "title"
+        },
+        {
+          "id": "4:2233177869299910248",
+          "indexId": "12:7909725735252140180",
+          "name": "categoryId"
+        },
+        {
+          "id": "5:8267310697452508319",
+          "name": "number"
+        },
+        {
+          "id": "7:4608737212600026591",
+          "indexId": "13:4542820937942520741",
+          "name": "liveId"
+        },
+        {
+          "id": "8:3234189361878992317",
+          "indexId": "14:2296803544757172383",
+          "name": "featuresId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:358898967036465",
+      "lastPropertyId": "4:8076109827830152806",
+      "name": "TvChannelCategoryEntity",
+      "properties": [
+        {
+          "id": "1:7495814442517821611",
+          "name": "id"
+        },
+        {
+          "id": "2:2766783503794388819",
+          "name": "title"
+        },
+        {
+          "id": "3:8358453925702231839",
+          "name": "logoReference"
+        },
+        {
+          "id": "4:8076109827830152806",
+          "name": "logoIconType"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:496918075873641003",
+      "lastPropertyId": "5:2500945875777442387",
+      "name": "TvFavoriteChannelEntity",
+      "properties": [
+        {
+          "id": "3:4419190903726179144",
+          "name": "id"
+        },
+        {
+          "id": "4:3302365689599221495",
+          "name": "channelId"
+        },
+        {
+          "id": "5:2500945875777442387",
+          "name": "userLoginName"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:8776651702300036457",
+      "lastPropertyId": "3:1477736767508925401",
+      "name": "DeviceModelOptionEntity",
+      "properties": [
+        {
+          "id": "1:5207556220975310350",
+          "name": "id"
+        },
+        {
+          "id": "3:1477736767508925401",
+          "name": "modelId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:3767975599030125300",
+      "lastPropertyId": "4:1655810094664136975",
+      "name": "RemoteControlKeyEntity",
+      "properties": [
+        {
+          "id": "1:176463583769594142",
+          "name": "id"
+        },
+        {
+          "id": "2:3063911191913087697",
+          "name": "function"
+        },
+        {
+          "id": "3:6623669695489787601",
+          "name": "keyCode"
+        },
+        {
+          "id": "4:1655810094664136975",
+          "indexId": "4:2870867724284677301",
+          "name": "deviceId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:5135359382625468189",
+      "lastPropertyId": "7:7446864326837710061",
+      "name": "ServiceSettingsEntity",
+      "properties": [
+        {
+          "id": "1:8838736963489183946",
+          "name": "id"
+        },
+        {
+          "id": "2:5537856500777983444",
+          "name": "scopeTypeOrdinal"
+        },
+        {
+          "id": "3:6628255334689868637",
+          "name": "scopeId"
+        },
+        {
+          "id": "4:5388988412134702651",
+          "name": "accountId"
+        },
+        {
+          "id": "5:2109877203146723897",
+          "indexId": "5:381313535510954795",
+          "name": "serverId"
+        },
+        {
+          "id": "6:4323132300512392326",
+          "indexId": "6:416891327484079120",
+          "name": "languageId"
+        },
+        {
+          "id": "7:7446864326837710061",
+          "indexId": "7:8476745212185634466",
+          "name": "deviceId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:5113139528922807573",
+      "lastPropertyId": "3:6744282245704094407",
+      "name": "LanguageOptionEntity",
+      "properties": [
+        {
+          "id": "1:429004855453889308",
+          "name": "id"
+        },
+        {
+          "id": "2:8151271620258672731",
+          "indexId": "8:791570167131944043",
+          "name": "code"
+        },
+        {
+          "id": "3:6744282245704094407",
+          "indexId": "9:3876775973009155870",
+          "name": "name"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:4641782745047131909",
+      "lastPropertyId": "4:4861352893714965726",
+      "name": "ServerOptionEntity",
+      "properties": [
+        {
+          "id": "1:1530171851710155980",
+          "name": "id"
+        },
+        {
+          "id": "2:1651837254093406598",
+          "name": "reference"
+        },
+        {
+          "id": "3:3123752031583329388",
+          "name": "title"
+        },
+        {
+          "id": "4:4861352893714965726",
+          "name": "description"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "12:8544989341801515503",
+      "lastPropertyId": "6:4928467624279821840",
+      "name": "TvChannelFeaturesEntity",
+      "properties": [
+        {
+          "id": "1:311508341229991225",
+          "indexId": "16:2922034967181324700",
+          "name": "channelId"
+        },
+        {
+          "id": "2:7027944886358942848",
+          "name": "hasArchive"
+        },
+        {
+          "id": "3:3472676058926381800",
+          "name": "hasSchedule"
+        },
+        {
+          "id": "4:7352808030062817085",
+          "name": "isPasswordProtected"
+        },
+        {
+          "id": "5:5733608369413208784",
+          "name": "hasMultipleLanguageAudioTracks"
+        },
+        {
+          "id": "6:4928467624279821840",
+          "name": "id"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "13:4603470194573394471",
+      "lastPropertyId": "6:3829018553352454133",
+      "name": "TvProgramLiveEntity",
+      "properties": [
+        {
+          "id": "1:924174076065801808",
+          "indexId": "15:2187969593749072192",
+          "name": "channelId"
+        },
+        {
+          "id": "2:5856945263369319259",
+          "name": "startMillis"
+        },
+        {
+          "id": "3:1719470743826349875",
+          "name": "endMillis"
+        },
+        {
+          "id": "4:6193492200518753758",
+          "name": "title"
+        },
+        {
+          "id": "5:7494556975304397512",
+          "name": "description"
+        },
+        {
+          "id": "6:3829018553352454133",
+          "name": "id"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "14:5719767438563060086",
+      "lastPropertyId": "3:7563215708925638111",
+      "name": "TvChannelIndexEntity",
+      "properties": [
+        {
+          "id": "1:2028794186714719264",
+          "name": "id"
+        },
+        {
+          "id": "2:4685299920754800124",
+          "indexId": "17:6561147895439641340",
+          "name": "categoryId"
+        },
+        {
+          "id": "3:7563215708925638111",
+          "name": "channelId"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "14:5719767438563060086",
+  "lastIndexId": "17:6561147895439641340",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [
+    4806836590412894734
+  ],
+  "retiredIndexUids": [
+    578982744183955796,
+    2616022097780059776,
+    6760094197675018877
+  ],
+  "retiredPropertyUids": [
+    6905912384517656670,
+    3296976293602802684,
+    2616707537095600517,
+    7845254038162417177,
+    687191689473975124,
+    1213164237547574928,
+    4062720676619842432,
+    9098303551122431368,
+    7822730864353431222,
+    7333532046463637694,
+    3806057511361152402,
+    749215639226195671,
+    819356239654352286,
+    1486320700742547207,
+    2535526855586482692,
+    6260830418622603633
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

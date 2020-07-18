@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
-    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
-    buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "org.alsi.android.tvlaba.mobile"
@@ -21,7 +21,7 @@ android {
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -32,12 +32,23 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
     }
 
     androidExtensions {
         experimental = true
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "android.support") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "26.+"
+            }
+        }
     }
 }
 
@@ -47,6 +58,7 @@ dependencies {
 
     implementation project(':Domain')
     implementation project(':PresentationTv')
+    implementation project(':MoiDom')
 
     //Support & Compatibility
     implementation uiDependencies.androidSupportV4
@@ -59,9 +71,9 @@ dependencies {
     implementation uiDependencies.constraintLayout
 
     //Architecture Components
-    implementation presentationDependencies.archRuntime
-    implementation presentationDependencies.archExtensions
-    kapt presentationDependencies.archCompiler
+    implementation uiDependencies.archRuntime
+    implementation uiDependencies.archExtensions
+    kapt uiDependencies.archCompiler
 
     //Kotlin
     implementation uiDependencies.kotlin
@@ -69,6 +81,7 @@ dependencies {
     //RX
     implementation uiDependencies.rxKotlin
     implementation uiDependencies.rxAndroid
+    implementation domainDependencies.rxJava
 
     //Dependency Injection
     implementation uiDependencies.javaxInject

@@ -1,7 +1,8 @@
 apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 dependencies {
     def domainDependencies = rootProject.ext.domainDependencies
@@ -9,9 +10,18 @@ dependencies {
 
     implementation domainDependencies.javaxAnnotation
     implementation domainDependencies.javaxInject
-    implementation domainDependencies.rxKotlin
+
     implementation domainDependencies.kotlin
-    implementation domainDependencies.jodaTime
+    implementation domainDependencies.rxKotlin
+    implementation domainDependencies.rxJava
+
+    implementation domainDependencies.dagger
+    implementation domainDependencies.daggerSupport
+    kapt domainDependencies.daggerCompiler
+    kapt domainDependencies.daggerProcessor
+
+
+    compile domainDependencies.jodaTime // "implementation" does not work here
 
     testImplementation domainTestDependencies.junit
     testImplementation domainTestDependencies.mockito

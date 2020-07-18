@@ -1,4 +1,9 @@
 package org.alsi.android.domain.tv.model.guide
 
-class TvChannelCategory(val id: Long, val title: String, val color: Int, val logoReference: String)
+import org.alsi.android.domain.implementation.model.TypedIconReference
+
+class TvChannelCategory(
+        val id: Long,
+        val title: String,
+        val logo: TypedIconReference?)
 

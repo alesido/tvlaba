@@ -6,32 +6,21 @@ import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.interactor.ObservableUseCase
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
-import org.alsi.android.domain.tv.repository.guide.TvChannelRepository
+import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
 import javax.inject.Inject
 
 open class TvCategoriesUseCase @Inject constructor(
         private val presentationManager: PresentationManager,
         postExecutionThread: PostExecutionThread)
-    : ObservableUseCase<List<TvChannelCategory>, Nothing>(postExecutionThread)
+    : ObservableUseCase<List<TvChannelCategory>, Nothing?>(postExecutionThread)
 {
     override fun buildUseCaseObservable(params: Nothing?): Observable<List<TvChannelCategory>> {
-        val serviceRepository = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.repository
-        return if (serviceRepository is TvChannelRepository) {
-            serviceRepository.getCategories()
+        val directory = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.directory
+        return if (directory is TvDirectoryRepository) {
+            directory.channels.getCategories()
         }
         else {
-            Observable.error(Throwable("TV Service Repository isn't available!"))
+            Observable.error(Throwable("TV Service Repository is N/A!"))
         }
     }
 }
-//
-//open class TvCategoryIconsUseCase @Inject constructor(
-//        private val tvChannelRepository: TvChannelRepository,
-//        postExecutionThread: PostExecutionThread)
-//    : ObservableUseCase<IconSet, Nothing>(postExecutionThread)
-//{
-//    override fun buildUseCaseObservable(params: Nothing?): Observable<IconSet> {
-//        return tvChannelRepository.getCategoryIcons()
-//    }
-//
-//}

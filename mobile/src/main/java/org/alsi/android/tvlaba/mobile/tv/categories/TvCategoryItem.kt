@@ -1,7 +1,7 @@
 package org.alsi.android.tvlaba.mobile.tv.categories
 
 import android.net.Uri
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.alsi.android.presentationtv.model.TvCategoryItemViewModel
 import org.alsi.android.tvlaba.mobile.mapper.ViewMapper
 import javax.inject.Inject

@@ -1,0 +1,96 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.objectbox'
+
+android {
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+
+    defaultConfig {
+        minSdkVersion globalConfiguration["androidMinSdkVersion"]
+        targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+        multiDexEnabled = true
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        dexInProcess = false
+        javaMaxHeapSize "4g"
+    }
+
+    compileOptions {
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
+    }
+
+    testOptions {
+        unitTests.all {
+            jvmArgs '-noverify'
+        }
+    }
+    buildTypes {
+        release {
+        }
+    }
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+dependencies {
+    def localDependencies = rootProject.ext.localDependencies
+    def localTestDependencies = rootProject.ext.localTestDependencies
+
+    api project(':Domain')
+    api project(':Data')
+    api project(':DataTv')
+
+    implementation localDependencies.kotlin
+    implementation localDependencies.rxKotlin
+    implementation localDependencies.rxJava
+    implementation localDependencies.kotlinReflect
+
+    implementation localDependencies.javaxInject
+    implementation localDependencies.javaxAnnotation
+    implementation localDependencies.appCompatV7
+
+    implementation localDependencies.dagger
+    implementation localDependencies.daggerSupport
+    kapt localDependencies.daggerCompiler
+    kapt localDependencies.daggerProcessor
+
+    implementation localDependencies.objectboxAndroid
+    implementation localDependencies.objectboxKotlin
+
+    testImplementation localTestDependencies.junit
+    testImplementation localTestDependencies.kotlinJUnit
+    testImplementation localTestDependencies.mockito
+    testImplementation localTestDependencies.assertj
+
+    testImplementation localTestDependencies.objectboxTestLinux
+    testImplementation localTestDependencies.objectboxTestMacOS
+    testImplementation localTestDependencies.objectboxTestWindows
+}

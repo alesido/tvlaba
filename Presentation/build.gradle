@@ -5,8 +5,8 @@ apply plugin: 'kotlin-kapt'
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
-    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
-    buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
 
     defaultConfig {
@@ -22,8 +22,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
     }
 
     packagingOptions {
@@ -49,11 +49,14 @@ android {
             jvmArgs '-noverify'
         }
     }
+    buildTypes {
+        release {
+        }
+    }
 }
 
 kapt {
     correctErrorTypes = true
-    generateStubs = true
 }
 
 dependencies {
@@ -63,6 +66,7 @@ dependencies {
 
     implementation presentationDependencies.kotlin
     implementation presentationDependencies.rxKotlin
+    implementation presentationDependencies.rxJava
 
     implementation presentationDependencies.javaxInject
 
@@ -76,5 +80,8 @@ dependencies {
     testImplementation presentationTestDependencies.assertj
     testImplementation presentationTestDependencies.robolectric
     testImplementation presentationTestDependencies.archTesting
+
+    androidTestImplementation presentationTestDependencies.junit
+    androidTestImplementation presentationTestDependencies.androidRunner
 
 }

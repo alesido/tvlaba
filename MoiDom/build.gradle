@@ -1,30 +1,103 @@
-apply plugin: 'kotlin'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.objectbox'
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+android {
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration["androidCompileSdkVersion"]
+    buildToolsVersion globalConfiguration["androidBuildToolsVersion"]
+
+
+    defaultConfig {
+        minSdkVersion globalConfiguration["androidMinSdkVersion"]
+        targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
+        multiDexEnabled = true
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        dexInProcess = false
+        javaMaxHeapSize "4g"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
+    }
+
+    testOptions {
+        unitTests.all {
+            jvmArgs '-noverify'
+        }
+    }
+    buildTypes {
+        release {
+        }
+    }
+}
+
+kapt {
+    correctErrorTypes = true
+}
 
 dependencies {
     def remoteDependencies = rootProject.ext.remoteDependencies
     def remoteTestDependencies = rootProject.ext.remoteTestDependencies
 
-    implementation project(':Data')
-    implementation project(':Remote')
+    api project(':Domain')
+    api project(':Data')
+    api project(':DataTv')
+    api project(':Remote')
+    api project(':Local')
 
-    implementation remoteDependencies.javaxAnnotation
     implementation remoteDependencies.kotlin
-    implementation remoteDependencies.javaxInject
     implementation remoteDependencies.rxKotlin
+    implementation remoteDependencies.rxJava
+    implementation remoteDependencies.kotlinReflect
+
+    implementation remoteDependencies.javaxInject
+    implementation remoteDependencies.javaxAnnotation
+    implementation remoteDependencies.appCompatV7
+
+    implementation remoteDependencies.dagger
+    implementation remoteDependencies.daggerSupport
+    kapt remoteDependencies.daggerCompiler
+    kapt remoteDependencies.daggerProcessor
+
     implementation remoteDependencies.gson
     implementation remoteDependencies.okHttp
     implementation remoteDependencies.okHttpLogger
+
     implementation remoteDependencies.retrofit
-    implementation remoteDependencies.retrofitConverter
+    implementation remoteDependencies.retrofitGson
     implementation remoteDependencies.retrofitAdapter
 
-    implementation remoteTestDependencies.junit
-    implementation remoteTestDependencies.kotlinJUnit
-    implementation remoteTestDependencies.mockito
-    implementation remoteTestDependencies.assertj
-    implementation remoteTestDependencies.mockWebServer
+    implementation remoteDependencies.objectboxAndroid
+    implementation remoteDependencies.objectboxKotlin
 
+    testImplementation remoteTestDependencies.junit
+    testImplementation remoteTestDependencies.kotlinJUnit
+    testImplementation remoteTestDependencies.mockito
+    testImplementation remoteTestDependencies.assertj
+    testImplementation remoteTestDependencies.mockWebServer
 }

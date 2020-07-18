@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TvLabA</string>
+    <string name="error_message_unexpected_condition">Unexpected condition</string>
 </resources>

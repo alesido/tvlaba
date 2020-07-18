@@ -1,7 +1,7 @@
 package org.alsi.android.presentationtv.model
 
 import android.net.Uri
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 
 /**
  * Created on 7/5/18.

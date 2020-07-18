@@ -126,7 +126,7 @@ class RetrofitServiceBuilder<API>
                 var request = chain.request()
 
                 // request modification
-                val urlBuilder = request.url().newBuilder()
+                val urlBuilder = request.url.newBuilder()
                 for ((key, value) in extraQueryParams) {
                     urlBuilder.addQueryParameter(key, value)
                 }

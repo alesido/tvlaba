@@ -1,4 +1,5 @@
 apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
@@ -13,6 +14,12 @@ dependencies {
     implementation dataDependencies.kotlin
     implementation dataDependencies.javaxInject
     implementation dataDependencies.rxKotlin
+    implementation dataDependencies.rxJava
+
+    implementation dataDependencies.dagger
+    implementation dataDependencies.daggerSupport
+    kapt dataDependencies.daggerCompiler
+    kapt dataDependencies.daggerProcessor
 
     testImplementation dataTestDependencies.junit
     testImplementation dataTestDependencies.kotlinJUnit

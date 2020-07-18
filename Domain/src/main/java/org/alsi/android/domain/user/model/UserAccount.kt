@@ -6,7 +6,5 @@ package org.alsi.android.domain.user.model
 class UserAccount(
         val loginName: String,
         val loginPassword: String,
-        val parentCode: String,
-        val languageCode: String,
         val subscriptions: List<ServiceSubscription>
 )

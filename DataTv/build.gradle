@@ -1,20 +1,22 @@
 apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 dependencies {
     def dataDependencies = rootProject.ext.dataDependencies
     def dataTestDependencies = rootProject.ext.dataTestDependencies
 
-    implementation project(':Domain')
-    implementation project(':DomainTv')
-    implementation project(':Data')
+    compile project(':Domain')
+    compile project(':DomainTv')
+    compile project(':Data')
 
     implementation dataDependencies.javaxAnnotation
     implementation dataDependencies.kotlin
     implementation dataDependencies.javaxInject
     implementation dataDependencies.rxKotlin
+    implementation dataDependencies.rxJava
 
     testImplementation dataTestDependencies.junit
     testImplementation dataTestDependencies.kotlinJUnit

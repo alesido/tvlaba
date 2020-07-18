@@ -3,9 +3,11 @@ package org.alsi.android.domain.tv.repository.guide
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.alsi.android.domain.context.model.ServiceRepository
+import io.reactivex.subjects.PublishSubject
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
+import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 
 /** Contract on TV repository of TV channels. Separated from the TV programs repository
  * to simplify it and allow for applications w/o programs.
@@ -14,21 +16,28 @@ import org.alsi.android.domain.tv.model.guide.TvChannelCategory
  */
 
 @Suppress("unused")
-interface TvChannelRepository : ServiceRepository
+interface TvChannelRepository
 {
+    // region Directory
+    fun getDirectory(): Observable<TvChannelDirectory>
+
+    // endregion
     // region Categories
 
     fun getCategories(): Observable<List<TvChannelCategory>>
-
-    fun findCategoryById(categoryId: Long): Single<TvChannelCategory>
+    fun findCategoryById(categoryId: Long): Single<TvChannelCategory?>
 
     // endregion
     // region Channels
 
     fun getChannels(categoryId: Long): Observable<List<TvChannel>>
+    fun findChannelByNumber(channelNumber: Int): Single<TvChannel?>
 
-    fun getChannelsUpdate(channelIds: List<Long>): Completable // assumed that the subscribed views will receive updates
-    fun findChannelByNumber(channelNumber: Int): Single<TvChannel>
+    // endregion
+    // region Actualization
+
+    fun getChannelsVisibilitySubject(): PublishSubject<TvChannelListWindow>
+    fun scheduleChannelsUpdate(window: TvChannelListWindow)
 
     // endregion
     // region Favorite Channels
@@ -39,6 +48,4 @@ interface TvChannelRepository : ServiceRepository
     fun isChannelFavorite(channelId: Long): Single<Boolean>
 
     // endregion
-
-    fun preload(): Completable
 }

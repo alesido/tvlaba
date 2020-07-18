@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">moi-dom.tv</domain>
+        <domain includeSubdomains="true">moidom.tv</domain>
+        <domain includeSubdomains="true">telecola.tv</domain>
+        <domain includeSubdomains="true">epgservice.ru</domain>
+        <domain includeSubdomains="true">ottstream.live</domain>
+        <domain includeSubdomains="true">cdnvideo.ru</domain>
+        <domain includeSubdomains="true">5.254.37.98</domain>
+        <domain includeSubdomains="true">185.37.148.42</domain><!-- Moi Dom VOD streams-->
+        <domain includeSubdomains="true">vcdn.biz</domain><!-- Megogo posters & streams -->
+        <domain includeSubdomains="true">mggcdn.net</domain><!-- Megogo posters & streams -->
+    </domain-config>
+</network-security-config>
