@@ -1,7 +1,10 @@
 package org.alsi.android.domain.tv.model.guide
 
-class TvChannelDirectory (
+class TvChannelDirectory(
+        // list of channel categories
         val categories: List<TvChannelCategory>,
-        val channels: List<TvChannel>
+        // ordered list all channels
+        val channels: List<TvChannel>,
+        // index maps category to list of channels belonging to it by category ID
+        val index: Map<Long, List<TvChannel>>
 )
-

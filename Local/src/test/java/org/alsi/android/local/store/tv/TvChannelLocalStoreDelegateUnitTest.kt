@@ -45,11 +45,11 @@ class TvChannelLocalStoreDelegateUnitTest {
 
         val readCategories = testObserver.values()[0]
         assertEquals(testCategories.size, readCategories.size)
-        for (i in 0 until testCategories.size) {
+        for (i in testCategories.indices) {
             assertEquals(testCategories[i].id, readCategories[i].id)
             assertEquals(testCategories[i].title, readCategories[i].title)
-            assertEquals(testCategories[i].logo.kind, readCategories[i].logo.kind)
-            assertEquals(testCategories[i].logo.reference, readCategories[i].logo.reference)
+            assertEquals(testCategories[i].logo?.kind, readCategories[i].logo?.kind)
+            assertEquals(testCategories[i].logo?.reference, readCategories[i].logo?.reference)
         }
     }
 
@@ -60,20 +60,20 @@ class TvChannelLocalStoreDelegateUnitTest {
         val testCategories = TvChannelTestDataFactory.categories()
         val testChannels = TvChannelTestDataFactory.channels()
 
-        storeDelegate.putDirectory(TvChannelDirectory(testCategories, testChannels)).subscribe {
+        storeDelegate.putDirectory(TvChannelDirectory(testCategories, testChannels, mapOf())).subscribe {
             storeDelegate.getDirectory().subscribe(testObserver)
         }
         onTestObserverTermination(testObserver, "shouldStoreCategories")
 
         val readDirectory = testObserver.values()[0]
         assertEquals(testCategories.size, readDirectory.categories.size)
-        for (i in 0 until testCategories.size) {
+        for (i in testCategories.indices) {
             assertEquals(testCategories[i].id, readDirectory.categories[i].id)
             assertEquals(testCategories[i].title, readDirectory.categories[i].title)
-            assertEquals(testCategories[i].logo.kind, readDirectory.categories[i].logo.kind)
-            assertEquals(testCategories[i].logo.reference, readDirectory.categories[i].logo.reference)
+            assertEquals(testCategories[i].logo?.kind, readDirectory.categories[i].logo?.kind)
+            assertEquals(testCategories[i].logo?.reference, readDirectory.categories[i].logo?.reference)
         }
-        for (i in 0 until testChannels.size) {
+        for (i in testChannels.indices) {
             assertEquals(testChannels[i].id, readDirectory.channels[i].id)
             assertEquals(testChannels[i].categoryId, readDirectory.channels[i].categoryId)
             assertEquals(testChannels[i].logoUri, readDirectory.channels[i].logoUri)
@@ -94,7 +94,7 @@ class TvChannelLocalStoreDelegateUnitTest {
 
         val readChannels = testObserver.values()[0]
         assertEquals(testChannels.size, readChannels.size)
-        for (i in 0 until testChannels.size) {
+        for (i in testChannels.indices) {
             assertEquals(testChannels[i].id, readChannels[i].id)
             assertEquals(testChannels[i].categoryId, readChannels[i].categoryId)
             assertEquals(testChannels[i].logoUri, readChannels[i].logoUri)

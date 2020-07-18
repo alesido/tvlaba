@@ -12,7 +12,6 @@ import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.mapper.TvCategoryItemViewMapper
 import javax.inject.Inject
-import javax.inject.Named
 
 /** View model to allow user browse channel categories contents in, e.g. Accordion layout.
  *

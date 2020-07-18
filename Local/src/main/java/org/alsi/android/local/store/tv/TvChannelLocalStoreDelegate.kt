@@ -18,11 +18,9 @@ import javax.inject.Inject
 
 /** Delegate for local TV channels store belonging to a service.
  *
- * DECISION It is decided, in favor of access speed, to have separate store files for services.
+ * It is decided, in favor of access speed, to have separate store files for services.
  *
- * NOTE While it doesn't make sense to store separate categories and channels set for each user,
- * it's a must to have different records set for channel favorites.
- * Though, there are own storage for each services.
+ * NOTE Depending on service subscription user may have different sets categories and channels.
  */
 class TvChannelLocalStoreDelegate(
 
@@ -36,6 +34,7 @@ class TvChannelLocalStoreDelegate(
 
     private val categoryBox: Box<TvChannelCategoryEntity> = serviceBoxStore.boxFor()
     private val channelBox: Box<TvChannelEntity> = serviceBoxStore.boxFor()
+    private val indexBox: Box<TvChannelIndexEntity> = serviceBoxStore.boxFor()
     private val favoriteChannelBox: Box<TvFavoriteChannelEntity> = serviceBoxStore.boxFor()
 
     private val categoryMapper = TvCategoryEntityMapper()
@@ -51,13 +50,31 @@ class TvChannelLocalStoreDelegate(
         return Completable.fromRunnable {
             categoryBox.put(directory.categories.map { categoryMapper.mapToEntity(it) })
             channelBox.put(directory.channels.map { channelMapper.mapToEntity(it) })
+            val indexItems: MutableList<TvChannelIndexEntity> = mutableListOf()
+            directory.index.forEach {node ->
+                node.value.forEach { channel ->
+                    indexItems.add(TvChannelIndexEntity(
+                            categoryId = node.key,
+                            channelId = channel.id
+                    ))
+                }
+            }
+            indexBox.put(indexItems)
         }
     }
 
     override fun getDirectory(): Single<TvChannelDirectory> = Single.fromCallable {
-        TvChannelDirectory(
-                categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) },
-                channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) })
+        val categories = categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) }
+        val channels = channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) }
+        val channelsById: Map<Long, TvChannel> = channels.map {it.id to it}.toMap()
+        val index : MutableMap<Long, MutableList<TvChannel>> = mutableMapOf()
+        indexBox.all.forEach { entry ->
+            if (! index.contains(entry.categoryId)) {
+                index[entry.categoryId] = mutableListOf()
+            }
+            channelsById[entry.channelId]?.let { index[entry.categoryId]?.add(it) }
+        }
+        TvChannelDirectory(categories, channels, index)
     }
 
     // endregion

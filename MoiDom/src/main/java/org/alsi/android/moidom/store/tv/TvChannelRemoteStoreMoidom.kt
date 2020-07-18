@@ -6,7 +6,7 @@ import org.alsi.android.datatv.store.TvChannelRemoteStore
 import org.alsi.android.datatv.store.TvChannelRemoteStoreFeature
 import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.moidom.mapper.TvCategoriesSourceDataMapper
-import org.alsi.android.moidom.mapper.TvChannelsSourceDataMapper
+import org.alsi.android.moidom.mapper.TvChannelDirectorySourceDataMapper
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.joda.time.DateTimeZone
@@ -23,13 +23,12 @@ class TvChannelRemoteStoreMoidom @Inject constructor(
     .withZone(DateTimeZone.getDefault()).print(0).replace(":", "")
 
     private val categoriesSourceMapper = TvCategoriesSourceDataMapper()
-    private val channelsSourceMapper = TvChannelsSourceDataMapper()
+    private val channelsSourceMapper = TvChannelDirectorySourceDataMapper()
 
     override fun getDirectory(): Single<TvChannelDirectory> {
-        return Single.just(TvChannelDirectorySink())
-        .flatMap { sink -> getCategories().map { categories -> sink.categories.addAll(categories); sink } }
-        .flatMap { sink -> getChannels().map { channels -> sink.channels.addAll(channels); sink} }
-        .map { sink -> TvChannelDirectory(sink.categories, sink.channels) }
+        return remoteSession.getSessionId()
+                .flatMap { sid -> remoteService.getAllChannels(sid, timeZoneQueryParameter) }
+                .map { response -> channelsSourceMapper.mapFromSource(response) }
     }
 
     override fun getCategories(): Single<List<TvChannelCategory>> {
@@ -41,7 +40,7 @@ class TvChannelRemoteStoreMoidom @Inject constructor(
     override fun getChannels(): Single<List<TvChannel>> {
         return remoteSession.getSessionId()
                 .flatMap { sid -> remoteService.getAllChannels(sid, timeZoneQueryParameter) }
-                .map { response -> channelsSourceMapper.mapFromSource(response) }
+                .map { response -> channelsSourceMapper.mapFromSource(response).channels }
     }
 
     override fun getChannels(channelIds: List<Long>): Single<List<TvChannel>> {
