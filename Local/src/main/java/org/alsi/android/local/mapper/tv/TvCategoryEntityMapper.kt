@@ -21,8 +21,8 @@ class TvCategoryEntityMapper: EntityMapper<TvChannelCategoryEntity, TvChannelCat
         return with(domain) {
             TvChannelCategoryEntity(
                 id, title,
-                IconTypeProperty.valueByType[logo.kind]?: IconTypeProperty.UNKNOWN,
-                logo.reference)
+                IconTypeProperty.valueByType[logo?.kind]?: IconTypeProperty.UNKNOWN,
+                logo?.reference)
         }
     }
 }

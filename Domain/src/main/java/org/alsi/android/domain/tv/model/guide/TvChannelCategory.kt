@@ -5,5 +5,5 @@ import org.alsi.android.domain.implementation.model.TypedIconReference
 class TvChannelCategory(
         val id: Long,
         val title: String,
-        val logo: TypedIconReference)
+        val logo: TypedIconReference?)
 
