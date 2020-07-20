@@ -8,7 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/DomainTv/DomainTv.iml" filepath="$PROJECT_DIR$/DomainTv/DomainTv.iml" group="TvLabA/DomainTv" />
       <module fileurl="file://$PROJECT_DIR$/DomainUser/DomainUser.iml" filepath="$PROJECT_DIR$/DomainUser/DomainUser.iml" group="TvLabA/DomainUser" />
       <module fileurl="file://$PROJECT_DIR$/DomainVod/DomainVod.iml" filepath="$PROJECT_DIR$/DomainVod/DomainVod.iml" group="TvLabA/DomainVod" />
-      <module fileurl="file://$PROJECT_DIR$/Local/Local.iml" filepath="$PROJECT_DIR$/Local/Local.iml" group="TvLabA/Local" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Local/Local.iml" filepath="$PROJECT_DIR$/.idea/modules/Local/Local.iml" group="TvLabA/Local" />
       <module fileurl="file://$PROJECT_DIR$/MoiDom/MoiDom.iml" filepath="$PROJECT_DIR$/MoiDom/MoiDom.iml" group="TvLabA/MoiDom" />
       <module fileurl="file://$PROJECT_DIR$/Presentation/Presentation.iml" filepath="$PROJECT_DIR$/Presentation/Presentation.iml" group="TvLabA/Presentation" />
       <module fileurl="file://$PROJECT_DIR$/PresentationTv/PresentationTv.iml" filepath="$PROJECT_DIR$/PresentationTv/PresentationTv.iml" group="TvLabA/PresentationTv" />
