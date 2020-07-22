@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TvLabA</string>
+    <string name="content_description_tv_channel_card_poster">TV Channel Poster View</string>
 </resources>

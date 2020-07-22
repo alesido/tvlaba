@@ -15,7 +15,7 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.tv.directory.TvDirectoryChannelPresenter
+import org.alsi.android.tvlaba.tv.tv.directory.TvDirectoryChannelCardPresenter
 import javax.inject.Inject
 
 /**
@@ -68,7 +68,7 @@ class ChannelDirectoryFragment : BrowseSupportFragment() {
         directory?.let {
             val categoryRows = directory.categories.mapIndexed { idx, category ->
                 val header = HeaderItem(idx.toLong(), category.title)
-                val listRowAdapter = ArrayObjectAdapter(TvDirectoryChannelPresenter()).apply {
+                val listRowAdapter = ArrayObjectAdapter(TvDirectoryChannelCardPresenter()).apply {
                     setItems(directory.index[category.id], null)
                 }
                 ListRow(header, listRowAdapter)

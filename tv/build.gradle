@@ -109,12 +109,6 @@ dependencies {
     implementation uiDependencies.timber
     implementation uiDependencies.glide
 
-    // Coil
-    implementation 'io.coil-kt:coil:0.7.0'
-
-    //Room
-    //implementation uiDependencies.roomRxJava
-
     //Unit Testing
     testImplementation uiTestDependencies.kotlinJUnit
 
