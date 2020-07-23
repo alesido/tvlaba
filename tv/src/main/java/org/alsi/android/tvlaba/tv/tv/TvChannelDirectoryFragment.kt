@@ -21,7 +21,7 @@ import javax.inject.Inject
 /**
  * @see "https://medium.com/@iammert/new-android-injector-with-dagger-2-part-1-8baa60152abe"
  */
-class ChannelDirectoryFragment : BrowseSupportFragment() {
+class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
 

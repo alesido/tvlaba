@@ -2,13 +2,13 @@ package org.alsi.android.tvlaba.tv.tv.directory
 
 import dagger.Module
 import dagger.Provides
-import org.alsi.android.tvlaba.tv.tv.ChannelDirectoryFragment
+import org.alsi.android.tvlaba.tv.tv.TvChannelDirectoryFragment
 
 @Module
-class ChannelDirectoryFragmentModule {
+class TvChannelDirectoryFragmentModule {
 
     @Provides
     fun provideChannelDirectoryFragmentView(
-            channelDirectoryFragment: ChannelDirectoryFragment
+            channelDirectoryFragment: TvChannelDirectoryFragment
     ) = channelDirectoryFragment
 }
