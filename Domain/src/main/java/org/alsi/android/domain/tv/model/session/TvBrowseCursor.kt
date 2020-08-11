@@ -10,5 +10,5 @@ class TvBrowseCursor(
         var category: ListCursor<Long>,
         var channel: ListCursor<Long>,
         var program: ListCursor<Long>,
-        var date: LocalDate
+        var timeStamp: Long
 )

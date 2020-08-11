@@ -1,6 +1,5 @@
 package org.alsi.android.domain.tv.interactor.guide
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType

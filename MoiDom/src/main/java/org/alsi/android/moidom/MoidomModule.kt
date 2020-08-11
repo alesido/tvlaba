@@ -9,10 +9,10 @@ import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.datatv.store.TvChannelRemoteStore
 import org.alsi.android.domain.streaming.model.ServiceProvider
 import org.alsi.android.domain.streaming.model.service.StreamingService
-import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
-import org.alsi.android.local.Local
-import org.alsi.android.local.store.AccountStoreLocalDelegate
+import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
+import org.alsi.android.local.store.tv.TvPlayCursorLocalStoreDelegate
+import org.alsi.android.local.store.tv.TvVideoStreamLocalStoreDelegate
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.model.tv.MyObjectBox

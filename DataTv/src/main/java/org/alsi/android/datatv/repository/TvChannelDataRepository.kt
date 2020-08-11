@@ -2,6 +2,7 @@ package org.alsi.android.datatv.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.datatv.store.TvChannelRemoteStore
@@ -28,8 +29,11 @@ abstract class TvChannelDataRepository: TvChannelRepository {
 
     private val visibilitySubject: PublishSubject<TvChannelListWindow> = PublishSubject.create()
 
+    protected val disposables = CompositeDisposable()
+
     init {
-        visibilitySubject.subscribe { window -> scheduleChannelsUpdate(window) }
+        val s = visibilitySubject.subscribe { window -> scheduleChannelsUpdate(window) }
+        disposables.add(s)
     }
 
     // region Categories
@@ -71,4 +75,8 @@ abstract class TvChannelDataRepository: TvChannelRepository {
     override fun isChannelFavorite(channelId: Long): Single<Boolean> = local.isChannelFavorite(channelId)
 
     // endregion
+
+    fun dispose() {
+        if (!disposables.isDisposed) disposables.dispose()
+    }
 }
