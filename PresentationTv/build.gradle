@@ -5,8 +5,8 @@ apply plugin: 'kotlin-kapt'
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
 
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
@@ -73,6 +73,12 @@ dependencies {
     implementation domainDependencies.rxJava
 
     implementation presentationDependencies.javaxInject
+
+    implementation presentationDependencies.dagger
+    implementation presentationDependencies.daggerSupport
+    kapt presentationDependencies.daggerCompiler
+    kapt presentationDependencies.daggerProcessor
+
 
     implementation presentationDependencies.archRuntime
     implementation presentationDependencies.archExtensions

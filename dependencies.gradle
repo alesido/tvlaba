@@ -37,8 +37,10 @@ ext {
     retrofitVersion = '2.6.0'
     glideVersion = '4.11.0'
     leanbackVersion = '1.0.0'
+    exoplayerVersion = '2.11.7'
+    exoplayerLeanbackExtensionVersion = '2.11.7'
     timberVersion = '4.7.1'
-    objectboxVersion = '2.0.0'
+    objectboxVersion = '2.7.0'
 
     //Testing
     jUnitVersion = '4.13-beta-3'
@@ -177,8 +179,12 @@ ext {
             rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
 
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
+
             daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger:             "com.google.dagger:dagger:${daggerVersion}",
+            daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
+            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
+
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             androidAnnotations: "androidx.annotation:annotation:${androidAnnotationsVersion}",
@@ -229,6 +235,8 @@ ext {
             timber:             "com.jakewharton.timber:timber:${timberVersion}",
 
             leanback:           "androidx.leanback:leanback:${leanbackVersion}",
+            exoplayer:          "com.google.android.exoplayer:exoplayer:${exoplayerVersion}",
+            exoplayerLeanback:  "com.google.android.exoplayer:extension-leanback:${exoplayerLeanbackExtensionVersion}",
 
             roomRuntime:        "androidx.room:room-runtime:${archCompVersion}",
             roomCompiler:       "androidx.room:room-compiler:${archCompVersion}",
