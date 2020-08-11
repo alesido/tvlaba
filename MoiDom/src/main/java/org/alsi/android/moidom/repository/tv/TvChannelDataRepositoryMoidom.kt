@@ -4,6 +4,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -27,16 +28,11 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
     var loginSubject: PublishSubject<LoginEvent>? = null
         set(value) {
             field = value
-            value?.subscribe {
+            val s = value?.subscribe {
                 local.switchUser(it.account.loginName)
-            }//?.dispose()
+            }
+            s?.let { disposables.add(it) }
         }
-
-//    /** Remote store property is overridden just to assign more specific type to it.
-//     */
-//    @Inject
-//    override lateinit var remote: TvChannelRemoteStore
-//    override var remote: TvChannelRemoteStore = TvChannelRemoteStoreMoidom()
 
     /** Directory subject made BehaviourSubject as it returns the last result immediately on subscription.
      */
@@ -63,7 +59,7 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      * This method provides cache with expiration functionality.
      */
     override fun getDirectory(): Observable<TvChannelDirectory> {
-        local.getDirectory().flatMap { directory ->
+        val s = local.getDirectory().flatMap { directory ->
             if (expiration.directoryExpired(directory)) {
                 expiration.checkInDirectory()
                 remote.getDirectory()
@@ -71,7 +67,8 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
             else Single.just(directory)
         }.subscribe( { directory -> directorySubject.onNext(directory) }, {
             Log.e(TvChannelDataRepositoryMoidom::class.simpleName, it.toString())
-        })//.dispose()
+        })
+        disposables.add(s)
         return directorySubject
     }
 
@@ -80,12 +77,12 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      */
     private fun sendUpdateToDirectorySubscribers() {
         if (directorySubject.hasObservers()) {
-            local.getDirectory().subscribe({
+            val s = local.getDirectory().subscribe({
                 directory -> directorySubject.onNext(directory) }, {
                 Log.w(TvChannelDataRepositoryMoidom::class.java.simpleName,
                         "Error reading TV channels directory from the local store", it)
-            })//.dispose()
-            // TODO Dispose the subscription when finished (in the onSuccess call-back?)
+            })
+            disposables.add(s)
         }
     }
 
@@ -112,13 +109,14 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      * This method provides cache with expiration functionality.
      */
     override fun getChannels(categoryId: Long): Observable<List<TvChannel>> {
-        local.getChannels(categoryId).flatMap { channels ->
+        val s = local.getChannels(categoryId).flatMap { channels ->
             if (expiration.channelsExpired(channels)) {
                 expiration.checkInChannels()
                 remote.getChannels()
             }
             else Single.just(channels)
-        }.subscribe { channels -> channelsSubject.onNext(channels.filter { it.categoryId == categoryId })}.dispose()
+        }.subscribe { channels -> channelsSubject.onNext(channels.filter { it.categoryId == categoryId })}
+        disposables.add(s)
         return channelsSubject
     }
 
@@ -145,11 +143,10 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
                         "Error getting TV channels directory", it)
                 })
     }
-
     // endregion
-    // region Expiration
 }
 
+// region Expiration
 @Suppress("MemberVisibilityCanBePrivate")
 class TvChannelDataExpiration {
 
@@ -205,4 +202,6 @@ class TvChannelDataExpiration {
         const val EXPIRATION_CHANNELS_MILLIS = DateUtils.MINUTE_IN_MILLIS * 30
     }
 }
+
+// endregion
 
