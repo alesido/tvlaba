@@ -5,9 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
+import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.context.interactor.StartSessionUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvChannelDirectoryObservationUseCase
+import org.alsi.android.domain.tv.interactor.guide.TvNewPlaybackUseCase
+import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import javax.inject.Inject
@@ -18,7 +22,8 @@ import javax.inject.Inject
  */
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         private val startSessionUseCase: StartSessionUseCase,
-        private val directoryObservationUseCase: TvChannelDirectoryObservationUseCase
+        private val directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
+        private val newPlaybackUseCase: TvNewPlaybackUseCase
 )
     : ViewModel()
 {
@@ -39,6 +44,11 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                 ))
     }
 
+    fun onChannelAction(item: TvChannel, navigate: () -> Unit) {
+        newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
+                TvNewPlaybackUseCase.Params(item.categoryId, item))
+    }
+
     inner class StartSessionSubscriber: DisposableCompletableObserver() {
         override fun onComplete() {
             directoryObservationUseCase.execute(ChannelDirectorySubscriber())
@@ -57,6 +67,16 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             // not applicable
         }
 
+        override fun onError(e: Throwable) {
+            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
+    inner class NewPlaybackSubscriber (val navigate: () -> Unit)
+        : DisposableSingleObserver<TvPlayback>() {
+        override fun onSuccess(t: TvPlayback) {
+            navigate()
+        }
         override fun onError(e: Throwable) {
             liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
         }

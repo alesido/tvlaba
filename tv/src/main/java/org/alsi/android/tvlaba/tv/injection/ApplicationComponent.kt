@@ -7,6 +7,7 @@ import dagger.android.AndroidInjectionModule
 import org.alsi.android.domain.DomainModule
 import org.alsi.android.local.LocalModule
 import org.alsi.android.moidom.MoidomModule
+import org.alsi.android.presentationtv.PresentationTvModule
 import org.alsi.android.tvlaba.tv.TvVideoStreamingApplication
 import org.alsi.android.tvlaba.tv.injection.module.*
 import javax.inject.Singleton
@@ -18,6 +19,7 @@ import javax.inject.Singleton
         ActivityModule::class,
         UiModule::class,
         PresentationModule::class,
+        PresentationTvModule::class,
         DomainModule::class,
         DataModule::class,
         LocalModule::class,

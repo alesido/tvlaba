@@ -8,7 +8,9 @@ import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
@@ -40,6 +42,16 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 .get(TvChannelDirectoryBrowseViewModel::class.java)
 
         adapter = ArrayObjectAdapter(ListRowPresenter())
+
+        setOnItemViewClickedListener {_, item, _, _ ->
+            if (item is TvChannel) {
+                browseViewModel.onChannelAction(item) {
+                    Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
+                            .navigate(TvChannelDirectoryFragmentDirections
+                                    .actionTvChannelDirectoryFragmentToTvPlaybackAndScheduleFragment())
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -76,5 +88,4 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             (adapter as ArrayObjectAdapter).setItems(categoryRows, null)
         }
     }
-
 }

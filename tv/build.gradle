@@ -6,6 +6,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs"
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -86,6 +87,7 @@ dependencies {
 
     //Kotlin
     implementation uiDependencies.kotlin
+    //implementation 'androidx.core:core-ktx:1.3.1'
 
     //RX
     implementation uiDependencies.rxKotlin
@@ -104,8 +106,17 @@ dependencies {
     implementation uiDependencies.androidAnnotations
     compileOnly uiDependencies.glassfishAnnotation
 
-    //Libraries
+    //Leanback & ExoPlayer
     implementation uiDependencies.leanback
+    implementation uiDependencies.exoplayer
+    implementation uiDependencies.exoplayerLeanback
+
+    //Navigation of Jet Pack
+    def nav_version = '2.3.0'
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    //Miscellaneous
     implementation uiDependencies.timber
     implementation uiDependencies.glide
 
