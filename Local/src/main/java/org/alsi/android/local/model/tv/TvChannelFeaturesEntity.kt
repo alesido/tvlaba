@@ -12,7 +12,4 @@ data class TvChannelFeaturesEntity (
         var hasSchedule: Boolean = true,
         var isPasswordProtected: Boolean = false,
         var hasMultipleLanguageAudioTracks: Boolean = false
-){
-        @Backlink
-        lateinit var channel: ToOne<TvChannelEntity>
-}
+)

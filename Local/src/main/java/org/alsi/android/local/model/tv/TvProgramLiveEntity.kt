@@ -14,7 +14,4 @@ data class TvProgramLiveEntity (
         var title: String? = null,
 
         var description: String? = null
-) {
-        @Backlink
-        lateinit var channel: ToOne<TvChannelEntity>
-}
+)

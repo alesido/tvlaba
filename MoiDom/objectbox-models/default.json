@@ -10,20 +10,27 @@
       "properties": [
         {
           "id": "1:588415729250711049",
-          "name": "entityId"
+          "name": "entityId",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "3:3192187121843265210",
-          "name": "sessionId"
+          "name": "sessionId",
+          "type": 9
         },
         {
           "id": "5:1882936419407431295",
+          "name": "loginName",
           "indexId": "4:7440242767645777685",
-          "name": "loginName"
+          "type": 9,
+          "flags": 2080
         },
         {
           "id": "6:5406711806057442089",
-          "name": "loginTimestampMillis"
+          "name": "loginTimestampMillis",
+          "type": 6,
+          "flags": 4
         }
       ],
       "relations": []
@@ -33,8 +40,8 @@
   "lastIndexId": "4:7440242767645777685",
   "lastRelationId": "1:1603089710432994114",
   "lastSequenceId": "0:0",
-  "modelVersion": 4,
-  "modelVersionParserMinimum": 4,
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
     472920663739370055,
     133165557016640118

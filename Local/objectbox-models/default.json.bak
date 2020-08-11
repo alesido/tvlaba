@@ -10,16 +10,21 @@
       "properties": [
         {
           "id": "2:8935402635139068629",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 129
         },
         {
           "id": "3:3338168980972012110",
+          "name": "loginName",
           "indexId": "1:9177577641245810274",
-          "name": "loginName"
+          "type": 9,
+          "flags": 2080
         },
         {
           "id": "4:9215816898936996617",
-          "name": "loginPassword"
+          "name": "loginPassword",
+          "type": 9
         }
       ],
       "relations": []
@@ -31,24 +36,35 @@
       "properties": [
         {
           "id": "1:8272572561211106474",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:1436076750736580229",
-          "name": "serviceId"
+          "name": "serviceId",
+          "type": 6,
+          "flags": 4
         },
         {
           "id": "3:7418450975132552450",
-          "name": "status"
+          "name": "status",
+          "type": 6,
+          "flags": 2
         },
         {
           "id": "4:7381691834817454487",
-          "name": "expirationDate"
+          "name": "expirationDate",
+          "type": 6,
+          "flags": 2
         },
         {
           "id": "5:2307170903947306182",
+          "name": "userAccountId",
           "indexId": "2:1094242775961301239",
-          "name": "userAccountId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "UserAccountEntity"
         }
       ],
       "relations": []
@@ -60,34 +76,48 @@
       "properties": [
         {
           "id": "1:379076813861415241",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 129
         },
         {
           "id": "2:3483540935700970322",
-          "name": "logoUri"
+          "name": "logoUri",
+          "type": 9
         },
         {
           "id": "3:1617835316810708729",
-          "name": "title"
+          "name": "title",
+          "type": 9
         },
         {
           "id": "4:2233177869299910248",
+          "name": "categoryId",
           "indexId": "12:7909725735252140180",
-          "name": "categoryId"
+          "type": 6,
+          "flags": 12
         },
         {
           "id": "5:8267310697452508319",
-          "name": "number"
+          "name": "number",
+          "type": 5,
+          "flags": 2
         },
         {
           "id": "7:4608737212600026591",
+          "name": "liveId",
           "indexId": "13:4542820937942520741",
-          "name": "liveId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "TvProgramLiveEntity"
         },
         {
           "id": "8:3234189361878992317",
+          "name": "featuresId",
           "indexId": "14:2296803544757172383",
-          "name": "featuresId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "TvChannelFeaturesEntity"
         }
       ],
       "relations": []
@@ -99,19 +129,25 @@
       "properties": [
         {
           "id": "1:7495814442517821611",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 129
         },
         {
           "id": "2:2766783503794388819",
-          "name": "title"
+          "name": "title",
+          "type": 9
         },
         {
           "id": "3:8358453925702231839",
-          "name": "logoReference"
+          "name": "logoReference",
+          "type": 9
         },
         {
           "id": "4:8076109827830152806",
-          "name": "logoIconType"
+          "name": "logoIconType",
+          "type": 6,
+          "flags": 2
         }
       ],
       "relations": []
@@ -123,15 +159,20 @@
       "properties": [
         {
           "id": "3:4419190903726179144",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "4:3302365689599221495",
-          "name": "channelId"
+          "name": "channelId",
+          "type": 6,
+          "flags": 4
         },
         {
           "id": "5:2500945875777442387",
-          "name": "userLoginName"
+          "name": "userLoginName",
+          "type": 9
         }
       ],
       "relations": []
@@ -143,11 +184,14 @@
       "properties": [
         {
           "id": "1:5207556220975310350",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "3:1477736767508925401",
-          "name": "modelId"
+          "name": "modelId",
+          "type": 9
         }
       ],
       "relations": []
@@ -159,20 +203,29 @@
       "properties": [
         {
           "id": "1:176463583769594142",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:3063911191913087697",
-          "name": "function"
+          "name": "function",
+          "type": 6,
+          "flags": 2
         },
         {
           "id": "3:6623669695489787601",
-          "name": "keyCode"
+          "name": "keyCode",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "4:1655810094664136975",
+          "name": "deviceId",
           "indexId": "4:2870867724284677301",
-          "name": "deviceId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "DeviceModelOptionEntity"
         }
       ],
       "relations": []
@@ -184,34 +237,51 @@
       "properties": [
         {
           "id": "1:8838736963489183946",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 129
         },
         {
           "id": "2:5537856500777983444",
-          "name": "scopeTypeOrdinal"
+          "name": "scopeTypeOrdinal",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "3:6628255334689868637",
-          "name": "scopeId"
+          "name": "scopeId",
+          "type": 6,
+          "flags": 4
         },
         {
           "id": "4:5388988412134702651",
-          "name": "accountId"
+          "name": "accountId",
+          "type": 6,
+          "flags": 4
         },
         {
           "id": "5:2109877203146723897",
+          "name": "serverId",
           "indexId": "5:381313535510954795",
-          "name": "serverId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "ServerOptionEntity"
         },
         {
           "id": "6:4323132300512392326",
+          "name": "languageId",
           "indexId": "6:416891327484079120",
-          "name": "languageId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "LanguageOptionEntity"
         },
         {
           "id": "7:7446864326837710061",
+          "name": "deviceId",
           "indexId": "7:8476745212185634466",
-          "name": "deviceId"
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "DeviceModelOptionEntity"
         }
       ],
       "relations": []
@@ -223,17 +293,23 @@
       "properties": [
         {
           "id": "1:429004855453889308",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:8151271620258672731",
+          "name": "code",
           "indexId": "8:791570167131944043",
-          "name": "code"
+          "type": 9,
+          "flags": 2080
         },
         {
           "id": "3:6744282245704094407",
+          "name": "name",
           "indexId": "9:3876775973009155870",
-          "name": "name"
+          "type": 9,
+          "flags": 2080
         }
       ],
       "relations": []
@@ -245,19 +321,24 @@
       "properties": [
         {
           "id": "1:1530171851710155980",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:1651837254093406598",
-          "name": "reference"
+          "name": "reference",
+          "type": 9
         },
         {
           "id": "3:3123752031583329388",
-          "name": "title"
+          "name": "title",
+          "type": 9
         },
         {
           "id": "4:4861352893714965726",
-          "name": "description"
+          "name": "description",
+          "type": 9
         }
       ],
       "relations": []
@@ -268,29 +349,34 @@
       "name": "TvChannelFeaturesEntity",
       "properties": [
         {
-          "id": "1:311508341229991225",
-          "indexId": "16:2922034967181324700",
-          "name": "channelId"
-        },
-        {
           "id": "2:7027944886358942848",
-          "name": "hasArchive"
+          "name": "hasArchive",
+          "type": 1,
+          "flags": 4
         },
         {
           "id": "3:3472676058926381800",
-          "name": "hasSchedule"
+          "name": "hasSchedule",
+          "type": 1,
+          "flags": 4
         },
         {
           "id": "4:7352808030062817085",
-          "name": "isPasswordProtected"
+          "name": "isPasswordProtected",
+          "type": 1,
+          "flags": 4
         },
         {
           "id": "5:5733608369413208784",
-          "name": "hasMultipleLanguageAudioTracks"
+          "name": "hasMultipleLanguageAudioTracks",
+          "type": 1,
+          "flags": 4
         },
         {
           "id": "6:4928467624279821840",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []
@@ -301,47 +387,248 @@
       "name": "TvProgramLiveEntity",
       "properties": [
         {
-          "id": "1:924174076065801808",
-          "indexId": "15:2187969593749072192",
-          "name": "channelId"
-        },
-        {
           "id": "2:5856945263369319259",
-          "name": "startMillis"
+          "name": "startMillis",
+          "type": 6,
+          "flags": 2
         },
         {
           "id": "3:1719470743826349875",
-          "name": "endMillis"
+          "name": "endMillis",
+          "type": 6,
+          "flags": 2
         },
         {
           "id": "4:6193492200518753758",
-          "name": "title"
+          "name": "title",
+          "type": 9
         },
         {
           "id": "5:7494556975304397512",
-          "name": "description"
+          "name": "description",
+          "type": 9
         },
         {
           "id": "6:3829018553352454133",
-          "name": "id"
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "14:5719767438563060086",
+      "lastPropertyId": "3:7563215708925638111",
+      "name": "TvChannelIndexEntity",
+      "properties": [
+        {
+          "id": "1:2028794186714719264",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:4685299920754800124",
+          "name": "categoryId",
+          "indexId": "17:6561147895439641340",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "3:7563215708925638111",
+          "name": "channelId",
+          "type": 6,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "15:8752597431670159393",
+      "lastPropertyId": "8:6967861054550988539",
+      "name": "TvPlayCursorEntity",
+      "properties": [
+        {
+          "id": "1:8764290582560222895",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4312836757774786326",
+          "name": "userLoginName",
+          "type": 9
+        },
+        {
+          "id": "3:2447692209490473117",
+          "name": "categoryId",
+          "indexId": "18:517081611603053490",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "6:3590514220661434165",
+          "name": "timeStamp",
+          "indexId": "21:7000938320671859901",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "7:3162344671220205707",
+          "name": "seekTime",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "8:6967861054550988539",
+          "name": "playbackId",
+          "indexId": "22:6596896660096903854",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "TvPlaybackEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "16:8238036204980077217",
+      "lastPropertyId": "8:5880834624398149995",
+      "name": "TvPlaybackEntity",
+      "properties": [
+        {
+          "id": "1:1722509941029717754",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6677953404487234715",
+          "name": "channelId",
+          "indexId": "23:5782574556914128443",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "3:4858863288170945692",
+          "name": "programId",
+          "indexId": "24:5205580643577394379",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "4:7782787530644057202",
+          "name": "start",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "5:2540253548295139811",
+          "name": "end",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "6:1181947344250500784",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "7:6597272251044865833",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "8:5880834624398149995",
+          "name": "streamUri",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "17:594264724552488769",
+      "lastPropertyId": "9:1009558917119465339",
+      "name": "TvVideoStreamEntity",
+      "properties": [
+        {
+          "id": "1:2690790854097404782",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1183063380375337145",
+          "name": "channelId",
+          "indexId": "25:1918555232089550668",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "3:4137812173423940146",
+          "name": "programId",
+          "indexId": "26:5381731626221289121",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "4:5482954632245150224",
+          "name": "streamUri",
+          "type": 9
+        },
+        {
+          "id": "5:1435668933541201048",
+          "name": "timeStamp",
+          "indexId": "27:1804460655491060421",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "6:4792058008975162209",
+          "name": "start",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "7:7659818133476799341",
+          "name": "end",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "8:1488699489362163237",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "9:1009558917119465339",
+          "name": "accessCode",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "13:4603470194573394471",
-  "lastIndexId": "16:2922034967181324700",
+  "lastEntityId": "17:594264724552488769",
+  "lastIndexId": "27:1804460655491060421",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
-  "modelVersion": 4,
-  "modelVersionParserMinimum": 4,
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "newUidPool": [
+    1544790841200149238
+  ],
   "retiredEntityUids": [
     4806836590412894734
   ],
   "retiredIndexUids": [
     578982744183955796,
     2616022097780059776,
-    6760094197675018877
+    6760094197675018877,
+    4710588344945474793,
+    7764979993992228997,
+    2187969593749072192,
+    2922034967181324700
   ],
   "retiredPropertyUids": [
     6905912384517656670,
@@ -359,7 +646,11 @@
     819356239654352286,
     1486320700742547207,
     2535526855586482692,
-    6260830418622603633
+    6260830418622603633,
+    7882763238584271585,
+    4923632791063091341,
+    924174076065801808,
+    311508341229991225
   ],
   "retiredRelationUids": [],
   "version": 1
