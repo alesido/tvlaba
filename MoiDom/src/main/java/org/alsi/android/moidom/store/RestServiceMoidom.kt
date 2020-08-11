@@ -80,10 +80,10 @@ interface RestServiceMoidom {
     fun getArchiveVideoStreamUrl(
             @Query("PATKER_SSID") sid: String,
             @Query("cid") channelId: String,
-            @Query("stream_mode") streamMode: String,
-            @Query("file_mode") fileMode: String,
+//            @Query("stream_mode") streamMode: String,
+//            @Query("file_mode") fileMode: String,
             @Query("gmt") unixTimeStamp: Long?,
-            @Query("protect_code") accessCode: String
+            @Query("protect_code") accessCode: String?
     ): Single<GetUrlResponse>
 
     /**
@@ -96,7 +96,7 @@ interface RestServiceMoidom {
             @Query("PATKER_SSID") sid: String,
             @Query("cid") channelId: String,
             @Query("stream_mode") streamMode: String,
-            @Query("protect_code") accessCode: String
+            @Query("protect_code") accessCode: String?
     ): Single<GetUrlResponse>
 
 
