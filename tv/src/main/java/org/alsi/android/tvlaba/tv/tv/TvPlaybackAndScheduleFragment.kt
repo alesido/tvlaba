@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
+import androidx.leanback.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
@@ -15,13 +16,15 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.domain.tv.model.guide.TvPlayback
-import org.alsi.android.domain.tv.model.guide.TvProgramTimeInterval
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
+import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.directory.TvDirectoryChannelCardPresenter
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackLeanbackGlue
 import javax.inject.Inject
 
@@ -30,7 +33,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private lateinit var viewModel: TvPlaybackViewModel
+    private lateinit var playbackViewModel: TvPlaybackViewModel
+
+    private lateinit var scheduleViewModel : TvChannelDirectoryBrowseViewModel
 
     private lateinit var player: SimpleExoPlayer
 
@@ -44,8 +49,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        playbackViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvPlaybackViewModel::class.java)
+
+        scheduleViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(TvChannelDirectoryBrowseViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -97,15 +105,20 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getLiveData().observe(this,
+        playbackViewModel.getLiveData().observe(this,
                 Observer<Resource<TvPlayback>> {
                     if (it != null) handlePlaybackRequestEvent(it)
                 })
+        scheduleViewModel.getLiveData().observe(this,
+                Observer<Resource<TvChannelDirectory>> {
+                    if (it != null) handleCategoriesListDataState(it)
+                })
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.dispose()
+        playbackViewModel.dispose()
     }
 
     // endregion
@@ -140,6 +153,52 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
             player.prepare(hlsMediaSource, false, true)
         }
+    }
+
+    private fun handleCategoriesListDataState(resource: Resource<TvChannelDirectory>) {
+        when (resource.status) {
+            ResourceState.SUCCESS -> {
+                addScheduleRows(resource.data)
+            }
+            ResourceState.LOADING -> {
+            }
+            ResourceState.ERROR -> {
+            }
+            else -> {
+            }
+        }
+    }
+
+    /** Add program schedule rows below the player controls.
+     *
+     * To add a new row to the player adapter and not lose the controls row that is provided by the
+     * glue, we need to compose a new row with the controls row and schedule row.
+     *
+     * We start by creating a new {@link ClassPresenterSelector} which, yes, can select
+     * an appropriate presenter for a presented row by its class as a key.
+     *
+     * Then add the controls row from the media player glue, then add the schedule rows.
+     *
+     * @see "tv-samples/Leanback sample"
+     */
+    private fun addScheduleRows(directory: TvChannelDirectory?) {
+        val presenterSelector = ClassPresenterSelector()
+                .addClassPresenter(glue.controlsRow::class.java, glue.playbackRowPresenter)
+                .addClassPresenter(ListRow::class.java, ListRowPresenter())
+        val rowsAdapter = ArrayObjectAdapter(presenterSelector)
+        rowsAdapter.add(glue.controlsRow)
+        directory?.let {
+            //val categoryRows =
+            directory.categories.mapIndexed { idx, category ->
+                val header = HeaderItem(idx.toLong(), category.title)
+                val listRowAdapter = ArrayObjectAdapter(TvDirectoryChannelCardPresenter()).apply {
+                    setItems(directory.index[category.id], null)
+                }
+                val row = ListRow(header, listRowAdapter)
+                rowsAdapter.add(row)
+            }
+        }
+        adapter = rowsAdapter
     }
 
     // endregion
