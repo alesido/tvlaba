@@ -1,5 +1,6 @@
 package org.alsi.android.tvlaba.tv.tv.playback
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.Action
@@ -10,23 +11,46 @@ import org.alsi.android.domain.tv.model.guide.TvPlayback
 import kotlin.math.max
 import kotlin.math.min
 
-class TvPlayerGlue (context: Context, adapter: LeanbackPlayerAdapter) :
+class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) :
         PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
 
     private val actionRewind = PlaybackControlsRow.RewindAction(context)
     private val actionFastForward = PlaybackControlsRow.FastForwardAction(context)
     private val actionClosedCaptions = PlaybackControlsRow.ClosedCaptioningAction(context)
 
+    private var playback: TvPlayback? = null
+
+    private var overriddenDuration: Long? = null
+    private val wrappedDuration get() = overriddenDuration?: playerAdapter.duration
+
+    var maintainLivePosition: Boolean = false
+
+    override fun getCurrentPosition() =
+        if (maintainLivePosition && playback?.time != null)
+            System.currentTimeMillis() - playback!!.time!!.startUnixTimeMillis
+        else
+            playerAdapter.currentPosition
+
+    fun setMetadata(playback: TvPlayback) {
+        this.playback = playback
+        title = playback.title
+        subtitle = playback.description
+    }
+
+    fun overrideDuration(overriddenDuration: Long) {
+        this.overriddenDuration = overriddenDuration
+    }
+
     private fun skipForward(millis: Long = SEEK_STEP_MILLIS) =
             // Ensures we don't advance past the content duration (if set)
-            playerAdapter.seekTo(if (playerAdapter.duration > 0) {
-                min(playerAdapter.duration, playerAdapter.currentPosition + millis)
+            playerAdapter.seekTo(if (wrappedDuration > 0) {
+                min(wrappedDuration, currentPosition + millis)
             } else {
-                playerAdapter.currentPosition + millis
+                currentPosition + millis
             })
 
     private fun skipBackward(millis: Long = SEEK_STEP_MILLIS) =
-            playerAdapter.seekTo(max(0, playerAdapter.currentPosition - millis))
+            playerAdapter.seekTo(max(0, currentPosition - millis))
 
     override fun onCreatePrimaryActions(adapter: ArrayObjectAdapter) {
         super.onCreatePrimaryActions(adapter)
@@ -41,9 +65,25 @@ class TvPlayerGlue (context: Context, adapter: LeanbackPlayerAdapter) :
         else -> super.onActionClicked(action)
     }
 
-    fun setMetadata(playback: TvPlayback) {
-        title = playback.title
-        subtitle = playback.description
+    @SuppressLint("MissingSuperCall")
+    override fun onUpdateProgress() {
+        if (controlsRow != null) {
+            controlsRow.currentPosition = if (playerAdapter.isPrepared) currentPosition else -1
+        }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onUpdateBufferedProgress() {
+        if (controlsRow != null) {
+            controlsRow.bufferedPosition = playerAdapter.bufferedPosition
+        }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onUpdateDuration() {
+        if (controlsRow != null) {
+            controlsRow.duration = if (playerAdapter.isPrepared) wrappedDuration else -1
+        }
     }
 
     companion object {

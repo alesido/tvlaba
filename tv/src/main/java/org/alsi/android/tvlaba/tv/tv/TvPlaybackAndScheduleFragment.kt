@@ -16,12 +16,13 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.tv.model.guide.TvPlayback
+import org.alsi.android.domain.tv.model.guide.TvProgramTimeInterval
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.tv.playback.TvPlayerGlue
+import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackLeanbackGlue
 import javax.inject.Inject
 
 class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
@@ -33,7 +34,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     private lateinit var player: SimpleExoPlayer
 
-    private lateinit var glue: TvPlayerGlue
+    private lateinit var glue: TvPlaybackLeanbackGlue
 
     private var playback: TvPlayback? = null
 
@@ -55,7 +56,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         val playerAdapter = LeanbackPlayerAdapter(
                 requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
 
-        glue = TvPlayerGlue(context, playerAdapter).apply {
+        glue = TvPlaybackLeanbackGlue(context, playerAdapter).apply {
 
             host = VideoSupportFragmentGlueHost(this@TvPlaybackAndScheduleFragment)
 
@@ -125,6 +126,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
         context?.let {
             glue.setMetadata(playback)
+
+            val t = playback.time
+            if (t != null) {
+                glue.overrideDuration(t.endUnixTimeMillis - t.startUnixTimeMillis)
+                glue.maintainLivePosition = true
+            }
 
             val dataSourceFactory = DefaultHttpDataSourceFactory(
                     Util.getUserAgent(it, getString(R.string.app_name)))

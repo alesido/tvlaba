@@ -21,9 +21,10 @@ abstract class TvPlayCursorDataRepository(
     override fun finalizeCursorSetting(previousCursor: TvPlayCursor?) : Single<TvPlayback> {
         return local.putPlayCursor(cursor).andThen(
             local.getLastPlayCursor()
-        ).flatMap { storedCursor ->
-            cursor = storedCursor
-            currentPlaybackSubject.onNext(storedCursor.playback)
+        ).flatMap { //TODO Compare memory and stored cursor and give an error if do not match ->
+//            cursor = storedCursor
+//            currentPlaybackSubject.onNext(storedCursor.playback)
+            currentPlaybackSubject.onNext(cursor.playback)
             Single.just(cursor.playback)
         }.doOnError {
             if (previousCursor != null)
