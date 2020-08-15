@@ -6,7 +6,6 @@ import org.alsi.android.datatv.store.TvVideoStreamRemoteStore
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
-import java.lang.NullPointerException
 import java.net.URI
 import javax.inject.Inject
 

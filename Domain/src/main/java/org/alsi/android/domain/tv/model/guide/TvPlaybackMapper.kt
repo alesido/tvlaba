@@ -8,7 +8,7 @@ class TvPlaybackMapper {
         with (channel.live) {
             return TvPlayback(
                     channelId = channel.id,
-                    programId = channel.id,
+                    programId = time?.startUnixTimeMillis?:0L,
                     streamUri = streamUri,
                     time = time,
                     title = title,

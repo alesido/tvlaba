@@ -5,5 +5,6 @@ enum class TvProgramDisposition {
     NO_RECORD,
     RECORD,
     LIVE,
+    LIVE_RECORD,
     FUTURE
 }
