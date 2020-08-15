@@ -16,15 +16,15 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
-import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
-import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
+import org.alsi.android.presentationtv.model.TvScheduleViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.tv.directory.TvDirectoryChannelCardPresenter
+import org.alsi.android.tvlaba.tv.tv.directory.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackLeanbackGlue
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     private lateinit var playbackViewModel: TvPlaybackViewModel
 
-    private lateinit var scheduleViewModel : TvChannelDirectoryBrowseViewModel
+    private lateinit var scheduleViewModel : TvScheduleViewModel
 
     private lateinit var player: SimpleExoPlayer
 
@@ -53,7 +53,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 .get(TvPlaybackViewModel::class.java)
 
         scheduleViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(TvChannelDirectoryBrowseViewModel::class.java)
+                .get(TvScheduleViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -110,8 +110,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                     if (it != null) handlePlaybackRequestEvent(it)
                 })
         scheduleViewModel.getLiveData().observe(this,
-                Observer<Resource<TvChannelDirectory>> {
-                    if (it != null) handleCategoriesListDataState(it)
+                Observer<Resource<TvDaySchedule>> {
+                    if (it != null) handleDayScheduleChange(it)
                 })
 
     }
@@ -155,7 +155,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
     }
 
-    private fun handleCategoriesListDataState(resource: Resource<TvChannelDirectory>) {
+    private fun handleDayScheduleChange(resource: Resource<TvDaySchedule>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
                 addScheduleRows(resource.data)
@@ -181,18 +181,18 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
      *
      * @see "tv-samples/Leanback sample"
      */
-    private fun addScheduleRows(directory: TvChannelDirectory?) {
+    private fun addScheduleRows(schedule: TvDaySchedule?) {
         val presenterSelector = ClassPresenterSelector()
                 .addClassPresenter(glue.controlsRow::class.java, glue.playbackRowPresenter)
                 .addClassPresenter(ListRow::class.java, ListRowPresenter())
         val rowsAdapter = ArrayObjectAdapter(presenterSelector)
         rowsAdapter.add(glue.controlsRow)
-        directory?.let {
+        schedule?.let {
             //val categoryRows =
-            directory.categories.mapIndexed { idx, category ->
-                val header = HeaderItem(idx.toLong(), category.title)
-                val listRowAdapter = ArrayObjectAdapter(TvDirectoryChannelCardPresenter()).apply {
-                    setItems(directory.index[category.id], null)
+            it.sections.mapIndexed { i, section ->
+                val header = HeaderItem(i.toLong(), section.title)
+                val listRowAdapter = ArrayObjectAdapter(TvScheduleProgramCardPresenter()).apply {
+                    setItems(section.items, null)
                 }
                 val row = ListRow(header, listRowAdapter)
                 rowsAdapter.add(row)
