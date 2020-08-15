@@ -61,9 +61,9 @@ class TvDaySchedule(
             }
 
             with (sections) {
-                add(TimeSection(0,5,  date))
-                add(TimeSection(5,10, date))
-                add(TimeSection(10,18, date))
+                add(TimeSection(0,6,  date))
+                add(TimeSection(6,12, date))
+                add(TimeSection(12,18, date))
                 add(TimeSection(18,24, date))
             }
 
