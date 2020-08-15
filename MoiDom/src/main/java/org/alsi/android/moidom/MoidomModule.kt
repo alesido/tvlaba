@@ -12,6 +12,7 @@ import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
 import org.alsi.android.local.store.tv.TvPlayCursorLocalStoreDelegate
+import org.alsi.android.local.store.tv.TvProgramLocalMemoryStoreDelegate
 import org.alsi.android.local.store.tv.TvVideoStreamLocalStoreDelegate
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.model.LoginEvent
@@ -25,6 +26,7 @@ import org.alsi.android.moidom.repository.vod.VodServiceMoidom
 import org.alsi.android.moidom.store.DataServiceFactoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
+import org.alsi.android.moidom.store.tv.TvProgramRemoteStoreMoidom
 import org.alsi.android.moidom.store.tv.TvVideoStreamRemoteStoreMoidom
 import javax.inject.Named
 import javax.inject.Singleton
@@ -80,13 +82,24 @@ class MoidomModule {
      */
     @Singleton @Provides fun provideTvChannelRemoteStoreMoidom(
             remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom)
-            : TvChannelRemoteStore = TvChannelRemoteStoreMoidom(remoteService, remoteSession)
+    : TvChannelRemoteStore = TvChannelRemoteStoreMoidom(remoteService, remoteSession)
 
     /**     TV Channel Local Store
      */
     @Singleton @Provides fun provideTvChannelLocalStoreMoidomDelegate(
             @Named("${Moidom.TAG}.${StreamingService.TV}") localBoxStore: BoxStore)
     : TvChannelLocalStore = TvChannelLocalStoreDelegate(localBoxStore, "guest")
+
+    /**     TV Program Remote Store
+     */
+    @Singleton @Provides fun provideTvProgramRemoteStoreMoidom(
+            remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom)
+    : TvProgramRemoteStore = TvProgramRemoteStoreMoidom(remoteService, remoteSession)
+
+    /**     TV Program Local Store
+     */
+    @Singleton @Provides fun provideTvProgramLocalStoreMoidom()
+    : TvProgramLocalStore = TvProgramLocalMemoryStoreDelegate()
 
     /**     TV Video Stream Local Store
      */

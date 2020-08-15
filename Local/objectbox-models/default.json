@@ -607,10 +607,68 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "18:3638758981994868413",
+      "lastPropertyId": "8:4062539708096820805",
+      "name": "TvProgramIssueEntity",
+      "properties": [
+        {
+          "id": "1:7432639804946838458",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6097056796562735967",
+          "name": "channelId",
+          "indexId": "29:1466990081738266782",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "3:7615342882195905881",
+          "name": "programId",
+          "indexId": "31:7764571307202757854",
+          "type": 6,
+          "flags": 10
+        },
+        {
+          "id": "4:6540083419356226741",
+          "name": "startMillis",
+          "indexId": "30:1387462481266347576",
+          "type": 6,
+          "flags": 10
+        },
+        {
+          "id": "5:145394845624178057",
+          "name": "endMillis",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "6:2352724006041515467",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "7:161681020973353572",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "8:4062539708096820805",
+          "name": "scheduleId",
+          "indexId": "32:4673249837582768857",
+          "type": 6,
+          "flags": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "17:594264724552488769",
-  "lastIndexId": "28:3039251026749192025",
+  "lastEntityId": "18:3638758981994868413",
+  "lastIndexId": "32:4673249837582768857",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
