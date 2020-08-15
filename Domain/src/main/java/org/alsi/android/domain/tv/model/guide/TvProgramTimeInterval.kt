@@ -6,8 +6,8 @@ import kotlin.math.roundToInt
 
 class TvProgramTimeInterval(val startUnixTimeMillis: Long, val endUnixTimeMillis: Long) {
 
-    private val startDateTime = DateTime(startUnixTimeMillis)
-    private val endDateTime = DateTime(endUnixTimeMillis)
+    val startDateTime = DateTime(startUnixTimeMillis)
+    val endDateTime = DateTime(endUnixTimeMillis)
 
     val shortString: String? get() =
         if (startUnixTimeMillis != endUnixTimeMillis) {
@@ -27,4 +27,5 @@ class TvProgramTimeInterval(val startUnixTimeMillis: Long, val endUnixTimeMillis
                 (endUnixTimeMillis - startUnixTimeMillis)).roundToInt()
     }
 
+    val durationMillis: Long get() = endUnixTimeMillis - startUnixTimeMillis
 }
