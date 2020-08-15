@@ -3,6 +3,7 @@ package org.alsi.android.moidom.mapper
 import org.alsi.android.domain.implementation.model.IconType
 import org.alsi.android.domain.implementation.model.TypedIconReference
 import org.alsi.android.moidom.model.tv.ChannelListResponse
+import org.alsi.android.moidom.model.tv.EpgResponse
 import org.alsi.android.moidom.model.tv.GetTvGroupResponse
 import java.net.URI
 
@@ -33,7 +34,22 @@ class TvChannelIconPathMapper(response: ChannelListResponse) {
 
     private val iconParams = response.icons[2]
     private val baseUrl = iconParams.base_url
-    private val format = iconParams.formats[0]
+    private val imageTypeExtension = iconParams.formats[0]
 
-    fun uriFromPath(path: String): URI = URI.create("$baseUrl$path.$format")
+    fun uriFromPath(path: String): URI = URI.create("$baseUrl$path.$imageTypeExtension")
+}
+
+class TvProgramPosterIconPathMapper(response: EpgResponse) {
+
+    private val iconParams = response.icons[0]
+    private val baseUrl = iconParams.base_url
+    private val imageTypeExtension = iconParams.formats[0]
+
+    fun uriFromPath(path: String): URI = URI.create("$baseUrl$path.$imageTypeExtension")
+
+    fun fixUri(uriString: String?): URI {
+        uriString?: return URI.create(baseUrl) // TODO Set default poster URI
+        val fixedUriString = uriString.replaceFirst("http:", "https:")
+        return URI.create(fixedUriString)
+    }
 }

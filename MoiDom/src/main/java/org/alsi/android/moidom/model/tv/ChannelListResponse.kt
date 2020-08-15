@@ -12,13 +12,6 @@ data class ChannelListResponse(
 
 ): BaseResponse() {
 
-    data class Icon(
-            val size: String,
-            val base_url: String,
-            val formats: List<String>
-    )
-
-
     data class Group(
             val id: Int,
             val name: String,

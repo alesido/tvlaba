@@ -5,6 +5,7 @@ import okhttp3.ResponseBody
 import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.model.SettingsSetResponse
 import org.alsi.android.moidom.model.tv.ChannelListResponse
+import org.alsi.android.moidom.model.tv.EpgResponse
 import org.alsi.android.moidom.model.tv.GetTvGroupResponse
 import org.alsi.android.moidom.model.tv.GetUrlResponse
 import org.alsi.android.moidom.model.vod.GetVodUrlResponse
@@ -64,14 +65,14 @@ interface RestServiceMoidom {
     /**
      * Example: http://iptv.moi-dom.tv/api/json/epg?cid=84&day=061217
      */
-    @GET("epg")
+    @GET("tv_programs?params=all") // ex "epg"
     fun getChannelSchedule(
             @Query("PATKER_SSID") sid: String,
             @Query("tz") timeZone: String,
             @Query("with_ts") withTimeShift: Int,
             @Query("cid") channelId: String,
             @Query("day") programDayDateString: String
-    ): Single<ResponseBody>
+    ): Single<EpgResponse>
 
     /**
      * Example: http://iptv.moi-dom.tv/api/json/get_url?cid=84&gmt=1512571261&protect_code=201717
