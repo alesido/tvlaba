@@ -75,14 +75,12 @@ interface RestServiceMoidom {
     ): Single<EpgResponse>
 
     /**
-     * Example: http://iptv.moi-dom.tv/api/json/get_url?cid=84&gmt=1512571261&protect_code=201717
+     * Example: http://iptv.moi-dom.tv/api/json/get_url?cid=84&gmt=1512571261&protect_code=201717&with_ts=1
      */
-    @GET("get_url")
+    @GET("get_url?with_ts=1")
     fun getArchiveVideoStreamUrl(
             @Query("PATKER_SSID") sid: String,
             @Query("cid") channelId: String,
-//            @Query("stream_mode") streamMode: String,
-//            @Query("file_mode") fileMode: String,
             @Query("gmt") unixTimeStamp: Long?,
             @Query("protect_code") accessCode: String?
     ): Single<GetUrlResponse>

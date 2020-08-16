@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvPlayback
+import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
@@ -54,6 +55,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
         scheduleViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvScheduleViewModel::class.java)
+
+        setOnItemViewClickedListener(ItemClickListener())
     }
 
     override fun onAttach(context: Context) {
@@ -188,7 +191,6 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         val rowsAdapter = ArrayObjectAdapter(presenterSelector)
         rowsAdapter.add(glue.controlsRow)
         schedule?.let {
-            //val categoryRows =
             it.sections.mapIndexed { i, section ->
                 val header = HeaderItem(i.toLong(), section.title)
                 val listRowAdapter = ArrayObjectAdapter(TvScheduleProgramCardPresenter()).apply {
@@ -199,6 +201,20 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             }
         }
         adapter = rowsAdapter
+    }
+
+    private inner class ItemClickListener: OnItemViewClickedListener {
+        override fun onItemClicked(
+                itemViewHolder: Presenter.ViewHolder?,
+                item: Any?,
+                rowViewHolder: RowPresenter.ViewHolder?,
+                row: Row?) {
+
+            if (item is TvProgramIssue) {
+                hideControlsOverlay(true)
+                this@TvPlaybackAndScheduleFragment.playbackViewModel.onTvProgramIssueAction(item)
+            }
+        }
     }
 
     // endregion

@@ -6,6 +6,7 @@ import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import java.net.URI
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TvVideoStreamRemoteStoreMoidom @Inject constructor(
@@ -27,7 +28,7 @@ class TvVideoStreamRemoteStoreMoidom @Inject constructor(
             .flatMap { sid -> remoteService.getArchiveVideoStreamUrl(
                     sid,
                     channelId = program.channelId.toString(),
-                    unixTimeStamp = program.time?.startUnixTimeMillis,
+                    unixTimeStamp = TimeUnit.MILLISECONDS.toSeconds(program.time?.startUnixTimeMillis?:0L),
                     accessCode = accessCode)
             }.map { response -> URI.create(response.url) }
 }
