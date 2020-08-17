@@ -12,6 +12,7 @@ class TvProgramIssueEntityMapper: EntityMapper<TvProgramIssueEntity, TvProgramIs
         with(entity) {
             val s = startMillis
             val e = endMillis
+            // TODO Add mapping to the rest of program properties
             return TvProgramIssue(channelId,
                     time = if (s != null && e != null) TvProgramTimeInterval(s, e) else null,
                     title = entity.title, description = entity.description)
@@ -20,6 +21,7 @@ class TvProgramIssueEntityMapper: EntityMapper<TvProgramIssueEntity, TvProgramIs
 
     override fun mapToEntity(domain: TvProgramIssue): TvProgramIssueEntity {
         return with (domain) {
+            // TODO Add mapping to the rest of program properties
             TvProgramIssueEntity(id = 0L, channelId = channelId, programId = programId,
                     startMillis = time?.startUnixTimeMillis, endMillis = time?.endUnixTimeMillis,
                     title = title, description = description)

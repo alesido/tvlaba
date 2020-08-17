@@ -2,6 +2,7 @@ package org.alsi.android.domain.tv.model.guide
 
 import org.alsi.android.domain.tv.interactor.guide.TvProgramCredit
 import java.net.URI
+import java.util.concurrent.TimeUnit
 
 /**
  *  TV program issue.
@@ -84,10 +85,6 @@ class TvProgramIssue(
 
     // -- state
 
-        /** Disposition: LIVE, RECORD, etc. ...
-        */
-        var disposition: TvProgramDisposition? = null,
-
         /** The playback state
         */
         var state: TvPlaybackState = TvPlaybackState.INITIAL,
@@ -95,4 +92,17 @@ class TvProgramIssue(
         /** Current video playback position.
         */
         var position: Long = 0L
-)
+) {
+        val disposition: TvProgramDisposition get() = evaluateTvProgramDisposition(time)
+}
+
+fun evaluateTvProgramDisposition(programTime: TvProgramTimeInterval?): TvProgramDisposition {
+        val nowMillis = System.currentTimeMillis()
+        val reserve = TimeUnit.SECONDS.toMillis(1)
+        programTime?: return TvProgramDisposition.LIVE
+        return when {
+                programTime.endUnixTimeMillis < nowMillis - reserve -> TvProgramDisposition.RECORD
+                programTime.startUnixTimeMillis > nowMillis + reserve -> TvProgramDisposition.FUTURE
+                else -> TvProgramDisposition.LIVE
+        }
+}

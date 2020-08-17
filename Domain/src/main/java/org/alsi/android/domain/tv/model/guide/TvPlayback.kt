@@ -32,6 +32,10 @@ class TvPlayback (
         val description: String? = null
 ) {
 
+    /** Current playback disposition, i.e. indication of availability and type of the video stream
+     */
+    val disposition: TvProgramDisposition get() = evaluateTvProgramDisposition(time)
+
     /** The playback state
      */
     var state: TvPlaybackState = TvPlaybackState.INITIAL

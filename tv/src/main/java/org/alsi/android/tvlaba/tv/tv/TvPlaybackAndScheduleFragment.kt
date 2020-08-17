@@ -3,6 +3,7 @@ package org.alsi.android.tvlaba.tv.tv
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
@@ -97,7 +98,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             playWhenPrepared()
 
             // displays the current item's metadata
-            playback?.let{ setMetadata(it) }
+            playback?.let{ bindPlaybackItem(it) }
         }
     }
 
@@ -131,30 +132,26 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         when (resource.status) {
             ResourceState.SUCCESS -> startPlayback(resource.data)
             ResourceState.LOADING -> {}
-            ResourceState.ERROR -> {}
+            ResourceState.ERROR -> {
+                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+            }
             else -> {}
         }
     }
 
     private fun startPlayback(playback: TvPlayback?) {
-        if (null == playback?.streamUri)
-            return
-
+        if (null == playback?.streamUri) return
         context?.let {
-            glue.setMetadata(playback)
-
-            val t = playback.time
-            if (t != null) {
-                glue.overrideDuration(t.endUnixTimeMillis - t.startUnixTimeMillis)
-                glue.maintainLivePosition = true
+            if (glue.bindPlaybackItem(playback)) {
+                val dataSourceFactory = DefaultHttpDataSourceFactory(
+                        Util.getUserAgent(it, getString(R.string.app_name)))
+                val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(Uri.parse(playback.streamUri.toString()))
+                player.prepare(hlsMediaSource, false, true)
             }
-
-            val dataSourceFactory = DefaultHttpDataSourceFactory(
-                    Util.getUserAgent(it, getString(R.string.app_name)))
-            val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(playback.streamUri.toString()))
-
-            player.prepare(hlsMediaSource, false, true)
+            else {
+                Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -166,6 +163,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             ResourceState.LOADING -> {
             }
             ResourceState.ERROR -> {
+                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
             }
             else -> {
             }

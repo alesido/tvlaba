@@ -2,14 +2,18 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.AudioManager
+import android.media.ToneGenerator
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.Action
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.PlaybackControlsRow
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import org.alsi.android.domain.tv.model.guide.TvPlayback
+import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
 import kotlin.math.max
 import kotlin.math.min
+
 
 class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) :
         PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
@@ -19,50 +23,105 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
     private val actionClosedCaptions = PlaybackControlsRow.ClosedCaptioningAction(context)
 
     private var playback: TvPlayback? = null
+    private var initialDisposition: TvProgramDisposition? = null
 
     private var overriddenDuration: Long? = null
     private val wrappedDuration get() = overriddenDuration?: playerAdapter.duration
 
-    var maintainLivePosition: Boolean = false
+    private var maintainLivePosition: Boolean = false
+    private var pausePosition: Long = -1L
 
-    override fun getCurrentPosition() =
-        if (maintainLivePosition && playback?.time != null)
-            System.currentTimeMillis() - playback!!.time!!.startUnixTimeMillis
-        else
-            playerAdapter.currentPosition
 
-    fun setMetadata(playback: TvPlayback) {
+    fun bindPlaybackItem(playback: TvPlayback): Boolean {
+        when(playback.disposition) {
+            TvProgramDisposition.LIVE -> configureLivePlayback()
+            TvProgramDisposition.RECORD -> configureArchivePlayback()
+            else -> return false
+        }
         this.playback = playback
         title = playback.title
         subtitle = playback.description
+        return true
     }
 
-    fun overrideDuration(overriddenDuration: Long) {
+    private fun configureLivePlayback() {
+        playback?: return
+        if (null == playback!!.time) {
+            isSeekEnabled = false
+            maintainLivePosition = true
+        }
+        else {
+            isSeekEnabled = true
+            with(playback!!.time!!) {
+                overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
+                maintainLivePosition = true
+            }
+        }
+        initialDisposition = TvProgramDisposition.LIVE
+    }
+
+    private fun configureArchivePlayback() {
+        playback?.time?: return
+        isSeekEnabled = true
+        with(playback!!.time!!) {
+            overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
+            maintainLivePosition = false
+        }
+        initialDisposition = TvProgramDisposition.RECORD
+    }
+
+    override fun getCurrentPosition() =
+        if (maintainLivePosition && playback?.time != null) {
+            if (playerAdapter.isPlaying)
+                System.currentTimeMillis() - playback!!.time!!.startUnixTimeMillis
+            else
+                pausePosition
+        }
+        else {
+            playerAdapter.currentPosition
+        }
+
+    private fun overrideDuration(overriddenDuration: Long) {
         this.overriddenDuration = overriddenDuration
     }
 
-    private fun skipForward(millis: Long = SEEK_STEP_MILLIS) =
-            // Ensures we don't advance past the content duration (if set)
-            playerAdapter.seekTo(if (wrappedDuration > 0) {
-                min(wrappedDuration, currentPosition + millis)
-            } else {
-                currentPosition + millis
-            })
+    private fun skipForward(millis: Long = SEEK_STEP_MILLIS) {
+        if (initialDisposition == TvProgramDisposition.LIVE) { beep(); return }
+        // Ensures we don't advance past the content duration (if set)
+        playerAdapter.seekTo(if (wrappedDuration > 0) {
+            min(wrappedDuration, currentPosition + millis)
+        } else {
+            currentPosition + millis
+        })
+    }
 
-    private fun skipBackward(millis: Long = SEEK_STEP_MILLIS) =
-            playerAdapter.seekTo(max(0, currentPosition - millis))
+    private fun skipBackward(millis: Long = SEEK_STEP_MILLIS) {
+        if (initialDisposition == TvProgramDisposition.LIVE) { beep(); return }
+        playerAdapter.seekTo(max(0, currentPosition - millis))
+    }
+
+    private fun beep() {
+        ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+                .startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+    }
 
     override fun onCreatePrimaryActions(adapter: ArrayObjectAdapter) {
         super.onCreatePrimaryActions(adapter)
         adapter.add(actionRewind)
         adapter.add(actionFastForward)
-        adapter.add(actionClosedCaptions)
+        //adapter.add(actionClosedCaptions)
     }
 
-    override fun onActionClicked(action: Action) = when (action) {
-        actionRewind -> skipBackward()
-        actionFastForward -> skipForward()
-        else -> super.onActionClicked(action)
+    override fun onActionClicked(action: Action) {
+        if (action.label1 == "Play") {
+            pausePosition = if (playerAdapter.isPlaying) currentPosition else -1L
+            return
+        }
+        when (action) {
+            actionRewind -> skipBackward()
+            actionFastForward -> skipForward()
+            else -> super.onActionClicked(action)
+        }
     }
 
     @SuppressLint("MissingSuperCall")
