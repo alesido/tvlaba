@@ -5,6 +5,7 @@ import org.alsi.android.datatv.store.TvProgramLocalStore
 import org.alsi.android.datatv.store.TvProgramRemoteStore
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
+import org.alsi.android.domain.tv.model.guide.TvWeekDayRange
 import org.alsi.android.domain.tv.repository.guide.TvProgramRepository
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
@@ -42,5 +43,12 @@ open class TvProgramDataRepository @Inject constructor(
                 Single.just(it.programAtTime(dateTime))
             }
         }
+    }
+
+    /** Default implementation that may be overridden in a concrete repository implementation
+     */
+    override fun getScheduleWeekDayRange(): Single<TvWeekDayRange> {
+        val now = LocalDate.now()
+        return Single.just(TvWeekDayRange(now.minusDays(14), now.plusDays(7)))
     }
 }
