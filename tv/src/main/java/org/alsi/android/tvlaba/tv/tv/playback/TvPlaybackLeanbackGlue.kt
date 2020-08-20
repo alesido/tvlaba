@@ -11,6 +11,7 @@ import androidx.leanback.widget.PlaybackControlsRow
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
+import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,8 +35,8 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
 
     fun bindPlaybackItem(playback: TvPlayback): Boolean {
         when(playback.disposition) {
-            TvProgramDisposition.LIVE -> configureLivePlayback()
-            TvProgramDisposition.RECORD -> configureArchivePlayback()
+            TvProgramDisposition.LIVE -> configureLivePlayback(playback)
+            TvProgramDisposition.RECORD -> configureArchivePlayback(playback)
             else -> return false
         }
         this.playback = playback
@@ -44,15 +45,15 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
         return true
     }
 
-    private fun configureLivePlayback() {
-        playback?: return
-        if (null == playback!!.time) {
+    private fun configureLivePlayback(playback: TvPlayback) {
+        if (null == playback.time) {
             isSeekEnabled = false
+            overrideDuration(TimeUnit.DAYS.toMillis(1))
             maintainLivePosition = true
         }
         else {
-            isSeekEnabled = true
-            with(playback!!.time!!) {
+            isSeekEnabled = false // enable when "live record" is ready
+            with(playback.time!!) {
                 overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
                 maintainLivePosition = true
             }
@@ -60,10 +61,10 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
         initialDisposition = TvProgramDisposition.LIVE
     }
 
-    private fun configureArchivePlayback() {
-        playback?.time?: return
+    private fun configureArchivePlayback(playback: TvPlayback) {
+        playback.time?: return
         isSeekEnabled = true
-        with(playback!!.time!!) {
+        with(playback.time!!) {
             overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
             maintainLivePosition = false
         }
@@ -148,7 +149,7 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
     companion object {
 
         /** Default time used when skipping playback in milliseconds */
-        private val SEEK_STEP_MILLIS: Long = java.util.concurrent.TimeUnit.MINUTES.toMillis(1)
-        private val FAST_SEEK_STEP_MILLIS: Long = java.util.concurrent.TimeUnit.MINUTES.toMillis(5)
+        private val SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(1)
+        private val FAST_SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(5)
     }
 }
