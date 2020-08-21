@@ -1,4 +1,4 @@
-package org.alsi.android.tvlaba.tv.tv
+package org.alsi.android.tvlaba.tv.tv.directory
 
 import android.os.Bundle
 import androidx.leanback.app.BrowseSupportFragment
@@ -17,7 +17,7 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.tv.directory.TvDirectoryChannelCardPresenter
+import org.alsi.android.tvlaba.tv.tv.TvChannelDirectoryFragmentDirections
 import javax.inject.Inject
 
 /**
@@ -47,8 +47,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             if (item is TvChannel) {
                 browseViewModel.onChannelAction(item) {
                     Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
-                            .navigate(TvChannelDirectoryFragmentDirections
-                                    .actionTvChannelDirectoryFragmentToTvPlaybackAndScheduleFragment())
+                            .navigate(TvChannelDirectoryFragmentDirections.actionTvChannelDirectoryFragmentToTvPlaybackAndScheduleFragment())
                 }
             }
         }

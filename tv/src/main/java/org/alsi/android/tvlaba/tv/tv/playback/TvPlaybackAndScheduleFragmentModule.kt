@@ -1,8 +1,7 @@
-package org.alsi.android.tvlaba.tv.tv.directory
+package org.alsi.android.tvlaba.tv.tv.playback
 
 import dagger.Module
 import dagger.Provides
-import org.alsi.android.tvlaba.tv.tv.TvPlaybackAndScheduleFragment
 
 @Module
 class TvPlaybackAndScheduleFragmentModule {

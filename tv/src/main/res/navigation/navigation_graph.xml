@@ -7,7 +7,7 @@
     >
     <fragment
         android:id="@+id/tvChannelDirectoryFragment"
-        android:name="org.alsi.android.tvlaba.tv.tv.TvChannelDirectoryFragment"
+        android:name="org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragment"
         android:label="TvChannelDirectoryFragment"
         >
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/tvPlaybackAndScheduleFragment"
-        android:name="org.alsi.android.tvlaba.tv.tv.TvPlaybackAndScheduleFragment"
+        android:name="org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragment"
         android:label="TvPlaybackAndScheduleFragment"
         />
 </navigation>

@@ -1,4 +1,4 @@
-package org.alsi.android.tvlaba.tv.tv.directory
+package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.content.Context
 import android.util.AttributeSet

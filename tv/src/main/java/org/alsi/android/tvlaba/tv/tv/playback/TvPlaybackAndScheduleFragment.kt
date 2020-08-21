@@ -1,4 +1,4 @@
-package org.alsi.android.tvlaba.tv.tv
+package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.content.Context
 import android.net.Uri
@@ -27,9 +27,6 @@ import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackFooterViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.tv.directory.TvScheduleProgramCardPresenter
-import org.alsi.android.tvlaba.tv.tv.directory.TvWeekDayCardPresenter
-import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackLeanbackGlue
 import javax.inject.Inject
 
 class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
