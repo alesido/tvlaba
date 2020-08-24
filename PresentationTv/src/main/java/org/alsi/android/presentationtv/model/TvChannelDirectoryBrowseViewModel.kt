@@ -7,11 +7,13 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.context.interactor.StartSessionUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvChannelDirectoryObservationUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvNewPlaybackUseCase
+import org.alsi.android.domain.tv.interactor.guide.*
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
 import org.alsi.android.domain.tv.model.guide.TvPlayback
+import org.alsi.android.domain.tv.model.session.TvBrowseCursor
+import org.alsi.android.domain.tv.model.session.TvBrowsePage
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import javax.inject.Inject
@@ -23,20 +25,28 @@ import javax.inject.Inject
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         private val startSessionUseCase: StartSessionUseCase,
         private val directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
-        private val newPlaybackUseCase: TvNewPlaybackUseCase
-)
-    : ViewModel()
-{
-    private val liveData: MutableLiveData<Resource<TvChannelDirectory>> = MutableLiveData()
+        private val newPlaybackUseCase: TvNewPlaybackUseCase,
+        private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,
+        private val browseCursorMoveUseCase: TvBrowseCursorMoveUseCase
+
+) : ViewModel() {
+
+    private val liveDirectory: MutableLiveData<Resource<TvChannelDirectory>> = MutableLiveData()
+    private val liveDirectoryPosition: MutableLiveData<Resource<TvChannelDirectoryPosition>> = MutableLiveData()
+
+    private lateinit var directory: TvChannelDirectory
 
     init {
         fetchChannelDirectory()
     }
 
-    fun getLiveData(): LiveData<Resource<TvChannelDirectory>> = liveData
+    fun getLiveDirectory(): LiveData<Resource<TvChannelDirectory>> = liveDirectory
+    fun getLiveDirectoryPosition(): LiveData<Resource<TvChannelDirectoryPosition>> = liveDirectoryPosition
+
+    // region Interface
 
     private fun fetchChannelDirectory() {
-        liveData.postValue(Resource(ResourceState.LOADING, null, null))
+        liveDirectory.postValue(Resource(ResourceState.LOADING, null, null))
         startSessionUseCase.execute(StartSessionSubscriber(),
                 StartSessionUseCase.Params(
                         loginName = "51",
@@ -44,32 +54,57 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                 ))
     }
 
-    fun onChannelAction(item: TvChannel, navigate: () -> Unit) {
-        newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
-                TvNewPlaybackUseCase.Params(item.categoryId, item))
+    @Suppress("UNUSED_PARAMETER")
+    fun onChannelSelected(categoryPosition: Int, channelPosition: Int, channel: TvChannel) {
+        browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
+                TvBrowseCursorMoveUseCase.Params(
+                        category = directory.categories[categoryPosition],
+                        channel = channel,
+                        page = TvBrowsePage.CHANNELS))
     }
+
+    fun onChannelAction(channel: TvChannel, navigate: () -> Unit) {
+        newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
+                TvNewPlaybackUseCase.Params(channel.categoryId, channel))
+    }
+
+    fun onResume() {
+        browseCursorGetUseCase.execute(BrowseCursorSubscriber())
+    }
+
+    // endregion
+    // region Dispose
+
+    fun dispose() {
+        startSessionUseCase.dispose()
+        directoryObservationUseCase.dispose()
+        newPlaybackUseCase.dispose()
+        browseCursorGetUseCase.dispose()
+        browseCursorMoveUseCase.dispose()
+    }
+
+    // endregion
+    // region Subscribers
 
     inner class StartSessionSubscriber: DisposableCompletableObserver() {
         override fun onComplete() {
             directoryObservationUseCase.execute(ChannelDirectorySubscriber())
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
         }
     }
 
-    inner class ChannelDirectorySubscriber: DisposableObserver<TvChannelDirectory>() {
+    private inner class ChannelDirectorySubscriber: DisposableObserver<TvChannelDirectory>() {
         override fun onNext(directory: TvChannelDirectory) {
-            liveData.postValue(Resource(ResourceState.SUCCESS, directory, null))
+            this@TvChannelDirectoryBrowseViewModel.directory = directory
+            liveDirectory.postValue(Resource(ResourceState.SUCCESS, directory, null))
+            browseCursorGetUseCase.execute(BrowseCursorSubscriber())
         }
-
-        override fun onComplete() {
-            // not applicable
-        }
-
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
         }
+        override fun onComplete() { /* not applicable */ }
     }
 
     inner class NewPlaybackSubscriber (val navigate: () -> Unit)
@@ -78,7 +113,32 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             navigate()
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
         }
     }
+
+    inner class BrowseCursorSubscriber : DisposableSingleObserver<TvBrowseCursor>() {
+        override fun onSuccess(cursor: TvBrowseCursor) {
+            if (null == cursor.category || null == cursor.channel) return
+            val dir = this@TvChannelDirectoryBrowseViewModel.directory
+            val position = TvChannelDirectoryPosition(
+                    categoryIndex = dir.categoryIndex(cursor.category!!),
+                    channelIndex = dir.channelIndex(cursor.channel!!)?:-1)
+            liveDirectoryPosition.postValue(Resource(ResourceState.SUCCESS, position,null))
+        }
+        override fun onError(e: Throwable) {
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
+    inner class BrowseCursorMoveSubscriber : DisposableSingleObserver<TvBrowseCursor>() {
+        override fun onSuccess(t: TvBrowseCursor) {
+            // silently accept it's OK
+        }
+        override fun onError(e: Throwable) {
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
+    // endregion
 }
