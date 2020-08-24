@@ -2,4 +2,6 @@
     <string name="app_name">TvLabA</string>
     <string name="content_description_tv_channel_card_poster">TV Channel Poster View</string>
     <string name="error_message_no_playback_available">No playback available!</string>
+    <string name="tv_program_details_action_watch">Watch</string>
+    <string name="tv_program_details_action_schedule">Schedule</string>
 </resources>

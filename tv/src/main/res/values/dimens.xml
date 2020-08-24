@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="tv_program_detail_poster_width">274dp</dimen>
+    <dimen name="tv_program_detail_poster_height">274dp</dimen>
+</resources>

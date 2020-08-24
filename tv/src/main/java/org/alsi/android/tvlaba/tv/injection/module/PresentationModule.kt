@@ -9,6 +9,7 @@ import dagger.multibindings.IntoMap
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackFooterViewModel
+import org.alsi.android.presentationtv.model.TvProgramDetailsViewModel
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import kotlin.reflect.KClass
 
@@ -29,6 +30,11 @@ abstract class PresentationModule {
     @IntoMap
     @ViewModelKey(TvPlaybackFooterViewModel::class)
     abstract fun bindPlaybackFooterViewModel(viewModel: TvPlaybackFooterViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TvProgramDetailsViewModel::class)
+    abstract fun bindProgramDetailsViewModel(viewModel: TvProgramDetailsViewModel) : ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

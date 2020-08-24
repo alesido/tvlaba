@@ -6,6 +6,8 @@ import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragment
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragment
 import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragmentModule
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragmentModule
+import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragment
+import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragmentModule
 
 @Module
 abstract class ActivityModule {
@@ -15,4 +17,7 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [TvPlaybackAndScheduleFragmentModule::class])
     abstract fun bindTvPlaybackAndScheduleFragment(): TvPlaybackAndScheduleFragment
+
+    @ContributesAndroidInjector(modules = [TvProgramDetailsFragmentModule::class])
+    abstract fun bindTvProgramDetailsFragment(): TvProgramDetailsFragment
 }
