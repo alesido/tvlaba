@@ -45,7 +45,7 @@ class TvDayScheduleSourceDataMapper {
                     countryNames = it.country?.map { c -> c.name?:"" },
                     credits = it.credits?.map { c ->
                         TvProgramCredit(
-                                name = it.name,
+                                name = c.name,
                                 role = when(c.type) {
                                     "actor" -> CreditRole.ACTOR
                                     "writer" -> CreditRole.WRITER
