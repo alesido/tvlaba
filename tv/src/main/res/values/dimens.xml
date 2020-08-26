@@ -3,4 +3,9 @@
 
     <dimen name="tv_program_detail_poster_width">274dp</dimen>
     <dimen name="tv_program_detail_poster_height">274dp</dimen>
+    <dimen name="video_poster_4x3_width">272dp</dimen>
+    <dimen name="video_poster_4x3_height">204dp</dimen>
+    <dimen name="tv_program_credits_card_width">272dp</dimen>
+    <dimen name="tv_program_credits_card_height">256dp</dimen>
+    <dimen name="tv_program_credits_card_title_height">48dp</dimen>
 </resources>

@@ -2,6 +2,7 @@ package org.alsi.android.tvlaba.tv.tv.program
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -15,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
@@ -22,6 +24,7 @@ import org.alsi.android.presentationtv.model.TvProgramDetailsLiveData
 import org.alsi.android.presentationtv.model.TvProgramDetailsViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.playback.TvScheduleProgramCardPresenter
 import javax.inject.Inject
 
 class TvProgramDetailsFragment : DetailsSupportFragment() {
@@ -160,22 +163,57 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
             return
         }
 
-        val row = DetailsOverviewRow(data)
+        val detailsRow = DetailsOverviewRow(data)
 
         val options: RequestOptions = RequestOptions()
                 .error(R.drawable.default_background).dontAnimate()
         program.let {
             Glide.with(this).asBitmap().load(it.mainPosterUri.toString()).apply(options)
-                    .into(PosterBitmapTarget(row))
+                    .into(PosterBitmapTarget(detailsRow))
         }
 
-        setupActions(row)
+        setupActions(detailsRow)
 
         with(adapter as ArrayObjectAdapter) {
             removeItems(0, size())
-            add(row)
+            add(detailsRow)
+            postersRow(program)?.let { add(it) }
+            actorsRow(program)?.let { add(it) }
+            dayScheduleRow(data.cursor?.schedule)?.let { add(it) }
+//            add(navigationRow())
         }
     }
+
+    private fun postersRow(program: TvProgramIssue): ListRow? {
+        if (program.allPosterUris.isNullOrEmpty()) return null
+        return ListRow(
+                HeaderItem(getString(R.string.header_footage)),
+                ArrayObjectAdapter(VideoPosterCardPresenter()).apply {
+                    setItems(program.allPosterUris?.map { Uri.parse(it.toString()) }, null)
+                })
+    }
+
+    private fun actorsRow(program: TvProgramIssue): ListRow? {
+        if (program.credits.isNullOrEmpty()) return null
+        return ListRow(
+                HeaderItem(getString(R.string.header_credits)),
+                ArrayObjectAdapter(TvProgramCreditsCardPresenter()).apply {
+                    setItems(program.creditPictures, null)
+                })
+    }
+
+    private fun dayScheduleRow(schedule: TvDaySchedule?): ListRow? {
+        if (null == schedule || schedule.items.isNullOrEmpty()) return null
+        return ListRow(
+                HeaderItem(getString(R.string.header_day_schedule)),
+                ArrayObjectAdapter(TvScheduleProgramCardPresenter()).apply {
+                    setItems(schedule.items, null)
+                })
+    }
+
+//    private fun navigationRow(): ListRow {
+//
+//    }
 
     inner class PosterBitmapTarget(private val row : DetailsOverviewRow): CustomTarget<Bitmap>() {
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap?>?) {

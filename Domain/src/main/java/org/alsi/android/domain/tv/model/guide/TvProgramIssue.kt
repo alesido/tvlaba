@@ -1,6 +1,7 @@
 package org.alsi.android.domain.tv.model.guide
 
 import org.alsi.android.domain.tv.interactor.guide.TvProgramCredit
+import org.alsi.android.domain.tv.interactor.guide.TvProgramCreditPicture
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition.*
 import java.net.URI
 import java.util.concurrent.TimeUnit
@@ -96,6 +97,17 @@ class TvProgramIssue(
 ) {
         @Suppress("MemberVisibilityCanBePrivate")
         val disposition: TvProgramDisposition get() = evaluateTvProgramDisposition(time)
+
+        val creditPictures: List<TvProgramCreditPicture>? get() {
+                if (credits.isNullOrEmpty()) return null
+                val pics: MutableList<TvProgramCreditPicture> = mutableListOf()
+                credits?.forEach { credit ->
+                        credit.photoUris?.forEach {
+                                pics.add(TvProgramCreditPicture(credit.name, credit.role, it))
+                        }
+                }
+                return pics
+        }
 }
 
 fun evaluateTvProgramDisposition(programTime: TvProgramTimeInterval?): TvProgramDisposition {
