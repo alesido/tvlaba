@@ -34,10 +34,4 @@ class TvProgramCardView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
     }
-
-    fun setPosterDimensions(width: Int, height: Int) {
-        val lp: ViewGroup.LayoutParams = tvProgramCardPoster.layoutParams
-        lp.width = width; lp.height = height
-        tvProgramCardPoster.layoutParams = lp
-    }
 }
