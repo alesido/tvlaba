@@ -1,6 +1,7 @@
 package org.alsi.android.domain.tv.model.guide
 
 import org.alsi.android.domain.tv.interactor.guide.TvProgramCredit
+import org.alsi.android.domain.tv.model.guide.TvProgramDisposition.*
 import java.net.URI
 import java.util.concurrent.TimeUnit
 
@@ -13,10 +14,10 @@ import java.util.concurrent.TimeUnit
  */
 class TvProgramIssue(
 
-    // -- core
+        // -- core
 
         /** ID of a TV channel where the program have been issued
-        */
+         */
         val channelId: Long,
 
         /** Program time interval, start and end time. N/A for channels w/o EPG.
@@ -93,16 +94,17 @@ class TvProgramIssue(
         */
         var position: Long = 0L
 ) {
+        @Suppress("MemberVisibilityCanBePrivate")
         val disposition: TvProgramDisposition get() = evaluateTvProgramDisposition(time)
 }
 
 fun evaluateTvProgramDisposition(programTime: TvProgramTimeInterval?): TvProgramDisposition {
         val nowMillis = System.currentTimeMillis()
         val reserve = TimeUnit.SECONDS.toMillis(1)
-        programTime?: return TvProgramDisposition.LIVE
+        programTime?: return LIVE
         return when {
-                programTime.endUnixTimeMillis < nowMillis - reserve -> TvProgramDisposition.RECORD
-                programTime.startUnixTimeMillis > nowMillis + reserve -> TvProgramDisposition.FUTURE
-                else -> TvProgramDisposition.LIVE
+                programTime.endUnixTimeMillis < nowMillis - reserve -> RECORD
+                programTime.startUnixTimeMillis > nowMillis + reserve -> FUTURE
+                else -> LIVE
         }
 }
