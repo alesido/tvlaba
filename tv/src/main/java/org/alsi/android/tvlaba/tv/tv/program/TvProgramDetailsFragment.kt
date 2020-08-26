@@ -67,7 +67,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
     private fun handleDetailsChangeEvent(resource: Resource<TvProgramDetailsLiveData>) {
         when (resource.status) {
-            ResourceState.SUCCESS -> bindProgramData(resource.data?.cursor?.program)
+            ResourceState.SUCCESS -> bindProgramData(resource.data)
             ResourceState.LOADING -> {}
             ResourceState.ERROR -> {
                 Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
@@ -95,8 +95,8 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
     private fun createDetailsPresenter(): FullWidthDetailsOverviewRowPresenter {
         val detailsPresenter = FullWidthDetailsOverviewRowPresenter(
-                TvProgramDetailsDescriptionPresenter(),
-                TvProgramDetailsPosterPresenter()
+                TvProgramDetailsDescriptionPresenter(requireContext()),
+                TvProgramDetailsPosterSimplePresenter()
         )
 
         detailsPresenter.initialState = FullWidthDetailsOverviewRowPresenter.STATE_HALF
@@ -149,13 +149,22 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     // endregion
     // region Data Binding
 
-    private fun bindProgramData(program: TvProgramIssue?) {
+    private fun bindProgramData(data: TvProgramDetailsLiveData?) {
 
-        val row = DetailsOverviewRow(program)
+        val program = data?.cursor?.program
+
+        if (null == program) {
+            Toast.makeText(context, R.string.error_message_no_program_data_available,
+                    Toast.LENGTH_LONG).show()
+            Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost).popBackStack()
+            return
+        }
+
+        val row = DetailsOverviewRow(data)
 
         val options: RequestOptions = RequestOptions()
                 .error(R.drawable.default_background).dontAnimate()
-        program?.let {
+        program.let {
             Glide.with(this).asBitmap().load(it.mainPosterUri.toString()).apply(options)
                     .into(PosterBitmapTarget(row))
         }

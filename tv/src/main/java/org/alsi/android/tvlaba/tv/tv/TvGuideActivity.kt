@@ -10,6 +10,7 @@ class TvGuideActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_Medium)
         setContentView(R.layout.tv_guide_activity)
     }
 }
