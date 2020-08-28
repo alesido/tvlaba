@@ -14,6 +14,7 @@ import androidx.navigation.Navigation
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
@@ -23,8 +24,8 @@ import org.alsi.android.domain.tv.model.guide.TvWeekDay
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvPlaybackFooterLiveData
-import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackFooterViewModel
+import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
@@ -37,6 +38,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     private lateinit var playbackViewModel: TvPlaybackViewModel
 
     private lateinit var footerViewModel : TvPlaybackFooterViewModel
+
+    private lateinit var dataSourceFactory : DefaultDataSourceFactory
 
     private lateinit var player: SimpleExoPlayer
 
@@ -57,6 +60,21 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 .get(TvPlaybackFooterViewModel::class.java)
 
         setOnItemViewClickedListener(ItemClickListener())
+
+// TODO Select a correct way to create media data source factory
+//                dataSourceFactory = DefaultHttpDataSourceFactory(
+//                        Util.getUserAgent(requireContext(), getString(R.string.app_name)))
+        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
+                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
+
+
+//        setOnKeyInterceptListener { receiverView: View?, keyCode: Int, event: KeyEvent? ->
+//            when (keyCode) {
+//                KeyEvent.KEYCODE_DPAD_CENTER -> Toast.makeText(context, "KEYCODE_DPAD_CENTER", Toast.LENGTH_LONG).show()
+//                else -> {}
+//            }
+//            false
+//        }
     }
 
     override fun onAttach(context: Context) {
@@ -142,8 +160,6 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         if (null == playback?.streamUri) return
         context?.let {
             if (glue.bindPlaybackItem(playback)) {
-                val dataSourceFactory = DefaultHttpDataSourceFactory(
-                        Util.getUserAgent(it, getString(R.string.app_name)))
                 val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(Uri.parse(playback.streamUri.toString()))
                 player.prepare(hlsMediaSource, false, true)
