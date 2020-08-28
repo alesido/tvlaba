@@ -37,8 +37,8 @@ ext {
     retrofitVersion = '2.6.0'
     glideVersion = '4.11.0'
     leanbackVersion = '1.0.0'
-    exoplayerVersion = '2.11.7'
-    exoplayerLeanbackExtensionVersion = '2.11.7'
+    exoplayerVersion = '2.11.8'
+    exoplayerLeanbackExtensionVersion = '2.11.8'
     timberVersion = '4.7.1'
     objectboxVersion = '2.7.0'
 
