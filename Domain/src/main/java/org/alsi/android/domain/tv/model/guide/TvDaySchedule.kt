@@ -91,6 +91,8 @@ class TvDaySchedule(
         return timeMap[programStart]!!.starting!!
     }
 
+    fun positionOf(programIssue: TvProgramIssue): Int? = positionMap[programIssue.programId]
+
     /** Time based section of the schedule.
      */
     class TimeSection(val startHour: Int, val endHour: Int, day: LocalDate,

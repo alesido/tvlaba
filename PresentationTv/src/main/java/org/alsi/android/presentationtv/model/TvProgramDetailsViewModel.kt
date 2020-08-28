@@ -31,6 +31,8 @@ class TvProgramDetailsViewModel @Inject constructor (
     private val liveData: MutableLiveData<Resource<TvProgramDetailsLiveData>> = MutableLiveData()
     private val snapshot = TvProgramDetailsLiveData()
 
+    val currentScheduleItemPosition: Int get() = _currentScheduleItemPosition
+    private var _currentScheduleItemPosition: Int = 0
 
     init {
         liveData.postValue(Resource(ResourceState.LOADING, null, null))
@@ -47,6 +49,23 @@ class TvProgramDetailsViewModel @Inject constructor (
                 })
     }
 
+    fun scheduleItemPositionOf(item: TvProgramIssue): Int? = snapshot.schedule?.positionOf(item)
+
+    fun onTvProgramIssueAction(item: TvProgramIssue) {
+        snapshot.cursor?: return
+        liveData.postValue(Resource(ResourceState.LOADING, null, null))
+        with(snapshot.cursor!!) {
+            browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
+                    TvBrowseCursorMoveUseCase.Params(
+                            category = category,
+                            channel = channel,
+                            schedule = schedule,
+                            program = item,
+                            page = TvBrowsePage.PROGRAM
+                    ))
+        }
+    }
+
     fun dispose() {
         browseCursorObserveUseCase.dispose()
         dayScheduleUseCase.dispose()
@@ -58,6 +77,9 @@ class TvProgramDetailsViewModel @Inject constructor (
             snapshot.cursor = cursor
             if (cursor.program != null) {
                 liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
+                if (snapshot.schedule != null) {
+                    _currentScheduleItemPosition = snapshot.schedule!!.positionOf(cursor.program!!)?: 0
+                }
             }
             else {
                 dayScheduleUseCase.execute(DayScheduleSubscriber(), TvDayScheduleUseCase.Params(

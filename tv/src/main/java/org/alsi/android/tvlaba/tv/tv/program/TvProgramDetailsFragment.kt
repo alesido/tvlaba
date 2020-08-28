@@ -94,6 +94,9 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
         // adapter
         adapter = ArrayObjectAdapter(rowPresenterSelector)
+
+        // --
+        setOnItemCardClickedListener()
     }
 
     private fun createDetailsPresenter(): FullWidthDetailsOverviewRowPresenter {
@@ -135,9 +138,32 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
                     }
                 }
                 ACTION_SCHEDULE -> {
-                    // TODO Scroll to program schedule below or navigate to a standalone program schedule page
+                    setSelectedPosition(adapter.size())
                 }
             }
+        }
+    }
+
+    private fun setOnItemCardSelectedActions() {
+        var isInitialSelection = true
+        setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
+            if (isInitialSelection && item is TvProgramIssue) {
+                val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
+                if (detailsViewModel.currentScheduleItemPosition
+                        != detailsViewModel.scheduleItemPositionOf(item))
+                    gridView.selectedPosition = detailsViewModel.currentScheduleItemPosition
+                isInitialSelection = false
+            }
+        }
+    }
+
+    private fun setOnItemCardClickedListener() {
+        setOnItemViewClickedListener { _, item, _, _ ->
+           when (item) {
+               is TvProgramIssue -> {
+                   detailsViewModel.onTvProgramIssueAction(item)
+               }
+           }
         }
     }
 
@@ -173,13 +199,14 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         }
 
         setupActions(detailsRow)
+        setOnItemCardSelectedActions()
 
         with(adapter as ArrayObjectAdapter) {
             removeItems(0, size())
             add(detailsRow)
             postersRow(program)?.let { add(it) }
             actorsRow(program)?.let { add(it) }
-            dayScheduleRow(data.cursor?.schedule)?.let { add(it) }
+            scheduleRow(data.cursor?.schedule)?.let { add(it) }
 //            add(navigationRow())
         }
     }
@@ -202,7 +229,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
                 })
     }
 
-    private fun dayScheduleRow(schedule: TvDaySchedule?): ListRow? {
+    private fun scheduleRow(schedule: TvDaySchedule?): ListRow? {
         if (null == schedule || schedule.items.isNullOrEmpty()) return null
         return ListRow(
                 HeaderItem(getString(R.string.header_day_schedule)),
