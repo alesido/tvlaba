@@ -61,9 +61,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         footerViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvPlaybackFooterViewModel::class.java)
 
-        setOnItemViewClickedListener(ItemClickListener())
+        setOnItemCardClickedListener()
 
-// TODO Select a correct way to create media data source factory
+// TODO Which is a correct way to create media data source factory:
 //                dataSourceFactory = DefaultHttpDataSourceFactory(
 //                        Util.getUserAgent(requireContext(), getString(R.string.app_name)))
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
@@ -175,7 +175,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     private fun handleFooterDataChange(resource: Resource<TvPlaybackFooterLiveData>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
-                refreshPlaybackFooter(resource.data)
+                bindPlaybackFooterData(resource.data)
             }
             ResourceState.LOADING -> {
             }
@@ -199,7 +199,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
      *
      * @see "tv-samples/Leanback sample"
      */
-    private fun refreshPlaybackFooter(data: TvPlaybackFooterLiveData?) {
+    private fun bindPlaybackFooterData(data: TvPlaybackFooterLiveData?) {
         val listRowPresenter = ListRowPresenter()
         val presenterSelector = ClassPresenterSelector()
                 .addClassPresenter(glue.controlsRow::class.java, glue.playbackRowPresenter)
@@ -220,25 +220,34 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
         adapter = rowsAdapter
 
-        // ensure initial week day selection
-        var isInitialSelection = true
+        // ensure initial schedule & week day selection
+        setOnItemCardSelectedListener()
+    }
+
+    private fun setOnItemCardSelectedListener() {
+        var isInitialProgramSelection = true
+        var isInitialWeekDaySelection = true
+
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
-            if (isInitialSelection && item is TvWeekDay) {
+            if (isInitialProgramSelection && item is TvProgramIssue) {
+                val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
+                if (footerViewModel.currentScheduleItemPosition
+                        != footerViewModel.scheduleItemPositionOf(item))
+                    gridView.selectedPosition = footerViewModel.currentScheduleItemPosition
+                isInitialProgramSelection = false
+
+            }
+            if (isInitialWeekDaySelection && item is TvWeekDay) {
                 val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
                 if (footerViewModel.selectedWeekDayPosition != footerViewModel.weekDayPositionOf(item))
                     gridView.selectedPosition = footerViewModel.selectedWeekDayPosition
-                isInitialSelection = false
+                isInitialWeekDaySelection = false
             }
         }
     }
 
-    private inner class ItemClickListener: OnItemViewClickedListener {
-        override fun onItemClicked(
-                itemViewHolder: Presenter.ViewHolder?,
-                item: Any?,
-                rowViewHolder: RowPresenter.ViewHolder?,
-                row: Row?
-        ) {
+    private fun setOnItemCardClickedListener() {
+        setOnItemViewClickedListener { _, item, _, _ ->
             when (item) {
                 is TvProgramIssue -> {
                     hideControlsOverlay(true)
@@ -250,6 +259,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             }
         }
     }
+
 
     // endregion
 

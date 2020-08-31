@@ -8,10 +8,9 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.tv.interactor.guide.TvCurrentPlaybackUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvDayScheduleUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvWeekDayRangeUseCase
-import org.alsi.android.domain.tv.model.guide.TvDaySchedule
-import org.alsi.android.domain.tv.model.guide.TvPlayback
-import org.alsi.android.domain.tv.model.guide.TvWeekDay
-import org.alsi.android.domain.tv.model.guide.TvWeekDayRange
+import org.alsi.android.domain.tv.model.guide.*
+import org.alsi.android.domain.tv.model.session.TvBrowseCursor
+import org.alsi.android.domain.tv.model.session.TvBrowsePage
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import javax.inject.Inject
@@ -27,8 +26,13 @@ class TvPlaybackFooterViewModel @Inject constructor (
     private val liveData: MutableLiveData<Resource<TvPlaybackFooterLiveData>> = MutableLiveData()
     private var snapshot = TvPlaybackFooterLiveData()
 
+    val currentScheduleItemPosition: Int get() = _currentScheduleItemPosition
+    private var _currentScheduleItemPosition: Int = 0
+
     val selectedWeekDayPosition: Int get() = _selectedWeekDayPosition
     private var _selectedWeekDayPosition: Int = 0
+
+    private var currentPlayback: TvPlayback? = null
 
 
     init {
@@ -54,14 +58,24 @@ class TvPlaybackFooterViewModel @Inject constructor (
         }
     }
 
+    fun scheduleItemPositionOf(item: TvProgramIssue): Int?
+            = snapshot.schedule?.positionOf(item)
+
     fun weekDayPositionOf(item: TvWeekDay): Int
             = snapshot.weekDayRange?.getWeekDayPosition(item.date)?: 0
 
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {
-        override fun onNext(t: TvPlayback) {
+        override fun onNext(playback: TvPlayback) {
+            currentPlayback = playback
+            snapshot.schedule?.let {
+                if (it.contains(playback)) {
+                    moveToProgram(it, playback)
+                    return
+                }
+            }
             dayScheduleUseCase.execute(DayScheduleSubscriber(), TvDayScheduleUseCase.Params(
-                    channelId = t.channelId,
-                    date = t.time?.startDateTime?.toLocalDate()
+                    channelId = playback.channelId,
+                    date = playback.time?.startDateTime?.toLocalDate()
             ))
         }
         override fun onError(e: Throwable) {
@@ -73,10 +87,14 @@ class TvPlaybackFooterViewModel @Inject constructor (
     }
 
     inner class DayScheduleSubscriber: DisposableSingleObserver<TvDaySchedule>() {
-        override fun onSuccess(t: TvDaySchedule) {
-            snapshot.schedule = t
+        override fun onSuccess(schedule: TvDaySchedule) {
+            snapshot.schedule = schedule
+            currentPlayback?.let {
+                _currentScheduleItemPosition = schedule.positionOf(it)?: schedule.middlePosition?: 0
+                moveToScheduleAndProgram(schedule, currentPlayback!!)
+            }
             snapshot.weekDayRange?.let {
-                _selectedWeekDayPosition = it.getWeekDayPosition(t.date)?:0
+                _selectedWeekDayPosition = it.getWeekDayPosition(schedule.date)?:0
             }
             liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
         }
