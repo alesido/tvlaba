@@ -2,6 +2,7 @@ package org.alsi.android.domain.tv.model.guide
 
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
+import org.joda.time.format.DateTimeFormat.longDate
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -77,12 +78,23 @@ class TvDaySchedule(
         }
     }
 
+    val longDateString: String get() = date.toString(longDate())
+
     val live: TvProgramIssue? get() {
         val nowMillis = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(timeShiftHours.toLong())
         val candidateProgramStart = timeLine.floor(nowMillis)?: return null
         val candidateProgram = timeMap[candidateProgramStart]?.starting?: return null
         candidateProgram.time?: return null
         if (candidateProgram.time!!.endUnixTimeMillis < nowMillis) return null
+        return candidateProgram
+    }
+
+    val programAtMiddle: TvProgramIssue? get() {
+        val midDayMillis = date.toDateTimeAtStartOfDay().millis + TimeUnit.HOURS.toMillis(12)
+        val candidateProgramStart = timeLine.floor(midDayMillis)?: return null
+        val candidateProgram = timeMap[candidateProgramStart]?.starting?: return null
+        candidateProgram.time?: return null
+        if (candidateProgram.time!!.endUnixTimeMillis < midDayMillis) return null
         return candidateProgram
     }
 

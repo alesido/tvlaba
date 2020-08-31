@@ -5,28 +5,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
-import org.alsi.android.domain.tv.interactor.guide.TvBrowseCursorMoveUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvBrowseCursorObserveUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvDayScheduleUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvNewPlaybackUseCase
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvDaySchedule
-import org.alsi.android.domain.tv.model.guide.TvPlayback
-import org.alsi.android.domain.tv.model.guide.TvProgramIssue
+import org.alsi.android.domain.tv.interactor.guide.*
+import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.domain.tv.model.session.TvBrowseCursor
 import org.alsi.android.domain.tv.model.session.TvBrowsePage
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
+import org.joda.time.LocalDate
 import javax.inject.Inject
 
 class TvProgramDetailsViewModel @Inject constructor (
 
         private val browseCursorObserveUseCase: TvBrowseCursorObserveUseCase,
         private val browseCursorMoveUseCase: TvBrowseCursorMoveUseCase,
+        private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val dayScheduleUseCase: TvDayScheduleUseCase,
-        private val newPlaybackUseCase: TvNewPlaybackUseCase
+        private val weekDayRangeUseCase: TvWeekDayRangeUseCase
 
-) : ViewModel() {
+        ) : ViewModel() {
 
     private val liveData: MutableLiveData<Resource<TvProgramDetailsLiveData>> = MutableLiveData()
     private val snapshot = TvProgramDetailsLiveData()
@@ -34,9 +30,14 @@ class TvProgramDetailsViewModel @Inject constructor (
     val currentScheduleItemPosition: Int get() = _currentScheduleItemPosition
     private var _currentScheduleItemPosition: Int = 0
 
+    val selectedWeekDayPosition: Int get() = _selectedWeekDayPosition
+    private var _selectedWeekDayPosition: Int = 0
+
+
     init {
         liveData.postValue(Resource(ResourceState.LOADING, null, null))
         browseCursorObserveUseCase.execute(TvBrowseCursorSubscriber())
+        weekDayRangeUseCase.execute(TvWeekDayRangeSubscriber())
     }
 
 
@@ -49,9 +50,13 @@ class TvProgramDetailsViewModel @Inject constructor (
                 })
     }
 
-    fun scheduleItemPositionOf(item: TvProgramIssue): Int? = snapshot.schedule?.positionOf(item)
+    fun scheduleItemPositionOf(item: TvProgramIssue): Int?
+            = snapshot.cursor?.schedule?.positionOf(item)
 
-    fun onTvProgramIssueAction(item: TvProgramIssue) {
+    fun weekDayPositionOf(item: TvWeekDay): Int? =
+            snapshot.weekDayRange?.getWeekDayPosition(item.date)?: 0
+
+    fun onTvProgramIssueAction(programIssue: TvProgramIssue) {
         snapshot.cursor?: return
         liveData.postValue(Resource(ResourceState.LOADING, null, null))
         with(snapshot.cursor!!) {
@@ -60,9 +65,21 @@ class TvProgramDetailsViewModel @Inject constructor (
                             category = category,
                             channel = channel,
                             schedule = schedule,
-                            program = item,
+                            program = programIssue,
                             page = TvBrowsePage.PROGRAM
                     ))
+        }
+    }
+
+    fun onWeekDayAction(weekDay: TvWeekDay) {
+        snapshot.cursor?: return
+        with (snapshot.cursor!!) {
+            if (schedule?.date == weekDay.date) return
+            liveData.postValue(Resource(ResourceState.LOADING, null, null))
+            dayScheduleUseCase.execute(DayScheduleSubscriber(), TvDayScheduleUseCase.Params(
+                    channelId = channel!!.id,
+                    date = weekDay.date
+            ))
         }
     }
 
@@ -75,19 +92,35 @@ class TvProgramDetailsViewModel @Inject constructor (
         override fun onNext(cursor: TvBrowseCursor) {
             if (null == cursor.category && null == cursor.channel) return
             snapshot.cursor = cursor
-            if (cursor.program != null) {
+            if (cursor.schedule != null && cursor.program != null) {
+                // another program selected from the current week day
                 liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
-                if (snapshot.schedule != null) {
-                    _currentScheduleItemPosition = snapshot.schedule!!.positionOf(cursor.program!!)?: 0
+                if (cursor.schedule != null) {
+                    _currentScheduleItemPosition = cursor.schedule!!.
+                        positionOf(cursor.program!!)?: 0
+                    _selectedWeekDayPosition = snapshot.weekDayRange?.
+                        getWeekDayPosition(cursor.schedule!!.date)?: 0
+                }
+            }
+            else if (cursor.schedule != null && null == cursor.program) {
+                // another week day selected ...
+                with(cursor) {
+                    browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
+                            TvBrowseCursorMoveUseCase.Params(
+                                    category = category,
+                                    channel = channel,
+                                    schedule = schedule,
+                                    program = schedule?.programAtMiddle,
+                                    page = TvBrowsePage.PROGRAM
+                            ))
                 }
             }
             else {
+                // came from the channel directory - both current schedule and program is N/A
                 dayScheduleUseCase.execute(DayScheduleSubscriber(), TvDayScheduleUseCase.Params(
                         channelId = cursor.channel!!.id,
-                        date = cursor.channel!!.live.time?.startDateTime?.toLocalDate()
+                        date = LocalDate.now()
                 ))
-                // TODO Get current program with designated use case instead of getting schedule
-                //  - some API may have a method to get a program's details
             }
         }
         override fun onError(e: Throwable) {
@@ -107,20 +140,27 @@ class TvProgramDetailsViewModel @Inject constructor (
         }
     }
 
+    inner class NewPlaybackSubscriber (val navigate: () -> Unit)
+        : DisposableSingleObserver<TvPlayback>() {
+        override fun onSuccess(t: TvPlayback) {
+            navigate()
+        }
+        override fun onError(e: Throwable) {
+            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
     inner class DayScheduleSubscriber: DisposableSingleObserver<TvDaySchedule>() {
         override fun onSuccess(schedule: TvDaySchedule) {
-            snapshot.schedule = schedule
-            if (null == snapshot.cursor!!.program) {
-                with(snapshot.cursor!!) {
-                    browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
-                        TvBrowseCursorMoveUseCase.Params(
-                                category = category,
-                                channel = channel,
-                                schedule = schedule,
-                                program = schedule.live,
-                                page = TvBrowsePage.PROGRAM
-                        ))
-                }
+            with(snapshot.cursor!!) {
+                browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
+                    TvBrowseCursorMoveUseCase.Params(
+                            category = category,
+                            channel = channel,
+                            schedule = schedule,
+                            program = schedule.live?: schedule.programAtMiddle, // "live" is null for an earlier or a later week day
+                            page = TvBrowsePage.PROGRAM
+                    ))
             }
             liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
         }
@@ -129,11 +169,15 @@ class TvProgramDetailsViewModel @Inject constructor (
         }
     }
 
-    inner class NewPlaybackSubscriber (val navigate: () -> Unit)
-        : DisposableSingleObserver<TvPlayback>() {
-        override fun onSuccess(t: TvPlayback) {
-            navigate()
+    inner class TvWeekDayRangeSubscriber: DisposableSingleObserver<TvWeekDayRange>() {
+        override fun onSuccess(t: TvWeekDayRange) {
+            snapshot.weekDayRange = t
+            val browseDate = snapshot.cursor?.schedule?.date?: LocalDate.now()
+            _selectedWeekDayPosition = t.getWeekDayPosition(browseDate)?: 0
+            if (snapshot.cursor?.program != null)
+                liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
         }
+
         override fun onError(e: Throwable) {
             liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
         }

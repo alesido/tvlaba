@@ -18,13 +18,16 @@ import com.bumptech.glide.request.transition.Transition
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
+import org.alsi.android.domain.tv.model.guide.TvWeekDay
+import org.alsi.android.domain.tv.model.guide.TvWeekDayRange
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvProgramDetailsLiveData
 import org.alsi.android.presentationtv.model.TvProgramDetailsViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.tv.playback.TvScheduleProgramCardPresenter
+import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
+import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
 import javax.inject.Inject
 
 class TvProgramDetailsFragment : DetailsSupportFragment() {
@@ -33,6 +36,10 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var detailsViewModel: TvProgramDetailsViewModel
+
+    private val scheduleRowPosition get() = adapter.size() - 2
+
+    private var initialRow = RowKind.DETAILS
 
     // region Life Cycle
 
@@ -138,21 +145,29 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
                     }
                 }
                 ACTION_SCHEDULE -> {
-                    setSelectedPosition(adapter.size())
+                    setSelectedPosition(scheduleRowPosition)
                 }
             }
         }
     }
 
     private fun setOnItemCardSelectedActions() {
-        var isInitialSelection = true
+        var isInitialProgramSelection = true
+        var isInitialWeekDaySelection = true
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
-            if (isInitialSelection && item is TvProgramIssue) {
+            if (isInitialProgramSelection && item is TvProgramIssue) {
                 val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
                 if (detailsViewModel.currentScheduleItemPosition
                         != detailsViewModel.scheduleItemPositionOf(item))
                     gridView.selectedPosition = detailsViewModel.currentScheduleItemPosition
-                isInitialSelection = false
+                isInitialProgramSelection = false
+
+            }
+            if (isInitialWeekDaySelection && item is TvWeekDay) {
+                val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
+                if (detailsViewModel.selectedWeekDayPosition != detailsViewModel.weekDayPositionOf(item))
+                    gridView.selectedPosition = detailsViewModel.selectedWeekDayPosition
+                isInitialWeekDaySelection = false
             }
         }
     }
@@ -162,6 +177,10 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
            when (item) {
                is TvProgramIssue -> {
                    detailsViewModel.onTvProgramIssueAction(item)
+               }
+               is TvWeekDay -> {
+                   detailsViewModel.onWeekDayAction(item)
+                   initialRow = RowKind.SCHEDULE
                }
            }
         }
@@ -207,7 +226,13 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
             postersRow(program)?.let { add(it) }
             actorsRow(program)?.let { add(it) }
             scheduleRow(data.cursor?.schedule)?.let { add(it) }
+            weekDayRow(data.weekDayRange)?.let { add(it) }
 //            add(navigationRow())
+        }
+
+        if (initialRow == RowKind.SCHEDULE) {
+            setSelectedPosition(scheduleRowPosition)
+            initialRow = RowKind.DETAILS
         }
     }
 
@@ -232,9 +257,17 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     private fun scheduleRow(schedule: TvDaySchedule?): ListRow? {
         if (null == schedule || schedule.items.isNullOrEmpty()) return null
         return ListRow(
-                HeaderItem(getString(R.string.header_day_schedule)),
+                HeaderItem(getString(R.string.header_day_schedule, schedule.longDateString)),
                 ArrayObjectAdapter(TvScheduleProgramCardPresenter()).apply {
                     setItems(schedule.items, null)
+                })
+    }
+
+    private fun weekDayRow(weekDayRange: TvWeekDayRange?): ListRow? {
+        if (null == weekDayRange || weekDayRange.weekDays.isNullOrEmpty()) return null
+        return ListRow(
+                ArrayObjectAdapter(TvWeekDayCardPresenter()).apply {
+                    setItems(weekDayRange.weekDays, null)
                 })
     }
 
@@ -255,11 +288,15 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
     // endregion
 
+    private enum class RowKind {
+        DETAILS, FOOTAGE, CREDITS, SCHEDULE, WEEKDAYS, NAVIGATION
+    }
+
     companion object {
         const val SHARED_ELEMENT_NAME = "hero"
 
         const val ACTION_WATCH = 1
         const val ACTION_SCHEDULE = 2
     }
-
 }
+

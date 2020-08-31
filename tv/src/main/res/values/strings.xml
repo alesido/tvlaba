@@ -14,7 +14,7 @@
     <string name="program_details_item_awards">Awards: %1$s</string>
     <string name="header_footage">Footage</string>
     <string name="header_credits">Credits</string>
-    <string name="header_day_schedule">Program schedule</string>
+    <string name="header_day_schedule">Program Schedule. %1$s</string>
 
     <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
     <string-array name="program_digest_roles_movie">
