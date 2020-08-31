@@ -85,7 +85,10 @@ class TvProgramDetailsViewModel @Inject constructor (
 
     fun dispose() {
         browseCursorObserveUseCase.dispose()
+        browseCursorMoveUseCase.dispose()
+        newPlaybackUseCase.dispose()
         dayScheduleUseCase.dispose()
+        weekDayRangeUseCase.dispose()
     }
 
     inner class TvBrowseCursorSubscriber: DisposableObserver<TvBrowseCursor>() {
