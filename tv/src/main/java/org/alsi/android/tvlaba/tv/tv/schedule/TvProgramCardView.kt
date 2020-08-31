@@ -1,4 +1,4 @@
-package org.alsi.android.tvlaba.tv.tv.playback
+package org.alsi.android.tvlaba.tv.tv.schedule
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,32 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.tv_program_card_view.view.*
-import kotlinx.android.synthetic.main.tv_week_day_card_view.view.*
 import org.alsi.android.tvlaba.R
 
 /**
  * @see "https://skillbox.ru/media/code/razrabotka_pod_android_tv_part2/"
  */
-class TvWeekDayCardView @JvmOverloads constructor(
+class TvProgramCardView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ): ConstraintLayout(context, attrs, defStyleAttr) {
 
-    var monthDayText: String = ""
+    var programTimeText: String = ""
         set(value) {
             field = value
-            tvWeekDayMonthDay.text = value
+            tvProgramCardTitle.text = value
         }
 
-    var weekDayText: String = ""
+    var programTitleText: String = ""
         set(value) {
             field = value
-            tvWeekDayWeekDay.text = value
+            tvProgramCardProgramTitle.text = value
         }
 
     init {
-        View.inflate(context, R.layout.tv_week_day_card_view, this)
+        View.inflate(context, R.layout.tv_program_card_view, this)
         isFocusable = true
         isFocusableInTouchMode = true
     }

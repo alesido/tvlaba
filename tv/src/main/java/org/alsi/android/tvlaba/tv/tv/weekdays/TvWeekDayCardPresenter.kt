@@ -1,4 +1,4 @@
-package org.alsi.android.tvlaba.tv.tv.playback
+package org.alsi.android.tvlaba.tv.tv.weekdays
 
 import android.graphics.Color
 import android.view.ViewGroup
