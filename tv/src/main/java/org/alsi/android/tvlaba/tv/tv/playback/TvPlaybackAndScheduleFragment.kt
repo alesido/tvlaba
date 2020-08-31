@@ -28,6 +28,8 @@ import org.alsi.android.presentationtv.model.TvPlaybackFooterViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
+import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
 import javax.inject.Inject
 
 class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
@@ -205,14 +207,10 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         val rowsAdapter = ArrayObjectAdapter(presenterSelector)
         rowsAdapter.add(glue.controlsRow)
         data?.schedule?.let {
-            it.sections.mapIndexed { i, section ->
-                val header = HeaderItem(i.toLong(), section.title)
-                val listRowAdapter = ArrayObjectAdapter(TvScheduleProgramCardPresenter()).apply {
-                    setItems(section.items, null)
-                }
-                val row = ListRow(header, listRowAdapter)
-                rowsAdapter.add(row)
-            }
+            rowsAdapter.add(ListRow(
+                    HeaderItem(getString(R.string.header_day_schedule, it.longDateString)),
+                    ArrayObjectAdapter(TvScheduleProgramCardPresenter())
+                            .apply { setItems(it.items, null) }))
         }
         data?.weekDayRange?.let {
             val listRowAdapter = ArrayObjectAdapter(TvWeekDayCardPresenter()).apply {
