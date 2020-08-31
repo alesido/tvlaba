@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
+import org.alsi.android.domain.tv.interactor.guide.TvBrowseCursorMoveUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvCurrentPlaybackUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvDayScheduleUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvWeekDayRangeUseCase
@@ -19,7 +20,8 @@ class TvPlaybackFooterViewModel @Inject constructor (
 
         private val currentPlaybackUseCase: TvCurrentPlaybackUseCase,
         private val dayScheduleUseCase: TvDayScheduleUseCase,
-        private val weekDayRangeUseCase: TvWeekDayRangeUseCase
+        private val weekDayRangeUseCase: TvWeekDayRangeUseCase,
+        private val browseCursorMoveUseCase: TvBrowseCursorMoveUseCase
 
 ): ViewModel() {
 
@@ -86,6 +88,25 @@ class TvPlaybackFooterViewModel @Inject constructor (
         }
     }
 
+    private fun moveToProgram(schedule: TvDaySchedule, playback: TvPlayback) {
+        browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
+                TvBrowseCursorMoveUseCase.Params(
+                        program = schedule.programForPlayback(playback),
+                        page = TvBrowsePage.PLAYBACK,
+                        reuse = true
+                ))
+    }
+
+    private fun moveToScheduleAndProgram(schedule: TvDaySchedule, playback: TvPlayback) {
+        browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
+                TvBrowseCursorMoveUseCase.Params(
+                        schedule = schedule,
+                        program = schedule.programForPlayback(playback),
+                        page = TvBrowsePage.PLAYBACK,
+                        reuse = true
+                ))
+    }
+
     inner class DayScheduleSubscriber: DisposableSingleObserver<TvDaySchedule>() {
         override fun onSuccess(schedule: TvDaySchedule) {
             snapshot.schedule = schedule
@@ -113,6 +134,17 @@ class TvPlaybackFooterViewModel @Inject constructor (
         }
 
         override fun onError(e: Throwable) {
+            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
+    inner class TvBrowseCursorMoveSubscriber: DisposableSingleObserver<TvBrowseCursor>() {
+        override fun onSuccess(t: TvBrowseCursor) {
+            // moving cursor emits cursor change event which is received in the cursor subscriber
+        }
+        override fun onError(e: Throwable) {
+            // TODO Exit program details fragment upon error while getting schedule
+            //  to complete browse cursor when just started from the channel directory
             liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
         }
     }

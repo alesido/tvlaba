@@ -25,12 +25,18 @@ abstract class TvBrowseCursorRepository {
             channel: TvChannel? = null,
             schedule: TvDaySchedule? = null,
             program: TvProgramIssue? = null,
-            page: TvBrowsePage? = null
+            page: TvBrowsePage? = null,
+            reuse: Boolean = false
 
     ) : Single<TvBrowseCursor> {
 
         val previousCursor = cursor
-        cursor = TvBrowseCursor(category, channel, schedule, program, page)
+        cursor = TvBrowseCursor(
+                category = if (reuse && null == category) previousCursor.category else category,
+                channel = if (reuse && null == channel) previousCursor.channel else channel,
+                schedule = if (reuse && null == schedule) previousCursor.schedule else schedule,
+                program = program,
+                page = page)
         return finalizeCursorSetting(previousCursor)
     }
 

@@ -33,7 +33,8 @@ open class TvBrowseCursorMoveUseCase @Inject constructor(
                     channel = channel,
                     schedule = schedule,
                     program = program,
-                    page = page
+                    page = page,
+                    reuse = reuse
             )
         }
     }
@@ -43,6 +44,7 @@ open class TvBrowseCursorMoveUseCase @Inject constructor(
             val channel: TvChannel? = null,
             val schedule: TvDaySchedule? = null,
             val program: TvProgramIssue? = null,
-            val page: TvBrowsePage? = null
+            val page: TvBrowsePage? = null,
+            val reuse: Boolean = false
     )
 }
