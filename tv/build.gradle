@@ -20,8 +20,8 @@ android {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
 
-        versionCode 2
-        versionName "1.0.2"
+        versionCode 3
+        versionName "1.0.3"
 
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
@@ -30,7 +30,7 @@ android {
 
         applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "${variant.name}-${versionCode}.apk"
+                outputFileName = "tvlaba-tv-${variant.name}-${versionCode}.apk"
             }
         }
 

@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">TvLabA</string>
+
+    <string name="content_description_tv_channel_card_poster">TV Channel Poster View</string>
+    <string name="content_description_video_poster_card">Video Poster Card View</string>
+
+    <string name="error_message_no_playback_available">No playback available!</string>
+    <string name="tv_program_details_action_watch">Watch</string>
+    <string name="tv_program_details_action_schedule">Schedule</string>
+    <string name="error_message_no_program_data_available">No program data available!</string>
+    <string name="statement_program_on_channel">On channel \"%1$s\"</string>
+
+    <string name="program_details_item_production">Production: %1$s</string>
+    <string name="program_details_item_awards">Awards: %1$s</string>
+    <string name="header_footage">Footage</string>
+    <string name="header_credits">Credits</string>
+    <string name="header_day_schedule">Program Schedule. %1$s</string>
+
+    <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
+    <string-array name="program_digest_roles_movie">
+        <item>Cast:</item>
+        <item>Writers:</item>
+        <item>Composers:</item>
+        <item>Producers:</item>
+        <item>Directors:</item>
+    </string-array>
+
+    <string-array name="program_digest_roles_program">
+        <item>Roles:</item>
+        <item>Writers:</item>
+        <item>Composers:</item>
+        <item>Producers:</item>
+        <item>Directors:</item>
+    </string-array>
+
+    <string-array name="program_role_title">
+        <item>Actor</item>
+        <item>Writer</item>
+        <item>Composer</item>
+        <item>Producer</item>
+        <item>Director</item>
+    </string-array>
+
+    <!-- In order of VodParticipantRole: UNKNOWN, ACTOR, ARTIST, WRITER, COMPOSER, OPERATOR, PRODUCER, DIRECTOR, -->
+    <string-array name="vod_digest_participant_roles">
+        <item>Participated:</item>
+        <item>Roles:</item>
+        <item>Art:</item>
+        <item>Scenario:</item>
+        <item>Music:</item>
+        <item>Operators:</item>
+        <item>Producers:</item>
+        <item>Directors:</item>
+    </string-array>
+
+</resources>

@@ -1,56 +1,56 @@
 <resources>
     <string name="app_name">TvLabA</string>
 
-    <string name="content_description_tv_channel_card_poster">TV Channel Poster View</string>
-    <string name="content_description_video_poster_card">Video Poster Card View</string>
+    <string name="content_description_tv_channel_card_poster">Изображение логотипа телеканала</string>
+    <string name="content_description_video_poster_card">Изображение постера видео</string>
 
-    <string name="error_message_no_playback_available">No playback available!</string>
-    <string name="tv_program_details_action_watch">Watch</string>
-    <string name="tv_program_details_action_schedule">Schedule</string>
-    <string name="error_message_no_program_data_available">No program data available!</string>
-    <string name="statement_program_on_channel">On channel \"%1$s\"</string>
+    <string name="error_message_no_playback_available">Видео недоступно!</string>
+    <string name="tv_program_details_action_watch">Смотреть</string>
+    <string name="tv_program_details_action_schedule">Программа</string>
+    <string name="error_message_no_program_data_available">Нет данных о программе!</string>
+    <string name="statement_program_on_channel">На канале \"%1$s\"</string>
 
-    <string name="program_details_item_production">Production: %1$s</string>
-    <string name="program_details_item_awards">Awards: %1$s</string>
-    <string name="header_footage">Footage</string>
-    <string name="header_credits">Credits</string>
-    <string name="header_day_schedule">Program Schedule. %1$s</string>
+    <string name="program_details_item_production">Производство: %1$s</string>
+    <string name="program_details_item_awards">Награды: %1$s</string>
+    <string name="header_footage">Кадры</string>
+    <string name="header_credits">В ролях</string>
+    <string name="header_day_schedule">Программа передач. %1$s</string>
 
     <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
     <string-array name="program_digest_roles_movie">
-        <item>Cast:</item>
-        <item>Writers:</item>
-        <item>Composers:</item>
-        <item>Producers:</item>
-        <item>Directors:</item>
+        <item>Роли:</item>
+        <item>Сценарии:</item>
+        <item>Музыка:</item>
+        <item>Продьюсеры:</item>
+        <item>Директоры:</item>
     </string-array>
 
     <string-array name="program_digest_roles_program">
-        <item>Roles:</item>
-        <item>Writers:</item>
-        <item>Composers:</item>
-        <item>Producers:</item>
-        <item>Directors:</item>
+        <item>Роли:</item>
+        <item>Сценарии:</item>
+        <item>Музыка:</item>
+        <item>Продьюсер:</item>
+        <item>Директор:</item>
     </string-array>
 
     <string-array name="program_role_title">
-        <item>Actor</item>
-        <item>Writer</item>
-        <item>Composer</item>
-        <item>Producer</item>
-        <item>Director</item>
+        <item>Актёр</item>
+        <item>Сценарист</item>
+        <item>Композитор</item>
+        <item>Продьюсер</item>
+        <item>Директор</item>
     </string-array>
 
     <!-- In order of VodParticipantRole: UNKNOWN, ACTOR, ARTIST, WRITER, COMPOSER, OPERATOR, PRODUCER, DIRECTOR, -->
     <string-array name="vod_digest_participant_roles">
-        <item>Participated:</item>
-        <item>Roles:</item>
-        <item>Art:</item>
-        <item>Scenario:</item>
-        <item>Music:</item>
-        <item>Operators:</item>
-        <item>Producers:</item>
-        <item>Directors:</item>
+        <item>Принимали участие:</item>
+        <item>Роли:</item>
+        <item>Декорации:</item>
+        <item>Сценарий:</item>
+        <item>Музыка:</item>
+        <item>Оператор:</item>
+        <item>Продьюсер:</item>
+        <item>Директор:</item>
     </string-array>
 
 </resources>
