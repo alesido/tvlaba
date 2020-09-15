@@ -11,6 +11,7 @@ import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvChannelsChange
 import org.alsi.android.local.mapper.tv.TvCategoryEntityMapper
 import org.alsi.android.local.mapper.tv.TvChannelEntityMapper
 import org.alsi.android.local.model.tv.*
@@ -101,6 +102,31 @@ class TvChannelLocalStoreDelegate(
         channelBox.put(channels.map { channelMapper.mapToEntity(it) })
     }
 
+    override fun updateChannels(change: TvChannelsChange): Completable {
+        val operations: MutableList<Completable> = mutableListOf()
+        if (change.create.isNotEmpty()) {
+            operations.add(putChannels(change.create))
+        }
+        if (change.update.isNotEmpty()) {
+            operations.add(putChannels(change.update))
+        }
+        if (change.delete.isNotEmpty()) {
+            operations.add(removeChannels(change.delete))
+        }
+        if (operations.isNotEmpty()) {
+            var chain = operations[0]
+            for (i in 1 until operations.size) {
+                chain = chain.andThen { operations[i] }
+            }
+            return chain
+        }
+        return Completable.complete()
+    }
+
+    override fun removeChannels(channels: List<TvChannel>): Completable = Completable.fromRunnable {
+        channelBox.removeByIds(channels.map { it.id })
+    }
+
     override fun getChannels(): Single<List<TvChannel>> = Single.fromCallable {
         channelBox.all.map { channel ->  channelMapper.mapFromEntity(channel) }
     }
@@ -122,7 +148,7 @@ class TvChannelLocalStoreDelegate(
         if (channelIds.isEmpty()) return null
         var earliestEndMillis: Long? = null
         for (channelId in channelIds) {
-            val endMillis = channelBox.get(channelId).live.target.endMillis ?: continue
+            val endMillis = channelBox.get(channelId)?.live?.target?.endMillis ?: continue
             if (null == earliestEndMillis || earliestEndMillis > endMillis) {
                 earliestEndMillis = endMillis
             }

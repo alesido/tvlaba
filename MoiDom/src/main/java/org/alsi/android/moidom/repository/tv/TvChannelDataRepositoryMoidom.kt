@@ -2,23 +2,28 @@ package org.alsi.android.moidom.repository.tv
 
 import android.text.format.DateUtils
 import android.util.Log
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvChannelCategory
-import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
-import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
+import org.alsi.android.domain.tv.model.guide.*
+import org.alsi.android.framework.RxUtils
+import org.alsi.android.framework.formatMillis
 import org.alsi.android.moidom.model.LoginEvent
+import org.alsi.android.moidom.repository.tv.TvChannelDataExpiration.Companion.DELAY_NEXT_PROGRAM_UPDATE_ANTICIPATION_MILLIS
+import org.alsi.android.moidom.repository.tv.TvChannelDataExpiration.Companion.DELAY_UPDATE_POLLING
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.max
 
 class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataRepository() {
+
+    val tag = TvChannelDataRepositoryMoidom::class.java.simpleName
 
     /** As soon as the login subject property gets value from dependency injection (on a late init),
      * subscription created and it initializes local store delegate for just logged in user.
@@ -43,9 +48,9 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      */
     private val channelsSubject: BehaviorSubject<List<TvChannel>> = BehaviorSubject.create()
 
-    private var channelsUpdate: Disposable? = null
-
     var expiration = TvChannelDataExpiration()
+
+    private val timeFormatter = DateTimeFormat.forPattern("HH:mm:ss.SSS")
 
     // region API Override
 
@@ -62,10 +67,16 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
         val s = local.getDirectory().flatMap { directory ->
             if (expiration.directoryExpired(directory)) {
                 expiration.checkInDirectory()
-                remote.getDirectory()
+                remote.getDirectory().flatMap {
+                    local.putDirectory(it).toSingle {it}
+                }
             }
-            else Single.just(directory)
-        }.subscribe( { directory -> directorySubject.onNext(directory) }, {
+            else {
+                Single.just(directory)
+            }
+        }.subscribe( { directory ->
+            directorySubject.onNext(directory)
+        }, {
             Log.e(TvChannelDataRepositoryMoidom::class.simpleName, it.toString())
         })
         disposables.add(s)
@@ -75,10 +86,12 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
     /** Read directory from local store and share with subscribers if there are any (avoiding overhead
      * of reading local store for nobody)
      */
-    private fun sendUpdateToDirectorySubscribers() {
+    private fun sendUpdateToDirectorySubscribers(change: TvChannelsChange) {
         if (directorySubject.hasObservers()) {
-            val s = local.getDirectory().subscribe({
-                directory -> directorySubject.onNext(directory) }, {
+            val s = local.getDirectory().subscribe({ directory ->
+                directory.change = change
+                directorySubject.onNext(directory)
+            }, {
                 Log.w(TvChannelDataRepositoryMoidom::class.java.simpleName,
                         "Error reading TV channels directory from the local store", it)
             })
@@ -121,28 +134,137 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
     }
 
     // endregion
-    // region Update Schedule
+    // region Update Scheduling
 
-    /**
-     * TODO Add retryWhen with custom functional object as an argument.
-     * See "https://stackoverflow.com/questions/22066481/rxjava-can-i-use-retry-but-with-delay"
+    private var currentUpdateTask: TvChannelsUpdateTask? = null
+
+    private val updateZipper = BiFunction<TvChannels, TvChannels, TvChannelsChange> {
+        remotes, locals ->
+        val remotesMap = remotes.map { it.id to it }.toMap()
+        val localsMap = locals.map { it.id to it }.toMap()
+        return@BiFunction TvChannelsChange(
+                create = remotes.filter { null == localsMap[it.id] },
+                update = remotes.filter { localsMap[it.id]?.live?.time?.isCurrent == false },
+                delete = locals.filter { null == remotesMap[it.id] },
+                defect = remotes.filter { it.live.time?.isCurrent == false && it.live.time?.isNotSet == false}
+        )
+    }
+
+    private fun updateDelay(updateTargetTimeMillis: Long): Long {
+        val updateStartMillis = updateTargetTimeMillis - DELAY_NEXT_PROGRAM_UPDATE_ANTICIPATION_MILLIS
+        val nowMillis = expiration.getCurrentTimeMillis()
+        val updateDelayMillis = updateStartMillis - nowMillis
+
+        Log.d(tag, String.format("target: %s, start: %s, now: %s, delay: %s",
+                DateTime(updateTargetTimeMillis).toString(timeFormatter),
+                DateTime(updateStartMillis).toString(timeFormatter),
+                DateTime(nowMillis).toString(timeFormatter),
+                formatMillis(updateDelayMillis.toInt())
+        ))
+
+        return updateDelayMillis
+    }
+
+    /** Schedule channels update to have an actual display.
+     *
+     * * Cancel current task on a next incoming task if it's different.
+     * * Repeat update request until there are all channels are up to date.
      */
     override fun scheduleChannelsUpdate(window: TvChannelListWindow) {
-        val expirationTimeMillis = local.getChannelWindowExpirationMillis(window.ids)?: return
-        val expirationDelayMillis = expirationTimeMillis - expiration.getCurrentTimeMillis()
-        channelsUpdate?.dispose()
-        channelsUpdate = Single.timer(if (expirationDelayMillis < 0) expirationDelayMillis else 0L, TimeUnit.MILLISECONDS)
-                .flatMap { remote.getChannels() }
-                .map { channels -> channels.filter { it.id in window.ids }}
-                .flatMap { channels -> local.putChannels(channels).toSingle { channels }}
-                .subscribe({ channels ->
-                    channelsSubject.onNext(channels)
-                    sendUpdateToDirectorySubscribers()
-                }, {
-                    Log.w(TvChannelDataRepositoryMoidom::class.java.simpleName,
-                        "Error getting TV channels directory", it)
-                })
+
+        val updateTargetTimeMillis = local.getChannelWindowExpirationMillis(window.ids)?: return
+        currentUpdateTask?.let { task ->
+            if (task.targetMillis == updateTargetTimeMillis && !task.isCancelled) {
+                // skip update requested as it's the same as the undergoing
+                logTaskSkipped(updateTargetTimeMillis)
+                return
+            }
+            // current simple solution: cancel task in any state cause it is no more actual
+            logTaskCancelled(updateTargetTimeMillis)
+            task.cancel()
+        }
+
+        // schedule the launch with delay and repetition to remove update defects
+        val updateSubscription = Flowable.interval(max(0L, updateDelay(updateTargetTimeMillis)),
+                DELAY_UPDATE_POLLING, TimeUnit.MILLISECONDS)
+
+        // request changes and map response to CRUD categories
+        .flatMap {
+            logTaskStared()
+            currentUpdateTask?.setRunning()
+            Flowable.zip(
+                    remote.getChannels().toFlowable(),
+                    local.getChannels().toFlowable(),
+                    updateZipper)
+
+        // apply changes to the local store
+        }.flatMap { change ->
+            logChange(change)
+            local.updateChannels(change).toSingle { change } .toFlowable()
+        }
+
+        // notify on changes
+        .flatMap { change ->
+            channelsSubject.onNext(change.update)
+            sendUpdateToDirectorySubscribers(change)
+            Flowable.just(change)
+        }
+
+        // make exponential backoff in case of error
+        .retryWhen { error ->
+            RxUtils.exponentialBackoff(error, 1, 5) {
+                currentUpdateTask?.setFailed(it)
+                true
+            }
+        }
+
+        // take while there are defects
+        .takeUntil { change ->
+            change.defect.isEmpty()
+        }
+
+        .subscribe({ change ->
+            if (change.defect.isEmpty()) currentUpdateTask?.setCompleted()
+        }, {
+            Log.w(TvChannelDataRepositoryMoidom::class.java.simpleName,
+                "Error getting TV channels directory", it)
+        })
+
+        currentUpdateTask = TvChannelsUpdateTask(updateTargetTimeMillis, updateSubscription)
+        currentUpdateTask!!.setWaiting()
+        disposables.add(currentUpdateTask!!.subscription)
     }
+
+    private fun logTaskSkipped(newTaskTargetTime: Long) {
+        currentUpdateTask?.let { task ->
+            Log.d(tag, String.format("ALREADY scheduled for %s, task was %s %s, skipping ...",
+                    DateTime(newTaskTargetTime).toString(timeFormatter), task.state.name,
+                    if (task.subscription.isDisposed) "(DISPOSED!)" else "(ALIVE)"))
+        }
+    }
+
+    private fun logTaskCancelled(newTaskTargetTime: Long) {
+        currentUpdateTask?.let { task ->
+            Log.d(tag, String.format("CANCELLED not actual %s %s @ %s against next @%s", task.state.name,
+                    if (task.subscription.isDisposed) "(DISPOSED!)" else "(ALIVE)",
+                    DateTime(task.targetMillis).toString(timeFormatter),
+                    DateTime(newTaskTargetTime).toString(timeFormatter)
+            ))
+        }
+    }
+
+    private fun logTaskStared() {
+        currentUpdateTask?: return
+        Log.d(tag, String.format("STARTED @ %s for target %s",
+                DateTime().toString(timeFormatter),
+                DateTime(currentUpdateTask?.targetMillis).toString(timeFormatter)
+        ))
+    }
+
+    private fun logChange(change: TvChannelsChange) {
+        Log.d(tag, String.format("UPDATE %s", change.toString()))
+    }
+
     // endregion
 }
 
@@ -200,8 +322,13 @@ class TvChannelDataExpiration {
     companion object {
         const val EXPIRATION_CATEGORIES_MILLIS = DateUtils.MINUTE_IN_MILLIS * 60
         const val EXPIRATION_CHANNELS_MILLIS = DateUtils.MINUTE_IN_MILLIS * 30
+
+        /** Anticipated time to request channel data update to get response in time. */
+        const val DELAY_NEXT_PROGRAM_UPDATE_ANTICIPATION_MILLIS = 500
+
+        /** Delay to repeat update request expecting that the data became available on the server */
+        const val DELAY_UPDATE_POLLING = 15 * DateUtils.SECOND_IN_MILLIS
     }
 }
 
 // endregion
-

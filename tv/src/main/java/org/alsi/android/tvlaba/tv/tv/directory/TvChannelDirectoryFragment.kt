@@ -1,25 +1,29 @@
 package org.alsi.android.tvlaba.tv.tv.directory
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.leanback.app.BrowseSupportFragment
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.HeaderItem
-import androidx.leanback.widget.ListRow
-import androidx.leanback.widget.ListRowPresenter
+import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
+import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
+import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseLiveData
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
+
+
 
 /**
  * @see "https://medium.com/@iammert/new-android-injector-with-dagger-2-part-1-8baa60152abe"
@@ -30,6 +34,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
+
+    private val topListRowPresenter = ListRowPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -42,25 +48,30 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         browseViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvChannelDirectoryBrowseViewModel::class.java)
 
-        adapter = ArrayObjectAdapter(ListRowPresenter())
+        adapter = ArrayObjectAdapter(topListRowPresenter)
 
         setOnItemViewClickedListener { _, item, _, _ ->
             if (item is TvChannel) {
+                // navigate to program details fragment
                 browseViewModel.onChannelAction(item) {
                     Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
                             .navigate(TvChannelDirectoryFragmentDirections
-//                                            .actionTvChannelDirectoryFragmentToTvPlaybackAndScheduleFragment())
-                                            .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment())
+                                    .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment())
                 }
             }
         }
 
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
             if (item is TvChannel) {
+                // record current browsing position to restore on the next start
                 val rowPosition = this@TvChannelDirectoryFragment.selectedPosition
                 val itemPosition = (rowViewHolder as ListRowPresenter.ViewHolder)
                         .gridView.selectedPosition - 1 // extra row for search?
                 browseViewModel.onChannelSelected(rowPosition, itemPosition, item)
+                // schedule next channel lives update
+                browseViewModel.onItemsVisibilityChange(
+                        visibleChannelDirectoryItemIds()
+                )
             }
         }
     }
@@ -68,12 +79,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     override fun onStart() {
         super.onStart()
         browseViewModel.getLiveDirectory().observe(this,
-                Observer<Resource<TvChannelDirectory>> {
+                Observer<Resource<TvChannelDirectoryBrowseLiveData>> {
                     if (it != null) handleCategoriesListDataState(it)
-                })
-        browseViewModel.getLiveDirectoryPosition().observe(this,
-                Observer<Resource<TvChannelDirectoryPosition>> {
-                    if (it != null) handleDirectoryPositionChange(it)
                 })
     }
 
@@ -87,7 +94,65 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         browseViewModel.dispose()
     }
 
-    private fun handleCategoriesListDataState(resource: Resource<TvChannelDirectory>) {
+    /**
+     * @see "https://stackoverflow.com/questions/54954232/find-first-visible-position-in-leanback-gridlayoutmanager"
+     */
+    private fun visibleChannelDirectoryItemIds(): TvChannelListWindow {
+        rowsSupportFragment?: return TvChannelListWindow(listOf(), System.currentTimeMillis())
+        val visibleItemsIds: MutableList<Long> = mutableListOf()
+        for (i in 0 until adapter.size()) {
+            val rowViewHolder = rowsSupportFragment.findRowViewHolderByPosition(i)?: continue
+            val rowView: HorizontalGridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView?: continue
+            findVisibleItemsOfHorizontalRow(rowView.layoutManager).map { node ->
+                rowView.adapter?.getItemId(node.first)?.let{
+                    visibleItemsIds.add(it)
+                }
+            }
+        }
+        return TvChannelListWindow(visibleItemsIds, System.currentTimeMillis())
+    }
+
+    private fun forEachVisibleChannelDirectoryItem(apply: (TvChannelCard) -> Boolean) {
+        rowsSupportFragment?:return
+        for (i in 0 until adapter.size()) {
+            val rowViewHolder = rowsSupportFragment.findRowViewHolderByPosition(i)?: continue
+            val rowView: HorizontalGridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView?: continue
+            findVisibleItemsOfHorizontalRow(rowView.layoutManager).map { node ->
+                rowView.adapter?.getItemId(node.first)?.let{
+                    val wrappedView = (node.second as ShadowOverlayContainer).wrappedView
+                    if (wrappedView is TvChannelCardView) {
+                        if (apply(TvChannelCard(id = it,
+                                        position = node.first,
+                                        view = wrappedView))) {
+                            rowView.adapter?.notifyItemChanged(node.first)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun findVisibleItemsOfHorizontalRow(
+            layoutManager: RecyclerView.LayoutManager?
+    ) : List<Pair<Int,View>> {
+        val result: MutableList<Pair<Int,View>> = mutableListOf()
+        layoutManager?: return result
+        val orientationHelper = OrientationHelper.createHorizontalHelper(layoutManager)
+        val viewPortStart = orientationHelper.startAfterPadding
+        val viewPortEnd = orientationHelper.endAfterPadding
+        for (i in 0 until layoutManager.childCount) {
+            val child = layoutManager.getChildAt(i)
+            child?:continue
+            val childStart = orientationHelper.getDecoratedStart(child)
+            val childEnd = orientationHelper.getDecoratedEnd(child)
+            if (childEnd < viewPortStart) continue
+            if (childStart > viewPortEnd) break
+            result.add(Pair(i, child))
+        }
+        return result
+    }
+
+    private fun handleCategoriesListDataState(resource: Resource<TvChannelDirectoryBrowseLiveData>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
                 updateDirectoryView(resource.data)
@@ -101,38 +166,72 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun handleDirectoryPositionChange(resource: Resource<TvChannelDirectoryPosition>) {
-        when (resource.status) {
-            ResourceState.SUCCESS -> {
-                selectDirectoryPosition(resource.data)
-            }
-            ResourceState.LOADING -> {
-            }
-            ResourceState.ERROR -> {
-            }
-            else -> {
-            }
-        }
-    }
-
-    private fun updateDirectoryView(directory: TvChannelDirectory?) {
-        directory?.let {
+    private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
+        data?.directory?.let { directory ->
+            // recreate category channels rows
             val categoryRows = directory.categories.mapIndexed { idx, category ->
                 val header = HeaderItem(idx.toLong(), category.title)
-                val listRowAdapter = ArrayObjectAdapter(TvDirectoryChannelCardPresenter()).apply {
+                val listRowAdapter = TvCategoryChannelsListRowAdapter(
+                        TvDirectoryChannelCardPresenter()).apply {
                     setItems(directory.index[category.id], null)
                 }
                 ListRow(header, listRowAdapter)
             }
+            // set fresh new rows to the adapter
             (adapter as ArrayObjectAdapter).setItems(categoryRows, null)
+            // ensure correct initial position
+            if (directory.change == null)
+                data.position?.let { onRowsLayoutReady(data.position!!) }
         }
     }
 
     private fun selectDirectoryPosition(position: TvChannelDirectoryPosition?) {
         position?.let {
-            setSelectedPosition(it.categoryIndex, true,
+            setSelectedPosition(it.categoryIndex, false,
                     SelectItemViewHolderTask(it.channelIndex)
             )
         }
     }
+
+    /**
+     * @see "https://antonioleiva.com/kotlin-ongloballayoutlistener/"
+     */
+    private fun onRowsLayoutReady(initialPosition: TvChannelDirectoryPosition) {
+        view?.viewTreeObserver?.addOnGlobalLayoutListener (object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                rowsSupportFragment?.let {
+                    val visibleItems = visibleChannelDirectoryItemIds()
+                        if (visibleItems.ids.isNotEmpty()) {
+                            // stop observation
+                            view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                            // select initial position
+                            selectDirectoryPosition(initialPosition)
+                            // schedule channel items update
+                            browseViewModel.onItemsVisibilityChange(visibleItems)
+                    }
+                }
+            }
+        })
+    }
 }
+
+class TvCategoryChannelsListRowAdapter(presenter: Presenter): ArrayObjectAdapter(presenter) {
+    override fun getId(position: Int): Long {
+        return (get(position) as TvChannel).id
+    }
+}
+
+/**
+ * @see "https://antonioleiva.com/kotlin-ongloballayoutlistener/"
+ */
+inline fun <T: View> T.onLayoutReady(crossinline f: T.() -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                f()
+            }
+        }
+    })
+}
+

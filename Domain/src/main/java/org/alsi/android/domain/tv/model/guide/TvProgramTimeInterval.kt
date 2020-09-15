@@ -9,6 +9,13 @@ class TvProgramTimeInterval(val startUnixTimeMillis: Long, val endUnixTimeMillis
     val startDateTime = DateTime(startUnixTimeMillis)
     val endDateTime = DateTime(endUnixTimeMillis)
 
+    val isCurrent: Boolean get() {
+        val current = System.currentTimeMillis()
+        return current in startUnixTimeMillis..endUnixTimeMillis
+    }
+
+    val isNotSet get() = startUnixTimeMillis < 0
+
     val shortString: String? get() =
         if (startUnixTimeMillis != endUnixTimeMillis) {
             String.format("%02d:%02d - %02d:%02d",

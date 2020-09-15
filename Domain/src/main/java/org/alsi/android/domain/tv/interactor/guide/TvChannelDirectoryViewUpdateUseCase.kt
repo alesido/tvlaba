@@ -9,10 +9,15 @@ import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
 import javax.inject.Inject
 
-open class TvChannelDirectoryActualizationUseCase @Inject constructor(
+/** Use Case of updating of a visible part of the Channel Directory.
+ *
+ * Updating, i.e. making live programs data for channels actual.
+ *
+ */
+open class TvChannelDirectoryViewUpdateUseCase @Inject constructor(
         private val presentationManager: PresentationManager,
         postExecutionThread: PostExecutionThread)
-    : CompletableUseCase<TvChannelDirectoryActualizationUseCase.Params?>(postExecutionThread)
+    : CompletableUseCase<TvChannelDirectoryViewUpdateUseCase.Params?>(postExecutionThread)
 {
     override fun buildUseCaseCompletable(params: Params?): Completable {
         params?: throw IllegalArgumentException("StartSessionUseCase: Params can't be null!")

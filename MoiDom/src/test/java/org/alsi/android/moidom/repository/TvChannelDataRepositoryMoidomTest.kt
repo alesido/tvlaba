@@ -54,7 +54,7 @@ class TvChannelDataRepositoryMoidomTest {
     fun setUp() {
         repository = TvChannelDataRepositoryMoidom()
 
-        repository.moidomServiceBoxStore = moidomServiceTestBoxStore()
+        //repository.moidomServiceBoxStore = moidomServiceTestBoxStore()
 
         repository.loginSubject = PublishSubject.create()
         repository.loginSubject?.onNext(testLoginEvent())
@@ -150,9 +150,9 @@ class TvChannelDataRepositoryMoidomTest {
 
     @After
     fun tearDown() {
-        repository.moidomServiceBoxStore.close()
+        //repository.moidomServiceBoxStore.close()
         BoxStore.deleteAllFiles(TEST_DATA_DIRECTORY)
-        repository.moidomServiceBoxStore.closeThreadResources()
+        //repository.moidomServiceBoxStore.closeThreadResources()
     }
 
     private fun moidomServiceTestBoxStore(): BoxStore {

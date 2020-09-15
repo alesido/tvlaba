@@ -29,16 +29,13 @@ class TvChannelCardView @JvmOverloads constructor(
             tvChannelCardProgramTitle.text = value
         }
 
+    fun showIsActual(actual: Boolean) {
+        tvChannelCardFooterBlur.visibility = if (actual) GONE else VISIBLE
+    }
+
     init {
         View.inflate(context, R.layout.tv_channel_card_view, this)
         isFocusable = true
         isFocusableInTouchMode = true
     }
-
-    fun setPosterDimensions(width: Int, height: Int) {
-        val lp: ViewGroup.LayoutParams = tvChannelCardPoster.layoutParams
-        lp.width = width; lp.height = height
-        tvChannelCardPoster.layoutParams = lp
-    }
-
 }

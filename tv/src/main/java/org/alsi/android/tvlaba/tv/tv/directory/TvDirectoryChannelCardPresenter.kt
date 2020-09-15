@@ -19,8 +19,9 @@ class TvDirectoryChannelCardPresenter: Presenter() {
         val cardView = viewHolder.view as TvChannelCardView
         cardView.channelTitleText = tvChannel.title?: ""
         with(tvChannel.live, {
-            cardView.programTitleText = (time?.shortString?:"") + " " + (title?:"")
-            cardView.tvChannelCardProgramProgress.progress = time?.progress?:0
+            cardView.programTitleText = (time?.shortString ?: "") + " " + (title ?: "")
+            cardView.tvChannelCardProgramProgress.progress = if (time?.isCurrent == true) time?.progress ?: 0 else 0
+            cardView.showIsActual(time?.isCurrent == true)
         })
         val context = cardView.tvChannelCardPoster.context
         Glide.with(context).load(tvChannel.logoUri.toString()).into(cardView.tvChannelCardPoster)

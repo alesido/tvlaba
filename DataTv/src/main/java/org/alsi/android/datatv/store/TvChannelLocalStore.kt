@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvChannelsChange
 
 /**
  * Created on 7/12/18.
@@ -29,6 +30,8 @@ interface TvChannelLocalStore {
     // region Channels
 
     fun putChannels(channels: List<TvChannel>): Completable
+    fun updateChannels(change: TvChannelsChange): Completable
+    fun removeChannels(channels: List<TvChannel>): Completable
     fun getChannels(): Single<List<TvChannel>>
     fun getChannels(categoryId: Long): Single<List<TvChannel>>
 
