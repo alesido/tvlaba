@@ -27,7 +27,7 @@ class TvChannelsChange(
 
 
     val isUpdateOnly get()
-    = create.isEmpty() && delete.isEmpty() && update.isNotEmpty()
+    = create.isEmpty() && delete.isEmpty()
 
     override fun toString(): String {
         return String.format("create %d, update %d, delete %d, defects %d",

@@ -113,26 +113,6 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         return TvChannelListWindow(visibleItemsIds, System.currentTimeMillis())
     }
 
-    private fun forEachVisibleChannelDirectoryItem(apply: (TvChannelCard) -> Boolean) {
-        rowsSupportFragment?:return
-        for (i in 0 until adapter.size()) {
-            val rowViewHolder = rowsSupportFragment.findRowViewHolderByPosition(i)?: continue
-            val rowView: HorizontalGridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView?: continue
-            findVisibleItemsOfHorizontalRow(rowView.layoutManager).map { node ->
-                rowView.adapter?.getItemId(node.first)?.let{
-                    val wrappedView = (node.second as ShadowOverlayContainer).wrappedView
-                    if (wrappedView is TvChannelCardView) {
-                        if (apply(TvChannelCard(id = it,
-                                        position = node.first,
-                                        view = wrappedView))) {
-                            rowView.adapter?.notifyItemChanged(node.first)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun findVisibleItemsOfHorizontalRow(
             layoutManager: RecyclerView.LayoutManager?
     ) : List<Pair<Int,View>> {
@@ -156,7 +136,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private fun handleCategoriesListDataState(resource: Resource<TvChannelDirectoryBrowseLiveData>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
-                updateDirectoryView(resource.data)
+                if (adapter.size() == 0)
+                    loadDirectoryView(resource.data)
+                else
+                    updateDirectoryView(resource.data)
             }
             ResourceState.LOADING -> {
             }
@@ -167,14 +150,14 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         }
     }
 
-    private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
+    private fun loadDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
         data?.directory?.let { directory ->
             // recreate category channels rows
             val categoryRows = directory.categories.mapIndexed { idx, category ->
                 val header = HeaderItem(idx.toLong(), category.title)
                 val listRowAdapter = TvCategoryChannelsListRowAdapter(
                         TvDirectoryChannelCardPresenter()).apply {
-                    setItems(directory.index[category.id], null)
+                    setItems(directory.index[category.id],null)
                 }
                 ListRow(header, listRowAdapter)
             }
@@ -183,6 +166,21 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             // ensure correct initial position & schedule update
             onRowsLayoutReady(data.position)
         }
+    }
+
+    private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
+        data?.directory?: return
+        for (i in 0 until adapter.size()) {
+            ((adapter[i] as ListRow).adapter as ArrayObjectAdapter).setItems(
+                    data.directory.index[data.directory.categories[i].id],
+                    tvCategoryChannelsDiff)
+        }
+    }
+
+    private val tvCategoryChannelsDiff = TvCategoryChannelsDiff()
+    class TvCategoryChannelsDiff : DiffCallback<TvChannel>() {
+        override fun areItemsTheSame(oldItem: TvChannel, newItem: TvChannel) = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: TvChannel, newItem: TvChannel) = oldItem == newItem
     }
 
     private fun selectDirectoryPosition(position: TvChannelDirectoryPosition?) {

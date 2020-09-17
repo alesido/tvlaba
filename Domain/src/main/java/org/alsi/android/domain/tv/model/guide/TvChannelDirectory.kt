@@ -20,4 +20,6 @@ class TvChannelDirectory(
 
     fun channelIndex(channel: TvChannel): Int?
             = index[channel.categoryId]?.indexOfFirst{ it.id == channel.id }
+
+    val isChanged get() = change != null && change?.isEffective == true
 }

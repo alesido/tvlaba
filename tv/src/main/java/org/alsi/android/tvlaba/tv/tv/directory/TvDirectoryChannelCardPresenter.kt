@@ -1,5 +1,6 @@
 package org.alsi.android.tvlaba.tv.tv.directory
 
+import android.app.Activity
 import android.graphics.Color
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
@@ -15,16 +16,33 @@ class TvDirectoryChannelCardPresenter: Presenter() {
             })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
+
         val tvChannel = item as TvChannel
         val cardView = viewHolder.view as TvChannelCardView
+
+        // channel title
         cardView.channelTitleText = tvChannel.title?: ""
+
         with(tvChannel.live, {
+
+            // live program title
             cardView.programTitleText = (time?.shortString ?: "") + " " + (title ?: "")
-            cardView.tvChannelCardProgramProgress.progress = if (time?.isCurrent == true) time?.progress ?: 0 else 0
-            cardView.showIsActual(time?.isCurrent == true)
+
+            val isCurrent = tvChannel.live.time?.isCurrent
+
+            // live program progress
+            cardView.tvChannelCardProgramProgress.progress =
+                    if (isCurrent == true) time?.progress ?: 0 else 0
+
+            // program update status
+            cardView.showIsActual(isCurrent == true)
         })
-        val context = cardView.tvChannelCardPoster.context
-        Glide.with(context).load(tvChannel.logoUri.toString()).into(cardView.tvChannelCardPoster)
+
+        // logo
+        val activity = cardView.tvChannelCardPoster.context as Activity
+        if (!activity.isFinishing && !activity.isDestroyed) {
+            Glide.with(activity).load(tvChannel.logoUri.toString()).into(cardView.tvChannelCardPoster)
+        }
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) = Unit

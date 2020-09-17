@@ -144,9 +144,14 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
         val localsMap = locals.map { it.id to it }.toMap()
         return@BiFunction TvChannelsChange(
                 create = remotes.filter { null == localsMap[it.id] },
-                update = remotes.filter { localsMap[it.id]?.live?.time?.isCurrent == false },
+                update = remotes.filter {
+                    it.live.time?.isCurrent == true
+                            && localsMap[it.id]?.live?.time?.isCurrent == false
+                },
                 delete = locals.filter { null == remotesMap[it.id] },
-                defect = remotes.filter { it.live.time?.isCurrent == false && it.live.time?.isNotSet == false}
+                defect = remotes.filter {
+                    it.live.time?.isCurrent == false
+                            && it.live.time?.isNotSet == false }
         )
     }
 
