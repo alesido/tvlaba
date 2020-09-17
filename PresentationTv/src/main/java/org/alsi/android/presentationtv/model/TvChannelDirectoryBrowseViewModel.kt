@@ -56,7 +56,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
                 TvBrowseCursorMoveUseCase.Params(
                         category = directory!!.categories[categoryPosition],
-                        channel = channel,
+                        channel = if (channelPosition >= 0) channel else null,
                         page = TvBrowsePage.CHANNELS))
     }
 
@@ -139,7 +139,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             }
             val position = TvChannelDirectoryPosition(
                     categoryIndex = dir.categoryIndex(cursor.category!!),
-                    channelIndex = (dir.channelIndex(cursor.channel!!)?:0)
+                    channelIndex = (dir.channelIndex(cursor.channel!!)?:-1)
             )
             liveDirectory.postValue(Resource(ResourceState.SUCCESS,
                     TvChannelDirectoryBrowseLiveData(dir, position), null))

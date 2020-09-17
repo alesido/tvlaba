@@ -21,6 +21,7 @@ import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseLiveData
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -179,24 +180,24 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             }
             // set fresh new rows to the adapter
             (adapter as ArrayObjectAdapter).setItems(categoryRows, null)
-            // ensure correct initial position
-            if (directory.change == null)
-                data.position?.let { onRowsLayoutReady(data.position!!) }
+            // ensure correct initial position & schedule update
+            onRowsLayoutReady(data.position)
         }
     }
 
     private fun selectDirectoryPosition(position: TvChannelDirectoryPosition?) {
         position?.let {
-            setSelectedPosition(it.categoryIndex, false,
-                    SelectItemViewHolderTask(it.channelIndex)
-            )
+            Timber.d("@selectDirectoryPosition %s", position)
+            val setItemPositionTask = if (it.channelIndex >= 0) SelectItemViewHolderTask(it.channelIndex) else null
+            setItemPositionTask?.isSmoothScroll = false
+            setSelectedPosition(it.categoryIndex, false, setItemPositionTask)
         }
     }
 
     /**
      * @see "https://antonioleiva.com/kotlin-ongloballayoutlistener/"
      */
-    private fun onRowsLayoutReady(initialPosition: TvChannelDirectoryPosition) {
+    private fun onRowsLayoutReady(initialPosition: TvChannelDirectoryPosition?) {
         view?.viewTreeObserver?.addOnGlobalLayoutListener (object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 rowsSupportFragment?.let {
@@ -219,19 +220,5 @@ class TvCategoryChannelsListRowAdapter(presenter: Presenter): ArrayObjectAdapter
     override fun getId(position: Int): Long {
         return (get(position) as TvChannel).id
     }
-}
-
-/**
- * @see "https://antonioleiva.com/kotlin-ongloballayoutlistener/"
- */
-inline fun <T: View> T.onLayoutReady(crossinline f: T.() -> Unit) {
-    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            if (measuredWidth > 0 && measuredHeight > 0) {
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-                f()
-            }
-        }
-    })
 }
 
