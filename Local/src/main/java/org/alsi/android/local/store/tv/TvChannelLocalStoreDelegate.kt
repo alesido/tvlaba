@@ -60,6 +60,7 @@ class TvChannelLocalStoreDelegate(
                     ))
                 }
             }
+            indexBox.removeAll()
             indexBox.put(indexItems)
         }
     }
@@ -102,25 +103,16 @@ class TvChannelLocalStoreDelegate(
         channelBox.put(channels.map { channelMapper.mapToEntity(it) })
     }
 
-    override fun updateChannels(change: TvChannelsChange): Completable {
-        val operations: MutableList<Completable> = mutableListOf()
+    override fun updateChannels(change: TvChannelsChange) {
         if (change.create.isNotEmpty()) {
-            operations.add(putChannels(change.create))
+            channelBox.put(change.create.map { channelMapper.mapToEntity(it) })
         }
         if (change.update.isNotEmpty()) {
-            operations.add(putChannels(change.update))
+            channelBox.put(change.update.map { channelMapper.mapToEntity(it) })
         }
         if (change.delete.isNotEmpty()) {
-            operations.add(removeChannels(change.delete))
+            channelBox.removeByIds(change.delete.map { it.id })
         }
-        if (operations.isNotEmpty()) {
-            var chain = operations[0]
-            for (i in 1 until operations.size) {
-                chain = chain.andThen { operations[i] }
-            }
-            return chain
-        }
-        return Completable.complete()
     }
 
     override fun removeChannels(channels: List<TvChannel>): Completable = Completable.fromRunnable {
@@ -155,6 +147,11 @@ class TvChannelLocalStoreDelegate(
         }
         return earliestEndMillis
     }
+
+    /** Collect time points when it's time to request update
+     */
+    override fun getChannelWindowUpdateSchedule(channelIds: List<Long>) = channelIds.mapNotNull {
+            channelBox.get(it)?.live?.target?.endMillis }.distinct().sorted()
 
     // endregion
     // region Favorites

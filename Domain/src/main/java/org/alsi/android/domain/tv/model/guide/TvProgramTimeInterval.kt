@@ -14,7 +14,11 @@ class TvProgramTimeInterval(val startUnixTimeMillis: Long, val endUnixTimeMillis
         return current in startUnixTimeMillis..endUnixTimeMillis
     }
 
-    val isNotSet get() = startUnixTimeMillis < 0
+    fun contains(instantMillis: Long) = instantMillis in startUnixTimeMillis..endUnixTimeMillis
+
+    fun isBefore(instantMillis: Long) = endUnixTimeMillis <= instantMillis
+
+    val isNotSet get() = startUnixTimeMillis < 0 || startUnixTimeMillis == endUnixTimeMillis
 
     val shortString: String? get() =
         if (startUnixTimeMillis != endUnixTimeMillis) {

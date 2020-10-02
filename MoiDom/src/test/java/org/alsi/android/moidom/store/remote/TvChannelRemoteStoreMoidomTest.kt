@@ -1,7 +1,7 @@
 package org.alsi.android.moidom.store.remote
 
 import com.google.gson.GsonBuilder
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.moidom.model.tv.ChannelListResponse
@@ -12,13 +12,12 @@ import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import org.alsi.android.remote.retrofit.json.IntEnablingMap
 import org.alsi.android.remote.retrofit.json.JsonDeserializerForIntEnablingMap
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import java.io.File
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
-import org.junit.Rule
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 

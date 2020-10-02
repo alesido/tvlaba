@@ -30,7 +30,7 @@ interface TvChannelLocalStore {
     // region Channels
 
     fun putChannels(channels: List<TvChannel>): Completable
-    fun updateChannels(change: TvChannelsChange): Completable
+    fun updateChannels(change: TvChannelsChange)
     fun removeChannels(channels: List<TvChannel>): Completable
     fun getChannels(): Single<List<TvChannel>>
     fun getChannels(categoryId: Long): Single<List<TvChannel>>
@@ -38,6 +38,7 @@ interface TvChannelLocalStore {
     fun findChannelByNumber(channelNumber: Int): Single<TvChannel?>
 
     fun getChannelWindowExpirationMillis(channelIds: List<Long>): Long?
+    fun getChannelWindowUpdateSchedule(channelIds: List<Long>): List<Long>
 
     // endregion
     // region Favorites

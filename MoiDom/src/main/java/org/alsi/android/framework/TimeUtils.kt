@@ -1,7 +1,8 @@
 package org.alsi.android.framework
 
-/**
- * Formats time in milliseconds to hh:mm:ss string format.
+import org.joda.time.DateTime
+
+/** To format time in milliseconds to hh:mm:ss string.
  */
 fun formatMillis(srcMillis: Int): String? {
     var millis = srcMillis
@@ -27,4 +28,11 @@ fun formatMillis(srcMillis: Int): String? {
         result += "0$sec"
     }
     return result
+}
+
+/** Current time wrapper to allow unit tests with a specific current time.
+ */
+class Now {
+    fun time(): DateTime = DateTime.now()
+    fun millis() = DateTime.now().millis
 }
