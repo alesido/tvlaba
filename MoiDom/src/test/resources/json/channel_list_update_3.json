@@ -1,0 +1,376 @@
+{
+  "icons": [
+    {
+      "size": "52x39",
+      "base_url": "http://iptv.moi-dom.tv/img/icons/52x39/",
+      "formats": [
+        "gif"
+      ]
+    },
+    {
+      "size": "490x280",
+      "base_url": "http://iptv.moi-dom.tv/img/icons/490x280/",
+      "formats": [
+        "png"
+      ]
+    },
+    {
+      "size": "245x140",
+      "base_url": "http://iptv.moi-dom.tv/img/icons/245x140/",
+      "formats": [
+        "png"
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "id": 5,
+      "name": "Kids / Cartoons",
+      "color": "#efef00",
+      "pos": 300,
+      "channels": [
+        {
+          "id": 203,
+          "name": "House Kids HD",
+          "pos": 0,
+          "icon": "/img/icons/52x39/0/203.gif",
+          "icon_path": "0/203",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "epg_progname": "Sinbad: Legend of the Seven Seas",
+          "epg_start": 1532292180,
+          "epg_end": 1532297280,
+          "epg_range": "23:43 - 01:08",
+          "hide": 0
+        },
+        {
+          "id": 311,
+          "name": "Mult",
+          "pos": 1,
+          "icon": "/img/icons/52x39/1/311.png",
+          "icon_path": "1/311",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "МУЛЬТсюрприз",
+          "epg_start": 1532286000,
+          "epg_end": 1532322000,
+          "epg_range": "22:00 - 08:00",
+          "hide": 0
+        },
+        {
+          "id": 348,
+          "name": "Smilik",
+          "pos": 3,
+          "icon": "/img/icons/52x39/1/348.png",
+          "icon_path": "1/348",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "epg_progname": "Лучшие мультфильмы мира",
+          "epg_start": 1532294160,
+          "epg_end": 1532296920,
+          "epg_range": "00:16 - 01:02",
+          "hide": 0
+        },
+        {
+          "id": 187,
+          "name": "Nickelodeon HD",
+          "pos": 5,
+          "icon": "/img/icons/52x39/1/187.png",
+          "icon_path": "1/187",
+          "is_video": 1,
+          "have_archive": 0,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus",
+            "eng"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Школа рока. Не пойми меня неправильно 2",
+          "epg_start": 1532294820,
+          "epg_end": 1532295000,
+          "epg_range": "00:27 - 00:30",
+          "hide": 0
+        },
+        {
+          "id": 2,
+          "name": "Nickelodeon",
+          "pos": 10,
+          "icon": "/img/icons/52x39/1/2.png",
+          "icon_path": "1/2",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus",
+            "eng"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Школа рока. Полное сердечное затмение",
+          "epg_start": 1532294400,
+          "epg_end": 1532295900,
+          "epg_range": "00:20 - 00:45",
+          "hide": 0
+        },
+        {
+          "id": 268,
+          "name": "Мама",
+          "pos": 11,
+          "icon": "/img/icons/52x39/1/268.png",
+          "icon_path": "1/268",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Время малышей",
+          "epg_start": 1532293200,
+          "epg_end": 1532300400,
+          "epg_range": "00:00 - 02:00",
+          "hide": 0
+        },
+        {
+          "id": 336,
+          "name": "O!",
+          "pos": 15,
+          "icon": "/img/icons/52x39/1/336.png",
+          "icon_path": "1/336",
+          "is_video": 1,
+          "have_archive": 0,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Белка и Стрелка. Озорная семейка",
+          "epg_start": 1532288100,
+          "epg_end": 1532324100,
+          "epg_range": "22:35 - 08:35",
+          "hide": 0
+        },
+        {
+          "id": 35,
+          "name": "Cartoon Network",
+          "pos": 20,
+          "icon": "/img/icons/52x39/1/35.png",
+          "icon_path": "1/35",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "eng",
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Удивительный мир Гамбола. Игра",
+          "epg_start": 1532294700,
+          "epg_end": 1532295600,
+          "epg_range": "00:25 - 00:40",
+          "hide": 0
+        },
+        {
+          "id": 258,
+          "name": "Boomerang",
+          "pos": 25,
+          "icon": "/img/icons/52x39/1/258.png",
+          "icon_path": "1/258",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus",
+            "eng"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Пёс по кличке Пэт. Picnic Palaver 2",
+          "epg_start": 1532294820,
+          "epg_end": 1532295000,
+          "epg_range": "00:27 - 00:30",
+          "hide": 0
+        },
+        {
+          "id": 43,
+          "name": "JimJam",
+          "pos": 30,
+          "icon": "/img/icons/52x39/1/43.png",
+          "icon_path": "1/43",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus",
+            "eng"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Радужная Руби",
+          "epg_start": 1532294520,
+          "epg_end": 1532295420,
+          "epg_range": "00:22 - 00:37",
+          "hide": 0
+        },
+        {
+          "id": 373,
+          "name": "Мульт Музыка",
+          "pos": 38,
+          "icon": "/img/icons/52x39/1/373.png",
+          "icon_path": "1/373",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Музпривет",
+          "epg_start": 1532287800,
+          "epg_end": 1532323800,
+          "epg_range": "22:30 - 08:30",
+          "hide": 0
+        },
+        {
+          "id": 7,
+          "name": "Gulli Girl",
+          "pos": 40,
+          "icon": "/img/icons/52x39/1/7.png",
+          "icon_path": "1/7",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Венди",
+          "epg_start": 1532294700,
+          "epg_end": 1532295900,
+          "epg_range": "00:25 - 00:45",
+          "hide": 0
+        },
+        {
+          "id": 256,
+          "name": "Baby TV",
+          "pos": 45,
+          "icon": "/img/icons/52x39/1/256.png",
+          "icon_path": "1/256",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "eng"
+          ],
+          "audiotrack_default": "eng",
+          "epg_progname": "Океан",
+          "epg_start": 1532294700,
+          "epg_end": 1532295300,
+          "epg_range": "00:25 - 00:35",
+          "hide": 0
+        },
+        {
+          "id": 6,
+          "name": "TiJi",
+          "pos": 50,
+          "icon": "/img/icons/52x39/1/6.png",
+          "icon_path": "1/6",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Сэмми и ко 2",
+          "epg_start": 1532294820,
+          "epg_end": 1532295000,
+          "epg_range": "00:27 - 00:30",
+          "hide": 0
+        },
+        {
+          "id": 154,
+          "name": "Disney Channel",
+          "pos": 70,
+          "icon": "/img/icons/52x39/1/154.png",
+          "icon_path": "1/154",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Мой любимый динозавр",
+          "epg_start": 1532288700,
+          "epg_end": 1532324700,
+          "epg_range": "22:45 - 08:45",
+          "hide": 0
+        },
+        {
+          "id": 257,
+          "name": "Disney Junior",
+          "pos": 75,
+          "icon": "/img/icons/52x39/1/257.png",
+          "icon_path": "1/257",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "pol",
+            "eng"
+          ],
+          "audiotrack_default": "pol",
+          "epg_progname": "Meine Freunde Tigger und Puuh. Aahs Reise zum Mond / Der schrumpfende Ruh",
+          "epg_start": 1532277000,
+          "epg_end": 1532313000,
+          "epg_range": "19:30 - 05:30",
+          "hide": 0
+        },
+        {
+          "id": 103,
+          "name": "Karusel",
+          "pos": 90,
+          "icon": "/img/icons/52x39/1/103.png",
+          "icon_path": "1/103",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "Огги и тараканы. Незваные гости 2",
+          "epg_start": 1532294820,
+          "epg_end": 1532295000,
+          "epg_range": "00:27 - 00:30",
+          "hide": 0
+        },
+        {
+          "id": 5,
+          "name": "Детский мир",
+          "pos": 110,
+          "icon": "/img/icons/52x39/1/5.png",
+          "icon_path": "1/5",
+          "is_video": 1,
+          "have_archive": 1,
+          "is_favorite": 0,
+          "audiotracks": [
+            "rus"
+          ],
+          "audiotrack_default": "rus",
+          "epg_progname": "NO EPG",
+          "epg_start": 1532294762,
+          "epg_end": 1532294762,
+          "epg_range": "00:26 - 00:26",
+          "hide": 0
+        }
+      ]
+    }
+  ],
+  "servertime": 1532294762
+}
