@@ -136,13 +136,6 @@
       "color": "Red",
       "icon_path": "0/21",
       "channels_count": 29
-    },
-    {
-      "id": 19,
-      "name": "Iran",
-      "color": "#6666ef",
-      "icon_path": "0/19",
-      "channels_count": 10
     }
   ],
   "servertime": 1532291753

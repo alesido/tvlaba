@@ -2,8 +2,8 @@ package org.alsi.android.moidom.repository
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.whenever
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.Single
@@ -11,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.MyObjectBox
+import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.model.tv.ChannelListResponse
@@ -43,6 +44,8 @@ class TvChannelDataRepositoryMoidomTest {
 
     @Rule @JvmField var mockitoRule: MockitoRule = MockitoJUnit.rule()
 
+    lateinit var moidomServiceTestBoxStore: BoxStore
+
     @Mock lateinit var remoteService: RestServiceMoidom
     @Mock lateinit var remoteSession: RemoteSessionRepositoryMoidom
 
@@ -54,7 +57,8 @@ class TvChannelDataRepositoryMoidomTest {
     fun setUp() {
         repository = TvChannelDataRepositoryMoidom()
 
-        //repository.moidomServiceBoxStore = moidomServiceTestBoxStore()
+        moidomServiceTestBoxStore = moidomServiceTestBoxStore()
+        repository.local = TvChannelLocalStoreDelegate(moidomServiceTestBoxStore, "guest")
 
         repository.loginSubject = PublishSubject.create()
         repository.loginSubject?.onNext(testLoginEvent())
@@ -144,15 +148,15 @@ class TvChannelDataRepositoryMoidomTest {
         assertEquals(directory3.categories.size, 19)
         assert(directory3.categories[0].title.contains(":TEST_UPDATE"))
         assertEquals(directory3.channels.size, 374)
-        assert(directory3.channels[0].title?.contains(":TEST_UPDATE")?: false)
+        assert(directory3.channels[0].title?.contains(":TEST_UPDATE") ?: false)
         assertEquals(directory3.channels[0].features.hasArchive, true)
     }
 
     @After
     fun tearDown() {
-        //repository.moidomServiceBoxStore.close()
+        moidomServiceTestBoxStore.close()
         BoxStore.deleteAllFiles(TEST_DATA_DIRECTORY)
-        //repository.moidomServiceBoxStore.closeThreadResources()
+        moidomServiceTestBoxStore.closeThreadResources()
     }
 
     private fun moidomServiceTestBoxStore(): BoxStore {
@@ -176,7 +180,7 @@ class TvChannelDataRepositoryMoidomTest {
                 gson.fromJson(getJson(categoriesJsonPath), GetTvGroupResponse::class.java)))
 
         whenever(remoteService.getAllChannels("testRemoteSessionId", "+0300")).thenReturn(
-                Single.just( gson.fromJson(getJson(channelsJsonPath), ChannelListResponse::class.java)))
+                Single.just(gson.fromJson(getJson(channelsJsonPath), ChannelListResponse::class.java)))
     }
 
     private fun stubRemoteSession() {
