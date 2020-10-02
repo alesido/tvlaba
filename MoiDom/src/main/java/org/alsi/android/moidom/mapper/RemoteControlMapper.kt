@@ -1,10 +1,10 @@
 package org.alsi.android.moidom.mapper
 
-import android.util.Log
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlMap
 import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.remote.mapper.SourceDataMapper
+import timber.log.Timber
 
 class RemoteControlMapper: SourceDataMapper<List<LoginResponse.Settings.RcCode>, RemoteControlMap> {
     override fun mapFromSource(source: List<LoginResponse.Settings.RcCode>): RemoteControlMap {
@@ -32,7 +32,7 @@ class RemoteControlMapper: SourceDataMapper<List<LoginResponse.Settings.RcCode>,
             if (key != RemoteControlFunction.UNKNOWN)
                 result.put(key, it.code)
             else
-                Log.w(RemoteControlMapper::class.simpleName, "Unknown RC functional key \"${it.func}\"")
+                Timber.w("Unknown RC functional key \"${it.func}\"")
         }
         return result
     }
