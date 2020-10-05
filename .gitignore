@@ -10,3 +10,4 @@
 /build
 /captures
 .externalNativeBuild
+libobjectbox-jni-macos-x64.dylib
