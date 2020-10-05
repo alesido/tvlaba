@@ -1,5 +1,6 @@
 package org.alsi.android.tvlaba.tv.tv.directory
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -12,6 +13,10 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
@@ -22,8 +27,8 @@ import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
 
 
 /**
@@ -37,6 +42,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
 
     private val topListRowPresenter = ListRowPresenter()
+
+    private var liveTimeIndicatorTaskSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -88,6 +95,12 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     override fun onResume() {
         super.onResume()
         browseViewModel.onResume()
+        startLiveTimeIndicatorTask()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLiveTimeIndicatorTask()
     }
 
     override fun onDestroy() {
@@ -113,10 +126,21 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         return TvChannelListWindow(visibleItemsIds, System.currentTimeMillis())
     }
 
+    private fun updateVisibleChannelDirectoryItems() {
+        rowsSupportFragment?: return
+        for (i in 0 until adapter.size()) {
+            val rowViewHolder = rowsSupportFragment.findRowViewHolderByPosition(i)?: continue
+            val rowView: HorizontalGridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView?: continue
+            findVisibleItemsOfHorizontalRow(rowView.layoutManager).map { node ->
+                rowView.adapter?.notifyItemChanged(node.first)
+            }
+        }
+    }
+
     private fun findVisibleItemsOfHorizontalRow(
             layoutManager: RecyclerView.LayoutManager?
-    ) : List<Pair<Int,View>> {
-        val result: MutableList<Pair<Int,View>> = mutableListOf()
+    ) : List<Pair<Int, View>> {
+        val result: MutableList<Pair<Int, View>> = mutableListOf()
         layoutManager?: return result
         val orientationHelper = OrientationHelper.createHorizontalHelper(layoutManager)
         val viewPortStart = orientationHelper.startAfterPadding
@@ -157,7 +181,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 val header = HeaderItem(idx.toLong(), category.title)
                 val listRowAdapter = TvCategoryChannelsListRowAdapter(
                         TvDirectoryChannelCardPresenter()).apply {
-                    setItems(directory.index[category.id],null)
+                    setItems(directory.index[category.id], null)
                 }
                 ListRow(header, listRowAdapter)
             }
@@ -180,6 +204,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private val tvCategoryChannelsDiff = TvCategoryChannelsDiff()
     class TvCategoryChannelsDiff : DiffCallback<TvChannel>() {
         override fun areItemsTheSame(oldItem: TvChannel, newItem: TvChannel) = oldItem.id == newItem.id
+        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: TvChannel, newItem: TvChannel) = oldItem == newItem
     }
 
@@ -196,21 +221,45 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
      * @see "https://antonioleiva.com/kotlin-ongloballayoutlistener/"
      */
     private fun onRowsLayoutReady(initialPosition: TvChannelDirectoryPosition?) {
-        view?.viewTreeObserver?.addOnGlobalLayoutListener (object : ViewTreeObserver.OnGlobalLayoutListener {
+        view?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 rowsSupportFragment?.let {
                     val visibleItems = visibleChannelDirectoryItemIds()
-                        if (visibleItems.ids.isNotEmpty()) {
-                            // stop observation
-                            view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-                            // select initial position
-                            selectDirectoryPosition(initialPosition)
-                            // schedule channel items update
-                            browseViewModel.onItemsVisibilityChange(visibleItems)
+                    if (visibleItems.ids.isNotEmpty()) {
+                        // stop observation
+                        view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                        // select initial position
+                        selectDirectoryPosition(initialPosition)
+                        // schedule channel items update
+                        browseViewModel.onItemsVisibilityChange(visibleItems)
+                        startLiveTimeIndicatorTask()
                     }
                 }
             }
         })
+    }
+
+    private fun startLiveTimeIndicatorTask() {
+        stopLiveTimeIndicatorTask()
+        liveTimeIndicatorTaskSubscription = Flowable.interval(
+                TIMER_INTERVAL_MINUTES_LIVE_TIME_TASK, TimeUnit.MINUTES)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { updateVisibleChannelDirectoryItems() },
+                        { error -> Timber.w(error,"@startListUpdateTimerTask") },
+                        { Timber.d("@startListUpdateTimerTask, completed") }
+                )
+    }
+
+    private fun stopLiveTimeIndicatorTask() {
+        liveTimeIndicatorTaskSubscription?.let {
+            if (! it.isDisposed) it.dispose()
+        }
+    }
+
+    companion object {
+        const val TIMER_INTERVAL_MINUTES_LIVE_TIME_TASK = 1L
     }
 }
 
