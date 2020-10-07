@@ -5,9 +5,7 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
 import androidx.leanback.media.PlaybackTransportControlGlue
-import androidx.leanback.widget.Action
-import androidx.leanback.widget.ArrayObjectAdapter
-import androidx.leanback.widget.PlaybackControlsRow
+import androidx.leanback.widget.*
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
@@ -16,14 +14,14 @@ import kotlin.math.max
 import kotlin.math.min
 
 
-class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) :
+class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
         PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
 
     private val actionRewind = PlaybackControlsRow.RewindAction(context)
     private val actionFastForward = PlaybackControlsRow.FastForwardAction(context)
     private val actionClosedCaptions = PlaybackControlsRow.ClosedCaptioningAction(context)
 
-    private var playback: TvPlayback? = null
+    var playback: TvPlayback? = null
     private var initialDisposition: TvProgramDisposition? = null
 
     private var overriddenDuration: Long? = null
@@ -32,6 +30,23 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
     private var maintainLivePosition: Boolean = false
     private var pausePosition: Long = -1L
 
+    override fun onCreateRowPresenter(): PlaybackRowPresenter {
+
+        val rowPresenter: PlaybackTransportRowPresenter = object : PlaybackTransportRowPresenter() {
+            override fun onBindRowViewHolder(vh: RowPresenter.ViewHolder, item: Any) {
+                super.onBindRowViewHolder(vh, item)
+                vh.onKeyListener = this@TvPlaybackLeanbackGlue
+        }
+
+        override fun onUnbindRowViewHolder(vh: RowPresenter.ViewHolder) {
+                super.onUnbindRowViewHolder(vh)
+                vh.onKeyListener = null
+            }
+        }
+
+        rowPresenter.setDescriptionPresenter(TvProgramPlaybackDetailsPresenter(context))
+        return rowPresenter
+    }
 
     fun bindPlaybackItem(playback: TvPlayback): Boolean {
         when(playback.disposition) {
@@ -40,8 +55,7 @@ class TvPlaybackLeanbackGlue (context: Context, adapter: LeanbackPlayerAdapter) 
             else -> return false
         }
         this.playback = playback
-        title = playback.title
-        subtitle = playback.description
+        this.title
         return true
     }
 

@@ -30,10 +30,13 @@ class TvNewPlaybackUseCase @Inject constructor(
             return Single.error(Throwable("The TV Directory Repository is N/A!"))
 
         with(params) {
-            if (null == channel && (null == program?.programId))
+            if (null == channel && null == program?.programId)
                 return Single.error(Throwable("Wrong new playback parameters!"))
             return directory.streams.getVideoStreamUri(channel, program, null).map { streamURI ->
-                if (program != null) mapper.from(program, streamURI) else mapper.from(channel!!, streamURI)
+                if (channel != null && program?.programId != null)
+                    mapper.from(channel, program, streamURI)
+                else
+                    mapper.from(channel!!, streamURI)
             }.flatMap { playback ->
                 session.play.setCursorTo(categoryId, playback) // set playback cursor to the new playback item asynchronously
             }

@@ -12,12 +12,16 @@ class TvPlaybackMapper {
                     streamUri = streamUri,
                     time = time,
                     title = title,
-                    description = description
+                    description = description,
+
+                    channelNumber = channel.number,
+                    channelTitle = channel.title,
+                    channelLogoUri = channel.logoUri
             )
         }
     }
 
-    fun from(program: TvProgramIssue, streamUri: URI) : TvPlayback {
+    fun from(channel: TvChannel, program: TvProgramIssue, streamUri: URI) : TvPlayback {
         with (program) {
             return TvPlayback (
                     channelId = channelId,
@@ -25,7 +29,30 @@ class TvPlaybackMapper {
                     streamUri = streamUri,
                     time = time,
                     title = title,
-                    description = description
+                    description = description,
+
+                    mainPosterUri = mainPosterUri,
+                    allPosterUris = allPosterUris,
+
+                    season = season,
+                    series = series,
+
+                    releaseDates = releaseDates,
+                    languageCode = languageCode,
+                    ageGroup = ageGroup,
+
+                    categoryNames = categoryNames,
+                    countryNames = countryNames,
+                    credits = credits,
+
+                    awards = awards,
+                    production = production,
+                    rateKinopoisk = rateKinopoisk,
+                    rateImdb = rateImdb,
+
+                    channelNumber = channel.number,
+                    channelTitle = channel.title,
+                    channelLogoUri = channel.logoUri
             )
         }
     }

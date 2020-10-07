@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <TextView
+        android:id="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        style="@style/Widget.Leanback.DetailsDescriptionTitleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="36dp"
+        android:maxLines="4"
+        android:textSize="24sp"
+        tools:text="Title Text"
+        />
+
+    <TextView
+        android:id="@+id/tvProgramPlaybackDetailsSecondaryTitle"
+        style="@style/Widget.Leanback.DetailsDescriptionSubtitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        android:layout_margin="16dp"
+        android:fontFamily="sans-serif-condensed"
+        tools:text="8:00 - 10:32 На канале ''Дом Кино ''"
+        />
+
+    <TextView
+        android:id="@+id/tvProgramPlaybackDetailsDescriptionText"
+        style="@style/Widget.Leanback.DetailsDescriptionBodyStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvProgramPlaybackDetailsSecondaryTitle"
+        android:layout_margin="16dp"
+        android:fontFamily="sans-serif-regular"
+        tools:text="Filmmaker Guillermo del Toro teas up with Legendary Pictures to bring audiences a unique take on the monster film with this sci/fi production."
+        />
+
+    <ImageView
+        android:id="@+id/tvProgramPlaybackDetailsDispositionLive"
+        android:layout_width="@dimen/ic_disposition_size"
+        android:layout_height="@dimen/ic_disposition_size"
+        app:layout_constraintTop_toTopOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/shape_circle_gradient_live"
+        tools:ignore="ContentDescription"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/tvProgramPlaybackDetailsDispositionRecord"
+        android:layout_width="@dimen/ic_disposition_size"
+        android:layout_height="@dimen/ic_disposition_size"
+        app:layout_constraintTop_toTopOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/shape_circle_gradient_record"
+        tools:ignore="ContentDescription"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/tvProgramPlaybackDetailsDispositionFuture"
+        android:layout_width="@dimen/ic_disposition_size"
+        android:layout_height="@dimen/ic_disposition_size"
+        app:layout_constraintTop_toTopOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="12dp"
+        android:src="@drawable/shape_circle_gradient_future"
+        tools:ignore="ContentDescription"
+        android:visibility="gone"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

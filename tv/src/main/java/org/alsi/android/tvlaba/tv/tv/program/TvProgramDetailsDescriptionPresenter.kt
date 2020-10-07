@@ -43,7 +43,6 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
                 val programTime = it?.time?.shortString?:""
                 val channelReferences = if (channel != null) context.getString(
                         R.string.statement_program_on_channel, channel.title) else ""
-                tvProgramDetailsSecondaryTitle.text = it?.time?.shortString?:""
                 tvProgramDetailsSecondaryTitle.text = "$programTime $channelReferences"
 
                 // body

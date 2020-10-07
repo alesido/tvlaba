@@ -2,4 +2,18 @@
 <resources>
     <color name="background_gradient_start">#000000</color>
     <color name="background_gradient_end">#DDDDDD</color>
+
+    <color name="red">#d23131</color>
+    <color name="darker_red">#a21111</color>
+    <color name="lite_red">#f74134</color>
+    <color name="pale_red">#f78184</color>
+
+    <color name="green">#11a211</color>
+    <color name="lite_green">#81f784</color>
+    <color name="darker_green">#115211</color>
+
+    <color name="grey">#808080</color>
+    <color name="lite_grey">#e0e0e0</color>
+    <color name="darker_grey">#202020</color>
+
 </resources>
