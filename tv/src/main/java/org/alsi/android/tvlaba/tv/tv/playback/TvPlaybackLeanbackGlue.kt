@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
+import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.*
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
+import org.alsi.android.tvlaba.R
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
@@ -17,9 +19,7 @@ import kotlin.math.min
 class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
         PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
 
-    private val actionRewind = PlaybackControlsRow.RewindAction(context)
-    private val actionFastForward = PlaybackControlsRow.FastForwardAction(context)
-    private val actionClosedCaptions = PlaybackControlsRow.ClosedCaptioningAction(context)
+    private val actions = TvPlaybackActions(context)
 
     var playback: TvPlayback? = null
     private var initialDisposition: TvProgramDisposition? = null
@@ -115,26 +115,27 @@ class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
         playerAdapter.seekTo(max(0, currentPosition - millis))
     }
 
-    private fun beep() {
-        ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-                .startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+    override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter) {
+        super.onCreatePrimaryActions(primaryActionsAdapter)
+        actions.setupPrimaryRow(primaryActionsAdapter)
     }
 
-    override fun onCreatePrimaryActions(adapter: ArrayObjectAdapter) {
-        super.onCreatePrimaryActions(adapter)
-        adapter.add(actionRewind)
-        adapter.add(actionFastForward)
-        //adapter.add(actionClosedCaptions)
+    override fun onCreateSecondaryActions(secondaryActionsAdapter: ArrayObjectAdapter) {
+        super.onCreateSecondaryActions(secondaryActionsAdapter)
+        actions.setupSecondaryRow(secondaryActionsAdapter)
     }
 
     override fun onActionClicked(action: Action) {
-        if (action.label1 == "Play") {
+//        if (action.label1 == "Play") {
+          if (actions.isPlayPauseAction(action)) {
             pausePosition = if (playerAdapter.isPlaying) currentPosition else -1L
             return
         }
         when (action) {
-            actionRewind -> skipBackward()
-            actionFastForward -> skipForward()
+            actions.slowRewind -> skipBackward()
+            actions.slowForward -> skipForward()
+            actions.fastRewind -> skipBackward(FAST_SEEK_STEP_MILLIS)
+            actions.fastForward -> skipForward(FAST_SEEK_STEP_MILLIS)
             else -> super.onActionClicked(action)
         }
     }
@@ -166,4 +167,54 @@ class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
         private val SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(1)
         private val FAST_SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(5)
     }
+}
+
+class TvPlaybackActions(val context: Context) {
+
+    val slowRewind = createAction(R.drawable.ic_rewind_slow, R.string.label_rewind_slow)
+    val slowForward = createAction(R.drawable.ic_forward_slow, R.string.label_forward_slow)
+
+    val fastRewind = PlaybackControlsRow.RewindAction(context)
+    val fastForward = PlaybackControlsRow.FastForwardAction(context)
+
+    val prevProgram = PlaybackControlsRow.SkipPreviousAction(context)
+    val nextProgram = PlaybackControlsRow.SkipNextAction(context)
+
+    val prevChannel = createAction(R.drawable.ic_channel_minus, R.string.label_previous_channel)
+    val nextChannel = createAction(R.drawable.ic_channel_plus, R.string.label_next_channel)
+
+    val language = createAction(R.drawable.ic_language, R.string.label_language)
+    val aspectRatio = createAction(R.drawable.ic_aspect_ratio, R.string.label_aspect_ratio)
+
+
+    fun setupPrimaryRow(adapter: ArrayObjectAdapter) {
+        // play/pause assumed is here by default
+        adapter.add(slowRewind)
+        adapter.add(slowForward)
+        adapter.add(prevProgram)
+        adapter.add(nextProgram)
+    }
+
+    fun setupSecondaryRow(adapter: ArrayObjectAdapter) {
+        adapter.add(language) // right below play/pause
+        adapter.add(fastRewind)
+        adapter.add(fastForward)
+        adapter.add(prevChannel)
+        adapter.add(nextChannel)
+        adapter.add(aspectRatio)
+    }
+
+    fun isPlayPauseAction(action: Action) =
+            action.id == androidx.leanback.R.id.lb_control_play_pause.toLong()
+
+    private fun createAction(iconRes: Int, labelRes: Int): Action {
+        val action = Action(iconRes.toLong(), context.resources.getString(labelRes))
+        action.icon = ResourcesCompat.getDrawable(context.resources, iconRes, null)
+        return action
+    }
+}
+
+fun beep() {
+    ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+            .startTone(ToneGenerator.TONE_CDMA_PIP, 150)
 }

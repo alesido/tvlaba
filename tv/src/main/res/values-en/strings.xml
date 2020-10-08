@@ -15,6 +15,14 @@
     <string name="header_footage">Footage</string>
     <string name="header_credits">Credits</string>
     <string name="header_day_schedule">Program Schedule. %1$s</string>
+    <string name="label_aspect_ratio">Aspect Ratio</string>
+    <string name="label_aspect_ratio_2">Video Aspect Ratio</string>
+    <string name="label_language">Language</string>
+    <string name="label_previous_channel">Previous Channel</string>
+    <string name="label_next_channel">Next Channel</string>
+    <string name="label_rewind_slow">Rewind</string>
+    <string name="label_forward_slow">Forward</string>
+
 
     <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
     <string-array name="program_digest_roles_movie">

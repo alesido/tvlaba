@@ -15,6 +15,13 @@
     <string name="header_footage">Кадры</string>
     <string name="header_credits">В ролях</string>
     <string name="header_day_schedule">Программа передач. %1$s</string>
+    <string name="label_aspect_ratio">Пропорции видео</string>
+    <string name="label_aspect_ratio_2">Пропорции видео</string>
+    <string name="label_language">Язык</string>
+    <string name="label_previous_channel">Предыдущий канал</string>
+    <string name="label_next_channel">Следующий канал</string>
+    <string name="label_rewind_slow">Назад</string>
+    <string name="label_forward_slow">Вперёд</string>
 
     <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
     <string-array name="program_digest_roles_movie">
