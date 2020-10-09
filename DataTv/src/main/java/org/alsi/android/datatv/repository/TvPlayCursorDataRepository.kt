@@ -42,24 +42,4 @@ abstract class TvPlayCursorDataRepository(
     override fun history(): Single<List<TvPlayCursor>?> {
         return local.getPlayHistory()
     }
-
-    override fun nextChannel(): Single<TvPlayback> {
-        TODO("Not yet implemented")
-    }
-
-    override fun prevChannel(): Single<TvPlayback> {
-        TODO("Not yet implemented")
-    }
-
-    override fun nextProgram(): Single<TvPlayback> {
-        TODO("Not yet implemented")
-    }
-
-    override fun prevProgram(): Single<TvPlayback> {
-        TODO("Not yet implemented")
-    }
-
-    private fun mapCursorToPlayback(cursor: TvPlayCursor): Single<TvPlayback> {
-        TODO("Not yet implemented")
-    }
 }
