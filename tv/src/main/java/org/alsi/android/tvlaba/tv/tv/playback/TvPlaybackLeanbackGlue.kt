@@ -10,18 +10,29 @@ import androidx.leanback.widget.*
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
+import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
 
 
-class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
-        PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
+class TvPlaybackLeanbackGlue(
 
+        context: Context,
+        adapter: LeanbackPlayerAdapter,
+        val model: TvPlaybackViewModel
+
+) : PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
+
+    /** Set of actions bound to player controls
+     */
     private val actions = TvPlaybackActions(context)
 
+    /** Currently bound playback item
+     */
     var playback: TvPlayback? = null
+
     private var initialDisposition: TvProgramDisposition? = null
 
     private var overriddenDuration: Long? = null
@@ -126,9 +137,9 @@ class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
     }
 
     override fun onActionClicked(action: Action) {
-//        if (action.label1 == "Play") {
           if (actions.isPlayPauseAction(action)) {
             pausePosition = if (playerAdapter.isPlaying) currentPosition else -1L
+            super.onActionClicked(action)
             return
         }
         when (action) {
@@ -136,6 +147,8 @@ class TvPlaybackLeanbackGlue(context: Context, adapter: LeanbackPlayerAdapter) :
             actions.slowForward -> skipForward()
             actions.fastRewind -> skipBackward(FAST_SEEK_STEP_MILLIS)
             actions.fastForward -> skipForward(FAST_SEEK_STEP_MILLIS)
+            actions.prevChannel -> model.onPreviousChannelAction()
+            actions.nextChannel -> model.onNextChannelAction()
             else -> super.onActionClicked(action)
         }
     }

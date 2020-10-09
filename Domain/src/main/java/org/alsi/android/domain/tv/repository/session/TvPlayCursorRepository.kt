@@ -44,28 +44,16 @@ abstract class TvPlayCursorRepository {
      */
     protected abstract fun finalizeCursorSetting(previousCursor: TvPlayCursor?): Single<TvPlayback>
 
-    /** Get current playback. Implementation should get actual URI of the stream from the
+    /** Subscribe to updates on current playback. Implementation should get actual URI of the stream from the
      * remote or get it cached from the local store.
      */
     abstract fun current(): Observable<TvPlayback>
 
+    /** Get last cursor set.
+     */
+    abstract fun last(): Single<TvPlayCursor?>
+
     /** Get playback history. Returns all the history stored.
      */
-    abstract fun history(): Single<List<TvPlayback>>
-
-    /** Set playback cursor to the next channel's live and return the playback data.
-     */
-    abstract fun nextChannel(): Single<TvPlayback>
-
-    /** Set playback cursor to the previous channel's live and return the playback data.
-     */
-    abstract fun prevChannel(): Single<TvPlayback>
-
-    /** Set playback cursor to the next archive item and return the next playback data.
-     */
-    abstract fun nextProgram(): Single<TvPlayback>
-
-    /** Set playback cursor to the previous archive item and return the next playback data.
-     */
-    abstract fun prevProgram(): Single<TvPlayback>
+    abstract fun history(): Single<List<TvPlayCursor>?>
 }

@@ -51,6 +51,7 @@ class TvPlayCursorLocalStoreDelegate (
                 equal(TvPlayCursorEntity_.categoryId, cursor.categoryId)
                 link(TvPlayCursorEntity_.playback)
                         .equal(TvPlaybackEntity_.programId, cursor.playback.programId?: 0L)
+                        .equal(TvPlaybackEntity_.channelId, cursor.playback.channelId)
             }.findFirst()
 
             if (record != null) {

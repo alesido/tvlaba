@@ -32,10 +32,15 @@ abstract class TvPlayCursorDataRepository(
         }
     }
 
+
+    /** Subscribe to cursor updates
+     */
     override fun current(): Observable<TvPlayback> = currentPlaybackSubject
 
-    override fun history(): Single<List<TvPlayback>> {
-        return local.getPlayHistory().map {cursors -> cursors.map { it.playback }}
+    override fun last(): Single<TvPlayCursor?> = local.getLastPlayCursor()
+
+    override fun history(): Single<List<TvPlayCursor>?> {
+        return local.getPlayHistory()
     }
 
     override fun nextChannel(): Single<TvPlayback> {

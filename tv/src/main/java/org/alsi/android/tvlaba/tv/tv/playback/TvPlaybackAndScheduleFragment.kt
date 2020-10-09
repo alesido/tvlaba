@@ -1,6 +1,5 @@
 package org.alsi.android.tvlaba.tv.tv.playback
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -27,6 +26,7 @@ import org.alsi.android.presentationtv.model.TvPlaybackFooterLiveData
 import org.alsi.android.presentationtv.model.TvPlaybackFooterViewModel
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
@@ -47,7 +47,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     private lateinit var glue: TvPlaybackLeanbackGlue
 
-    private var playback: TvPlayback? = null
+    private lateinit var errorMessaging: TvErrorMessaging
 
     // region Android Life Cycle
 
@@ -61,33 +61,23 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         footerViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvPlaybackFooterViewModel::class.java)
 
+        errorMessaging = TvErrorMessaging(requireContext())
+
         setOnItemCardClickedListener()
 
-// TODO Which is a correct way to create media data source factory:
-//                dataSourceFactory = DefaultHttpDataSourceFactory(
-//                        Util.getUserAgent(requireContext(), getString(R.string.app_name)))
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
                 Util.getUserAgent(requireContext(), getString(R.string.app_name))))
 
-
-//        setOnKeyInterceptListener { receiverView: View?, keyCode: Int, event: KeyEvent? ->
-//            when (keyCode) {
-//                KeyEvent.KEYCODE_DPAD_CENTER -> Toast.makeText(context, "KEYCODE_DPAD_CENTER", Toast.LENGTH_LONG).show()
-//                else -> {}
-//            }
-//            false
-//        }
+        setupPlayer()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    private fun setupPlayer() {
 
-        player = SimpleExoPlayer.Builder(context).build()
-
+        player = SimpleExoPlayer.Builder(requireContext()).build()
         val playerAdapter = LeanbackPlayerAdapter(
                 requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
 
-        glue = TvPlaybackLeanbackGlue(context, playerAdapter).apply {
+        glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
 
             host = VideoSupportFragmentGlueHost(this@TvPlaybackAndScheduleFragment)
 
@@ -121,11 +111,6 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        player.release()
-    }
-
     override fun onStart() {
         super.onStart()
         playbackViewModel.getLiveData().observe(this,
@@ -138,6 +123,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 })
     }
 
+    override fun onPause() {
+        super.onPause()
+        player.release()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         playbackViewModel.dispose()
@@ -145,14 +135,14 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     }
 
     // endregion
-    // region
+    // region Data Events
 
     private fun handlePlaybackRequestEvent(resource: Resource<TvPlayback>) {
         when (resource.status) {
             ResourceState.SUCCESS -> startPlayback(resource.data)
             ResourceState.LOADING -> {}
             ResourceState.ERROR -> {
-                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
             }
             else -> {}
         }
@@ -180,7 +170,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             ResourceState.LOADING -> {
             }
             ResourceState.ERROR -> {
-                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
             }
             else -> {
             }
@@ -224,6 +214,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         setOnItemCardSelectedListener()
     }
 
+    // endregion
+    // region Item Action Listeners
+
     private fun setOnItemCardSelectedListener() {
         var isInitialProgramSelection = true
         var isInitialWeekDaySelection = true
@@ -260,19 +253,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
     }
 
-
     // endregion
 
     companion object {
-        private val TAG = TvPlaybackAndScheduleFragment::class.java.simpleName
-
-        /** How often the player refreshes its views in milliseconds */
+        /**
+         * How often the player refreshes its views, in milliseconds.
+         **/
         private const val PLAYER_UPDATE_INTERVAL_MILLIS: Int = 100
-
-        /** Time between metadata updates in milliseconds */
-        private val METADATA_UPDATE_INTERVAL_MILLIS: Long = java.util.concurrent.TimeUnit.SECONDS.toMillis(10)
-
-        /** Default time used when skipping playback in milliseconds */
-        private val SKIP_PLAYBACK_MILLIS: Long = java.util.concurrent.TimeUnit.SECONDS.toMillis(10)
     }
 }

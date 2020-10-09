@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="message_response_no_prevous_channel">First channel in the category!</string>
+    <string name="message_response_no_next_channel">Last channel in the category!</string>
+    <string name="message_error_undefined_failure">Undefined Failure</string>
+</resources>
