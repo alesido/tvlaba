@@ -48,6 +48,16 @@ class TvPlaybackViewModel @Inject constructor(
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_CHANNEL))
     }
 
+    fun onPreviousProgramAction() {
+        nextPlaybackUseCase.execute(NewPlaybackSubscriber(),
+                TvNextPlaybackUseCase.Params(TvNextPlayback.PREVIOUS_PROGRAM))
+    }
+
+    fun onNextProgramAction() {
+        nextPlaybackUseCase.execute(NewPlaybackSubscriber(),
+                TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
+    }
+
     fun dispose() {
         currentPlaybackUseCase.dispose()
         newPlaybackUseCase.dispose()
@@ -69,7 +79,8 @@ class TvPlaybackViewModel @Inject constructor(
     inner class NewPlaybackSubscriber ()
         : DisposableSingleObserver<TvPlayback>() {
         override fun onSuccess(t: TvPlayback) {
-            liveData.postValue(Resource.success(t))
+            // current playback subscriber will get result too,
+            // so avoid duplicate notification here
         }
         override fun onError(e: Throwable) {
             liveData.postValue(Resource.error(e))

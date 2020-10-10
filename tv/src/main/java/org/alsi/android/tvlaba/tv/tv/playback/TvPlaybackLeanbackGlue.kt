@@ -66,7 +66,6 @@ class TvPlaybackLeanbackGlue(
             else -> return false
         }
         this.playback = playback
-        this.title
         return true
     }
 
@@ -149,6 +148,8 @@ class TvPlaybackLeanbackGlue(
             actions.fastForward -> skipForward(FAST_SEEK_STEP_MILLIS)
             actions.prevChannel -> model.onPreviousChannelAction()
             actions.nextChannel -> model.onNextChannelAction()
+            actions.prevProgram -> model.onPreviousProgramAction()
+            actions.nextProgram -> model.onNextProgramAction()
             else -> super.onActionClicked(action)
         }
     }

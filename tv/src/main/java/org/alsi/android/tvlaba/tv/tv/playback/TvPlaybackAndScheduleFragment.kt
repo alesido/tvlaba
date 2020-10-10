@@ -152,6 +152,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         if (null == playback?.streamUri) return
         context?.let {
             if (glue.bindPlaybackItem(playback)) {
+                adapter.notifyItemRangeChanged(0, 1)
                 val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(Uri.parse(playback.streamUri.toString()))
                 player.prepare(hlsMediaSource, false, true)

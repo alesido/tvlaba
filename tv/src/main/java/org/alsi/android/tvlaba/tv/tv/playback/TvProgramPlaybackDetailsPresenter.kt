@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.tv_program_playback_details.view.*
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition.*
 import org.alsi.android.tvlaba.R
+import org.joda.time.LocalDate
 import java.util.*
 
 class TvProgramPlaybackDetailsPresenter(val context: Context) : Presenter() {
@@ -34,7 +35,7 @@ class TvProgramPlaybackDetailsPresenter(val context: Context) : Presenter() {
                 tvProgramPlaybackDetailsPrimaryTitle.text = it.title
 
                 // subtitle: time & channel's title
-                val programTime = it.time?.shortString?:""
+                val programTime = playbackTimeString(it)
                 val channelReferences = if (it.channelTitle != null) context.getString(
                         R.string.statement_program_on_channel, it.channelTitle) else ""
                 tvProgramPlaybackDetailsSecondaryTitle.text = "$programTime $channelReferences"
@@ -51,6 +52,14 @@ class TvProgramPlaybackDetailsPresenter(val context: Context) : Presenter() {
                         if (it.disposition == FUTURE) VISIBLE else GONE
             }
         }
+    }
+
+    private fun playbackTimeString(it: TvPlayback): String {
+        val t = it.time?: return ""
+        val now = LocalDate.now()
+        val s = t.startDateTime.toLocalDate()
+        val e = t.endDateTime.toLocalDate()
+        return if (s == e && s == now) t.shortString else t.toString()
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) {
