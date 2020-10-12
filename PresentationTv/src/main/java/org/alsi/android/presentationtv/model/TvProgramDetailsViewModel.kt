@@ -118,7 +118,7 @@ class TvProgramDetailsViewModel @Inject constructor (
                             ))
                 }
             }
-            else {
+            else if (cursor.channel != null) {
                 // came from the channel directory - both current schedule and program is N/A
                 dayScheduleUseCase.execute(DayScheduleSubscriber(), TvDayScheduleUseCase.Params(
                         channelId = cursor.channel!!.id,
