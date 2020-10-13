@@ -2,12 +2,11 @@ package org.alsi.android.moidom.store.settings
 
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataRemote
+import org.alsi.android.domain.streaming.model.options.DeviceModelOption
 import org.alsi.android.domain.streaming.model.options.ServiceLanguageOption
 import org.alsi.android.domain.streaming.model.options.StreamingServerOption
-import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
-import org.alsi.android.domain.streaming.model.options.DeviceModelOption
-import org.alsi.android.domain.streaming.model.options.rc.RemoteControlMap
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.moidom.mapper.RemoteControlMapper
 import org.alsi.android.moidom.model.LoginResponse
