@@ -9,8 +9,10 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.abs
 
+@Singleton
 open class TvProgramRemoteStoreMoidom @Inject constructor(
 
         private val remoteService: RestServiceMoidom,

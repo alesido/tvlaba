@@ -12,7 +12,9 @@ import org.alsi.android.moidom.store.RestServiceMoidom
 import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TvChannelRemoteStoreMoidom @Inject constructor(
         private val remoteService: RestServiceMoidom,
         private val remoteSession: RemoteSessionRepositoryMoidom

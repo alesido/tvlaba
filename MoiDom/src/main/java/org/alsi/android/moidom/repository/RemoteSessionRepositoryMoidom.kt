@@ -12,7 +12,9 @@ import org.alsi.android.moidom.model.tv.RemoteSessionEntityMoidom
 import org.alsi.android.moidom.model.tv.RemoteSessionEntityMoidom_
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 open class RemoteSessionRepositoryMoidom @Inject constructor(
         @Named(org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME)
         private val store: BoxStore,

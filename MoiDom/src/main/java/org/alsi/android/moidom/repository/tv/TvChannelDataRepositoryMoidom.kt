@@ -12,7 +12,9 @@ import org.alsi.android.framework.RxUtils
 import org.alsi.android.moidom.model.LoginEvent
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataRepository() {
 
     /** As soon as the login subject property gets value from dependency injection (on a late init),

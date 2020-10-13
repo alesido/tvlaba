@@ -15,10 +15,12 @@ import org.alsi.android.moidom.store.RestServiceMoidom
 import java.net.NetworkInterface
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created on 7/26/18.
  */
+@Singleton
 class AccountServiceRemoteMoidom @Inject constructor(
 
         private val remoteService: RestServiceMoidom,

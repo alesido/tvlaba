@@ -8,7 +8,9 @@ import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
 import org.alsi.android.moidom.Moidom
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class TvDirectoryRepositoryMoidom @Inject constructor(
         @Named("${Moidom.TAG}.$TV") serviceId: Long,
         channelRepository: TvChannelDataRepositoryMoidom,

@@ -8,7 +8,9 @@ import org.alsi.android.moidom.store.RestServiceMoidom
 import java.net.URI
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TvVideoStreamRemoteStoreMoidom @Inject constructor(
 
         private val remoteService: RestServiceMoidom,
