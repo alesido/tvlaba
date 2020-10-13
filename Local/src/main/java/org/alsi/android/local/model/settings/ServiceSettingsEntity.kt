@@ -25,6 +25,8 @@ data class ServiceSettingsEntity(
     lateinit var language: ToOne<LanguageOptionEntity>
     lateinit var device: ToOne<DeviceModelOptionEntity>
 
+    constructor() : this(0L, 1, 0L, 0L)
+
     companion object {
         const val SCOPE_PROVIDER = 1
         const val SCOPE_SERVICE = 2

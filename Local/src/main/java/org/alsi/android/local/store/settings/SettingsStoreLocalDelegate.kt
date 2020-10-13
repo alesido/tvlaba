@@ -8,6 +8,7 @@ import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataLocal
 import org.alsi.android.domain.streaming.model.options.*
 import org.alsi.android.domain.streaming.model.options.DeviceModelOption
+import org.alsi.android.domain.streaming.model.options.rc.RemoteControlMap
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
@@ -94,13 +95,14 @@ class SettingsStoreLocalDelegate(
         val server = entity.server.target
         val language  = entity.language.target
         val device = entity.device.target
+        val rc = RemoteControlMap()
+        device.remoteControlKeys.forEach { rc.put( it.function.reference, it.keyCode)}
         return StreamingServiceSettings(
                 server = StreamingServerOption(server.reference, server.title, server.description),
                 language = ServiceLanguageOption(language.code, language.name),
                 device = DeviceModelOption(device.id, device.modelId),
                 timeShiftSettingHours = 0,
-                rc = null)
-        // TODO Implement remote control settings
+                rc = rc)
     }
 
     /**
@@ -116,11 +118,34 @@ class SettingsStoreLocalDelegate(
 
     /**
      * save settings to store
+     *
+     * NOTE Server, language and partially device settings are retrieved from profile records
      */
     override fun setValues(settings: StreamingServiceSettings) {
-        settings.server?.tag?.let { setServer(it) }
-        settings.language?.code?.let { setLanguage(it) }
-        settings.device?.name?.let { setDevice(it) }
+        val settingsEntity = settingsEntity()
+        settings.server?.tag?.let {
+            settingsEntity.server.target = serverBox.query { equal(ServerOptionEntity_.reference, it) }.findFirst()
+        }
+        settings.language?.code?.let {
+            settingsEntity.language.target = languageBox.query {
+                equal(LanguageOptionEntity_.code, it) }.findUnique()
+                    ?: LanguageOptionEntity(0L, defaults.getDefaultLanguageCode(), defaults.getDefaultLanguageName())
+
+        }
+        settings.device?.name?.let {
+            val deviceEntity = deviceBox.query { equal(DeviceModelOptionEntity_.modelId, it) }.findUnique()
+                    ?: DeviceModelOptionEntity(0L, it)
+            val valueByReference = RcFunctionProperty.valueByReference
+            settings.rc?.remoteControlKeyCodeMap?.forEach { entry ->
+                deviceEntity.remoteControlKeys.add(RemoteControlKeyEntity(
+                        id = 0L,
+                        function = valueByReference[entry.value]?:RcFunctionProperty.UNKNOWN,
+                        keyCode = entry.key))
+            }
+            deviceBox.put(deviceEntity)
+            settingsEntity.device.target = deviceEntity
+        }
+        settingsBox.put(settingsEntity)
     }
 
     /**

@@ -22,7 +22,9 @@ import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.repository.ServiceProviderMoidom
 import org.alsi.android.moidom.repository.SettingsRepositoryMoidom
 import org.alsi.android.moidom.repository.tv.TvServiceMoidom
+import org.alsi.android.moidom.repository.vod.VodDirectoryRepositoryMoidom
 import org.alsi.android.moidom.repository.vod.VodServiceMoidom
+import org.alsi.android.moidom.repository.vod.VodSessionRepositoryMoidom
 import org.alsi.android.moidom.store.DataServiceFactoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
@@ -45,8 +47,9 @@ class MoidomModule {
     /**     MoiDom VOD service
      */
     @Singleton @Provides fun provideVodServiceMoidom(
-            @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long)
-            = VodServiceMoidom(serviceId)
+            @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long,
+            settings: SettingsRepositoryMoidom)
+            = VodServiceMoidom(serviceId, settings)
 
     /**     MoiDom Service Provider
      */

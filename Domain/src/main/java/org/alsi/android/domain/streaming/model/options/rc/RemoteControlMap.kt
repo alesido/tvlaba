@@ -4,7 +4,7 @@ import java.util.HashMap
 
 class RemoteControlMap {
 
-    private val remoteControlKeyCodeMap = HashMap<Int, RemoteControlFunction>()
+    val remoteControlKeyCodeMap = HashMap<Int, RemoteControlFunction>()
 
     fun put(key: RemoteControlFunction, code: Int) {
         remoteControlKeyCodeMap[code] = key

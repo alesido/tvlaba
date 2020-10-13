@@ -1,6 +1,5 @@
 package org.alsi.android.moidom.repository
 
-import android.util.Log
 import io.objectbox.BoxStore
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -12,6 +11,7 @@ import org.alsi.android.local.store.settings.SettingsStoreLocalDelegate
 import org.alsi.android.moidom.Moidom
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.store.settings.SettingsRemoteStoreMoidom
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -44,7 +44,7 @@ class SettingsRepositoryMoidom @Inject constructor(
             localMoidom.setValues(remoteMoidom.getSourceSettings(it.data, profile))
 
         }, {
-            Log.e(SettingsRepositoryMoidom::class.simpleName, "Exception Ignored: $it")
+            Timber.e(it, "Exception Ignored")
         })
     }
 

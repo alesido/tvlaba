@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
+import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
+import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.interactor.guide.TvCurrentPlaybackUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvNewPlaybackUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvNextPlayback
@@ -18,15 +20,19 @@ class TvPlaybackViewModel @Inject constructor(
 
         private val currentPlaybackUseCase: TvCurrentPlaybackUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
-        private val nextPlaybackUseCase: TvNextPlaybackUseCase
+        private val nextPlaybackUseCase: TvNextPlaybackUseCase,
+        private val getSettingsUseCase: StreamingSettingsUseCase
 
 ) : ViewModel() {
 
     val liveData: MutableLiveData<Resource<TvPlayback>> = MutableLiveData()
 
+    var settings: StreamingServiceSettings? = null
+
     init {
         liveData.postValue(Resource.loading())
         currentPlaybackUseCase.execute(CurrentPlaybackSubscriber())
+        getSettingsUseCase.execute(SettingsSubscriber())
     }
 
     fun getLiveData(): LiveData<Resource<TvPlayback>> = liveData
@@ -62,6 +68,7 @@ class TvPlaybackViewModel @Inject constructor(
         currentPlaybackUseCase.dispose()
         newPlaybackUseCase.dispose()
         nextPlaybackUseCase.dispose()
+        getSettingsUseCase.dispose()
     }
 
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {
@@ -81,6 +88,16 @@ class TvPlaybackViewModel @Inject constructor(
         override fun onSuccess(t: TvPlayback) {
             // current playback subscriber will get result too,
             // so avoid duplicate notification here
+        }
+        override fun onError(e: Throwable) {
+            liveData.postValue(Resource.error(e))
+        }
+    }
+
+    inner class SettingsSubscriber ()
+        : DisposableSingleObserver<StreamingServiceSettings>() {
+        override fun onSuccess(t: StreamingServiceSettings) {
+            settings = t
         }
         override fun onError(e: Throwable) {
             liveData.postValue(Resource.error(e))

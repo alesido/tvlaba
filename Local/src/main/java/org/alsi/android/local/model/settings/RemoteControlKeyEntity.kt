@@ -17,6 +17,8 @@ data class RemoteControlKeyEntity (
         val keyCode: Int) {
 
     lateinit var device: ToOne<DeviceModelOptionEntity>
+
+    constructor() : this(0L, RcFunctionProperty.UNKNOWN, -1)
 }
 
 enum class RcFunctionProperty(val id: Long, val reference: RemoteControlFunction) {
@@ -36,8 +38,8 @@ enum class RcFunctionProperty(val id: Long, val reference: RemoteControlFunction
     ADD_FAVORITE_CHANNEL(13L, RemoteControlFunction.ADD_FAVORITE_CHANNEL),
     DELETE_FAVORITE_CHANNEL(14L, RemoteControlFunction.DELETE_FAVORITE_CHANNEL);
     companion object {
-        val valueById = RcFunctionProperty.values().map { it.id to it }.toMap()
-        val valueByReference = RcFunctionProperty.values().map { it.reference to it }.toMap()
+        val valueById = values().map { it.id to it }.toMap()
+        val valueByReference = values().map { it.reference to it }.toMap()
     }
 }
 
