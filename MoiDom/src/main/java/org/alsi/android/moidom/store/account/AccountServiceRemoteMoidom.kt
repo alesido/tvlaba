@@ -36,7 +36,7 @@ class AccountServiceRemoteMoidom @Inject constructor(
                 loginPassword,
                 settings = RestServiceMoidom.QUERY_PARAM_LOGIN_SETTINGS_DEFAULT,
                 deviceTypeAndroid = RestServiceMoidom.QUERY_PARAM_DEVICE_TYPE,
-                appBuildNumber = BuildConfig.VERSION_CODE,
+                appBuildNumber = 1, // TODO Fetch VERSION_CODE into the library module, see "https://developer.android.com/studio/releases/gradle-plugin?hl=ru"
                 androidSdkNumber = Build.VERSION.SDK_INT,
                 deviceSerialNumber = getDeviceSerialNumber(),
                 macAddress = getMacAddressToIdentifyDevice("UNKNOWN"),
