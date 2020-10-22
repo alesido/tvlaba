@@ -27,16 +27,16 @@ class TvPlaybackViewModel @Inject constructor(
 
     val liveData: MutableLiveData<Resource<TvPlayback>> = MutableLiveData()
 
-    var settings: StreamingServiceSettings? = null
-
     init {
         liveData.postValue(Resource.loading())
         currentPlaybackUseCase.execute(CurrentPlaybackSubscriber())
-        getSettingsUseCase.execute(SettingsSubscriber())
     }
 
     fun getLiveData(): LiveData<Resource<TvPlayback>> = liveData
 
+    fun getSettings(receiver: (settings: StreamingServiceSettings) -> Unit) {
+        getSettingsUseCase.execute(SettingsSubscriber(receiver))
+    }
 
     fun onTvProgramIssueAction(item: TvProgramIssue) {
         liveData.postValue(Resource.loading())
@@ -94,10 +94,10 @@ class TvPlaybackViewModel @Inject constructor(
         }
     }
 
-    inner class SettingsSubscriber ()
+    inner class SettingsSubscriber(val receiver: (settings: StreamingServiceSettings) -> Unit)
         : DisposableSingleObserver<StreamingServiceSettings>() {
         override fun onSuccess(t: StreamingServiceSettings) {
-            settings = t
+            receiver(t)
         }
         override fun onError(e: Throwable) {
             liveData.postValue(Resource.error(e))

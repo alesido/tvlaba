@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
+import android.view.KeyEvent
+import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.*
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
+import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
+import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction.*
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
@@ -27,7 +31,7 @@ class TvPlaybackLeanbackGlue(
 
     /** Set of actions bound to player controls
      */
-    private val actions = TvPlaybackActions(context)
+    private val actions = TvPlaybackActions(context, model)
 
     /** Currently bound playback item
      */
@@ -58,6 +62,8 @@ class TvPlaybackLeanbackGlue(
         rowPresenter.setDescriptionPresenter(TvProgramPlaybackDetailsPresenter(context))
         return rowPresenter
     }
+
+    // region Playback Setup
 
     fun bindPlaybackItem(playback: TvPlayback): Boolean {
         when(playback.disposition) {
@@ -110,6 +116,9 @@ class TvPlaybackLeanbackGlue(
         this.overriddenDuration = overriddenDuration
     }
 
+    // endregion
+    // region Actions Binding
+
     private fun skipForward(millis: Long = SEEK_STEP_MILLIS) {
         if (initialDisposition == TvProgramDisposition.LIVE) { beep(); return }
         // Ensures we don't advance past the content duration (if set)
@@ -123,6 +132,14 @@ class TvPlaybackLeanbackGlue(
     private fun skipBackward(millis: Long = SEEK_STEP_MILLIS) {
         if (initialDisposition == TvProgramDisposition.LIVE) { beep(); return }
         playerAdapter.seekTo(max(0, currentPosition - millis))
+    }
+
+    override fun previous() {
+        model.onPreviousProgramAction()
+    }
+
+    override fun next() {
+        model.onNextProgramAction()
     }
 
     override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter) {
@@ -142,17 +159,33 @@ class TvPlaybackLeanbackGlue(
             return
         }
         when (action) {
-            actions.slowRewind -> skipBackward()
-            actions.slowForward -> skipForward()
-            actions.fastRewind -> skipBackward(FAST_SEEK_STEP_MILLIS)
-            actions.fastForward -> skipForward(FAST_SEEK_STEP_MILLIS)
+            actions.rewind -> skipBackward()
+            actions.forward -> skipForward()
+            actions.fasterRewind -> skipBackward(FAST_SEEK_STEP_MILLIS)
+            actions.fasterForward -> skipForward(FAST_SEEK_STEP_MILLIS)
             actions.prevChannel -> model.onPreviousChannelAction()
             actions.nextChannel -> model.onNextChannelAction()
-            actions.prevProgram -> model.onPreviousProgramAction()
-            actions.nextProgram -> model.onNextProgramAction()
             else -> super.onActionClicked(action)
         }
     }
+
+    override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+        // prevent redefinition of DPAD functions providing basic leanback navigation
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT,
+            KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_ESCAPE
+            -> return false
+        }
+        // consume RC function if defined
+        val action = actions.getActionForKeyCode(keyCode) ?: return false
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            onActionClicked(action)
+        }
+        return true
+    }
+
+    // endregion
+    // region Control Panel Updating
 
     @SuppressLint("MissingSuperCall")
     override fun onUpdateProgress() {
@@ -175,6 +208,8 @@ class TvPlaybackLeanbackGlue(
         }
     }
 
+    // endregion
+
     companion object {
 
         /** Default time used when skipping playback in milliseconds */
@@ -183,16 +218,23 @@ class TvPlaybackLeanbackGlue(
     }
 }
 
-class TvPlaybackActions(val context: Context) {
+class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 
-    val slowRewind = createAction(R.drawable.ic_rewind_slow, R.string.label_rewind_slow)
-    val slowForward = createAction(R.drawable.ic_forward_slow, R.string.label_forward_slow)
+    private val actionByRemoteControlFunction: MutableMap<RemoteControlFunction, Action> = mutableMapOf()
+    private val remoteControlFunctionByInputKey: MutableMap<Int, RemoteControlFunction> = mutableMapOf()
 
-    val fastRewind = PlaybackControlsRow.RewindAction(context)
-    val fastForward = PlaybackControlsRow.FastForwardAction(context)
+    val rewind = createAction(REWIND_LEFT, R.drawable.ic_rewind_slow, R.string.label_rewind_slow)
+    val forward = createAction(REWIND_RIGHT, R.drawable.ic_forward_slow, R.string.label_forward_slow)
 
-    val prevProgram = PlaybackControlsRow.SkipPreviousAction(context)
-    val nextProgram = PlaybackControlsRow.SkipNextAction(context)
+    val fasterRewind = createAction(REWIND_LEFT_FASTER,
+            R.drawable.ic_rewind_faster, R.string.label_rewind_faster)
+    val fasterForward = createAction(REWIND_RIGHT_FASTER,
+            R.drawable.ic_forward_faster, R.string.label_forward_faster)
+
+    val prevProgram = createAction(PREVIOUS_PROGRAM,
+            R.drawable.ic_previous_program, R.string.label_previous_program)
+    val nextProgram = createAction(NEXT_PROGRAM,
+            R.drawable.ic_next_program, R.string.label_next_program)
 
     val prevChannel = createAction(R.drawable.ic_channel_minus, R.string.label_previous_channel)
     val nextChannel = createAction(R.drawable.ic_channel_plus, R.string.label_next_channel)
@@ -200,19 +242,27 @@ class TvPlaybackActions(val context: Context) {
     val language = createAction(R.drawable.ic_language, R.string.label_language)
     val aspectRatio = createAction(R.drawable.ic_aspect_ratio, R.string.label_aspect_ratio)
 
+    init {
+        model.getSettings { settings ->
+            settings.rc?.remoteControlKeyCodeMap?.forEach {
+                actionByRemoteControlFunction[it.value]?.addKeyCode(it.key)
+                remoteControlFunctionByInputKey[it.key] = it.value
+            }
+        }
+    }
 
     fun setupPrimaryRow(adapter: ArrayObjectAdapter) {
         // play/pause assumed is here by default
-        adapter.add(slowRewind)
-        adapter.add(slowForward)
+        adapter.add(rewind)
+        adapter.add(forward)
         adapter.add(prevProgram)
         adapter.add(nextProgram)
     }
 
     fun setupSecondaryRow(adapter: ArrayObjectAdapter) {
         adapter.add(language) // right below play/pause
-        adapter.add(fastRewind)
-        adapter.add(fastForward)
+        adapter.add(fasterRewind)
+        adapter.add(fasterForward)
         adapter.add(prevChannel)
         adapter.add(nextChannel)
         adapter.add(aspectRatio)
@@ -221,9 +271,20 @@ class TvPlaybackActions(val context: Context) {
     fun isPlayPauseAction(action: Action) =
             action.id == androidx.leanback.R.id.lb_control_play_pause.toLong()
 
+    fun getActionForKeyCode(keyCode: Int): Action? {
+        val rcFunction = remoteControlFunctionByInputKey[keyCode]?: return null
+        return actionByRemoteControlFunction[rcFunction]
+    }
+
     private fun createAction(iconRes: Int, labelRes: Int): Action {
         val action = Action(iconRes.toLong(), context.resources.getString(labelRes))
         action.icon = ResourcesCompat.getDrawable(context.resources, iconRes, null)
+        return action
+    }
+
+    private fun createAction(rcFunction: RemoteControlFunction, iconRes: Int, labelRes: Int): Action {
+        val action = createAction(iconRes, labelRes)
+        actionByRemoteControlFunction[rcFunction] = action
         return action
     }
 }

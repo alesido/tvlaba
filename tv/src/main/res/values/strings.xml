@@ -22,6 +22,10 @@
     <string name="label_next_channel">Следующий канал</string>
     <string name="label_rewind_slow">Назад</string>
     <string name="label_forward_slow">Вперёд</string>
+    <string name="label_rewind_faster">Быстро назад</string>
+    <string name="label_forward_faster">Быстро вперёд</string>
+    <string name="label_previous_program">Предыдущая передача</string>
+    <string name="label_next_program">Следующая передача</string>
 
     <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
     <string-array name="program_digest_roles_movie">
