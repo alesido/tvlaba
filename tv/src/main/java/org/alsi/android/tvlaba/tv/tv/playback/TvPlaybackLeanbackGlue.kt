@@ -163,6 +163,8 @@ class TvPlaybackLeanbackGlue(
             actions.forward -> skipForward()
             actions.fasterRewind -> skipBackward(FAST_SEEK_STEP_MILLIS)
             actions.fasterForward -> skipForward(FAST_SEEK_STEP_MILLIS)
+            actions.prevProgram -> previous()
+            actions.nextProgram -> next()
             actions.prevChannel -> model.onPreviousChannelAction()
             actions.nextChannel -> model.onNextChannelAction()
             else -> super.onActionClicked(action)
