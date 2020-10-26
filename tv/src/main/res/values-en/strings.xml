@@ -65,4 +65,14 @@
         <item>Directors:</item>
     </string-array>
 
+    <string name="video_aspect_fill_screen">Full Screen</string>
+    <string name="video_aspect_fill_width">Horizontal</string>
+    <string name="video_aspect_fill_height">Vertical</string>
+    <string name="video_aspect_original">Original</string>
+    <string name="video_aspect_16_9">16:9</string>
+    <string name="video_aspect_4_3">4:3</string>
+    <string name="video_aspect_adapt">Choose</string>
+    <string name="video_aspect_scale">Aspect</string>
+    <string name="label_video_options">Options</string>
+
 </resources>

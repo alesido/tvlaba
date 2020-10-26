@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="key_video_playback_aspect_ratio_values">
+        <item>@string/video_aspect_fill_screen</item>
+        <item>@string/video_aspect_fill_width</item>
+        <item>@string/video_aspect_fill_height</item>
+        <item>@string/video_aspect_original</item>
+        <item>@string/video_aspect_16_9</item>
+        <item>@string/video_aspect_4_3</item>
+        <item>@string/video_aspect_adapt</item>
+        <item>@string/video_aspect_scale</item>
+    </array>
+</resources>

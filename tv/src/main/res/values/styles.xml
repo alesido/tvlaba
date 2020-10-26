@@ -7,7 +7,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="playbackControlsAutoHideTickleTimeout">10000</item-->
+
+        <item name="android:scrollbars">none</item><!-- Leanback Preferences NPE fix! -->
     </style>
+
+    <style name="AppTheme.FullScreenDialog" parent="AppTheme">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 
     <!-- Themes for text size modes. -->
 

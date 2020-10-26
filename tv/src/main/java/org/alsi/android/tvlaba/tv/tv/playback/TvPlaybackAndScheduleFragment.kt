@@ -103,6 +103,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 }
             })
 
+            // add navigation to the video preferences fragment
+            setPreferencesCallback {
+                TvPlaybackPreferencesDialogFragment.newInstance().show(childFragmentManager,
+                        TvPlaybackPreferencesDialogFragment::class.java.simpleName)
+            }
+
             // start playback or order it to start automatically
             playWhenPrepared()
 
@@ -113,14 +119,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        playbackViewModel.getLiveData().observe(this,
-                Observer<Resource<TvPlayback>> {
-                    if (it != null) handlePlaybackRequestEvent(it)
-                })
-        footerViewModel.getLiveData().observe(this,
-                Observer<Resource<TvPlaybackFooterLiveData>> {
-                    if (it != null) handleFooterDataChange(it)
-                })
+        playbackViewModel.getLiveData().observe(this, {
+            if (it != null) handlePlaybackRequestEvent(it)
+        })
+        footerViewModel.getLiveData().observe(this,{
+            if (it != null) handleFooterDataChange(it)
+        })
     }
 
     override fun onPause() {

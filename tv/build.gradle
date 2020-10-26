@@ -125,11 +125,12 @@ dependencies {
 
     //Leanback & ExoPlayer
     implementation uiDependencies.leanback
+    implementation uiDependencies.leanbackPreferences
     implementation uiDependencies.exoplayer
     implementation uiDependencies.exoplayerLeanback
 
     //Navigation of Jet Pack
-    def nav_version = '2.3.0'
+    def nav_version = '2.3.1'
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 

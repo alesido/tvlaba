@@ -45,6 +45,8 @@ class TvPlaybackLeanbackGlue(
     private var maintainLivePosition: Boolean = false
     private var pausePosition: Long = -1L
 
+    private lateinit var onVideoOptionsControlClicked: () -> Unit
+
     override fun onCreateRowPresenter(): PlaybackRowPresenter {
 
         val rowPresenter: PlaybackTransportRowPresenter = object : PlaybackTransportRowPresenter() {
@@ -142,6 +144,14 @@ class TvPlaybackLeanbackGlue(
         model.onNextProgramAction()
     }
 
+    fun setPreferencesCallback(f: () -> Unit) {
+        onVideoOptionsControlClicked = f
+    }
+
+    private fun videoOptions() {
+        onVideoOptionsControlClicked()
+    }
+
     override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter) {
         super.onCreatePrimaryActions(primaryActionsAdapter)
         actions.setupPrimaryRow(primaryActionsAdapter)
@@ -167,6 +177,7 @@ class TvPlaybackLeanbackGlue(
             actions.nextProgram -> next()
             actions.prevChannel -> model.onPreviousChannelAction()
             actions.nextChannel -> model.onNextChannelAction()
+            actions.videoOptions -> onVideoOptionsControlClicked()
             else -> super.onActionClicked(action)
         }
     }
@@ -241,8 +252,7 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
     val prevChannel = createAction(R.drawable.ic_channel_minus, R.string.label_previous_channel)
     val nextChannel = createAction(R.drawable.ic_channel_plus, R.string.label_next_channel)
 
-    val language = createAction(R.drawable.ic_language, R.string.label_language)
-    val aspectRatio = createAction(R.drawable.ic_aspect_ratio, R.string.label_aspect_ratio)
+    val videoOptions = createAction(R.drawable.ic_video_settings, R.string.label_video_options)
 
     init {
         model.getSettings { settings ->
@@ -262,12 +272,11 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
     }
 
     fun setupSecondaryRow(adapter: ArrayObjectAdapter) {
-        adapter.add(language) // right below play/pause
+        adapter.add(videoOptions) // right below play/pause
         adapter.add(fasterRewind)
         adapter.add(fasterForward)
         adapter.add(prevChannel)
         adapter.add(nextChannel)
-        adapter.add(aspectRatio)
     }
 
     fun isPlayPauseAction(action: Action) =

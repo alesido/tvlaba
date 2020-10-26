@@ -36,7 +36,7 @@ ext {
     okHttpVersion = '4.0.1'
     retrofitVersion = '2.6.0'
     glideVersion = '4.11.0'
-    leanbackVersion = '1.0.0'
+    leanbackVersion = '1.1.0-alpha05'
     exoplayerVersion = '2.11.8'
     exoplayerLeanbackExtensionVersion = '2.11.8'
     timberVersion = '4.7.1'
@@ -236,6 +236,7 @@ ext {
             timber:             "com.jakewharton.timber:timber:${timberVersion}",
 
             leanback:           "androidx.leanback:leanback:${leanbackVersion}",
+            leanbackPreferences: "androidx.leanback:leanback-preference:${leanbackVersion}",
             exoplayer:          "com.google.android.exoplayer:exoplayer:${exoplayerVersion}",
             exoplayerLeanback:  "com.google.android.exoplayer:extension-leanback:${exoplayerLeanbackExtensionVersion}",
 
