@@ -4,5 +4,5 @@
     android:id="@+id/tv_playback_preferences_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesFragment"
+    android:name="org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesContainerFragment"
     />

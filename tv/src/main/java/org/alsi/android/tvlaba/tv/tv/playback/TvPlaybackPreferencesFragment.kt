@@ -1,39 +1,38 @@
-@file:Suppress("DEPRECATION")
-
 package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.os.Bundle
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat
-import androidx.leanback.preference.LeanbackSettingsFragmentCompat
+import androidx.lifecycle.ViewModelProviders
+import androidx.preference.ListPreference
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceScreen
+import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import javax.inject.Inject
 
-class TvPlaybackPreferencesFragment : LeanbackSettingsFragmentCompat()
-{
-    override fun onPreferenceStartInitialScreen() {
-        startPreferenceFragment(buildPreferenceFragment())
+
+class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var playbackViewModel: TvPlaybackViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
+        playbackViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(TvPlaybackViewModel::class.java)
     }
 
-    override fun onPreferenceStartFragment(
-            preferenceFragment: PreferenceFragmentCompat?,
-            preference: Preference?) = false
+    override fun onCreatePreferences(arguments: Bundle?, s: String?) {
+        // inflate preferences screens
+        addPreferencesFromResource(preferencesXmlRes)
 
-    override fun onPreferenceStartScreen(
-            preferenceFragment: PreferenceFragmentCompat?,
-            preferenceScreen: PreferenceScreen): Boolean {
-        startPreferenceFragment(buildPreferenceFragment())
-        return true
-    }
-
-    private fun buildPreferenceFragment(): PreferenceFragmentCompat {
-        return PrefFragment()
-    }
-
-    class PrefFragment : LeanbackPreferenceFragmentCompat() {
-        override fun onCreatePreferences(arguments: Bundle?, s: String?) {
-            addPreferencesFromResource(preferencesXmlRes)
+        // aspect ratio
+        val aspectRatioPreference = findPreference<ListPreference>("video_playback_option_aspect_ratio")
+        aspectRatioPreference?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener {
+            _, value -> playbackViewModel.onAspectRatioChanged(value); true
         }
     }
 

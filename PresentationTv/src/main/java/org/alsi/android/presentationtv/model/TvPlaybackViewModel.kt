@@ -71,6 +71,10 @@ class TvPlaybackViewModel @Inject constructor(
         getSettingsUseCase.dispose()
     }
 
+    fun onAspectRatioChanged(value: Any?) {
+        TODO("Aspect ratio change is not yet implemented yet! Still the callback is correct :)")
+    }
+
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {
         override fun onNext(t: TvPlayback) {
             liveData.postValue(Resource.success(t))
