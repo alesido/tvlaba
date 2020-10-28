@@ -99,7 +99,7 @@ class SettingsStoreLocalDelegate(
         device.remoteControlKeys.forEach { rc.put( it.function.reference, it.keyCode)}
         return StreamingServiceSettings(
                 server = StreamingServerOption(server.reference, server.title, server.description),
-                language = ServiceLanguageOption(language.code, language.name),
+                language = LanguageOption(language.code, language.name),
                 device = DeviceModelOption(device.id, device.modelId),
                 timeShiftSettingHours = 0,
                 rc = rc)
@@ -111,7 +111,7 @@ class SettingsStoreLocalDelegate(
     override fun profile(): StreamingServiceProfile {
         return StreamingServiceProfile(
                 servers = serverBox.all.map { StreamingServerOption(it.reference, it.title, it.description) },
-                languages = languageBox.all.map { ServiceLanguageOption(it.code, it.name) },
+                languages = languageBox.all.map { LanguageOption(it.code, it.name) },
                 devices = deviceBox.all.map { DeviceModelOption(it.id, it.modelId) }
         )
     }

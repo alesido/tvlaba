@@ -3,7 +3,7 @@ package org.alsi.android.moidom.store.settings
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataRemote
 import org.alsi.android.domain.streaming.model.options.DeviceModelOption
-import org.alsi.android.domain.streaming.model.options.ServiceLanguageOption
+import org.alsi.android.domain.streaming.model.options.LanguageOption
 import org.alsi.android.domain.streaming.model.options.StreamingServerOption
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
@@ -31,8 +31,8 @@ class SettingsRemoteStoreMoidom: SettingsDataRemote {
 
         val languageCode = settings.language?.value
         val languageName = languageCode?.let { profile.languageNameByCode[languageCode] }
-        val languageSetting = if (languageName != null) ServiceLanguageOption(languageCode, languageName)
-        else ServiceLanguageOption(defaults.getDefaultLanguageCode(), defaults.getDefaultLanguageName())
+        val languageSetting = if (languageName != null) LanguageOption(languageCode, languageName)
+        else LanguageOption(defaults.getDefaultLanguageCode(), defaults.getDefaultLanguageName())
 
         val deviceModelId = settings.device_model?.value?.toLong()
         val deviceModelName = deviceModelId?.let { profile.deviceById[deviceModelId] }
@@ -48,8 +48,8 @@ class SettingsRemoteStoreMoidom: SettingsDataRemote {
         val serverOptions: MutableList<StreamingServerOption> = mutableListOf()
         source.settings.stream_server?.list?.forEach { serverOptions.add(StreamingServerOption(it.ip, it.ip, it.descr)) }
 
-        val languageOptions: MutableList<ServiceLanguageOption> = mutableListOf()
-        source.settings.language?.list?.forEach { languageOptions.add(ServiceLanguageOption(it.id, it.name)) }
+        val languageOptions: MutableList<LanguageOption> = mutableListOf()
+        source.settings.language?.list?.forEach { languageOptions.add(LanguageOption(it.id, it.name)) }
 
         val deviceModelOptions: MutableList<DeviceModelOption> = mutableListOf()
         source.settings.device_model?.list?.forEach { deviceModelOptions.add(DeviceModelOption(it.id.toLong(), it.name)) }
