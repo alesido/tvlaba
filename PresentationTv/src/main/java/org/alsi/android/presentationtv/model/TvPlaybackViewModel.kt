@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
+import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.interactor.guide.TvCurrentPlaybackUseCase
 import org.alsi.android.domain.tv.interactor.guide.TvNewPlaybackUseCase
@@ -25,7 +26,10 @@ class TvPlaybackViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    val liveData: MutableLiveData<Resource<TvPlayback>> = MutableLiveData()
+    private val liveData: MutableLiveData<Resource<TvPlayback>> = MutableLiveData()
+
+    private val preferenceChangeLiveData:
+            MutableLiveData<Resource<PlaybackPreferenceChangeEvent>> = MutableLiveData()
 
     init {
         liveData.postValue(Resource.loading())
@@ -33,6 +37,8 @@ class TvPlaybackViewModel @Inject constructor(
     }
 
     fun getLiveData(): LiveData<Resource<TvPlayback>> = liveData
+
+    fun getPreferenceChangeLiveData(): LiveData<Resource<PlaybackPreferenceChangeEvent>> = preferenceChangeLiveData
 
     fun getSettings(receiver: (settings: StreamingServiceSettings) -> Unit) {
         getSettingsUseCase.execute(SettingsSubscriber(receiver))
@@ -71,8 +77,9 @@ class TvPlaybackViewModel @Inject constructor(
         getSettingsUseCase.dispose()
     }
 
-    fun onAspectRatioChanged(value: Any?) {
-        TODO("Aspect ratio change is not yet implemented yet! Still the callback is correct :)")
+    fun onAspectRatioChanged(aspectRatio: VideoAspectRatio) {
+        val event = PlaybackAspectRatioChanged(aspectRatio)
+        preferenceChangeLiveData.value = Resource.success(event)
     }
 
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {

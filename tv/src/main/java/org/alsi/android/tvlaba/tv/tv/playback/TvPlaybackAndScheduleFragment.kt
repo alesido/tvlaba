@@ -7,7 +7,6 @@ import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -17,14 +16,14 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.domain.tv.model.guide.TvWeekDay
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
-import org.alsi.android.presentationtv.model.TvPlaybackFooterLiveData
-import org.alsi.android.presentationtv.model.TvPlaybackFooterViewModel
-import org.alsi.android.presentationtv.model.TvPlaybackViewModel
+import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
+import org.alsi.android.presentationtv.model.*
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
@@ -49,13 +48,15 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     private lateinit var errorMessaging: TvErrorMessaging
 
+    private lateinit var videoLayoutCalculator: VideoLayoutCalculator
+
     // region Android Life Cycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        playbackViewModel = ViewModelProviders.of(this, viewModelFactory)
+        playbackViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(TvPlaybackViewModel::class.java)
 
         footerViewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -119,10 +120,13 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        playbackViewModel.getLiveData().observe(this, {
+        playbackViewModel.getLiveData().observe(requireActivity(), {
             if (it != null) handlePlaybackRequestEvent(it)
         })
-        footerViewModel.getLiveData().observe(this,{
+        playbackViewModel.getPreferenceChangeLiveData().observe(requireActivity(), {
+            if (it != null) handlePreferenceChangeEvent(it)
+        })
+        footerViewModel.getLiveData().observe(this, {
             if (it != null) handleFooterDataChange(it)
         })
     }
@@ -144,7 +148,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     private fun handlePlaybackRequestEvent(resource: Resource<TvPlayback>) {
         when (resource.status) {
             ResourceState.SUCCESS -> startPlayback(resource.data)
-            ResourceState.LOADING -> {}
+            ResourceState.LOADING -> {
+            }
             ResourceState.ERROR -> {
                 Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
             }
@@ -165,6 +170,43 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun handlePreferenceChangeEvent(resource: Resource<PlaybackPreferenceChangeEvent>) {
+        when (resource.status) {
+            ResourceState.SUCCESS -> {
+                when (resource.data) {
+                    is PlaybackAspectRatioChanged -> setAspectRatio(
+                            (resource.data as PlaybackAspectRatioChanged).newAspectRatio)
+                    is PlaybackAudioTrackLanguageChanged -> {
+
+                    }
+                    is PlaybackSubtitlesLanguageChanged -> {
+
+                    }
+                }
+            }
+            ResourceState.LOADING -> {
+            }
+            ResourceState.ERROR -> {
+                Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
+            }
+            else -> {
+            }
+        }
+    }
+
+    override fun onVideoSizeChanged(width: Int, height: Int) {
+        super.onVideoSizeChanged(width, height)
+        videoLayoutCalculator = VideoLayoutCalculator(requireContext(), width, height)
+    }
+
+    private fun setAspectRatio(targetAspectRatio: VideoAspectRatio) {
+        val t = videoLayoutCalculator.calculate(targetAspectRatio)
+        val p = surfaceView.layoutParams
+        p.width = t.width
+        p.height = t.height
+        surfaceView.layoutParams = p
     }
 
     private fun handleFooterDataChange(resource: Resource<TvPlaybackFooterLiveData>) {
