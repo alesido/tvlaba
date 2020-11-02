@@ -74,5 +74,10 @@
     <string name="video_aspect_adapt">Choose</string>
     <string name="video_aspect_scale">Aspect</string>
     <string name="label_video_options">Options</string>
+    <string name="video_playback_options_screen_title">Video</string>
+    <string name="video_playback_option_aspect_ratio_title">Aspect Ratio</string>
+    <string name="video_playback_option_language_section_title">Language</string>
+    <string name="video_playback_option_audio_title">Audio Track</string>
+    <string name="video_playback_option_subtitles_title">Closed Captions</string>
 
 </resources>

@@ -64,14 +64,19 @@
         <item>Директор:</item>
     </string-array>
 
-    <string name="video_aspect_fill_screen">Заполнить экран</string>
-    <string name="video_aspect_fill_width">Заполнить по горизонтали</string>
-    <string name="video_aspect_fill_height">Заполнить по вертикали</string>
+    <string name="video_aspect_fill_screen">Заполннение экрана</string>
+    <string name="video_aspect_fill_width">Заполнение по горизонтали</string>
+    <string name="video_aspect_fill_height">Заполнение по вертикали</string>
     <string name="video_aspect_original">Оригинал</string>
     <string name="video_aspect_16_9">16:9</string>
     <string name="video_aspect_4_3">4:3</string>
-    <string name="video_aspect_adapt">Подобрать</string>
-    <string name="video_aspect_scale">Масштабировать</string>
+    <string name="video_aspect_adapt">Подоборка</string>
+    <string name="video_aspect_scale">Масштабирование</string>
     <string name="label_video_options">Параметры</string>
+    <string name="video_playback_options_screen_title">Видео</string>
+    <string name="video_playback_option_aspect_ratio_title">Пропорции</string>
+    <string name="video_playback_option_language_section_title">Выбор языка</string>
+    <string name="video_playback_option_audio_title">Звуковая дорожка</string>
+    <string name="video_playback_option_subtitles_title">Субтитры</string>
 
 </resources>

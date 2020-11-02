@@ -32,11 +32,13 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
 
         // aspect ratio
         val aspectRatioPreference = findPreference<ListPreference>("video_playback_option_aspect_ratio")
+        aspectRatioPreference?.let { it.summary = it.entries[4] }
         aspectRatioPreference?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener {
             preference, selectedValue ->
             val selectedIndex = (preference as ListPreference).entries.indexOf(selectedValue)
             if (selectedIndex >= 0 && selectedIndex < VideoAspectRatio.values().size) {
                 playbackViewModel.onAspectRatioChanged(VideoAspectRatio.values()[selectedIndex])
+                preference.summary = preference.entries[selectedIndex]
             }
             true
         }
