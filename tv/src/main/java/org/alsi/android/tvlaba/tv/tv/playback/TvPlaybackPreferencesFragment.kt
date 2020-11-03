@@ -7,7 +7,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
-import org.alsi.android.presentationtv.model.TvPlaybackViewModel
+import org.alsi.android.presentationtv.model.TvPlaybackPreferencesViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
@@ -17,16 +17,19 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var playbackViewModel: TvPlaybackViewModel
+
+    private lateinit var preferencesViewModel: TvPlaybackPreferencesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-        playbackViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(TvPlaybackViewModel::class.java)
     }
 
     override fun onCreatePreferences(arguments: Bundle?, s: String?) {
+
+        preferencesViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(TvPlaybackPreferencesViewModel::class.java)
+
         // inflate preferences screens
         addPreferencesFromResource(preferencesXmlRes)
 
@@ -37,10 +40,25 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
             preference, selectedValue ->
             val selectedIndex = (preference as ListPreference).entries.indexOf(selectedValue)
             if (selectedIndex >= 0 && selectedIndex < VideoAspectRatio.values().size) {
-                playbackViewModel.onAspectRatioChanged(VideoAspectRatio.values()[selectedIndex])
+                preferencesViewModel.onAspectRatioChanged(VideoAspectRatio.values()[selectedIndex])
                 preference.summary = preference.entries[selectedIndex]
             }
             true
+        }
+
+        // audio track languages
+        val audioTrackLanguagePreference = findPreference<ListPreference>("video_playback_option_audio_language")
+        audioTrackLanguagePreference?.let { preference ->
+            val tracks = preferencesViewModel.currentTrackSelection.audioTracks
+            if (tracks.isEmpty()) {
+                preference.summary = "N/A"
+            }
+            else {
+                preference.entries = Array<CharSequence>(tracks.size) { i -> tracks[i] }
+                preference.entryValues = Array<CharSequence>(tracks.size) { i -> tracks[i] }
+                preference.setDefaultValue(tracks[0])
+                preference.summary = tracks[0]
+            }
         }
     }
 

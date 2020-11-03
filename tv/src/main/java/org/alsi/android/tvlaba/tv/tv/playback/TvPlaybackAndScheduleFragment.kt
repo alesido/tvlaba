@@ -9,9 +9,14 @@ import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.RendererCapabilities
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.DefaultTrackNameProvider
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
@@ -24,6 +29,7 @@ import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
 import org.alsi.android.presentationtv.model.*
+import org.alsi.android.presentationtv.model.TvPlaybackViewModel.*
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
@@ -37,7 +43,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var playbackViewModel: TvPlaybackViewModel
-
+    private lateinit var preferencesViewModel: TvPlaybackPreferencesViewModel
     private lateinit var footerViewModel : TvPlaybackFooterViewModel
 
     private lateinit var dataSourceFactory : DefaultDataSourceFactory
@@ -45,6 +51,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     private lateinit var player: SimpleExoPlayer
 
     private lateinit var glue: TvPlaybackLeanbackGlue
+
+    private lateinit var trackSelector: DefaultTrackSelector
+    private lateinit var trackNameProvider: DefaultTrackNameProvider
 
     private lateinit var errorMessaging: TvErrorMessaging
 
@@ -56,8 +65,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        playbackViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        playbackViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvPlaybackViewModel::class.java)
+
+        preferencesViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(TvPlaybackPreferencesViewModel::class.java)
 
         footerViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(TvPlaybackFooterViewModel::class.java)
@@ -69,12 +81,16 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
                 Util.getUserAgent(requireContext(), getString(R.string.app_name))))
 
+        trackSelector = DefaultTrackSelector(requireContext(), AdaptiveTrackSelection.Factory())
+        trackSelector.parameters = DefaultTrackSelector.ParametersBuilder(requireContext()).build()
+        trackNameProvider = DefaultTrackNameProvider(resources)
+
         setupPlayer()
     }
 
     private fun setupPlayer() {
 
-        player = SimpleExoPlayer.Builder(requireContext()).build()
+        player = SimpleExoPlayer.Builder(requireContext()).setTrackSelector(trackSelector).build()
         val playerAdapter = LeanbackPlayerAdapter(
                 requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
 
@@ -106,6 +122,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
             // add navigation to the video preferences fragment
             setPreferencesCallback {
+                prepareTrackSelection()
                 TvPlaybackPreferencesDialogFragment.newInstance().show(childFragmentManager,
                         TvPlaybackPreferencesDialogFragment::class.java.simpleName)
             }
@@ -118,12 +135,38 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
     }
 
+    private fun prepareTrackSelection() {
+        preferencesViewModel.currentTrackSelection = TrackSelection.empty()
+        val audioTracks: MutableList<String> = mutableListOf()
+        val textTracks: MutableList<String> = mutableListOf()
+        val mappedTrackInfo = trackSelector.currentMappedTrackInfo ?: return
+        for (rendererIndex in 0 until mappedTrackInfo.rendererCount) {
+            val trackGroupArray = mappedTrackInfo.getTrackGroups(rendererIndex)
+            val trackType = mappedTrackInfo.getRendererType(rendererIndex)
+            if (trackType != C.TRACK_TYPE_AUDIO && trackType != C.TRACK_TYPE_TEXT) continue
+            for (groupIndex in 0 until trackGroupArray.length) {
+                val group = trackGroupArray[groupIndex]
+                for (trackIndex in 0 until group.length) {
+                    if (mappedTrackInfo.getTrackSupport(rendererIndex, groupIndex, trackIndex)
+                            != RendererCapabilities.FORMAT_HANDLED) continue
+                    val trackName = trackNameProvider.getTrackName(group.getFormat(trackIndex))
+                    when (trackType) {
+                        C.TRACK_TYPE_AUDIO -> audioTracks.add(trackName)
+                        C.TRACK_TYPE_TEXT -> textTracks.add(trackName)
+                    }
+                }
+            }
+        }
+        preferencesViewModel.currentTrackSelection = TrackSelection(audioTracks, textTracks)
+    }
+
     override fun onStart() {
         super.onStart()
-        playbackViewModel.getLiveData().observe(requireActivity(), {
+
+        playbackViewModel.getLiveData().observe(this, {
             if (it != null) handlePlaybackRequestEvent(it)
         })
-        playbackViewModel.getPreferenceChangeLiveData().observe(requireActivity(), {
+        preferencesViewModel.getPreferenceChangeLiveData().observe(requireActivity(), {
             if (it != null) handlePreferenceChangeEvent(it)
         })
         footerViewModel.getLiveData().observe(this, {
@@ -196,6 +239,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
     }
 
+    // region Aspect Ratio
     override fun onVideoSizeChanged(width: Int, height: Int) {
         super.onVideoSizeChanged(width, height)
         videoLayoutCalculator = VideoLayoutCalculator(requireContext(), width, height)

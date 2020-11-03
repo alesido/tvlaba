@@ -28,17 +28,12 @@ class TvPlaybackViewModel @Inject constructor(
 
     private val liveData: MutableLiveData<Resource<TvPlayback>> = MutableLiveData()
 
-    private val preferenceChangeLiveData:
-            MutableLiveData<Resource<PlaybackPreferenceChangeEvent>> = MutableLiveData()
-
     init {
         liveData.postValue(Resource.loading())
         currentPlaybackUseCase.execute(CurrentPlaybackSubscriber())
     }
 
     fun getLiveData(): LiveData<Resource<TvPlayback>> = liveData
-
-    fun getPreferenceChangeLiveData(): LiveData<Resource<PlaybackPreferenceChangeEvent>> = preferenceChangeLiveData
 
     fun getSettings(receiver: (settings: StreamingServiceSettings) -> Unit) {
         getSettingsUseCase.execute(SettingsSubscriber(receiver))
@@ -75,11 +70,6 @@ class TvPlaybackViewModel @Inject constructor(
         newPlaybackUseCase.dispose()
         nextPlaybackUseCase.dispose()
         getSettingsUseCase.dispose()
-    }
-
-    fun onAspectRatioChanged(aspectRatio: VideoAspectRatio) {
-        val event = PlaybackAspectRatioChanged(aspectRatio)
-        preferenceChangeLiveData.value = Resource.success(event)
     }
 
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {
