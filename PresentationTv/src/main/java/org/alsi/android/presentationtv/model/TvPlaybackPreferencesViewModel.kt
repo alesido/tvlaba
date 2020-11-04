@@ -11,7 +11,7 @@ class TvPlaybackPreferencesViewModel @Inject constructor() : ViewModel() {
     private val changeLiveData:
             MutableLiveData<Resource<PlaybackPreferenceChangeEvent>> = MutableLiveData()
 
-    var currentTrackSelection: TrackSelection = TrackSelection.empty()
+    var trackLanguageSelection: LanguageTrackSelection = LanguageTrackSelection.empty()
 
     fun getPreferenceChangeLiveData() = changeLiveData
 

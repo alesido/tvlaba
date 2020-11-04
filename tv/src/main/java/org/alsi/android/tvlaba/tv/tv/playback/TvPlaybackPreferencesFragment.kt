@@ -49,7 +49,7 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
         // audio track languages
         val audioTrackLanguagePreference = findPreference<ListPreference>("video_playback_option_audio_language")
         audioTrackLanguagePreference?.let { preference ->
-            val tracks = preferencesViewModel.currentTrackSelection.audioTracks
+            val tracks = preferencesViewModel.trackLanguageSelection.audioTracks
             if (tracks.isEmpty()) {
                 preference.summary = "N/A"
             }
