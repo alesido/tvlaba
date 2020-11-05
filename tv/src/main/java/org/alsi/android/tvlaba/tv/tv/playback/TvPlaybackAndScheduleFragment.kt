@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.lb_playback_fragment.*
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
@@ -30,6 +31,7 @@ import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
+import timber.log.Timber
 import javax.inject.Inject
 
 class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
@@ -89,6 +91,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         val playerAdapter = LeanbackPlayerAdapter(
                 requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
 
+        player.textComponent?.addTextOutput{
+            Timber.d("Subtitle: %s", if (it.size > 0) it[0].text else "N/A")
+            leanbackSubtitles.setCues(it)
+        }
+
         glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
 
             host = VideoSupportFragmentGlueHost(this@TvPlaybackAndScheduleFragment)
@@ -117,6 +124,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
             // add navigation to the video preferences fragment
             setPreferencesCallback {
+                if (! player.isPlaying) return@setPreferencesCallback
                 trackLanguageSelection.update()
                 TvPlaybackPreferencesDialogFragment.newInstance().show(childFragmentManager,
                         TvPlaybackPreferencesDialogFragment::class.java.simpleName)

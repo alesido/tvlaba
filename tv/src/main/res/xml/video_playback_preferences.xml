@@ -8,8 +8,6 @@
         android:title="@string/video_playback_option_aspect_ratio_title"
         android:icon="@drawable/ic_aspect_ratio"
         android:entries="@array/key_video_playback_aspect_ratio_values"
-        android:entryValues="@array/key_video_playback_aspect_ratio_values"
-        android:defaultValue=""
         />
     <PreferenceCategory
         android:title="@string/video_playback_option_language_section_title"

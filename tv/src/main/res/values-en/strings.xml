@@ -79,5 +79,7 @@
     <string name="video_playback_option_language_section_title">Language</string>
     <string name="video_playback_option_audio_title">Audio Track</string>
     <string name="video_playback_option_subtitles_title">Closed Captions</string>
+    <string name="preference_summary_not_available">N/A</string>
+    <string name="preference_subtitles_is_off">Off</string>
 
 </resources>

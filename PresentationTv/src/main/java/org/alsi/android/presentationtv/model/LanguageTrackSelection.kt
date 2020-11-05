@@ -1,11 +1,23 @@
 package org.alsi.android.presentationtv.model
 
-open class LanguageTrackSelection(
-        open val audioTracks: List<String>,
-        open val textTracks: List<String>
-) {
-    companion object {
-        fun empty() = LanguageTrackSelection(listOf(), listOf())
-    }
+import org.alsi.android.domain.streaming.model.options.LanguageOption
+
+abstract class LanguageTrackSelection {
+
+    abstract val audioTracks: List<String>
+    abstract val textTracks: List<String>
+
+    var preferredLanguage: LanguageOption? = null
+
+    var selectedAudioTrackIndex = 0
+    var selectedTextTrackIndex: Int? = null
+
+    abstract fun update()
+
+    abstract fun selectAudioTrack(audioLanguageIndex: Int)
+
+    abstract fun selectTextTrack(textLanguageIndex: Int?)
+
+    abstract fun turnSubtitlesOff()
 }
 

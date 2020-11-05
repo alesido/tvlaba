@@ -64,7 +64,7 @@
         <item>Директор:</item>
     </string-array>
 
-    <string name="video_aspect_fill_screen">Заполннение экрана</string>
+    <string name="video_aspect_fill_screen">Заполнение экрана</string>
     <string name="video_aspect_fill_width">Заполнение по горизонтали</string>
     <string name="video_aspect_fill_height">Заполнение по вертикали</string>
     <string name="video_aspect_original">Оригинал</string>
@@ -78,5 +78,7 @@
     <string name="video_playback_option_language_section_title">Выбор языка</string>
     <string name="video_playback_option_audio_title">Звуковая дорожка</string>
     <string name="video_playback_option_subtitles_title">Субтитры</string>
+    <string name="preference_summary_not_available">Выбора нет</string>
+    <string name="preference_subtitles_is_off">Отключены</string>
 
 </resources>

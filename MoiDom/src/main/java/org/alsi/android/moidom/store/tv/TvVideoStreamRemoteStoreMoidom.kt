@@ -32,5 +32,9 @@ class TvVideoStreamRemoteStoreMoidom @Inject constructor(
                     channelId = program.channelId.toString(),
                     unixTimeStamp = TimeUnit.MILLISECONDS.toSeconds(program.time?.startUnixTimeMillis?:0L),
                     accessCode = accessCode)
-            }.map { response -> URI.create(response.url) }
+            }.map { response ->
+                URI.create(response.url)
+                //URI.create("http://d3rlna7iyyu8wu.cloudfront.net/skip_armstrong/skip_armstrong_multi_language_subs.m3u8")
+                //URI.create("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")
+            }
 }
