@@ -53,7 +53,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     private lateinit var errorMessaging: TvErrorMessaging
 
-    private lateinit var videoLayoutCalculator: VideoLayoutCalculator
+    private var videoLayoutCalculator: VideoLayoutCalculator? = null
 
     // region Android Life Cycle
 
@@ -224,7 +224,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     }
 
     private fun setAspectRatio(targetAspectRatio: VideoAspectRatio) {
-        val t = videoLayoutCalculator.calculate(targetAspectRatio)
+        videoLayoutCalculator?: return
+        surfaceView?: return
+        val t = videoLayoutCalculator!!.calculate(targetAspectRatio)
         val p = surfaceView.layoutParams
         p.width = t.width
         p.height = t.height

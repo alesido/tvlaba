@@ -116,8 +116,7 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
 
         if (tracks == null || tracks.isEmpty()) {
             // no options
-            preference.summary = getString(R.string.preference_summary_not_available)
-            preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener{ _,_ -> true}
+            preference.isEnabled = false
         }
         else {
             // entries and values
@@ -150,8 +149,7 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
         val tracks = preferencesViewModel.trackLanguageSelection?.textTracks
         if (tracks == null || tracks.isEmpty()) {
             // no options
-            preference.summary = getString(R.string.preference_summary_not_available)
-            preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener{ _,_ -> true}
+            preference.isEnabled = false
         }
         else {
             // entries and values
