@@ -22,11 +22,17 @@ class TvChannelDirectorySourceDataMapper: SourceDataMapper<ChannelListResponse, 
 
         val channelIconPathMapper = TvChannelIconPathMapper(source)
 
+        var categoryOrdinal = 0
         var channelNumber = 1
         for (group in source.groups) {
 
             dstCategories.add(
-                    TvChannelCategory(id = group.id.toLong(), title = group.name, logo = null))
+                    TvChannelCategory(
+                            id = group.id.toLong(),
+                            ordinal = categoryOrdinal++,
+                            title = group.name,
+                            logo = null
+                    ))
 
             val thisCategoryChannels: MutableList<TvChannel> = mutableListOf()
             for (srcChannel in group.channels) {

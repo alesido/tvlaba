@@ -9,9 +9,11 @@ class TvCategoriesSourceDataMapper: SourceDataMapper<GetTvGroupResponse, List<Tv
     override fun mapFromSource(source: GetTvGroupResponse): List<TvChannelCategory> {
         val categories: MutableList<TvChannelCategory> = mutableListOf()
         val iconPathMapper = TvCategoryIconPathMapper(source)
+        var groupOrdinal = 0
         source.groups.forEach {
             categories.add(TvChannelCategory(
                     id = it.id.toLong(),
+                    ordinal = groupOrdinal++,
                     title = it.name,
                     logo = iconPathMapper.fromPath(it.icon_path)))
         }

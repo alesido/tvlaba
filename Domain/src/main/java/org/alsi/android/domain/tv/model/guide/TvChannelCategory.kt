@@ -4,6 +4,7 @@ import org.alsi.android.domain.implementation.model.TypedIconReference
 
 class TvChannelCategory(
         val id: Long,
+        val ordinal: Int?,
         val title: String,
         val logo: TypedIconReference?)
 

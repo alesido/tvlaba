@@ -66,7 +66,9 @@ class TvChannelLocalStoreDelegate(
     }
 
     override fun getDirectory(): Single<TvChannelDirectory> = Single.fromCallable {
-        val categories = categoryBox.all.map { category -> categoryMapper.mapFromEntity(category) }
+        val categories = categoryBox.all
+                .map { category -> categoryMapper.mapFromEntity(category) }
+                .sortedBy { it.ordinal }
         val channels = channelBox.all.map { channel -> channelMapper.mapFromEntity(channel) }
         val channelsById: Map<Long, TvChannel> = channels.map {it.id to it}.toMap()
         val index : MutableMap<Long, MutableList<TvChannel>> = mutableMapOf()
