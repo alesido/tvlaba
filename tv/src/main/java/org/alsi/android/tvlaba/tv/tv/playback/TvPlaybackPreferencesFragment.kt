@@ -33,51 +33,10 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
         // inflate preferences screens
         addPreferencesFromResource(preferencesXmlRes)
 
+        // populate preferences
         initAspectRatioPreference()
         initAudioTrackLanguagePreference()
         initTextTrackLanguagePreference()
-
-        // subtitles languages
-//        val textTrackLanguagePreference = findPreference<ListPreference>("video_playback_option_subtitles_language")
-//        textTrackLanguagePreference?.let { preference ->
-//            // availability
-//            val tracks = preferencesViewModel.trackLanguageSelection?.textTracks
-//            if (tracks == null || tracks.isEmpty()) {
-//                preference.summary = getString(R.string.preference_summary_not_available)
-//            }
-//            else {
-//                // entries and initial selection
-//                preference.entries = Array<CharSequence>(tracks.size + 1) { i ->
-//                    if (i > 0) tracks[i - 1] else getString(R.string.preference_subtitles_is_off)
-//                }
-//                preference.entryValues = Array<CharSequence>(tracks.size + 1) { i -> i.toString() }
-//                val selectedTextTrackIndex = preferencesViewModel.trackLanguageSelection?.selectedTextTrackIndex
-//                if (selectedTextTrackIndex != null) {
-//                    preference.setDefaultValue((selectedTextTrackIndex + 1).toString())
-//                    preference.value = (selectedTextTrackIndex + 1).toString()
-//                    preference.summary = tracks[selectedTextTrackIndex]
-//                }
-//                else {
-//                    preference.setDefaultValue("0")
-//                    preference.value = "0"
-//                    preference.summary = getString(R.string.preference_subtitles_is_off)
-//
-//                }
-//            }
-//            preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener {
-//                _, selectedValue ->
-//                val selectedIndex = selectedValue.toString().toInt()
-//                if (selectedIndex > 0) {
-//                    preferencesViewModel.onTextTrackLanguageSelected(selectedIndex - 1)
-//                    preference.summary = preference.entries[selectedIndex]
-//                }
-//                else {
-//                    preferencesViewModel.turnSubtitlesOff()
-//                    preference.summary = getString(R.string.preference_subtitles_is_off)
-//                }
-//                true
-//            }
-//        }
     }
 
     private fun initAspectRatioPreference() {
