@@ -103,21 +103,30 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             // add playback state listeners
             addPlayerCallback(object : PlaybackGlue.PlayerCallback() {
 
+                /**
                 override fun onPreparedStateChanged(glue: PlaybackGlue?) {
                     super.onPreparedStateChanged(glue)
-                    if (glue?.isPrepared == true) {
-                        playback?.let {
-                            seekTo(it.position)
-                        }
-                    }
+
+                    // This isn't required to seek to initial playback position here! Looks like
+                    // player.seekTo may be called immediately after player started preparation!
+                    // See the start playback code.
+
+                    // Place code to do something on a first playback preparation. All subsequent
+                    // "next playbacks" won't get here.
+
+                    // See LeanbackPlayerAdapter#maybeNotifyPreparedStateChanged and use general
+                    // player events subscription.
                 }
+                */
 
                 override fun onPlayCompleted(glue: PlaybackGlue?) {
                     super.onPlayCompleted(glue)
-                    val navController = Navigation.findNavController(
-                            requireActivity(), R.id.tvGuideNavigationHost)
-                    navController.currentDestination?.id?.let {
-                        navController.popBackStack(it, true)
+                    playbackViewModel.onPlayCompleted {
+                        val navController = Navigation.findNavController(
+                                requireActivity(), R.id.tvGuideNavigationHost)
+                        navController.currentDestination?.id?.let {
+                            navController.popBackStack(it, true)
+                        }
                     }
                 }
             })
@@ -181,11 +190,26 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     private fun startPlayback(playback: TvPlayback?) {
         if (null == playback?.streamUri) return
         context?.let {
+            Timber.d("@startPlayback %s @ %d", playback.title, playback.position)
             if (glue.bindPlaybackItem(playback)) {
+
+                // reset player (seems not required, but gives better look by resetting
+                // progress view immediately)
+                if (player.isPlaying) {
+                    Timber.d("@startPlayback stop & reset %s", playback.title)
+                    player.stop(true)
+                }
+
+                // create media source
                 adapter.notifyItemRangeChanged(0, 1)
                 val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(Uri.parse(playback.streamUri.toString()))
-                player.prepare(hlsMediaSource, false, true)
+
+                // start preparation
+                player.prepare(hlsMediaSource, true, true)
+
+                // request initial position (tested, works)
+                player.seekTo(playback.position)
             }
             else {
                 Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()

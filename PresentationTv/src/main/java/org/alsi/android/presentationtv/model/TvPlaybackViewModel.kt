@@ -65,6 +65,14 @@ class TvPlaybackViewModel @Inject constructor(
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
     }
 
+    /**
+     * TODO Switch to a live on early completion of a live record (archive)
+     */
+    fun onPlayCompleted(fallback: () -> Unit) {
+        nextPlaybackUseCase.execute(ContinueToNextPlaybackSubscriber(fallback),
+                TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
+    }
+
     fun dispose() {
         currentPlaybackUseCase.dispose()
         newPlaybackUseCase.dispose()
@@ -92,6 +100,18 @@ class TvPlaybackViewModel @Inject constructor(
         }
         override fun onError(e: Throwable) {
             liveData.postValue(Resource.error(e))
+        }
+    }
+
+    inner class ContinueToNextPlaybackSubscriber (val fallback: () -> Unit)
+        : DisposableSingleObserver<TvPlayback>() {
+        override fun onSuccess(t: TvPlayback) {
+            // current playback subscriber will get result too,
+            // so avoid duplicate notification here
+        }
+        override fun onError(e: Throwable) {
+            liveData.postValue(Resource.error(e))
+            fallback()
         }
     }
 
