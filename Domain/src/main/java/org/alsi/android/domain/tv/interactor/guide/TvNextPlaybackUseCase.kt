@@ -42,8 +42,7 @@ class TvNextPlaybackUseCase @Inject constructor(
     private fun navigateChannel(directory: TvDirectoryRepository, session: TvSessionRepository,
                         target: TvNextPlayback): Single<TvPlayback> {
 
-        return Single.zip( session.play.last(), directory.channels.getDirectory().firstOrError(),
-                BiFunction<TvPlayCursor?, TvChannelDirectory, Pair<TvPlayCursor, TvChannelDirectory>> {
+        return Single.zip( session.play.last(), directory.channels.getDirectory().firstOrError(), {
                     cursor, channelDirectory -> Pair(cursor, channelDirectory)
                 }
 
@@ -88,11 +87,10 @@ class TvNextPlaybackUseCase @Inject constructor(
             directory: TvDirectoryRepository, session: TvSessionRepository, target: TvNextPlayback
     ): Single<TvPlayback> {
 
-        return Single.zip( session.play.last(), directory.channels.getDirectory().firstOrError(),
-                BiFunction<TvPlayCursor?, TvChannelDirectory, Pair<TvPlayCursor, TvChannelDirectory>> {
+        return Single.zip( session.play.last(), directory.channels.getDirectory().firstOrError(), {
                     cursor, channelDirectory -> Pair(cursor, channelDirectory)
                 }
-        ).flatMap<TvPlayback> {
+        ).flatMap {
 
             val (cursor, channelDirectory) = it
 
@@ -132,7 +130,7 @@ class TvNextPlaybackUseCase @Inject constructor(
                     }
                 }
                 else {
-                    // switch to the previous day, program after the current
+                    // switch to the next day, program after the current
                     return@schedule directory.programs.getDaySchedule(cursor.playback.channelId,
                             date.plusDays(1)).map { scheduleAfter ->
                         if (scheduleAfter.items.first().programId != cursor.playback.programId)
