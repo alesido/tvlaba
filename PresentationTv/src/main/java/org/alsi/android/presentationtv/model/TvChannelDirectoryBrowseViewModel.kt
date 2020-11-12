@@ -63,8 +63,13 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     }
 
     fun onChannelAction(channel: TvChannel, navigate: () -> Unit) {
-        newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
-                TvNewPlaybackUseCase.Params(channel.categoryId, channel))
+        // ensure browse cursor in a correct position before navigating to the details fragment
+        val category = directory?.categories?.first { it.id == channel.categoryId }?: return
+        browseCursorMoveUseCase.execute(BrowseCursorMoveOnActionSubscriber(navigate),
+                TvBrowseCursorMoveUseCase.Params(
+                        category = category,
+                        channel = channel,
+                        page = TvBrowsePage.CHANNELS))
     }
 
     fun onResume() {
@@ -121,16 +126,6 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         }
     }
 
-    inner class NewPlaybackSubscriber (val navigate: () -> Unit)
-        : DisposableSingleObserver<TvPlayback>() {
-        override fun onSuccess(t: TvPlayback) {
-            navigate()
-        }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
-        }
-    }
-
     inner class BrowseCursorSubscriber : DisposableSingleObserver<TvBrowseCursor>() {
         override fun onSuccess(cursor: TvBrowseCursor) {
             val dir = this@TvChannelDirectoryBrowseViewModel.directory?: return
@@ -154,6 +149,29 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     inner class BrowseCursorMoveSubscriber : DisposableSingleObserver<TvBrowseCursor>() {
         override fun onSuccess(t: TvBrowseCursor) {
             // silently accept it's OK
+        }
+        override fun onError(e: Throwable) {
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
+    inner class BrowseCursorMoveOnActionSubscriber(private val navigate: () -> Unit)
+        : DisposableSingleObserver<TvBrowseCursor>() {
+        override fun onSuccess(t: TvBrowseCursor) {
+            val channel =  t.channel?: return
+            newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
+                    TvNewPlaybackUseCase.Params(channel.categoryId, channel))
+        }
+        override fun onError(e: Throwable) {
+            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+        }
+    }
+
+
+    inner class NewPlaybackSubscriber(private val navigate: () -> Unit)
+        : DisposableSingleObserver<TvPlayback>() {
+        override fun onSuccess(t: TvPlayback) {
+            navigate()
         }
         override fun onError(e: Throwable) {
             liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
