@@ -43,10 +43,12 @@ class TvProgramDetailsViewModel @Inject constructor (
 
     fun getLiveData(): LiveData<Resource<TvProgramDetailsLiveData>> = liveData
 
-    fun onPlaybackAction(navigate: () -> Unit) {
+    fun onPlaybackAction(requestLivePlayback: Boolean, navigate: () -> Unit) {
         newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
                 with(snapshot.cursor!!) {
-                    TvNewPlaybackUseCase.Params(category!!.id, channel, program)
+                    TvNewPlaybackUseCase.Params(
+                            category!!.id, channel,
+                            if (requestLivePlayback) null else program)
                 })
     }
 

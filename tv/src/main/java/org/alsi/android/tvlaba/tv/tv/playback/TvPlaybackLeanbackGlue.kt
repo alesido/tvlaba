@@ -10,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.*
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
+import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction.*
 import org.alsi.android.domain.tv.model.guide.TvPlayback
@@ -68,9 +69,9 @@ class TvPlaybackLeanbackGlue(
     // region Playback Setup
 
     fun bindPlaybackItem(playback: TvPlayback): Boolean {
-        when(playback.disposition) {
-            TvProgramDisposition.LIVE -> configureLivePlayback(playback)
-            TvProgramDisposition.RECORD -> configureArchivePlayback(playback)
+        when(playback.stream?.kind) {
+            VideoStreamKind.LIVE -> configureLivePlayback(playback)
+            VideoStreamKind.RECORD -> configureArchivePlayback(playback)
             else -> return false
         }
         this.playback = playback

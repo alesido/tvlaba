@@ -16,10 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import dagger.android.support.AndroidSupportInjection
-import org.alsi.android.domain.tv.model.guide.TvDaySchedule
-import org.alsi.android.domain.tv.model.guide.TvProgramIssue
-import org.alsi.android.domain.tv.model.guide.TvWeekDay
-import org.alsi.android.domain.tv.model.guide.TvWeekDayRange
+import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvProgramDetailsLiveData
@@ -69,8 +66,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     }
 
     private fun launchViewModel() {
-        detailsViewModel.getLiveData().observe(this,
-                Observer<Resource<TvProgramDetailsLiveData>> {
+        detailsViewModel.getLiveData().observe(this, {
                     if (it != null) handleDetailsChangeEvent(it)
                 })
     }
@@ -125,26 +121,44 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         return detailsPresenter
     }
 
-    private fun setupActions(detailsOverviewRow: DetailsOverviewRow) {
+    private fun setupActions(program: TvProgramIssue, detailsOverviewRow: DetailsOverviewRow) {
         val actionsAdapter = SparseArrayObjectAdapter()
-        actionsAdapter[ACTION_WATCH] = Action(ACTION_WATCH.toLong(),
-                resources.getString(R.string.tv_program_details_action_watch))
-        actionsAdapter[ACTION_SCHEDULE] = Action(ACTION_SCHEDULE.toLong(),
+
+        if (program.disposition == TvProgramDisposition.LIVE || program.disposition == TvProgramDisposition.LIVE_RECORD) {
+            actionsAdapter[ACTION_PLAY_LIVE] = Action(ACTION_PLAY_LIVE.toLong(),
+                    resources.getString(R.string.tv_program_details_action_play_live))
+            actionsAdapter[ACTION_PLAY_RECORD] = Action(ACTION_PLAY_RECORD.toLong(),
+                    resources.getString(R.string.tv_program_details_action_play_record))
+        }
+        else if (program.disposition == TvProgramDisposition.RECORD) {
+            actionsAdapter[ACTION_PLAY_RECORD] = Action(ACTION_PLAY_LIVE.toLong(),
+                    resources.getString(R.string.tv_program_details_action_watch))
+        }
+
+        actionsAdapter[ACTION_SHOW_SCHEDULE] = Action(ACTION_SHOW_SCHEDULE.toLong(),
                 resources.getString(R.string.tv_program_details_action_schedule))
+
         detailsOverviewRow.actionsAdapter = actionsAdapter
     }
 
     private fun setOnActionListener(detailsPresenter: FullWidthDetailsOverviewRowPresenter) {
         detailsPresenter.setOnActionClickedListener {
             when(it.id.toInt()) {
-                ACTION_WATCH -> {
-                    detailsViewModel.onPlaybackAction() {
+                ACTION_PLAY_LIVE -> {
+                    detailsViewModel.onPlaybackAction(requestLivePlayback = true) {
                         Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
                                 .navigate(TvProgramDetailsFragmentDirections
                                         .actionTvProgramDetailsFragmentToTvPlaybackAndScheduleFragment())
                     }
                 }
-                ACTION_SCHEDULE -> {
+                ACTION_PLAY_RECORD -> {
+                    detailsViewModel.onPlaybackAction(requestLivePlayback = false) {
+                        Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
+                                .navigate(TvProgramDetailsFragmentDirections
+                                        .actionTvProgramDetailsFragmentToTvPlaybackAndScheduleFragment())
+                    }
+                }
+                ACTION_SHOW_SCHEDULE -> {
                     setSelectedPosition(scheduleRowPosition)
                 }
             }
@@ -217,7 +231,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
                     .into(PosterBitmapTarget(detailsRow))
         }
 
-        setupActions(detailsRow)
+        setupActions(program, detailsRow)
         setOnItemCardSelectedActions()
 
         with(adapter as ArrayObjectAdapter) {
@@ -295,8 +309,9 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     companion object {
         const val SHARED_ELEMENT_NAME = "hero"
 
-        const val ACTION_WATCH = 1
-        const val ACTION_SCHEDULE = 2
+        const val ACTION_PLAY_LIVE = 1
+        const val ACTION_PLAY_RECORD = 2
+        const val ACTION_SHOW_SCHEDULE = 3
     }
 }
 

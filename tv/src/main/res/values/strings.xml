@@ -80,5 +80,7 @@
     <string name="video_playback_option_subtitles_title">Субтитры</string>
     <string name="preference_summary_not_available">Выбора нет</string>
     <string name="preference_subtitles_is_off">Отключены</string>
+    <string name="tv_program_details_action_play_live">Эфир</string>
+    <string name="tv_program_details_action_play_record">Запись</string>
 
 </resources>

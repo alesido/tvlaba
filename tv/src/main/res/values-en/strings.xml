@@ -81,5 +81,7 @@
     <string name="video_playback_option_subtitles_title">Closed Captions</string>
     <string name="preference_summary_not_available">N/A</string>
     <string name="preference_subtitles_is_off">Off</string>
+    <string name="tv_program_details_action_play_live">Live</string>
+    <string name="tv_program_details_action_play_record">Record</string>
 
 </resources>
