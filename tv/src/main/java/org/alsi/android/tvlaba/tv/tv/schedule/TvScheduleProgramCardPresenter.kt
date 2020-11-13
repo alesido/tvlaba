@@ -19,7 +19,7 @@ class TvScheduleProgramCardPresenter: Presenter() {
         val cardView = viewHolder.view as TvProgramCardView
         with(tvProgram, {
             cardView.programTimeText = time?.shortString?:""
-            cardView.programTitleText = title?:"" + "\n" + description?:""
+            cardView.programTitleText = title?:"" + "\n" + (description?:"")
         })
         val context = cardView.tvProgramCardPoster.context
         Glide.with(context).load(tvProgram.mainPosterUri.toString())
