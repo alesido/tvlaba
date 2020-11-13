@@ -124,7 +124,7 @@
     },
     {
       "id": "4:358898967036465",
-      "lastPropertyId": "4:8076109827830152806",
+      "lastPropertyId": "5:1235940815394675775",
       "name": "TvChannelCategoryEntity",
       "properties": [
         {
@@ -148,6 +148,13 @@
           "name": "logoIconType",
           "type": 6,
           "flags": 2
+        },
+        {
+          "id": "5:1235940815394675775",
+          "name": "ordinal",
+          "indexId": "33:3801068196188206420",
+          "type": 5,
+          "flags": 10
         }
       ],
       "relations": []
@@ -668,7 +675,7 @@
     }
   ],
   "lastEntityId": "18:3638758981994868413",
-  "lastIndexId": "32:4673249837582768857",
+  "lastIndexId": "33:3801068196188206420",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

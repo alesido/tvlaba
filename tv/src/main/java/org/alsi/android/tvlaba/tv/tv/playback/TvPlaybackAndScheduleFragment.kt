@@ -93,7 +93,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
         player.textComponent?.addTextOutput{
             Timber.d("Subtitle: %s", if (it.size > 0) it[0].text else "N/A")
-            leanbackSubtitles.setCues(it)
+            leanbackSubtitles?.setCues(it)
         }
 
         glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
@@ -188,7 +188,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     }
 
     private fun startPlayback(playback: TvPlayback?) {
-        if (null == playback?.streamUri) return
+        playback?.stream?.uri?: return
         context?.let {
             Timber.d("@startPlayback %s @ %d", playback.title, playback.position)
             if (glue.bindPlaybackItem(playback)) {
@@ -200,10 +200,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                     player.stop(true)
                 }
 
-                // create media source
+                // update program data display
                 adapter.notifyItemRangeChanged(0, 1)
+
+                // create media source
                 val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(playback.streamUri.toString()))
+                        .createMediaSource(Uri.parse(playback.stream!!.uri.toString()))
 
                 // start preparation
                 player.prepare(hlsMediaSource, true, true)

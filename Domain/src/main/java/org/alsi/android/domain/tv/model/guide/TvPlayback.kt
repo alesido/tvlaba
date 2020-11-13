@@ -1,5 +1,6 @@
 package org.alsi.android.domain.tv.model.guide
 
+import org.alsi.android.domain.streaming.model.VideoStream
 import org.alsi.android.domain.tv.interactor.guide.TvProgramCredit
 import java.net.URI
 
@@ -13,9 +14,9 @@ class TvPlayback (
          */
         val programId: Long? = null,
 
-        /** Live or archive stream URI
+        /** Live or archive stream
          */
-        var streamUri: URI?,
+        var stream: VideoStream?,
 
         /** Program time interval, start and end time. N/A for channels w/o EPG.
          *

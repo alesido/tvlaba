@@ -2,6 +2,7 @@ package org.alsi.android.datatv.store
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.alsi.android.domain.streaming.model.VideoStream
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import java.net.URI
@@ -14,9 +15,9 @@ import java.net.URI
  */
 interface TvVideoStreamLocalStore {
 
-    fun getVideoStreamUri(channel: TvChannel, accessCode: String?): Single<URI?>
-    fun putVideoStreamUri(channel: TvChannel, streamUri: URI, accessCode: String?): Completable
+    fun getVideoStream(channel: TvChannel, accessCode: String?): Single<VideoStream?>
+    fun putVideoStream(channel: TvChannel, stream: VideoStream, accessCode: String?): Completable
 
-    fun getVideoStreamUri(program: TvProgramIssue, accessCode: String?): Single<URI?>
-    fun putVideoStreamUri(program: TvProgramIssue, streamUri: URI, accessCode: String?): Completable
+    fun getVideoStream(program: TvProgramIssue, accessCode: String?): Single<VideoStream?>
+    fun putVideoStream(program: TvProgramIssue, stream: VideoStream, accessCode: String?): Completable
 }

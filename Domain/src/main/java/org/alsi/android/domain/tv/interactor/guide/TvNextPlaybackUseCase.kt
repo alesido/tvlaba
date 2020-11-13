@@ -1,7 +1,6 @@
 package org.alsi.android.domain.tv.interactor.guide
 
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
@@ -65,8 +64,8 @@ class TvNextPlaybackUseCase @Inject constructor(
             // retrieve target playback & set cursor to it
             val targetChannel = categoryChannels[
                     if (target == NEXT_CHANNEL) channelPosition + 1 else channelPosition - 1]
-            directory.streams.getVideoStreamUri(targetChannel, null, null).map {
-                streamURI -> mapper.from(targetChannel, streamURI)
+            directory.streams.getVideoStream(targetChannel, null, null).map {
+                stream -> mapper.from(targetChannel, stream)
             }.flatMap { targetPlayback ->
                 session.play.setCursorTo(cursor.categoryId, targetPlayback)
             }
@@ -142,8 +141,8 @@ class TvNextPlaybackUseCase @Inject constructor(
 
             // get URI of the stream and compose playback data
             }.flatMap { targetProgram ->
-                directory.streams.getVideoStreamUri(channel, targetProgram, null).map {
-                    streamURI -> mapper.from(channel, targetProgram, streamURI)
+                directory.streams.getVideoStream(channel, targetProgram, null).map {
+                    videoStream -> mapper.from(channel, targetProgram, videoStream)
                 }
 
             // set cursor to the playback
