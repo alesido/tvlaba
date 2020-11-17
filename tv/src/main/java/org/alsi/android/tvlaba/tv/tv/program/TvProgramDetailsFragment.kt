@@ -131,7 +131,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
                     resources.getString(R.string.tv_program_details_action_play_record))
         }
         else if (program.disposition == TvProgramDisposition.RECORD) {
-            actionsAdapter[ACTION_PLAY_RECORD] = Action(ACTION_PLAY_LIVE.toLong(),
+            actionsAdapter[ACTION_PLAY_RECORD] = Action(ACTION_PLAY_RECORD.toLong(),
                     resources.getString(R.string.tv_program_details_action_watch))
         }
 
