@@ -15,6 +15,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PresentationTv/TvLabA.PresentationTv.iml" filepath="$PROJECT_DIR$/.idea/modules/PresentationTv/TvLabA.PresentationTv.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PresentationVod/TvLabA.PresentationVod.iml" filepath="$PROJECT_DIR$/.idea/modules/PresentationVod/TvLabA.PresentationVod.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Remote/TvLabA.Remote.iml" filepath="$PROJECT_DIR$/.idea/modules/Remote/TvLabA.Remote.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/leanback/TvLabA.leanback.iml" filepath="$PROJECT_DIR$/.idea/modules/leanback/TvLabA.leanback.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/mobile/TvLabA.mobile.iml" filepath="$PROJECT_DIR$/.idea/modules/mobile/TvLabA.mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tv/TvLabA.tv.iml" filepath="$PROJECT_DIR$/.idea/modules/tv/TvLabA.tv.iml" />
     </modules>

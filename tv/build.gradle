@@ -123,9 +123,12 @@ dependencies {
     implementation uiDependencies.androidAnnotations
     compileOnly uiDependencies.glassfishAnnotation
 
-    //Leanback & ExoPlayer
-    implementation uiDependencies.leanback
+    //Leanback
+    //implementation uiDependencies.leanback
+    implementation project(':leanback') // customized extract of the library from androidx
     implementation uiDependencies.leanbackPreferences
+
+    //ExoPlayer
     implementation uiDependencies.exoplayer
     implementation uiDependencies.exoplayerLeanback
 
