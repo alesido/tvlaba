@@ -157,7 +157,7 @@ class TvChannelsUpdateTask(
         val start = now.millis() + delay
         Timber.d("SCHEDULED target: %s, start: %s, now: %s, delay: %s",
                 DateTime(target).toString(timeFormatter), DateTime(start).toString(timeFormatter),
-                now.time().toString(timeFormatter), formatMillis(delay.toInt()))
+                now.time().toString(timeFormatter), formatMillis(delay))
     }
 
     fun onStepStarted() {

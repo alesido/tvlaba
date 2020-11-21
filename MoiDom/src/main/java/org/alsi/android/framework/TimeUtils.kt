@@ -4,7 +4,7 @@ import org.joda.time.DateTime
 
 /** To format time in milliseconds to hh:mm:ss string.
  */
-fun formatMillis(srcMillis: Int): String? {
+fun formatMillis(srcMillis: Long): String? {
     var millis = srcMillis
     var result: String? = ""
     val hr = millis / 3600000
