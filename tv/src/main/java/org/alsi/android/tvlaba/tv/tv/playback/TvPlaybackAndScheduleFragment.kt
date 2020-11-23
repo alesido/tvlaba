@@ -145,6 +145,17 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             // displays the current item's metadata
             playback?.let{ bindPlaybackItem(it) }
         }
+
+        //setPlaybackSeekUiClient(TvPlaybackSeekUiClient())
+    }
+
+    class TvPlaybackSeekUiClient: PlaybackSeekUi.Client() {
+
+        override fun isSeekEnabled() = true
+
+        override fun onSeekStarted() {
+            Timber.d("@onSeekStarted")
+        }
     }
 
     override fun onStart() {

@@ -15,8 +15,10 @@ import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction.*
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
+import org.alsi.android.framework.formatMillis
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 import kotlin.math.min
@@ -80,6 +82,7 @@ class TvPlaybackLeanbackGlue(
 
     private fun configureLivePlayback(playback: TvPlayback) {
         if (null == playback.time) {
+            // no program channel
             isSeekEnabled = false
             overrideDuration(TimeUnit.DAYS.toMillis(1))
             maintainLivePosition = true
@@ -92,6 +95,7 @@ class TvPlaybackLeanbackGlue(
             }
         }
         initialDisposition = TvProgramDisposition.LIVE
+        setSeekController(SeekController())
     }
 
     private fun configureArchivePlayback(playback: TvPlayback) {
@@ -102,6 +106,7 @@ class TvPlaybackLeanbackGlue(
             maintainLivePosition = false
         }
         initialDisposition = TvProgramDisposition.RECORD
+        setSeekController(SeekController())
     }
 
     override fun getCurrentPosition() =
@@ -119,21 +124,64 @@ class TvPlaybackLeanbackGlue(
         this.overriddenDuration = overriddenDuration
     }
 
+
+    fun onEarlyCompletion() {
+        playback?.time?: return
+        if (playback?.disposition == TvProgramDisposition.LIVE &&
+                playback?.stream?.kind?:VideoStreamKind.UNKNOWN == VideoStreamKind.RECORD) {
+            // live record have reached current time boundary
+            Timber.d("@onEarlyCompletion switchToLivePlayback")
+            model.switchToLivePlayback(playback!!)
+        }
+    }
+
+
     // endregion
     // region Actions Binding
 
     private fun skipForward(millis: Long = SEEK_STEP_MILLIS) {
-        if (initialDisposition == TvProgramDisposition.LIVE) { beep(); return }
-        // Ensures we don't advance past the content duration (if set)
-        playerAdapter.seekTo(if (wrappedDuration > 0) {
-            min(wrappedDuration, currentPosition + millis)
-        } else {
-            currentPosition + millis
-        })
+        playback?.stream?: return
+
+        val nextPosition = currentPosition + millis
+
+        if (playback?.disposition == TvProgramDisposition.LIVE) {
+
+            // check if live record's end boundary reached
+            if (playback?.stream?.kind == VideoStreamKind.RECORD) {
+
+                val endPosition = playerAdapter.duration
+                if (nextPosition > endPosition - 1_000L) {
+                    Timber.d("@skipForward: switch to LIVE")
+                    playback?.let { model.switchToLivePlayback(it) }
+                }
+                else {
+                    playback?.position = nextPosition
+                    playerAdapter.seekTo(nextPosition)
+                    Timber.d("@skipForward: to %s/%s", formatMillis(nextPosition), formatMillis(endPosition))
+                }
+                return
+            }
+
+            beep(); return
+        }
+
+        // move to a next video or seek to a next position
+        if (nextPosition > min(wrappedDuration, playerAdapter.duration) - 1_000L) {
+            next()
+        }
+        else {
+            playerAdapter.seekTo(nextPosition)
+        }
     }
 
     private fun skipBackward(millis: Long = SEEK_STEP_MILLIS) {
-        if (initialDisposition == TvProgramDisposition.LIVE) { beep(); return }
+        if (playback?.disposition == TvProgramDisposition.LIVE) {
+            if (playback?.stream?.kind == VideoStreamKind.LIVE) {
+                playback?.let { model.switchToArchivePlayback(it) }
+            }
+            beep(); return
+        }
+
         playerAdapter.seekTo(max(0, currentPosition - millis))
     }
 
@@ -144,6 +192,7 @@ class TvPlaybackLeanbackGlue(
     override fun next() {
         model.onNextProgramAction()
     }
+
 
     fun setPreferencesCallback(f: () -> Unit) {
         onVideoOptionsControlClicked = f
@@ -199,6 +248,24 @@ class TvPlaybackLeanbackGlue(
     }
 
     // endregion
+    // region Seek Controller
+
+    inner class SeekController: PlaybackSeekUi.Controller {
+
+        override fun consumeSeekStart(): Boolean {
+            return false
+        }
+
+        override fun consumeSeekPositionChange(pos: Long): Boolean {
+            return false
+        }
+
+        override fun consumeSeekFinished(cancelled: Boolean, pos: Long): Boolean {
+            return false
+        }
+    }
+
+    // endregion
     // region Control Panel Updating
 
     @SuppressLint("MissingSuperCall")
@@ -223,6 +290,7 @@ class TvPlaybackLeanbackGlue(
     }
 
     // endregion
+    // region Companion
 
     companion object {
 
@@ -230,7 +298,11 @@ class TvPlaybackLeanbackGlue(
         private val SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(1)
         private val FAST_SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(5)
     }
+
+    // endregion
 }
+
+// region Actions Definition
 
 class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 
@@ -300,6 +372,8 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
         return action
     }
 }
+
+// endregion
 
 fun beep() {
     ToneGenerator(AudioManager.STREAM_MUSIC, 100)

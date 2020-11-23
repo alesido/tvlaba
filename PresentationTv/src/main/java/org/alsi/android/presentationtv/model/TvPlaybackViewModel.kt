@@ -8,10 +8,8 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
-import org.alsi.android.domain.tv.interactor.guide.TvCurrentPlaybackUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvNewPlaybackUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvNextPlayback
-import org.alsi.android.domain.tv.interactor.guide.TvNextPlaybackUseCase
+import org.alsi.android.domain.tv.interactor.guide.*
+import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.presentation.state.Resource
@@ -22,6 +20,8 @@ class TvPlaybackViewModel @Inject constructor(
         private val currentPlaybackUseCase: TvCurrentPlaybackUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val nextPlaybackUseCase: TvNextPlaybackUseCase,
+        private val switchToLivePlaybackUseCase: TvSwitchToLivePlaybackUseCase,
+        private val switchToArchivePlaybackUseCase: TvSwitchToArchivePlaybackUseCase,
         private val getSettingsUseCase: StreamingSettingsUseCase
 
 ) : ViewModel() {
@@ -65,18 +65,28 @@ class TvPlaybackViewModel @Inject constructor(
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
     }
 
-    /**
-     * TODO Switch to a live on early completion of a live record (archive)
-     */
     fun onPlayCompleted(fallback: () -> Unit) {
         nextPlaybackUseCase.execute(ContinueToNextPlaybackSubscriber(fallback),
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
+    }
+
+    fun switchToLivePlayback(playback: TvPlayback) {
+        liveData.postValue(Resource.loading())
+        switchToLivePlaybackUseCase.execute(NewPlaybackSubscriber(),
+                TvSwitchToLivePlaybackUseCase.Params(playback))
+    }
+
+    fun switchToArchivePlayback(playback: TvPlayback) {
+        liveData.postValue(Resource.loading())
+        switchToArchivePlaybackUseCase.execute(NewPlaybackSubscriber(),
+                TvSwitchToArchivePlaybackUseCase.Params(playback))
     }
 
     fun dispose() {
         currentPlaybackUseCase.dispose()
         newPlaybackUseCase.dispose()
         nextPlaybackUseCase.dispose()
+        switchToLivePlaybackUseCase.dispose()
         getSettingsUseCase.dispose()
     }
 
