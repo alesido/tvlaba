@@ -324,11 +324,18 @@ public class PlaybackTransportControlGlue<T extends PlayerAdapter>
 
     final SeekUiClient mPlaybackSeekUiClient = new SeekUiClient();
 
+    public void setSeekController(PlaybackSeekUi.Controller controller) {
+        mPlaybackSeekUiClient.controller = controller;
+    }
+
     class SeekUiClient extends PlaybackSeekUi.Client {
+
         boolean mPausedBeforeSeek;
         long mPositionBeforeSeek;
         long mLastUserPosition;
         boolean mIsSeek;
+
+        PlaybackSeekUi.Controller controller;
 
         @Override
         public PlaybackSeekDataProvider getPlaybackSeekDataProvider() {
@@ -342,6 +349,9 @@ public class PlaybackTransportControlGlue<T extends PlayerAdapter>
 
         @Override
         public void onSeekStarted() {
+            if (controller != null && controller.consumeSeekStart())
+                return;
+
             mIsSeek = true;
             mPausedBeforeSeek = !isPlaying();
             mPlayerAdapter.setProgressUpdatingEnabled(true);
@@ -355,6 +365,9 @@ public class PlaybackTransportControlGlue<T extends PlayerAdapter>
 
         @Override
         public void onSeekPositionChanged(long pos) {
+            if (controller != null && controller.consumeSeekPositionChange(pos))
+                return;
+
             if (mSeekProvider == null) {
                 mPlayerAdapter.seekTo(pos);
             } else {
@@ -367,6 +380,9 @@ public class PlaybackTransportControlGlue<T extends PlayerAdapter>
 
         @Override
         public void onSeekFinished(boolean cancelled) {
+            if (controller != null && controller.consumeSeekFinished(cancelled, mLastUserPosition))
+                return;
+
             if (!cancelled) {
                 if (mLastUserPosition >= 0) {
                     seekTo(mLastUserPosition);

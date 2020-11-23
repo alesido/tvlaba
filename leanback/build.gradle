@@ -21,6 +21,8 @@ dependencies {
     api ("androidx.recyclerview:recyclerview:1.2.0-alpha06")
     api("androidx.appcompat:appcompat:1.2.0")
 
+    api("com.google.android.exoplayer:exoplayer:2.11.8")
+
 //    androidTestImplementation(ANDROIDX_TEST_EXT_JUNIT)
 //    androidTestImplementation(ANDROIDX_TEST_CORE)
 //    androidTestImplementation(ANDROIDX_TEST_RUNNER)

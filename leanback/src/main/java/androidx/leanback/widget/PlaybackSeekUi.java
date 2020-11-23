@@ -76,6 +76,15 @@ public interface PlaybackSeekUi {
         }
     }
 
+    interface Controller {
+
+        boolean consumeSeekStart();
+
+        boolean consumeSeekPositionChange(long pos);
+
+        boolean consumeSeekFinished(boolean cancelled, long pos);
+    }
+
     /**
      * Interface to be implemented by UI widget to support PlaybackSeekUi.
      */

@@ -76,6 +76,9 @@ configurations.all {
             }
         }
     }
+    resolutionStrategy.dependencySubstitution {
+        substitute module("androidx.leanback:leanback") with project(":leanback") // because "using customized copy of the leanback library"
+    }
 }
 
 
