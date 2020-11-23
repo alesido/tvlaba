@@ -50,8 +50,8 @@
 
     <ImageView
         android:id="@+id/tvProgramPlaybackDetailsDispositionLive"
-        android:layout_width="@dimen/ic_disposition_size"
-        android:layout_height="@dimen/ic_disposition_size"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         app:layout_constraintTop_toTopOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
         app:layout_constraintBottom_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,10 +69,11 @@
         app:layout_constraintTop_toTopOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
         app:layout_constraintBottom_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="14dp"
         android:src="@drawable/shape_circle_gradient_record"
         tools:ignore="ContentDescription"
         android:visibility="gone"
+        tools:visibility="visible"
         />
 
     <ImageView

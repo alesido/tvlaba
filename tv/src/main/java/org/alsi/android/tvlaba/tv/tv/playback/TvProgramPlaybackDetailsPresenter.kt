@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import kotlinx.android.synthetic.main.tv_program_playback_details.view.*
+import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition.*
 import org.alsi.android.tvlaba.R
@@ -47,7 +48,8 @@ class TvProgramPlaybackDetailsPresenter(val context: Context) : Presenter() {
                 tvProgramPlaybackDetailsDispositionLive.visibility =
                         if (it.disposition == LIVE) VISIBLE else GONE
                 tvProgramPlaybackDetailsDispositionRecord.visibility =
-                        if (it.disposition == RECORD) VISIBLE else GONE
+                        if (it.disposition == RECORD
+                                || it.stream?.kind == VideoStreamKind.RECORD) VISIBLE else GONE
                 tvProgramPlaybackDetailsDispositionFuture.visibility =
                         if (it.disposition == FUTURE) VISIBLE else GONE
             }
