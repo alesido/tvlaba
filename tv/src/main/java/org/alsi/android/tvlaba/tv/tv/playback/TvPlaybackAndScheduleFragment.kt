@@ -9,6 +9,9 @@ import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.Player.STATE_ENDED
+import com.google.android.exoplayer2.Player.STATE_IDLE
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -103,7 +106,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
             // add playback state listeners
             addPlayerCallback(object : PlaybackGlue.PlayerCallback() {
 
-                /**
+
                 override fun onPreparedStateChanged(glue: PlaybackGlue?) {
                     super.onPreparedStateChanged(glue)
 
@@ -116,8 +119,30 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
                     // See LeanbackPlayerAdapter#maybeNotifyPreparedStateChanged and use general
                     // player events subscription.
+
+//                    if (! isPrepared && isEarlyCompletion()) {
+//                        Timber.d("@onPreparedStateChanged onEarlyCompletion")
+//                        onEarlyCompletion()
+//                    }
                 }
-                */
+
+                override fun onPlayStateChanged(glue: PlaybackGlue?) {
+                    super.onPlayStateChanged(glue)
+                    val playerStateName = when(player.playbackState) {
+                        STATE_IDLE -> "IDLE"
+                        Player.STATE_BUFFERING -> "BUFFERING"
+                        Player.STATE_READY -> "READY"
+                        STATE_ENDED -> "ENDED"
+                        else -> "UNKNOWN"
+                    }
+                    Timber.d("@onPlayStateChanged %s", playerStateName)
+
+//                    if ((player.playbackState == STATE_ENDED || player.playbackState == STATE_IDLE)
+//                            && isEarlyCompletion()) {
+//                        Timber.d("@onPlayStateChanged onEarlyCompletion")
+//                        onEarlyCompletion()
+//                    }
+                }
 
                 override fun onPlayCompleted(glue: PlaybackGlue?) {
                     super.onPlayCompleted(glue)
@@ -128,6 +153,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                             navController.popBackStack(it, true)
                         }
                     }
+                }
+
+                private fun isEarlyCompletion(): Boolean {
+                    return !isDetached && !isRemoving
+                            && player.duration < playback?.time?.durationMillis?:0 - 1000L
                 }
             })
 
@@ -254,7 +284,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         }
     }
 
-    // region Aspect Ratio
+    // region Payer Callbacks
+
     override fun onVideoSizeChanged(width: Int, height: Int) {
         super.onVideoSizeChanged(width, height)
         videoLayoutCalculator = VideoLayoutCalculator(requireContext(), width, height)
@@ -269,6 +300,14 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         p.height = t.height
         surfaceView.layoutParams = p
     }
+
+
+    override fun onError(errorCode: Int, errorMessage: CharSequence?) {
+        super.onError(errorCode, errorMessage)
+    }
+
+    // endregion
+    // region Footer Data
 
     private fun handleFooterDataChange(resource: Resource<TvPlaybackFooterLiveData>) {
         when (resource.status) {
