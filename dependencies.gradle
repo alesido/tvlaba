@@ -9,8 +9,11 @@ ext {
     //Layouts
     constraintLayoutVersion = '2.0.4'
 
+    //JetPack
+    nav_version = "2.3.0"
+
     //Kotlin
-    kotlinVersion = '1.4.10'
+    kotlinVersion = '1.4.30'
     kotlinReflectVersion = '1.4.10'
 
     //Annotations
@@ -20,7 +23,7 @@ ext {
 
     //Dependency Injection
     javaxInjectVersion = '1'
-    daggerVersion = '2.23.2'
+    daggerVersion = '2.23.1'
 
     //RX
     rxJavaVersion = '2.2.10'
@@ -36,9 +39,15 @@ ext {
     okHttpVersion = '4.0.1'
     retrofitVersion = '2.6.0'
     glideVersion = '4.11.0'
-    leanbackVersion = '1.1.0-alpha05'
-    exoplayerVersion = '2.11.8'
-    exoplayerLeanbackExtensionVersion = '2.11.8'
+
+    //Leanback
+    leanbackVersion = '1.1.0-beta01'
+    leanback = "androidx.leanback:leanback:${leanbackVersion}"
+    leanbackPreferences = "androidx.leanback:leanback-preference:${leanbackVersion}"
+
+    //Exoplayer
+    exoplayerVersion = '2.13.2'
+    exoplayerLeanbackExtensionVersion = '2.13.2'
     timberVersion = '4.7.1'
     objectboxVersion = '2.7.0'
 
@@ -203,7 +212,7 @@ ext {
             androidRules:       "androidx.test:rules:${androidSupportRulesVersion}",
     ]
 
-    uiDependencies = [
+    uiImplementation = [
             androidSupportV4:   'androidx.legacy:legacy-support-v4:1.0.0',
             androidSupportV13:  'androidx.legacy:legacy-support-v13:1.0.0',
             appCompatV7:        'androidx.appcompat:appcompat:1.0.0',
@@ -223,28 +232,38 @@ ext {
             rxAndroid:          "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
 
             javaxInject:        "javax.inject:javax.inject:${javaxInjectVersion}",
-            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger:             "com.google.dagger:dagger:${daggerVersion}",
             daggerSupport:      "com.google.dagger:dagger-android-support:${daggerVersion}",
-            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
 
             javaxAnnotation:    "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             androidAnnotations: 'androidx.annotation:annotation:1.0.0',
-            glassfishAnnotation: "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
+
+            //leanback:           "androidx.leanback:leanback:${leanbackVersion}",
+            leanback:            project(':leanback'),
+            leanbackPreferences: "androidx.leanback:leanback-preference:${leanbackVersion}",
+
+            exoplayer:          "com.google.android.exoplayer:exoplayer:${exoplayerVersion}",
+            exoplayerLeanback:  "com.google.android.exoplayer:extension-leanback:${exoplayerLeanbackExtensionVersion}",
+
+            navFragment:       "androidx.navigation:navigation-fragment-ktx:$nav_version",
+            navKtx:            "androidx.navigation:navigation-ui-ktx:$nav_version",
 
             glide:              "com.github.bumptech.glide:glide:${glideVersion}",
             timber:             "com.jakewharton.timber:timber:${timberVersion}",
 
-            leanback:           "androidx.leanback:leanback:${leanbackVersion}",
-            leanbackPreferences: "androidx.leanback:leanback-preference:${leanbackVersion}",
-            exoplayer:          "com.google.android.exoplayer:exoplayer:${exoplayerVersion}",
-            exoplayerLeanback:  "com.google.android.exoplayer:extension-leanback:${exoplayerLeanbackExtensionVersion}",
-
-            roomRuntime:        "androidx.room:room-runtime:${archCompVersion}",
-            roomCompiler:       "androidx.room:room-compiler:${archCompVersion}",
-            roomRxJava:         'androidx.room:room-rxjava2:2.0.0',
+//            roomRuntime:        "androidx.room:room-runtime:${archCompVersion}",
+//            roomCompiler:       "androidx.room:room-compiler:${archCompVersion}",
+//            roomRxJava:         'androidx.room:room-rxjava2:2.0.0',
     ]
 
+    uiKapt = [
+            daggerCompiler:     "com.google.dagger:dagger-compiler:${daggerVersion}",
+            daggerProcessor:    "com.google.dagger:dagger-android-processor:${daggerVersion}",
+    ]
+
+    uiCompileOnly = [
+            glassfishAnnotation: "org.glassfish:javax.annotation:${glassfishAnnotationVersion}",
+    ]
 
     uiTestDependencies = [
             junit:              "junit:junit:${jUnitVersion}",

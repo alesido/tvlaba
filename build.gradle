@@ -3,7 +3,7 @@
 apply from: 'dependencies.gradle'
 
 buildscript {
-    ext.kotlinVersion = '1.4.10'
+    ext.kotlinVersion = '1.4.30'
     ext.objectboxVersion = '2.7.0'
     ext.nav_version = "2.3.0"
 
@@ -12,7 +12,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"

@@ -2,11 +2,19 @@
 // Laboratory project for Set Top Box & Smart TV, i.e. big screen
 //
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs"
+//apply plugin: 'com.android.application'
+//apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-kapt'
+//apply plugin: "androidx.navigation.safeargs"
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id "androidx.navigation.safeargs"
+}
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")
@@ -83,72 +91,76 @@ configurations.all {
 
 
 dependencies {
-    def uiDependencies = rootProject.ext.uiDependencies
+    def ext = rootProject.ext
+
     def uiTestDependencies = rootProject.ext.uiTestDependencies
 
     implementation project(':Domain')
     implementation project(':PresentationTv')
     implementation project(':MoiDom')
 
-    //Support & Compatibility
-    implementation uiDependencies.androidSupportV4
-    implementation uiDependencies.androidSupportV13
-    implementation uiDependencies.appCompatV7
+    implementation ext.uiImplementation.values()
+    compileOnly ext.uiCompileOnly.values()
+    kapt ext.uiKapt.values()
 
-    //Design & Layout
-    implementation uiDependencies.supportRecyclerView
-    implementation uiDependencies.supportDesign
-    implementation uiDependencies.constraintLayout
 
-    //Architecture Components
-    implementation uiDependencies.archRuntime
-    implementation uiDependencies.archExtensions
-    kapt uiDependencies.archCompiler
-
-    //Kotlin
-    implementation uiDependencies.kotlin
-    //implementation 'androidx.core:core-ktx:1.3.1'
-
-    //RX
-    implementation uiDependencies.rxKotlin
-    implementation uiDependencies.rxAndroid
-    implementation domainDependencies.rxJava
-
-    //Dependency Injection
-    implementation uiDependencies.javaxInject
-    implementation uiDependencies.dagger
-    implementation uiDependencies.daggerSupport
-    kapt uiDependencies.daggerCompiler
-    kapt uiDependencies.daggerProcessor
-
-    //Annotations
-    implementation uiDependencies.javaxAnnotation
-    implementation uiDependencies.androidAnnotations
-    compileOnly uiDependencies.glassfishAnnotation
-
-    //Leanback
-    //implementation uiDependencies.leanback
-    implementation project(':leanback') // customized extract of the library from androidx
-    implementation uiDependencies.leanbackPreferences
-
-    //ExoPlayer
-    implementation uiDependencies.exoplayer
-    implementation uiDependencies.exoplayerLeanback
-
-    //Navigation of Jet Pack
-    def nav_version = '2.3.1'
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-    //Miscellaneous
-    implementation uiDependencies.timber
-    implementation uiDependencies.glide
+//    //Support & Compatibility
+//    implementation uiDependencies.androidSupportV4
+//    implementation uiDependencies.androidSupportV13
+//    implementation uiDependencies.appCompatV7
+//
+//    //Design & Layout
+//    implementation uiDependencies.supportRecyclerView
+//    implementation uiDependencies.supportDesign
+//    implementation uiDependencies.constraintLayout
+//
+//    //Architecture Components
+//    implementation uiDependencies.archRuntime
+//    implementation uiDependencies.archExtensions
+//    kapt uiDependencies.archCompiler
+//
+//    //Kotlin
+//    implementation uiDependencies.kotlin
+//    //implementation 'androidx.core:core-ktx:1.3.1'
+//
+//    //RX
+//    implementation uiDependencies.rxKotlin
+//    implementation uiDependencies.rxAndroid
+//    implementation domainDependencies.rxJava
+//
+//    //Dependency Injection
+//    implementation uiDependencies.javaxInject
+//    implementation uiDependencies.dagger
+//    implementation uiDependencies.daggerSupport
+//    kapt uiDependencies.daggerCompiler
+//    kapt uiDependencies.daggerProcessor
+//
+//    //Annotations
+//    implementation uiDependencies.javaxAnnotation
+//    implementation uiDependencies.androidAnnotations
+//    compileOnly uiDependencies.glassfishAnnotation
+//
+//    //Leanback
+//    implementation project(':leanback') // customized extract of the library from androidx
+//    implementation uiDependencies.leanbackPreferences
+//
+//    //ExoPlayer
+//    implementation uiDependencies.exoplayer
+//    implementation uiDependencies.exoplayerLeanback
+//
+//    //Navigation of Jet Pack
+//    implementation uiDependencies.navFragment
+//    implementation uiDependencies.navKtx
+//
+//    //Miscellaneous
+//    implementation uiDependencies.timber
+//    implementation uiDependencies.glide
 
     //Unit Testing
     testImplementation uiTestDependencies.kotlinJUnit
 
-    kaptTest uiDependencies.daggerCompiler
-    kaptAndroidTest uiDependencies.daggerCompiler
+    kaptTest uiKapt.daggerCompiler
+    kaptAndroidTest uiKapt.daggerCompiler
 
     //Instrumentation Testing
     androidTestImplementation uiTestDependencies.junit
