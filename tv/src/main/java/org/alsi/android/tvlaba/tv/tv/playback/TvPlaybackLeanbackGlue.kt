@@ -376,6 +376,7 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 // endregion
 
 fun beep() {
-    ToneGenerator(AudioManager.STREAM_MUSIC, 100)
-            .startTone(ToneGenerator.TONE_CDMA_PIP, 150)
+// FIXME This arises an exception while running on an emulator!
+//    ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+//            .startTone(ToneGenerator.TONE_CDMA_PIP, 150)
 }
