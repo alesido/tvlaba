@@ -9,6 +9,7 @@
 .DS_Store
 /build
 /leanback/build/
+/leanback/build
 /buildSrc/build/
 /captures
 .externalNativeBuild
