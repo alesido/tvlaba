@@ -48,21 +48,26 @@ ext {
     //Exoplayer
     exoplayerVersion = '2.13.2'
     exoplayerLeanbackExtensionVersion = '2.13.2'
+
     timberVersion = '4.7.1'
     objectboxVersion = '2.7.0'
 
     //Testing
     jUnitVersion = '4.13-beta-3'
     assertJVersion = '3.12.2'
+
+    mockitoVersion = '3.5.13'
     mockitoKotlinVersion = '2.2.0'
+    mockitoAndroidVersion = '3.5.13'
+    dexmakerMockitoversion = '2.2.0'
+
     espressoVersion = '3.0.2'
     robolectricVersion = '4.3'
-    mockitoVersion = '3.5.13'
-    mockitoAndroidVersion = '3.5.13'
+
+    runnerVersion = '1.0.2'
     androidSupportRunnerVersion = '1.1.0'
     androidSupportRulesVersion = '1.0.0'
-    dexmakerMockitoversion = '2.2.0'
-    runnerVersion = '1.0.2'
+
     okHttpMockWebServerVersion = '4.0.1'
 
     domainDependencies = [
