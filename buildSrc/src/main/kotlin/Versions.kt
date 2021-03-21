@@ -71,4 +71,6 @@ object Versions  {
     const val okHttpMockWebServer = "4.0.1"
 
     const val archTesting = "2.1.0"
+
+    const val timberUnitRule = "1.0.1"
 }

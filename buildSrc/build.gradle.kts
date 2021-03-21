@@ -14,7 +14,8 @@ buildscript {
 
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
-        //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.4")
+        //classpath("io.objectbox:objectbox-gradle-plugin:2.7.0") // cannot use this for precompiled scripts
+        //classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.4") // cannot use this for precompiled scripts
     }
 }
 

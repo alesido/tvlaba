@@ -81,6 +81,9 @@ object Libs {
     const val jUnit = "junit:junit:${Versions.jUnit}"
     const val assertJ = "org.assertj:assertj-core:${Versions.assertJ}"
 
+    // Testing: Kotlin
+    const val kotlinJUnit= "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"
+
     // Testing: Mockito
     const val mockitoKotlin =  "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlin}"
     const val mockitoAndroid = "org.mockito:mockito-android:${Versions.mockitoAndroid}"
@@ -103,4 +106,6 @@ object Libs {
     const val okHttpMockWebServer = "com.squareup.okhttp3:mockwebserver:${Versions.okHttpMockWebServer}"
 
     const val archTesting = "androidx.arch.core:core-testing:${Versions.archTesting}"
+
+    const val timberUnitRule = "net.lachlanmckee:timber-junit-rule:${Versions.timberUnitRule}"
 }
