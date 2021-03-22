@@ -93,6 +93,9 @@ object Libs {
     const val espressoIntents = "androidx.test.espresso:espresso-intents:${Versions.espresso}"
     const val espressoContrib = "androidx.test.espresso:espresso-contrib:${Versions.espresso}"
 
+    // Testing: roboelectric
+    const val robolectric =  "org.robolectric:robolectric:${Versions.robolectric}"
+
     // Testing: Android Support
     const val androidSupportRunner = "androidx.test:runner:${Versions.androidSupportRunner}"
     const val androidSupportRules =  "androidx.test:rules:${Versions.androidSupportRules}"
