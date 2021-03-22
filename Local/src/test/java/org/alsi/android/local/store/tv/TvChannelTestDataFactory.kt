@@ -11,7 +11,9 @@ object TvChannelTestDataFactory {
     fun categories(): List<TvChannelCategory> {
         val categories: MutableList<TvChannelCategory> = mutableListOf()
         for (i in 1..10) {
-            categories.add( TvChannelCategory(i.toLong(),
+            categories.add( TvChannelCategory(
+                    i.toLong(),
+                    i,
                     "TV Channel Category #$i",
                     TypedIconReference(IconType.REMOTE_RASTER,
                             "http://test.example.com/catcha$i.png")))
