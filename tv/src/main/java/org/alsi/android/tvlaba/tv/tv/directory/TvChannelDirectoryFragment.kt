@@ -86,10 +86,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        browseViewModel.getLiveDirectory().observe(this,
-                Observer<Resource<TvChannelDirectoryBrowseLiveData>> {
-                    if (it != null) handleCategoriesListDataState(it)
-                })
+        browseViewModel.getLiveDirectory().observe(this, {
+            if (it != null) handleCategoriesListDataState(it)
+        })
     }
 
     override fun onResume() {
@@ -195,9 +194,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
         data?.directory?: return
         for (i in 0 until adapter.size()) {
-            ((adapter[i] as ListRow).adapter as ArrayObjectAdapter).setItems(
-                    data.directory.index[data.directory.categories[i].id],
-                    tvCategoryChannelsDiff)
+            data.directory.index[data.directory.categories[i].id]?.let {
+                ((adapter[i] as ListRow).adapter as ArrayObjectAdapter)
+                    .setItems(it, tvCategoryChannelsDiff)
+            }
         }
     }
 
