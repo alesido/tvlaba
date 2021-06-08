@@ -45,7 +45,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         liveDirectory.postValue(Resource(ResourceState.LOADING, null, null))
         startSessionUseCase.execute(StartSessionSubscriber(),
                 StartSessionUseCase.Params(
-                        loginName = "51",
+                        loginName = "52",
                         loginPassword = "123"
                 ))
     }
