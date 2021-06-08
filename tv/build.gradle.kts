@@ -74,7 +74,7 @@ dependencies {
     implementation(Libs.exoplayer)
     implementation(Libs.exoplayerLeanback)
 
-    //
-    implementation(Libs.jetPackNavigationFragment)
-    implementation(Libs.jetPackNavigationKtx)
+    //Navigation
+    implementation(AndroidX.Navigation.fragment)
+    implementation(AndroidX.Navigation.uiKtx)
 }
