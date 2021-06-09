@@ -5,11 +5,13 @@ plugins {
     `kotlin-dsl-precompiled-script-plugins`
 }
 
+@Suppress("JcenterRepositoryObsolete")
 buildscript {
 
     repositories {
         google()
-        jcenter()
+        jcenter() // left read only forever
+        mavenCentral()
     }
 
     dependencies {
@@ -18,15 +20,16 @@ buildscript {
 }
 
 repositories {
-    jcenter()
     google()
+    jcenter() // left read only forever
+    mavenCentral()
 }
 
 dependencies {
 
-    implementation( "com.android.tools.build:gradle:4.1.3")
+    implementation("com.android.tools.build:gradle:4.2.1")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
-    implementation("com.android.tools.build:gradle-api:4.1.3")
+    implementation("com.android.tools.build:gradle-api:4.2.1")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.31")
     //implementation(kotlin("stdlib"))
