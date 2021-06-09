@@ -10,105 +10,106 @@ object Plugins {
 object Libs {
 
     // Kotlin
-    const val kotlin =        "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
-    const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinReflect}"
+    const val kotlin =        "org.jetbrains.kotlin:kotlin-stdlib:_"
+    const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:_"
 
     // Annotations
-    const val javaxAnnotation =     "javax.annotation:jsr250-api:${Versions.javaxAnnotation}"
-    const val androidAnnotations =  "androidx.annotation:annotation:${Versions.androidAnnotation}"
-    const val glassfishAnnotation = "org.glassfish:javax.annotation:${Versions.glassfishAnnotation}"
+    const val javaxAnnotation =     "javax.annotation:jsr250-api:_"
+    const val androidAnnotations =  "androidx.annotation:annotation:_"
+    const val glassfishAnnotation = "org.glassfish:javax.annotation:_"
 
     // Dependency Injection
-    const val javaxInject =     "javax.inject:javax.inject:${Versions.javaxInject}"
+    const val javaxInject =     "javax.inject:javax.inject:_"
+    // !!! Cannot use last dagger version: "Could not resolve androidx.activity:activity:1.2.2. Required by:  project :Domain > com.google.dagger:dagger-android-support:2.36
     const val dagger =          "com.google.dagger:dagger:${Versions.dagger}"
     const val daggerCompiler =  "com.google.dagger:dagger-compiler:${Versions.dagger}"
     const val daggerProcessor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
     const val daggerSupport =   "com.google.dagger:dagger-android-support:${Versions.dagger}"
 
     // RX
-    const val rxJava =    "io.reactivex.rxjava2:rxjava:${Versions.rxJava}"
-    const val rxKotlin =  "io.reactivex.rxjava2:rxkotlin:${Versions.rxKotlin}"
-    const val rxAndroid = "io.reactivex.rxjava2:rxandroid:${Versions.rxAndroid}"
+    const val rxJava =    "io.reactivex.rxjava2:rxjava:_"
+    const val rxKotlin =  "io.reactivex.rxjava2:rxkotlin:_"
+    const val rxAndroid = "io.reactivex.rxjava2:rxandroid:_"
 
     // General
-    const val jodaTime = "joda-time:joda-time:${Versions.jodaTime}"
-    const val gson =     "com.google.code.gson:gson:${Versions.gson}"
-    const val glide =    "com.github.bumptech.glide:glide:${Versions.glide}"
-    const val timber =   "com.jakewharton.timber:timber:${Versions.timber}"
+    const val jodaTime = "joda-time:joda-time:_"
+    const val gson =     "com.google.code.gson:gson:_"
+    const val glide =    "com.github.bumptech.glide:glide:_"
+    const val timber =   "com.jakewharton.timber:timber:_"
 
     // okHttp
-    const val okHttp =       "com.squareup.okhttp3:okhttp:${Versions.okHttp}"
-    const val okHttpLogger = "com.squareup.okhttp3:logging-interceptor:${Versions.okHttp}"
+    const val okHttp =       "com.squareup.okhttp3:okhttp:_"
+    const val okHttpLogger = "com.squareup.okhttp3:logging-interceptor:_"
 
     // Retrofit
-    const val retrofit =        "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
-    const val retrofitGson =    "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
-    const val retrofitScalars = "com.squareup.retrofit2:converter-scalars:${Versions.retrofit}"
-    const val retrofitAdapter = "com.squareup.retrofit2:adapter-rxjava2:${Versions.retrofit}"
+    const val retrofit =        "com.squareup.retrofit2:retrofit:_"
+    const val retrofitGson =    "com.squareup.retrofit2:converter-gson:_"
+    const val retrofitScalars = "com.squareup.retrofit2:converter-scalars:_"
+    const val retrofitAdapter = "com.squareup.retrofit2:adapter-rxjava2:_"
 
     // ObjectBox
-    const val objectboxAndroid = "io.objectbox:objectbox-android:${Versions.objectbox}"
-    const val objectboxKotlin =  "io.objectbox:objectbox-kotlin:${Versions.objectbox}"
+    const val objectboxAndroid = "io.objectbox:objectbox-android:_"
+    const val objectboxKotlin =  "io.objectbox:objectbox-kotlin:_"
 
-    // Leanback
+    // Leanback: used custom copy which requires certain leanback-preference version
     const val leanback =            "androidx.leanback:leanback:${Versions.leanback}"
     const val leanbackPreferences = "androidx.leanback:leanback-preference:${Versions.leanback}"
 
     // Exoplayer
-    const val exoplayer =         "com.google.android.exoplayer:exoplayer:${Versions.exoplayer}"
-    const val exoplayerLeanback = "com.google.android.exoplayer:extension-leanback:${Versions.exoplayerLeanback}"
+    const val exoplayer =         "com.google.android.exoplayer:exoplayer:_"
+    const val exoplayerLeanback = "com.google.android.exoplayer:extension-leanback:_"
 
     // Layout & Design
-    const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
-    const val recyclerView =     "androidx.recyclerview:recyclerview:${Versions.recyclerView}"
-    const val materialDesign =   "com.google.android.material:material:${Versions.materialDesign}"
+    const val constraintLayout = "androidx.constraintlayout:constraintlayout:_"
+    const val recyclerView =     "androidx.recyclerview:recyclerview:_"
+    const val materialDesign =   "com.google.android.material:material:_"
 
     // JetPack Navigation
-    const val jetPackNavigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.jetPackNavigation}"
-    const val jetPackNavigationKtx =      "androidx.navigation:navigation-ui-ktx:${Versions.jetPackNavigation}"
+    const val jetPackNavigationFragment = "androidx.navigation:navigation-fragment-ktx:_"
+    const val jetPackNavigationKtx =      "androidx.navigation:navigation-ui-ktx:_"
 
     // Architectural Components
-    const val archCompiler =   "androidx.lifecycle:lifecycle-compiler:${Versions.archComponents}"
-    const val archRuntime =    "androidx.lifecycle:lifecycle-runtime:${Versions.archComponents}"
-    const val archExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.archExtensions}"
+    const val archCompiler =   "androidx.lifecycle:lifecycle-compiler:_"
+    const val archRuntime =    "androidx.lifecycle:lifecycle-runtime:_"
+    const val archExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.archExtensions}" // refreshVersions uses group version here by mistake
 
     // Compatibility
-    const val appCompatV7 = "androidx.appcompat:appcompat:${Versions.appCompatV7}"
+    const val appCompatV7 = "androidx.appcompat:appcompat:_"
 
     // -- Testing
 
     // Testing: Java
-    const val jUnit = "junit:junit:${Versions.jUnit}"
-    const val assertJ = "org.assertj:assertj-core:${Versions.assertJ}"
+    const val jUnit = "junit:junit:_"
+    const val assertJ = "org.assertj:assertj-core:_"
 
     // Testing: Kotlin
-    const val kotlinJUnit= "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"
+    const val kotlinJUnit= "org.jetbrains.kotlin:kotlin-test-junit:_"
 
     // Testing: Mockito
-    const val mockitoKotlin =  "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlin}"
-    const val mockitoAndroid = "org.mockito:mockito-android:${Versions.mockitoAndroid}"
+    const val mockitoKotlin =  "com.nhaarman.mockitokotlin2:mockito-kotlin:_"
+    const val mockitoAndroid = "org.mockito:mockito-android:_"
 
     // Testing: Espresso
-    const val espressoCore =    "androidx.test.espresso:espresso-core:${Versions.espresso}"
-    const val espressoIntents = "androidx.test.espresso:espresso-intents:${Versions.espresso}"
-    const val espressoContrib = "androidx.test.espresso:espresso-contrib:${Versions.espresso}"
+    const val espressoCore =    "androidx.test.espresso:espresso-core:_"
+    const val espressoIntents = "androidx.test.espresso:espresso-intents:_"
+    const val espressoContrib = "androidx.test.espresso:espresso-contrib:_"
 
     // Testing: roboelectric
-    const val robolectric =  "org.robolectric:robolectric:${Versions.robolectric}"
+    const val robolectric =  "org.robolectric:robolectric:_"
 
     // Testing: Android Support
-    const val androidSupportRunner = "androidx.test:runner:${Versions.androidSupportRunner}"
-    const val androidSupportRules =  "androidx.test:rules:${Versions.androidSupportRules}"
+    const val androidSupportRunner = "androidx.test:runner:_"
+    const val androidSupportRules =  "androidx.test:rules:_"
 
     // Testing: ObjectBox
-    const val objectboxTestLinux =   "io.objectbox:objectbox-linux:${Versions.objectbox}"
-    const val objectboxTestMacOS =   "io.objectbox:objectbox-macos:${Versions.objectbox}"
-    const val objectboxTestWindows = "io.objectbox:objectbox-windows:${Versions.objectbox}"
+    const val objectboxTestLinux =   "io.objectbox:objectbox-linux:_"
+    const val objectboxTestMacOS =   "io.objectbox:objectbox-macos:_"
+    const val objectboxTestWindows = "io.objectbox:objectbox-windows:_"
 
     // Testing: Mock Web Server
-    const val okHttpMockWebServer = "com.squareup.okhttp3:mockwebserver:${Versions.okHttpMockWebServer}"
+    const val okHttpMockWebServer = "com.squareup.okhttp3:mockwebserver:_"
 
-    const val archTesting = "androidx.arch.core:core-testing:${Versions.archTesting}"
+    const val archTesting = "androidx.arch.core:core-testing:_"
 
-    const val timberUnitRule = "net.lachlanmckee:timber-junit-rule:${Versions.timberUnitRule}"
+    const val timberUnitRule = "net.lachlanmckee:timber-junit-rule:_"
 }

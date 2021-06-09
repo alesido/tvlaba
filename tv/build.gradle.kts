@@ -74,7 +74,10 @@ dependencies {
     implementation(Libs.exoplayer)
     implementation(Libs.exoplayerLeanback)
 
-    //Navigation
-    implementation(AndroidX.Navigation.fragment)
-    implementation(AndroidX.Navigation.uiKtx)
+    //Navigation: refreshVersion plugin used here, i.e. supported package references
+//    implementation(AndroidX.Navigation.fragment)
+//    implementation(AndroidX.Navigation.uiKtx)
+    implementation(AndroidX.navigation.fragment)
+    implementation(AndroidX.navigation.uiKtx)
+
 }
