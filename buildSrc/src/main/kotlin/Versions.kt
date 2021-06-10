@@ -1,7 +1,6 @@
 object Versions  {
 
     //Android
-    const val androidBuildTools = "29.0.2"
     const val androidMinSdk = 21
     const val androidTargetSdk = 29
     const val androidCompileSdk = 29
