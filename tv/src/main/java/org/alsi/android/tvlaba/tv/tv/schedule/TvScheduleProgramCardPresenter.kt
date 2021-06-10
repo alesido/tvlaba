@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.tv_program_card_view.view.*
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 
 class TvScheduleProgramCardPresenter: Presenter() {
@@ -21,9 +20,9 @@ class TvScheduleProgramCardPresenter: Presenter() {
             cardView.programTimeText = time?.shortString?:""
             cardView.programTitleText = title?:"" + "\n" + (description?:"")
         })
-        val context = cardView.tvProgramCardPoster.context
+        val context = cardView.vb.tvProgramCardPoster.context
         Glide.with(context).load(tvProgram.mainPosterUri.toString())
-                .into(cardView.tvProgramCardPoster)
+                .into(cardView.vb.tvProgramCardPoster)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) = Unit

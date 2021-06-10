@@ -2,6 +2,9 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
@@ -19,7 +22,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.lb_playback_fragment.*
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
@@ -29,6 +31,7 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
 import org.alsi.android.presentationtv.model.*
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.LbPlaybackFragmentBinding
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
@@ -55,6 +58,10 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     private lateinit var trackLanguageSelection: ExoplayerTrackLanguageSelection
 
     private lateinit var errorMessaging: TvErrorMessaging
+
+    private var _vb: LbPlaybackFragmentBinding? = null
+    private val vb get() = _vb!!
+
 
     private var videoLayoutCalculator: VideoLayoutCalculator? = null
 
@@ -85,6 +92,15 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         setupPlayer()
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _vb = LbPlaybackFragmentBinding.inflate(inflater, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     private fun setupPlayer() {
 
         player = SimpleExoPlayer.Builder(requireContext())
@@ -96,7 +112,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
         player.textComponent?.addTextOutput{
             Timber.d("Subtitle: %s", if (it.size > 0) it[0].text else "N/A")
-            leanbackSubtitles?.setCues(it)
+            vb.leanbackSubtitles.setCues(it)
         }
 
         glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
