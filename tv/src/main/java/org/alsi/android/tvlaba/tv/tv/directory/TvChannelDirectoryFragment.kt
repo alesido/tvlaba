@@ -7,8 +7,7 @@ import android.view.ViewTreeObserver
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +52,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
 
-        browseViewModel = ViewModelProviders.of(this, viewModelFactory)
+        browseViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvChannelDirectoryBrowseViewModel::class.java)
 
         adapter = ArrayObjectAdapter(topListRowPresenter)

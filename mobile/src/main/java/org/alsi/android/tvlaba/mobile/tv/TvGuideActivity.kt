@@ -5,7 +5,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.tv_guide_activity.*
@@ -28,14 +28,12 @@ class TvGuideActivity : AppCompatActivity() {
     @Inject lateinit var adapter: TvCategoriesAdapter
     @Inject lateinit var mapper: TvCategoryItemViewMapper
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tv_guide_activity)
 
-        browseViewModel = ViewModelProviders.of(this, viewModelFactory)
+        browseViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvCategoryBrowseViewModel::class.java)
 
         categoriesListView.layoutManager = LinearLayoutManager(this)
@@ -44,9 +42,8 @@ class TvGuideActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        browseViewModel.getLiveData().observe(this,
-                Observer<Resource<List<TvCategoryItemViewModel>>> {
-                    if (it != null) handleCategoriesListDataState(it)
+        browseViewModel.getLiveData().observe(this, {
+            if (it != null) handleCategoriesListDataState(it)
         })
     }
 
@@ -74,7 +71,6 @@ class TvGuideActivity : AppCompatActivity() {
                 errorMessageView.text = getString(R.string.error_message_unexpected_condition)
             }
         }
-
     }
 
     private fun setupScreenForSuccess(categories: List<TvCategoryItem>?) {
@@ -83,5 +79,4 @@ class TvGuideActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
          }
     }
-
 }

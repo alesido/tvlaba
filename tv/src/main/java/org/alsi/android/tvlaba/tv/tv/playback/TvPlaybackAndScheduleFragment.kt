@@ -7,7 +7,7 @@ import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.STATE_ENDED
@@ -64,15 +64,15 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        playbackViewModel = ViewModelProviders.of(this, viewModelFactory)
+        playbackViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvPlaybackViewModel::class.java)
 
-        preferencesViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        preferencesViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(TvPlaybackPreferencesViewModel::class.java)
         trackLanguageSelection = ExoplayerTrackLanguageSelection(requireContext())
         preferencesViewModel.trackLanguageSelection = trackLanguageSelection
 
-        footerViewModel = ViewModelProviders.of(this, viewModelFactory)
+        footerViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvPlaybackFooterViewModel::class.java)
 
         errorMessaging = TvErrorMessaging(requireContext())

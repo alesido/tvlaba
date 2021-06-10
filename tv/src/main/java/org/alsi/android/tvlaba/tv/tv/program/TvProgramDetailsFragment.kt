@@ -8,8 +8,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -61,7 +60,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     // region View Model setup
 
     private fun setupViewModel() {
-        detailsViewModel = ViewModelProviders.of(this, viewModelFactory)
+        detailsViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvProgramDetailsViewModel::class.java)
     }
 

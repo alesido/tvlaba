@@ -2,7 +2,7 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.os.Bundle
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import dagger.android.support.AndroidSupportInjection
@@ -27,7 +27,7 @@ class TvPlaybackPreferencesFragment : LeanbackPreferenceFragmentCompat() {
 
     override fun onCreatePreferences(arguments: Bundle?, s: String?) {
 
-        preferencesViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        preferencesViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(TvPlaybackPreferencesViewModel::class.java)
 
         // inflate preferences screens
