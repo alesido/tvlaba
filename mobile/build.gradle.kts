@@ -31,6 +31,10 @@ dependencies {
     implementation(project(":PresentationTv"))
     implementation(project(":MoiDom"))
 
+    //Activity Jetpack
+    implementation(AndroidX.activity)
+    implementation(AndroidX.activityKtx)
+
     //ExoPlayer
     implementation(Libs.exoplayer)
     implementation(Libs.exoplayerLeanback)
