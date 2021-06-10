@@ -64,6 +64,8 @@ object Libs {
     const val recyclerView =     "androidx.recyclerview:recyclerview:_"
     const val materialDesign =   "com.google.android.material:material:_"
 
+    const val viewBinding = "androidx.databinding:viewbinding:_"
+
     // JetPack Navigation
     const val jetPackNavigationFragment = "androidx.navigation:navigation-fragment-ktx:_"
     const val jetPackNavigationKtx =      "androidx.navigation:navigation-ui-ktx:_"

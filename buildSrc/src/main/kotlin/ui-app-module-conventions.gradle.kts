@@ -29,6 +29,9 @@ android {
     androidExtensions {
         isExperimental = true
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 configurations.all {
@@ -59,6 +62,8 @@ dependencies {
     implementation(Libs.recyclerView)
     implementation(Libs.materialDesign)
     implementation(Libs.constraintLayout)
+
+    implementation(Libs.viewBinding)
 
     // Architectural Components
     archComponents()
