@@ -50,7 +50,7 @@ class RetrofitFileDataSource(fileSourceUrlString: String) {
             outputStream = FileOutputStream(outputFile)
 
             while (true) {
-                val read = inputStream!!.read(fileReader)
+                val read = inputStream.read(fileReader)
                 if (read == -1) {
                     break
                 }

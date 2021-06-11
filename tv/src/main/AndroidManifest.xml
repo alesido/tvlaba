@@ -15,7 +15,6 @@
 
     <!-- Declare permissions used by our app -->
     <uses-permission android:name="${applicationId}.MEDIA" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Declare non-touchscreen capabilities -->
     <uses-feature

@@ -3,7 +3,8 @@ plugins {
 }
 
 dependencies {
-    compile(project(":Domain"))
+
+    implementation(project(":Domain"))
 
     // Kotlin
     implementation(Libs.kotlin)
@@ -17,7 +18,7 @@ dependencies {
     implementation(Libs.rxJava)
 
     // Miscellaneous
-    compile(Libs.jodaTime)
+    implementation(Libs.jodaTime)
 
     testImplementation(Libs.jUnit)
     testImplementation(Libs.mockitoKotlin)
