@@ -1,6 +1,5 @@
 package org.alsi.android.tvlaba.tv.tv.playback
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.STATE_ENDED
 import com.google.android.exoplayer2.Player.STATE_IDLE
@@ -19,8 +19,8 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.common.net.HttpHeaders.USER_AGENT
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
@@ -86,8 +86,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
         setOnItemCardClickedListener()
 
-        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
-                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
+//        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
+//                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
+        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSource.Factory().setUserAgent(USER_AGENT))
 
         setupPlayer()
     }
@@ -254,7 +255,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 // progress view immediately)
                 if (player.isPlaying) {
                     Timber.d("@startPlayback stop & reset %s", playback.title)
-                    player.stop(true)
+                    player.stop()
                 }
 
                 // update program data display
@@ -262,10 +263,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
                 // create media source
                 val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(playback.stream!!.uri.toString()))
+                        .createMediaSource(MediaItem.fromUri(playback.stream!!.uri.toString()))
 
                 // start preparation
-                player.prepare(hlsMediaSource, true, true)
+                //player.prepare(hlsMediaSource, true, true) - deprecated
+                player.setMediaSource(hlsMediaSource, true)
 
                 // request initial position (tested, works)
                 player.seekTo(playback.position)
