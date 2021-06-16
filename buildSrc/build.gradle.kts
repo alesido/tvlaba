@@ -3,9 +3,9 @@ import org.gradle.kotlin.dsl.`kotlin-dsl`
 plugins {
     `kotlin-dsl`
     `kotlin-dsl-precompiled-script-plugins`
+    //id("org.gradle.kotlin.kotlin-dsl.precompiled-script-plugins") version "2.1.4"
 }
 
-@Suppress("JcenterRepositoryObsolete")
 buildscript {
 
     repositories {
@@ -26,11 +26,7 @@ repositories {
 }
 
 dependencies {
-
     implementation("com.android.tools.build:gradle:4.2.1")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
     implementation("com.android.tools.build:gradle-api:4.2.1")
-
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.31")
-    //implementation(kotlin("stdlib"))
 }
