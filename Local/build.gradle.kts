@@ -1,3 +1,4 @@
+
 plugins {
     id("android-library-module")
     id("io.objectbox")
@@ -14,12 +15,12 @@ dependencies {
     implementation(Libs.rxAndroid)
     implementation(Libs.kotlinReflect)
 
-    //implementation localDependencies.appCompatV7
-
     dependencyInjection()
 
     implementation(Libs.objectboxAndroid)
     implementation(Libs.objectboxKotlin)
+
+    implementation(Libs.jodaTime)
 
     testImplementation(Libs.jUnit)
     testImplementation(Libs.kotlinJUnit)

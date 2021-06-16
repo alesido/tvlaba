@@ -75,9 +75,8 @@ dependencies {
     implementation(Libs.exoplayerLeanback)
 
     //Navigation: refreshVersion plugin used here, i.e. supported package references
-//    implementation(AndroidX.Navigation.fragment)
-//    implementation(AndroidX.Navigation.uiKtx)
     implementation(AndroidX.navigation.fragment)
     implementation(AndroidX.navigation.uiKtx)
 
+    implementation(Libs.jodaTime)
 }

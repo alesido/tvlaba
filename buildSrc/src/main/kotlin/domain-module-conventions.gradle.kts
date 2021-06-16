@@ -19,7 +19,7 @@ dependencies {
     implementation(Libs.rxJava)
 
     // Miscellaneous
-    compile(Libs.jodaTime)
+    implementation(Libs.jodaTime)
 
     testImplementation(Libs.jUnit)
     testImplementation(Libs.mockitoKotlin)
