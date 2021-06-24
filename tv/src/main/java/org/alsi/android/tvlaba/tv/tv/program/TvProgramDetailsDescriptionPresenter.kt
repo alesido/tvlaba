@@ -4,18 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.leanback.widget.Presenter
-import kotlinx.android.synthetic.main.tv_program_details_description_extended.view.*
 import org.alsi.android.domain.tv.model.guide.CreditRole
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.presentationtv.model.TvProgramDetailsLiveData
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.TvProgramDetailsDescriptionExtendedBinding
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -23,11 +22,49 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
 
     @SuppressLint("InflateParams")
     override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder {
-        val view: View = LayoutInflater.from(context)
-                .inflate(R.layout.tv_program_details_description_extended, null)
-        return ViewHolder(view)
+        val itemBinding = TvProgramDetailsDescriptionExtendedBinding.inflate(LayoutInflater.from(context))
+        return MyViewHolder(itemBinding)
     }
 
+    override fun onBindViewHolder(holder: ViewHolder, item: Any) = (holder as MyViewHolder).bind(item as TvProgramDetailsLiveData)
+
+    inner class MyViewHolder(private val ib: TvProgramDetailsDescriptionExtendedBinding) : ViewHolder(ib.root) {
+        fun bind(item: TvProgramDetailsLiveData) {
+            val program = item.cursor!!.program
+            val channel = item.cursor!!.channel
+            program.let {
+
+                // title
+                ib.tvProgramDetailsPrimaryTitle.text = it?.title
+
+                // subtitle: time & channel's title
+                val programTime = it?.time?.shortString?:""
+                val channelReferences = if (channel != null) context.getString(
+                    R.string.statement_program_on_channel, channel.title) else ""
+                ib.tvProgramDetailsSecondaryTitle.text = String.format("%s %s", programTime, channelReferences)
+
+                // body
+                ib.tvProgramDetailsDescriptionText.text = buildBodyText(program)
+
+                // timeline
+                ib.tvProgramDetailsProgress.progress = it?.time?.progress?:0
+
+                // age limitation
+                if (it?.ageGroup != null && it.ageGroup!! > 0)
+                    ib.tvProgramDetailsBannerAgeLimitation.text = String.format("%s+", it.ageGroup)
+                else ib.tvProgramDetailsBannerAgeLimitation.visibility = GONE
+
+                // rates
+                bindRate(ib.tvProgramDetailsBannerKinopoiskRate,
+                    ib.tvProgramDetailsBannerKinopoiskLogo, it?.rateKinopoisk)
+                bindRate(ib.tvProgramDetailsBannerImdbRate,
+                    ib.tvProgramDetailsBannerImdbLogo, it?.rateKinopoisk)
+            }
+        }
+    }
+
+
+    /*
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val data = item as TvProgramDetailsLiveData
@@ -65,6 +102,8 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
         }
     }
 
+    */
+
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) {
         // not applicable here
     }
@@ -95,7 +134,7 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
         return parts.joinToString(", ")
     }
 
-    private fun buildProductionAndAwardsShort(program: TvProgramIssue): String? {
+    private fun buildProductionAndAwardsShort(program: TvProgramIssue): String {
         val parts: MutableList<String?> = ArrayList()
         with(program) {
             production?.let { if (it.isNotEmpty()) parts.add(

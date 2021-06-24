@@ -48,14 +48,14 @@ class LoginApiIntegrationTest {
         val data = observer.values()[0]
         data?.let {
             assertNotNull(data.sid)
-            assert(data.account.login == "20172017")
+            assert(data.account.login == "52")
             assertNotNull(data.account.packet_expire)
             assertNotNull(data.services)
         }?: fail()
     }
 
     private fun subscribeLoginRequest(observer: TestObserver<LoginResponse>) {
-        moiDomService.login("20172017", "201717",
+        moiDomService.login("52", "123",
                 "all", "android", 999, 25,
                 "N/A", "00:A0:C9:14:C8", "H906", "man")
                 .subscribe(observer)

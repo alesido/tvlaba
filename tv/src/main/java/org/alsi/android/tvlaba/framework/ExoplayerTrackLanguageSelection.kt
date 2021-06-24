@@ -43,7 +43,7 @@ class ExoplayerTrackLanguageSelection(context: Context): LanguageTrackSelection(
                     val language = group.getFormat(trackIndex).language?: continue
                     // skip not handled formats
                     if (mappedTrackInfo.getTrackSupport(rendererIndex, groupIndex, trackIndex)
-                            != RendererCapabilities.FORMAT_HANDLED) continue
+                            != C.FORMAT_HANDLED) continue
                     // track name
                     val trackName = trackNameProvider.getTrackName(group.getFormat(trackIndex))
                     // add language option with track reference
@@ -107,7 +107,7 @@ class ExoplayerTrackLanguageSelection(context: Context): LanguageTrackSelection(
     private fun selectTrackOverride(trackReference: TrackReference) {
         val mappedTrackInfo = trackSelector.currentMappedTrackInfo
         val trackGroupArray = mappedTrackInfo?.getTrackGroups(trackReference.rendererIndex)?: return
-        trackGroupArray[trackReference.groupIndex]?: return
+       // trackGroupArray[trackReference.groupIndex]?: return // not sure for what this is
 
         val parametersBuilder = trackSelector.buildUponParameters()
         preferredLanguage?.let {

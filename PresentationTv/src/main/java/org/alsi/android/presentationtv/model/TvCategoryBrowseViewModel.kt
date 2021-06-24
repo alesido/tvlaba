@@ -45,8 +45,8 @@ open class TvCategoryBrowseViewModel @Inject constructor(
         liveData.postValue(Resource(ResourceState.LOADING, null, null))
         startSessionUseCase.execute(StartSessionSubscriber(),
                 StartSessionUseCase.Params(
-                        loginName = "20172017",
-                        loginPassword = "201717"
+                        loginName = "40",
+                        loginPassword = "1"
                 ))
     }
 

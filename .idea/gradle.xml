@@ -22,14 +22,15 @@
             <option value="$PROJECT_DIR$/PresentationTv" />
             <option value="$PROJECT_DIR$/PresentationVod" />
             <option value="$PROJECT_DIR$/Remote" />
+            <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/leanback" />
             <option value="$PROJECT_DIR$/mobile" />
             <option value="$PROJECT_DIR$/tv" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
+    <option name="offlineMode" value="true" />
   </component>
 </project>

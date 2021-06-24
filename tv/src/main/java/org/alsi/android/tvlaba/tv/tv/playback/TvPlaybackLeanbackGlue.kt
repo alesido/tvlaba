@@ -2,8 +2,6 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.AudioManager
-import android.media.ToneGenerator
 import android.view.KeyEvent
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
@@ -376,7 +374,7 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 // endregion
 
 fun beep() {
-// FIXME This arises an exception while running on an emulator!
+// This drops "java.lang.RuntimeException: Init failed" at org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackLeanbackGlueKt.beep(TvPlaybackLeanbackGlue.kt:379)
 //    ToneGenerator(AudioManager.STREAM_MUSIC, 100)
 //            .startTone(ToneGenerator.TONE_CDMA_PIP, 150)
 }

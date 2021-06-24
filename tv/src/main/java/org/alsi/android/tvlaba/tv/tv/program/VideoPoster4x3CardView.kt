@@ -2,9 +2,9 @@ package org.alsi.android.tvlaba.tv.tv.program
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.VideoPosterCard4x3Binding
 
 class VideoPoster4x3CardView @JvmOverloads constructor(
         context: Context,
@@ -12,8 +12,9 @@ class VideoPoster4x3CardView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ): ConstraintLayout(context, attrs, defStyleAttr) {
 
+    val vb = VideoPosterCard4x3Binding.inflate(LayoutInflater.from(context))
+
     init {
-        View.inflate(context, R.layout.video_poster_card_4x3, this)
         isFocusable = true
         isFocusableInTouchMode = true
     }

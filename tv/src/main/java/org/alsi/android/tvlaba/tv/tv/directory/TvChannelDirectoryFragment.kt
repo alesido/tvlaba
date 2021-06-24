@@ -7,8 +7,7 @@ import android.view.ViewTreeObserver
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +52,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
 
-        browseViewModel = ViewModelProviders.of(this, viewModelFactory)
+        browseViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvChannelDirectoryBrowseViewModel::class.java)
 
         adapter = ArrayObjectAdapter(topListRowPresenter)
@@ -86,10 +85,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     override fun onStart() {
         super.onStart()
-        browseViewModel.getLiveDirectory().observe(this,
-                Observer<Resource<TvChannelDirectoryBrowseLiveData>> {
-                    if (it != null) handleCategoriesListDataState(it)
-                })
+        browseViewModel.getLiveDirectory().observe(this, {
+            if (it != null) handleCategoriesListDataState(it)
+        })
     }
 
     override fun onResume() {
@@ -195,9 +193,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
         data?.directory?: return
         for (i in 0 until adapter.size()) {
-            ((adapter[i] as ListRow).adapter as ArrayObjectAdapter).setItems(
-                    data.directory.index[data.directory.categories[i].id],
-                    tvCategoryChannelsDiff)
+            data.directory.index[data.directory.categories[i].id]?.let {
+                ((adapter[i] as ListRow).adapter as ArrayObjectAdapter)
+                    .setItems(it, tvCategoryChannelsDiff)
+            }
         }
     }
 

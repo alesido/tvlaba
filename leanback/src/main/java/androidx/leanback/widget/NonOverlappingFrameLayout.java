@@ -17,7 +17,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-class NonOverlappingFrameLayout extends FrameLayout {
+public class NonOverlappingFrameLayout extends FrameLayout {
 
     public NonOverlappingFrameLayout(Context context) {
         this(context, null);

@@ -1,14 +1,17 @@
 package org.alsi.android.tvlaba.tv.tv.playback
 
-import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.STATE_ENDED
 import com.google.android.exoplayer2.Player.STATE_IDLE
@@ -16,10 +19,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.common.net.HttpHeaders.USER_AGENT
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.lb_playback_fragment.*
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
@@ -29,6 +31,7 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
 import org.alsi.android.presentationtv.model.*
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.LbPlaybackFragmentBinding
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
@@ -56,6 +59,10 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
     private lateinit var errorMessaging: TvErrorMessaging
 
+    private var _vb: LbPlaybackFragmentBinding? = null
+    private val vb get() = _vb!!
+
+
     private var videoLayoutCalculator: VideoLayoutCalculator? = null
 
     // region Android Life Cycle
@@ -64,25 +71,35 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        playbackViewModel = ViewModelProviders.of(this, viewModelFactory)
+        playbackViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvPlaybackViewModel::class.java)
 
-        preferencesViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        preferencesViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(TvPlaybackPreferencesViewModel::class.java)
         trackLanguageSelection = ExoplayerTrackLanguageSelection(requireContext())
         preferencesViewModel.trackLanguageSelection = trackLanguageSelection
 
-        footerViewModel = ViewModelProviders.of(this, viewModelFactory)
+        footerViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvPlaybackFooterViewModel::class.java)
 
         errorMessaging = TvErrorMessaging(requireContext())
 
         setOnItemCardClickedListener()
 
-        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
-                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
+//        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
+//                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
+        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSource.Factory().setUserAgent(USER_AGENT))
 
         setupPlayer()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _vb = LbPlaybackFragmentBinding.inflate(inflater, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun setupPlayer() {
@@ -96,7 +113,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
         player.textComponent?.addTextOutput{
             Timber.d("Subtitle: %s", if (it.size > 0) it[0].text else "N/A")
-            leanbackSubtitles?.setCues(it)
+            vb.leanbackSubtitles.setCues(it)
         }
 
         glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
@@ -238,7 +255,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                 // progress view immediately)
                 if (player.isPlaying) {
                     Timber.d("@startPlayback stop & reset %s", playback.title)
-                    player.stop(true)
+                    player.stop()
                 }
 
                 // update program data display
@@ -246,13 +263,16 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
                 // create media source
                 val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(Uri.parse(playback.stream!!.uri.toString()))
+                        .createMediaSource(MediaItem.fromUri(playback.stream!!.uri.toString()))
 
                 // start preparation
-                player.prepare(hlsMediaSource, true, true)
+                //player.prepare(hlsMediaSource, true, true) - deprecated
+                player.setMediaSource(hlsMediaSource, true)
 
                 // request initial position (tested, works)
                 player.seekTo(playback.position)
+
+                player.prepare()
             }
             else {
                 Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()

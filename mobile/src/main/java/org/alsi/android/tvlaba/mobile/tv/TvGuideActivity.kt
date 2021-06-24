@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.tv_guide_activity.*
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvCategoryBrowseViewModel
 import org.alsi.android.presentationtv.model.TvCategoryItemViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.TvGuideActivityBinding
 import org.alsi.android.tvlaba.mobile.injection.ViewModelFactory
 import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoriesAdapter
 import org.alsi.android.tvlaba.mobile.tv.categories.TvCategoryItem
@@ -28,53 +27,52 @@ class TvGuideActivity : AppCompatActivity() {
     @Inject lateinit var adapter: TvCategoriesAdapter
     @Inject lateinit var mapper: TvCategoryItemViewMapper
 
-
+    private lateinit var vb: TvGuideActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.tv_guide_activity)
+        vb = TvGuideActivityBinding.inflate(layoutInflater)
+        setContentView(vb.root)
 
-        browseViewModel = ViewModelProviders.of(this, viewModelFactory)
+        browseViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvCategoryBrowseViewModel::class.java)
 
-        categoriesListView.layoutManager = LinearLayoutManager(this)
-        categoriesListView.adapter = adapter
+        vb.categoriesListView.layoutManager = LinearLayoutManager(this)
+        vb.categoriesListView.adapter = adapter
     }
 
     override fun onStart() {
         super.onStart()
-        browseViewModel.getLiveData().observe(this,
-                Observer<Resource<List<TvCategoryItemViewModel>>> {
-                    if (it != null) handleCategoriesListDataState(it)
+        browseViewModel.getLiveData().observe(this, {
+            if (it != null) handleCategoriesListDataState(it)
         })
     }
 
     private fun handleCategoriesListDataState(resource: Resource<List<TvCategoryItemViewModel>>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
-                progress.visibility = GONE
-                errorMessageView.visibility = GONE
-                categoriesListView.visibility = VISIBLE
+                vb.progress.visibility = GONE
+                vb.errorMessageView.visibility = GONE
+                vb.categoriesListView.visibility = VISIBLE
                 setupScreenForSuccess(resource.data?.map { mapper.mapToView(it) })
             }
             ResourceState.LOADING -> {
-                progress.visibility = VISIBLE
-                errorMessageView.visibility = GONE
-                categoriesListView.visibility = GONE
+                vb.progress.visibility = VISIBLE
+                vb.errorMessageView.visibility = GONE
+                vb.categoriesListView.visibility = GONE
             }
             ResourceState.ERROR -> {
-                progress.visibility = GONE
-                errorMessageView.visibility = VISIBLE
-                errorMessageView.text = resource.message
+                vb.progress.visibility = GONE
+                vb.errorMessageView.visibility = VISIBLE
+                vb.errorMessageView.text = resource.message
             }
             else -> {
-                progress.visibility = GONE
-                errorMessageView.visibility = VISIBLE
-                errorMessageView.text = getString(R.string.error_message_unexpected_condition)
+                vb.progress.visibility = GONE
+                vb.errorMessageView.visibility = VISIBLE
+                vb.errorMessageView.text = getString(R.string.error_message_unexpected_condition)
             }
         }
-
     }
 
     private fun setupScreenForSuccess(categories: List<TvCategoryItem>?) {
@@ -83,5 +81,4 @@ class TvGuideActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
          }
     }
-
 }

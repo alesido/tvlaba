@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.tv_program_credits_card_view.view.*
 import org.alsi.android.domain.tv.interactor.guide.TvProgramCreditPicture
 import org.alsi.android.tvlaba.R
 
@@ -28,7 +27,7 @@ class TvProgramCreditsCardPresenter: Presenter() {
             cardView.tvProgramCreditsCardText = titleText?: ""
         })
         Glide.with(context).load(creditPicture.uri.toString())
-                .into(cardView.tvProgramCreditsCardPoster)
+                .into(cardView.vb.tvProgramCreditsCardPoster)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) = Unit

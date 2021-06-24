@@ -112,7 +112,7 @@ public class PlaybackTransportControlGlue<T extends PlayerAdapter>
     static final Handler sHandler = new UpdatePlaybackStateHandler();
 
     final WeakReference<PlaybackBaseControlGlue> mGlueWeakReference =
-            new WeakReference<PlaybackBaseControlGlue>(this);
+            new WeakReference<>(this);
 
     /**
      * Constructor for the glue.
