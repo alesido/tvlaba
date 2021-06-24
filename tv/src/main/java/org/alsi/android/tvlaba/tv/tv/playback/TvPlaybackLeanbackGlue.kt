@@ -2,8 +2,6 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.AudioManager
-import android.media.ToneGenerator
 import android.view.KeyEvent
 import android.view.View
 import androidx.core.content.res.ResourcesCompat

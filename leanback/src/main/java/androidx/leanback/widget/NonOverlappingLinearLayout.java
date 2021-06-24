@@ -70,7 +70,7 @@ public class NonOverlappingLinearLayout extends LinearLayout {
                     mSortedAvailableViews.remove(mSortedAvailableViews.size() - 1);
                 }
                 while (mSortedAvailableViews.size() < getChildCount()) {
-                    mSortedAvailableViews.add(new ArrayList<View>());
+                    mSortedAvailableViews.add(new ArrayList<>());
                 }
             }
             super.onLayout(changed, l, t, r, b);
