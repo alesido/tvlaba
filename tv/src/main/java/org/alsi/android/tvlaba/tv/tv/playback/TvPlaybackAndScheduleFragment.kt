@@ -271,6 +271,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
 
                 // request initial position (tested, works)
                 player.seekTo(playback.position)
+
+                player.prepare()
             }
             else {
                 Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()
