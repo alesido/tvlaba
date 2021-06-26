@@ -150,8 +150,8 @@ public class DetailsSupportFragmentBackgroundController {
     public void enableParallax() {
         int offset = mParallaxDrawableMaxOffset;
         if (offset == 0) {
-            offset = mFragment.getContext().getResources()
-                    .getDimensionPixelSize(R.dimen.lb_details_cover_drawable_parallax_movement);
+            offset = mFragment.getContext() != null? mFragment.getContext().getResources()
+                    .getDimensionPixelSize(R.dimen.lb_details_cover_drawable_parallax_movement): 0;
         }
         Drawable coverDrawable = new FitWidthBitmapDrawable();
         ColorDrawable colorDrawable = new ColorDrawable();
@@ -227,7 +227,7 @@ public class DetailsSupportFragmentBackgroundController {
      * @see #onCreateVideoSupportFragment()
      * @see #onCreateGlueHost().
      */
-    @SuppressWarnings("ReferenceEquality")
+    @SuppressWarnings({"ReferenceEquality", "JavadocReference"})
     public void setupVideoPlayback(@NonNull PlaybackGlue playbackGlue) {
         if (mPlaybackGlue == playbackGlue) {
             return;
@@ -429,6 +429,7 @@ public class DetailsSupportFragmentBackgroundController {
         Drawable drawable = getCoverDrawable();
         if (drawable instanceof FitWidthBitmapDrawable) {
             ((FitWidthBitmapDrawable) drawable).setBitmap(mCoverBitmap);
+            drawable.invalidateSelf();
         }
     }
 

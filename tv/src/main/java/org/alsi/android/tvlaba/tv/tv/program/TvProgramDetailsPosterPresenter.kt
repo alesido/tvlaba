@@ -11,6 +11,12 @@ import androidx.leanback.widget.Presenter
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.databinding.TvProgramDetailsSlideShowBinding
 
+/**
+ * Alternative, not used version of {@link TvProgramDetailsPosterSimplePresenter}.
+ * Created, probably, to test DataBinding here and with intent to make logo
+ * slide show.
+ **/
+
 class TvProgramDetailsPosterPresenter: DetailsOverviewLogoPresenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {

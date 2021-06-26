@@ -1,12 +1,14 @@
 package org.alsi.android.tvlaba.tv.tv.program
 
 import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
+import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -32,6 +34,8 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var detailsViewModel: TvProgramDetailsViewModel
+
+    private val bgController = DetailsSupportFragmentBackgroundController(this)
 
     private val scheduleRowPosition get() = adapter.size() - 2
 
@@ -224,10 +228,21 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         val detailsRow = DetailsOverviewRow(data)
 
         val options: RequestOptions = RequestOptions()
-                .error(R.drawable.default_background).dontAnimate()
+                .error(R.drawable.default_background)//.dontAnimate()
+
         program.let {
             Glide.with(this).asBitmap().load(it.mainPosterUri.toString()).apply(options)
                     .into(PosterBitmapTarget(detailsRow))
+
+            bgController.coverBitmap = null
+            it.allPosterUris?.let { uris ->
+                if (uris.isNotEmpty()) {
+                    bgController.enableParallax()
+                    val uri = if (uris.size > 2) uris[1] else uris[0]
+                    Glide.with(this).asBitmap().load(uri.toString()).apply(options)
+                        .into(BackgroundBitmapTarget())
+                }
+            }
         }
 
         setupActions(program, detailsRow)
@@ -246,6 +261,28 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         if (initialRow == RowKind.SCHEDULE) {
             setSelectedPosition(scheduleRowPosition)
             initialRow = RowKind.DETAILS
+        }
+    }
+
+    inner class PosterBitmapTarget(private val row : DetailsOverviewRow): CustomTarget<Bitmap>() {
+        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap?>?) {
+
+            row.setImageBitmap(requireActivity(), resource)
+            startEntranceTransition()
+        }
+        override fun onLoadCleared(placeholder: Drawable?) {
+            // if the bitmap referenced somewhere else too other than this imageView
+            // clear it here as you can no longer have the bitmap
+        }
+    }
+
+    inner class BackgroundBitmapTarget(): CustomTarget<Bitmap>() {
+        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap?>?) {
+            bgController.coverBitmap = resource
+        }
+        override fun onLoadCleared(placeholder: Drawable?) {
+            // if the bitmap referenced somewhere else too other than this imageView
+            // clear it here as you can no longer have the bitmap
         }
     }
 
@@ -288,18 +325,8 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 //
 //    }
 
-    inner class PosterBitmapTarget(private val row : DetailsOverviewRow): CustomTarget<Bitmap>() {
-        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap?>?) {
-            row.setImageBitmap(requireActivity(), resource)
-            startEntranceTransition()
-        }
-        override fun onLoadCleared(placeholder: Drawable?) {
-            // if the bitmap referenced somewhere else too other than this imageView
-            // clear it here as you can no longer have the bitmap
-        }
-    }
-
     // endregion
+    // region Constants
 
     private enum class RowKind {
         DETAILS, FOOTAGE, CREDITS, SCHEDULE, WEEKDAYS, NAVIGATION
@@ -312,5 +339,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         const val ACTION_PLAY_RECORD = 2
         const val ACTION_SHOW_SCHEDULE = 3
     }
+
+    // endregion
 }
 
