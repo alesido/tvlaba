@@ -157,15 +157,18 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private fun handleCategoriesListDataState(resource: Resource<TvChannelDirectoryBrowseLiveData>) {
         when (resource.status) {
+            ResourceState.LOADING -> {
+                progressBarManager.show()
+            }
             ResourceState.SUCCESS -> {
+                progressBarManager.hide()
                 if (adapter.size() == 0)
                     loadDirectoryView(resource.data)
                 else
                     updateDirectoryView(resource.data)
             }
-            ResourceState.LOADING -> {
-            }
             ResourceState.ERROR -> {
+                progressBarManager.hide()
             }
             else -> {
             }
