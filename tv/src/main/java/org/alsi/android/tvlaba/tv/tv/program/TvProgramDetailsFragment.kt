@@ -1,7 +1,6 @@
 package org.alsi.android.tvlaba.tv.tv.program
 
 import android.graphics.Bitmap
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -266,13 +265,11 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
     inner class PosterBitmapTarget(private val row : DetailsOverviewRow): CustomTarget<Bitmap>() {
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap?>?) {
-
             row.setImageBitmap(requireActivity(), resource)
             startEntranceTransition()
         }
         override fun onLoadCleared(placeholder: Drawable?) {
-            // if the bitmap referenced somewhere else too other than this imageView
-            // clear it here as you can no longer have the bitmap
+            // if the bitmap referenced somewhere else too other than this imageView, clear it here as you can no longer have the bitmap
         }
     }
 
@@ -281,8 +278,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
             bgController.coverBitmap = resource
         }
         override fun onLoadCleared(placeholder: Drawable?) {
-            // if the bitmap referenced somewhere else too other than this imageView
-            // clear it here as you can no longer have the bitmap
+            // if the bitmap referenced somewhere else too other than this imageView, clear it here as you can no longer have the bitmap
         }
     }
 
