@@ -18,6 +18,8 @@ import com.google.android.exoplayer2.Player.STATE_IDLE
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.text.Cue
+import com.google.android.exoplayer2.text.TextOutput
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.common.net.HttpHeaders.USER_AGENT
@@ -40,8 +42,8 @@ import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
 import timber.log.Timber
 import javax.inject.Inject
 
-class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
-
+class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, TextOutput
+{
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
@@ -111,10 +113,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         val playerAdapter = LeanbackPlayerAdapter(
                 requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
 
-        player.textComponent?.addTextOutput{
-            Timber.d("Subtitle: %s", if (it.size > 0) it[0].text else "N/A")
-            vb.leanbackSubtitles.setCues(it)
-        }
+        player.addListener(this)
 
         glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
 
@@ -172,10 +171,10 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
                     }
                 }
 
-                private fun isEarlyCompletion(): Boolean {
-                    return !isDetached && !isRemoving
-                            && player.duration < playback?.time?.durationMillis?:0 - 1000L
-                }
+//                private fun isEarlyCompletion(): Boolean {
+//                    return !isDetached && !isRemoving
+//                            && player.duration < playback?.time?.durationMillis?:0 - 1000L
+//                }
             })
 
             // add navigation to the video preferences fragment
@@ -196,14 +195,14 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
         //setPlaybackSeekUiClient(TvPlaybackSeekUiClient())
     }
 
-    class TvPlaybackSeekUiClient: PlaybackSeekUi.Client() {
-
-        override fun isSeekEnabled() = true
-
-        override fun onSeekStarted() {
-            Timber.d("@onSeekStarted")
-        }
-    }
+//    class TvPlaybackSeekUiClient: PlaybackSeekUi.Client() {
+//
+//        override fun isSeekEnabled() = true
+//
+//        override fun onSeekStarted() {
+//            Timber.d("@onSeekStarted")
+//        }
+//    }
 
     override fun onStart() {
         super.onStart()
@@ -307,7 +306,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     // region Payer Callbacks
 
     override fun onVideoSizeChanged(width: Int, height: Int) {
-        super.onVideoSizeChanged(width, height)
+        super<VideoSupportFragment>.onVideoSizeChanged(width, height)
         videoLayoutCalculator = VideoLayoutCalculator(requireContext(), width, height)
     }
 
@@ -421,6 +420,14 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
     }
 
     // endregion
+    // Subtitles
+
+    override fun onCues(cues: MutableList<Cue>) {
+        vb.leanbackSubtitles.setCues(cues)
+    }
+
+    // endregion
+    // Companion Object
 
     companion object {
         /**
@@ -428,4 +435,6 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment() {
          **/
         private const val PLAYER_UPDATE_INTERVAL_MILLIS: Int = 100
     }
+
+    // endregion
 }
