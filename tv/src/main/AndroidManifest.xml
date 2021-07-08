@@ -40,7 +40,7 @@
         android:fullBackupContent="@xml/backup_descriptor"
         >
         <activity
-            android:name=".tv.tv.TvGuideActivity"
+            android:name=".tv.AppActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             >

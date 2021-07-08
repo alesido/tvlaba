@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.tvlaba.tv.UiThread
-import org.alsi.android.tvlaba.tv.tv.TvGuideActivity
+import org.alsi.android.tvlaba.tv.AppActivity
 
 @Module
 abstract class UiModule {
@@ -14,5 +14,5 @@ abstract class UiModule {
     abstract fun bindPostExecutionThread(uiThread: UiThread): PostExecutionThread
 
     @ContributesAndroidInjector
-    abstract fun contributesTvGuideActivity(): TvGuideActivity
+    abstract fun contributesTvGuideActivity(): AppActivity
 }

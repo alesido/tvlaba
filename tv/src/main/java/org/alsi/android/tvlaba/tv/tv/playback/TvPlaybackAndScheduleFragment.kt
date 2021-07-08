@@ -88,8 +88,6 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
         setOnItemCardClickedListener()
 
-//        dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSourceFactory(
-//                Util.getUserAgent(requireContext(), getString(R.string.app_name))))
         dataSourceFactory = DefaultDataSourceFactory(requireContext(), DefaultHttpDataSource.Factory().setUserAgent(USER_AGENT))
 
         setupPlayer()
@@ -101,6 +99,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         savedInstanceState: Bundle?
     ): View? {
         _vb = LbPlaybackFragmentBinding.inflate(inflater, container, false)
+        // FIXME Should return vb.root, otherwise the view binding won't work. Though, there is an exception while doing correctly.
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -162,7 +161,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
                 override fun onPlayCompleted(glue: PlaybackGlue?) {
                     super.onPlayCompleted(glue)
+
+                    // Test of navigation to outside from nested graph, both methods work
+                    // view?.findNavController()?.navigate(R.id.actionGlobalLogOut)
+
                     playbackViewModel.onPlayCompleted {
+                        // not sure, but does "view?.findNavController()?" get the same navigation controller?
                         val navController = Navigation.findNavController(
                                 requireActivity(), R.id.tvGuideNavigationHost)
                         navController.currentDestination?.id?.let {

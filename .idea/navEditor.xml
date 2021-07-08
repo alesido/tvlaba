@@ -8,6 +8,32 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="landingFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="54" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_landingFragment_to_loginFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_landingFragment_to_tvGuide">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="tvChannelDirectoryFragment">
                     <value>
                       <LayoutPositions>
@@ -60,6 +86,195 @@
                             <entry key="action_tvProgramDetailsFragment_to_tvPlaybackAndScheduleFragment">
                               <value>
                                 <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </LayoutPositions>
+          </value>
+        </entry>
+        <entry key="root_navigation_graph.xml">
+          <value>
+            <LayoutPositions>
+              <option name="myPositions">
+                <map>
+                  <entry key="actionGlobalLogOut">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="actionGlobalLoggedIn">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="actionGlobalSessionInvalid">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="appRouterFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="-688" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_appRouterFragment_to_loginFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_appRouterFragment_to_tvGuideNavigation">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="appStartFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-40" />
+                            <option name="y" value="-261" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_appStartFragment_to_loginFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_appStartFragment_to_tvGuide">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="loginFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="432" />
+                            <option name="y" value="-687" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="tvGuideNavigation">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="304" />
+                            <option name="y" value="-153" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="tvChannelDirectoryFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="46" />
+                                      <option name="y" value="82" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_tvChannelDirectoryFragment_to_tvProgramDetailsFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="tvGuideStartFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="-184" />
+                                      <option name="y" value="82" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_tvGuideStartFragment_to_tvChannelDirectoryFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="tvPlaybackAndScheduleFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="511" />
+                                      <option name="y" value="84" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="deepLink">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="tvProgramDetailsFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="282" />
+                                      <option name="y" value="84" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_tvProgramDetailsFragment_to_tvPlaybackAndScheduleFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
                               </value>
                             </entry>
                           </map>
