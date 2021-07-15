@@ -32,16 +32,18 @@ open class RemoteSessionRepositoryMoidom @Inject constructor(
             val record = box.query {
                 equal(RemoteSessionEntityMoidom_.loginName, it.account.loginName)
             }.findFirst()
+
             if (null == record) {
                 box.put(RemoteSessionEntityMoidom(
                         0L,
                         it.account.loginName,
-                        it.data.sid,
+                        it.data?.sid ?: "",
                         System.currentTimeMillis()
                 ))
             }
             else {
-                record.sessionId = it.data.sid
+                // session ID updated by normal login or reused in case of "dry" login (resuming session)
+                record.sessionId = it.data?.sid ?: record.sessionId
                 record.loginTimestampMillis = System.currentTimeMillis()
                 box.put(record)
             }

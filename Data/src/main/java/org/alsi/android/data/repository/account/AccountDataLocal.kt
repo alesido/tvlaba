@@ -10,11 +10,12 @@ import org.alsi.android.domain.user.model.UserAccount
 interface AccountDataLocal
 {
     fun addAttachAccount(account: UserAccount)
+    fun attachAccountFor(loginName: String): UserAccount
 
     fun getLoginName(): Single<String>
     fun getPassword(): Single<String>
+    fun getPassword(loginName: String): Single<String>
 
     fun getSubscriptions(): Single<List<ServiceSubscription>>
-
     fun setSubscriptions(subscriptions: List<ServiceSubscription>): Completable
 }

@@ -49,6 +49,11 @@ class AccountServiceRemoteMoidom @Inject constructor(
                 }
     }
 
+    override fun onLoginResume(account: UserAccount): Single<UserAccount> {
+        loginSubject.onNext(LoginEvent(account, null))
+        return Single.just(account)
+    }
+
     override fun changeParentCode(currentCode: String, newCode: String): Completable {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

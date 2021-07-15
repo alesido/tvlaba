@@ -9,6 +9,7 @@ import org.alsi.android.domain.user.model.UserAccount
 interface AccountDataRemote
 {
     fun login(loginName: String, loginPassword: String): Single<UserAccount>
+    fun onLoginResume(account: UserAccount): Single<UserAccount>
 
     fun changeParentCode(currentCode: String, newCode: String): Completable
     fun setLanguage(languageCode: String): Completable

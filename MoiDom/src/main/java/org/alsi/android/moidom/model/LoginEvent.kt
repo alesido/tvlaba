@@ -4,5 +4,5 @@ import org.alsi.android.domain.user.model.UserAccount
 
 class LoginEvent(
         val account: UserAccount,
-        val data: LoginResponse
+        val data: LoginResponse?  // in case of "dry" login
 )
