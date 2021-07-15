@@ -1,6 +1,5 @@
 package org.alsi.android.local.store.tv
 
-import android.content.Context
 import android.text.format.DateUtils
 import io.objectbox.Box
 import io.objectbox.BoxStore
@@ -15,15 +14,10 @@ import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.local.mapper.tv.TvVideoStreamEntityMapper
 import org.alsi.android.local.model.tv.TvVideoStreamEntity
 import org.alsi.android.local.model.tv.TvVideoStreamEntity_
-import java.net.URI
-import javax.inject.Inject
 
 class TvVideoStreamLocalStoreDelegate(
         serviceBoxStore: BoxStore
 ): TvVideoStreamLocalStore {
-
-    @Inject
-    lateinit var context: Context
 
     private val streamBox: Box<TvVideoStreamEntity> = serviceBoxStore.boxFor()
 

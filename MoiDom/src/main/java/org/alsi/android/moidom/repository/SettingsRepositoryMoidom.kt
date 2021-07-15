@@ -30,25 +30,23 @@ class SettingsRepositoryMoidom @Inject constructor(
                 ServiceSettingsEntity.SCOPE_PROVIDER,
                 providerId, localStore, defaults)) {
 
-    private var subscription: Disposable
+    private var subscription: Disposable = loginSubject.subscribe( {
 
-    init {
-        subscription = loginSubject.subscribe( {
+        val localMoidom = local as SettingsStoreLocalDelegate
+        val remoteMoidom = remote as SettingsRemoteStoreMoidom
 
-            val localMoidom = local as SettingsStoreLocalDelegate
-            val remoteMoidom = remote as SettingsRemoteStoreMoidom
+        localMoidom.attach(it.account)
 
-            localMoidom.attach(it.account)
-
-            val profile = remoteMoidom.getSourceProfile(it.data)
-
+        // skipped for dry login (session resumed)
+        it.data?.let { data ->
+            val profile = remoteMoidom.getSourceProfile(data)
             localMoidom.setProfile(profile)
-            localMoidom.setValues(remoteMoidom.getSourceSettings(it.data, profile))
+            localMoidom.setValues(remoteMoidom.getSourceSettings(data, profile))
+        }
 
-        }, {
-            Timber.e(it, "Exception Ignored")
-        })
-    }
+    }, {
+        Timber.e(it, "Exception Ignored")
+    })
 
     fun dispose() {
         if (!subscription.isDisposed) subscription.dispose()
