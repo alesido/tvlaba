@@ -2,6 +2,7 @@ package org.alsi.android.datatv.store
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.domain.tv.model.session.TvPlayCursor
 
 interface TvPlayCursorLocalStore {
@@ -18,9 +19,14 @@ interface TvPlayCursorLocalStore {
      */
     fun putPlayCursor(cursor: TvPlayCursor): Completable
 
-    /**
+    /** Get latest play cursor position for current user
      */
     fun getLastPlayCursor(): Single<TvPlayCursor?>
+
+    /** Get latest play cursor position over all users
+     *
+     */
+    fun getLatestPlayCursor(): Single<UserActivityRecord?>
 
     /**
      */

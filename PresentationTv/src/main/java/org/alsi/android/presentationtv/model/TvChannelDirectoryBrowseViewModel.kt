@@ -34,7 +34,8 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     private var directory: TvChannelDirectory? = null
 
     init {
-        fetchChannelDirectory()
+        //fetchChannelDirectory()
+        directoryObservationUseCase.execute(ChannelDirectorySubscriber())
     }
 
     fun getLiveDirectory(): LiveData<Resource<TvChannelDirectoryBrowseLiveData>> = liveDirectory

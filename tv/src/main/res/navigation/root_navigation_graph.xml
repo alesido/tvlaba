@@ -16,11 +16,12 @@
         <action
             android:id="@+id/action_appStartFragment_to_loginFragment"
             app:destination="@id/loginFragment"
+            app:popUpTo="@id/appStartFragment"
+            app:popUpToInclusive="true"
             />
         <action
             android:id="@+id/action_appStartFragment_to_tvGuide"
             app:destination="@id/tvGuideNavigation"
-            app:launchSingleTop="true"
             app:popUpTo="@id/appStartFragment"
             app:popUpToInclusive="true"
             />

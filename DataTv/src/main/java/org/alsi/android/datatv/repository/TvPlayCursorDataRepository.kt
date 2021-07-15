@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import org.alsi.android.datatv.store.TvPlayCursorLocalStore
+import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.session.TvPlayCursor
 import org.alsi.android.domain.tv.repository.session.TvPlayCursorRepository
@@ -21,7 +22,7 @@ abstract class TvPlayCursorDataRepository(
     override fun finalizeCursorSetting(previousCursor: TvPlayCursor?) : Single<TvPlayback> {
         return local.putPlayCursor(cursor).andThen(
             local.getLastPlayCursor()
-        ).flatMap { //TODO Compare memory and stored cursor and give an error if do not match ->
+        ).flatMap { //TODO Compare memory and stored cursor and give an error if they do not match
 //            cursor = storedCursor
 //            currentPlaybackSubject.onNext(storedCursor.playback)
             currentPlaybackSubject.onNext(cursor.playback)
@@ -38,6 +39,8 @@ abstract class TvPlayCursorDataRepository(
     override fun current(): Observable<TvPlayback> = currentPlaybackSubject
 
     override fun last(): Single<TvPlayCursor?> = local.getLastPlayCursor()
+
+    override fun latest(): Single<UserActivityRecord?> = local.getLatestPlayCursor()
 
     override fun history(): Single<List<TvPlayCursor>?> {
         return local.getPlayHistory()

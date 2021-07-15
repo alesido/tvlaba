@@ -2,6 +2,7 @@ package org.alsi.android.domain.tv.repository.session
 
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.session.TvPlayCursor
 
@@ -52,6 +53,10 @@ abstract class TvPlayCursorRepository {
     /** Get last cursor set.
      */
     abstract fun last(): Single<TvPlayCursor?>
+
+    /** Get data on latest cursor record over all users
+     */
+    abstract fun latest(): Single<UserActivityRecord?>
 
     /** Get playback history. Returns all the history stored.
      */
