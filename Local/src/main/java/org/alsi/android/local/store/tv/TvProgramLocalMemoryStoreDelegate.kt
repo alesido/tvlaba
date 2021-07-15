@@ -2,14 +2,27 @@ package org.alsi.android.local.store.tv
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import org.alsi.android.datatv.store.TvProgramLocalStore
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
+import org.alsi.android.local.model.user.UserAccountSubject
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 
-class TvProgramLocalMemoryStoreDelegate: TvProgramLocalStore {
+class TvProgramLocalMemoryStoreDelegate (
+    accountSubject: UserAccountSubject
+): TvProgramLocalStore {
 
     var store: MutableMap<Long, MutableMap<Long, TvDaySchedule>> = mutableMapOf()
+
+    private val disposables = CompositeDisposable()
+
+    init {
+        val s = accountSubject.subscribe {
+            switchUser(it.loginName)
+        }
+        s?.let { disposables.add(it) }
+    }
 
     override fun switchUser(userLoginName: String) {
         store = mutableMapOf()
@@ -45,5 +58,9 @@ class TvProgramLocalMemoryStoreDelegate: TvProgramLocalStore {
 
     override fun compactStorage() {
         store = mutableMapOf()
+    }
+
+    fun dispose() {
+        if (!disposables.isDisposed) disposables.dispose()
     }
 }

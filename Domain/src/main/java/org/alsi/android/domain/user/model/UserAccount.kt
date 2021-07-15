@@ -7,4 +7,10 @@ class UserAccount(
         val loginName: String,
         val loginPassword: String,
         val subscriptions: List<ServiceSubscription>
-)
+) {
+        fun isGuest() = loginName == "guest"
+
+        companion object {
+                fun guest() = UserAccount("guest", "", listOf())
+        }
+}

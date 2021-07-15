@@ -1,35 +1,42 @@
 package org.alsi.android.local.store.tv
 
-import android.content.Context
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import io.objectbox.kotlin.query
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import org.alsi.android.datatv.store.TvProgramLocalStore
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
-import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.local.mapper.tv.TvProgramIssueEntityMapper
 import org.alsi.android.local.model.tv.TvProgramIssueEntity
 import org.alsi.android.local.model.tv.TvProgramIssueEntity_
+import org.alsi.android.local.model.user.UserAccountSubject
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
-import javax.inject.Inject
 
 class TvProgramLocalStoreDelegate(
 
         serviceBoxStore: BoxStore,
-        private var userLoginName: String = "guest"
+        accountSubject: UserAccountSubject
 
 ) : TvProgramLocalStore {
 
+    private var userLoginName: String = "guest"
+
     val mapper = TvProgramIssueEntityMapper()
 
-    @Inject
-    lateinit var context: Context
-
     private val box: Box<TvProgramIssueEntity> = serviceBoxStore.boxFor()
+
+    private val disposables = CompositeDisposable()
+
+    init {
+        val s = accountSubject.subscribe {
+            switchUser(it.loginName)
+        }
+        s?.let { disposables.add(it) }
+    }
 
     override fun switchUser(userLoginName: String) {
         this.userLoginName = userLoginName
@@ -89,5 +96,9 @@ class TvProgramLocalStoreDelegate(
 
     override fun compactStorage() {
         TODO("Not yet implemented")
+    }
+
+    fun dispose() {
+        if (!disposables.isDisposed) disposables.dispose()
     }
 }

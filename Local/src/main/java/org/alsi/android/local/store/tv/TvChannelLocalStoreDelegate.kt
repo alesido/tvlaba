@@ -1,12 +1,12 @@
 package org.alsi.android.local.store.tv
 
-import android.content.Context
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import io.objectbox.kotlin.query
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import org.alsi.android.datatv.store.TvChannelLocalStore
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
@@ -15,7 +15,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannelsChange
 import org.alsi.android.local.mapper.tv.TvCategoryEntityMapper
 import org.alsi.android.local.mapper.tv.TvChannelEntityMapper
 import org.alsi.android.local.model.tv.*
-import javax.inject.Inject
+import org.alsi.android.local.model.user.UserAccountSubject
 
 /** Delegate for local TV channels store belonging to a service.
  *
@@ -24,14 +24,11 @@ import javax.inject.Inject
  * NOTE Depending on service subscription user may have different sets categories and channels.
  */
 class TvChannelLocalStoreDelegate(
-
         serviceBoxStore: BoxStore,
-        private var userLoginName: String = "guest")
+        accountSubject: UserAccountSubject
+    ) : TvChannelLocalStore {
 
-    : TvChannelLocalStore {
-
-    @Inject
-    lateinit var context: Context
+    private var userLoginName: String = "guest"
 
     private val categoryBox: Box<TvChannelCategoryEntity> = serviceBoxStore.boxFor()
     private val channelBox: Box<TvChannelEntity> = serviceBoxStore.boxFor()
@@ -40,6 +37,15 @@ class TvChannelLocalStoreDelegate(
 
     private val categoryMapper = TvCategoryEntityMapper()
     private val channelMapper = TvChannelEntityMapper()
+
+    private val disposables = CompositeDisposable()
+
+    init {
+        val s = accountSubject.subscribe {
+            switchUser(it.loginName)
+        }
+        s?.let { disposables.add(it) }
+    }
 
     override fun switchUser(userLoginName: String) {
         this.userLoginName = userLoginName
@@ -198,4 +204,8 @@ class TvChannelLocalStoreDelegate(
     }
 
     // endregion
+
+    fun dispose() {
+        if (!disposables.isDisposed) disposables.dispose()
+    }
 }

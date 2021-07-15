@@ -17,19 +17,21 @@ import javax.inject.Singleton
 @Singleton
 class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataRepository() {
 
-    /** As soon as the login subject property gets value from dependency injection (on a late init),
-     * subscription created and it initializes local store delegate for just logged in user.
-     * The dependency injection is attached to the setter method here.
-     */
-    @set:Inject
-    var loginSubject: PublishSubject<LoginEvent>? = null
-        set(value) {
-            field = value
-            val s = value?.subscribe {
-                local.switchUser(it.account.loginName)
-            }
-            s?.let { disposables.add(it) }
-        }
+// Saved for example
+//
+//    /** As soon as the login subject property gets value from dependency injection (on a late init),
+//     * subscription created and it initializes local store delegate for just logged in user.
+//     * The dependency injection is attached to the setter method here.
+//     */
+//    @set:Inject
+//    var loginSubject: PublishSubject<LoginEvent>? = null
+//        set(value) {
+//            field = value
+//            val s = value?.subscribe {
+//                local.switchUser(it.account.loginName)
+//            }
+//            s?.let { disposables.add(it) }
+//        }
 
     /** Directory subject made BehaviourSubject as it returns the last result immediately on subscription.
      */
