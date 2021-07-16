@@ -694,9 +694,64 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "19:5398649960296256770",
+      "lastPropertyId": "8:415511494137573339",
+      "name": "TvBrowseCursorEntity",
+      "properties": [
+        {
+          "id": "1:43290567578883495",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3218254550344696796",
+          "name": "userLoginName",
+          "type": 9
+        },
+        {
+          "id": "3:6488058140890580177",
+          "name": "categoryId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "4:7174699307006457281",
+          "name": "channelId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "5:6309582334665934657",
+          "name": "scheduleDate",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "6:1180859313982828362",
+          "name": "programId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "7:1457461304638611690",
+          "name": "page",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "8:415511494137573339",
+          "name": "timeStamp",
+          "type": 6,
+          "flags": 4
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "18:3638758981994868413",
+  "lastEntityId": "19:5398649960296256770",
   "lastIndexId": "33:3801068196188206420",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

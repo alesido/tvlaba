@@ -500,7 +500,7 @@
     },
     {
       "id": "16:8238036204980077217",
-      "lastPropertyId": "9:1544790841200149238",
+      "lastPropertyId": "11:4568988606547413493",
       "name": "TvPlaybackEntity",
       "properties": [
         {
@@ -549,13 +549,24 @@
           "indexId": "28:3039251026749192025",
           "type": 6,
           "flags": 12
+        },
+        {
+          "id": "10:6840564068611808380",
+          "name": "streamKind",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "11:4568988606547413493",
+          "name": "subtitlesUri",
+          "type": 9
         }
       ],
       "relations": []
     },
     {
       "id": "17:594264724552488769",
-      "lastPropertyId": "9:1009558917119465339",
+      "lastPropertyId": "11:6147095336781774409",
       "name": "TvVideoStreamEntity",
       "properties": [
         {
@@ -610,6 +621,17 @@
         {
           "id": "9:1009558917119465339",
           "name": "accessCode",
+          "type": 9
+        },
+        {
+          "id": "10:4734518235207474242",
+          "name": "streamKind",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "11:6147095336781774409",
+          "name": "subtitlesUri",
           "type": 9
         }
       ],

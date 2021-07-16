@@ -3,20 +3,22 @@ package org.alsi.android.datatv.repository
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
+import org.alsi.android.datatv.store.TvBrowseCursorLocalStore
 import org.alsi.android.domain.tv.model.session.TvBrowseCursor
 import org.alsi.android.domain.tv.repository.session.TvBrowseCursorRepository
 
-open class TvBrowseCursorDataRepository: TvBrowseCursorRepository() {
+open class TvBrowseCursorDataRepository(
+    private val local: TvBrowseCursorLocalStore
+): TvBrowseCursorRepository() {
 
-    private val currentPlaybackSubject: BehaviorSubject<TvBrowseCursor> = BehaviorSubject.create()
+    private val browsingSubject: BehaviorSubject<TvBrowseCursor> = BehaviorSubject.create()
 
     override fun finalizeCursorSetting(previousCursor: TvBrowseCursor?) : Single<TvBrowseCursor> {
-        // TODO Implement a local store for the Browse Cursor
-        currentPlaybackSubject.onNext(cursor)
-        return Single.just(cursor)
+        browsingSubject.onNext(cursor)
+        return local.putBrowseCursor(cursor).andThen(Single.just(cursor))
     }
 
     override fun getCursor(): Single<TvBrowseCursor> = Single.just(cursor)
 
-    override fun observeCursor(): Observable<TvBrowseCursor> = currentPlaybackSubject
+    override fun observeCursor(): Observable<TvBrowseCursor> = browsingSubject
 }

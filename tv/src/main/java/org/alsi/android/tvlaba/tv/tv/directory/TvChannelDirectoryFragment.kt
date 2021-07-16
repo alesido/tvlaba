@@ -73,7 +73,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 // record current browsing position to restore on the next start
                 val rowPosition = this@TvChannelDirectoryFragment.selectedPosition
                 val itemPosition = (rowViewHolder as ListRowPresenter.ViewHolder)
-                        .gridView.selectedPosition - 1 // extra row for search?
+                        .gridView.selectedPosition
                 browseViewModel.onChannelSelected(rowPosition, itemPosition, item)
                 // schedule next channel lives update
                 browseViewModel.onItemsVisibilityChange(

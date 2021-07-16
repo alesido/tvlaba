@@ -24,6 +24,7 @@ data class TvBrowseCursor (
 )
 
 enum class TvBrowsePage {
+    UNKNOWN,
     CATEGORIES, // categories list in channel a directory or a standalone category selection screen
     CHANNELS,
     SCHEDULE,   // standalone page, or in program details related, or in a playback footer

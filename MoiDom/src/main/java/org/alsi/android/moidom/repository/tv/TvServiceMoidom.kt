@@ -1,6 +1,5 @@
 package org.alsi.android.moidom.repository.tv
 
-import org.alsi.android.datatv.repository.TvBrowseCursorDataRepository
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
 import org.alsi.android.domain.tv.repository.session.TvSessionRepository
@@ -16,6 +15,7 @@ class TvServiceMoidom @Inject constructor(
         @Named("${Moidom.TAG}.$TV") serviceId: Long,
         serviceDirectory: TvDirectoryRepositoryMoidom,
         playCursorRepository: TvPlayCursorRepositoryMoiDom,
+        browseCursorRepository: TvBrowseCursorRepositoryMoiDom,
         configuration: SettingsRepositoryMoidom
     )
 
@@ -25,6 +25,6 @@ class TvServiceMoidom @Inject constructor(
         kind = StreamingServiceKind.TV,
         tag = "${Moidom.TAG}.$TV",
         directory = serviceDirectory,
-        session = TvSessionRepository(TvBrowseCursorDataRepository(), playCursorRepository),
+        session = TvSessionRepository(browseCursorRepository, playCursorRepository),
         configuration = configuration
     )

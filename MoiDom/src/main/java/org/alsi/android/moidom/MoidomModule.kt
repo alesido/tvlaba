@@ -13,10 +13,7 @@ import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
 import org.alsi.android.local.Local
 import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.AccountStoreLocalDelegate
-import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
-import org.alsi.android.local.store.tv.TvPlayCursorLocalStoreDelegate
-import org.alsi.android.local.store.tv.TvProgramLocalMemoryStoreDelegate
-import org.alsi.android.local.store.tv.TvVideoStreamLocalStoreDelegate
+import org.alsi.android.local.store.tv.*
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.model.tv.MyObjectBox
@@ -130,7 +127,7 @@ class MoidomModule {
             localStore: TvVideoStreamLocalStore, remoteStore: TvVideoStreamRemoteStore)
             : TvVideoStreamRepository = TvVideoStreamDataRepository(localStore, remoteStore)
 
-    /**     TV Playback Cursor Local Store
+    /**     TV Playback Cursor, Local Store
      */
     @Named("${Moidom.TAG}.${StreamingService.TV}")
     @Singleton @Provides fun provideTvPlayCursorLocalStoreMoidomDelegate(
@@ -138,6 +135,15 @@ class MoidomModule {
             @Named("${Moidom.TAG}.${StreamingService.TV}") accountChangeSubject: UserAccountSubject
     )
     : TvPlayCursorLocalStore = TvPlayCursorLocalStoreDelegate(localBoxStore, accountChangeSubject)
+
+    /**     TV Browsing Cursor, Local Store
+     */
+    @Named("${Moidom.TAG}.${StreamingService.TV}")
+    @Singleton @Provides fun provideTvBrowseCursorLocalStoreMoidomDelegate(
+            @Named("${Moidom.TAG}.${StreamingService.TV}") localBoxStore: BoxStore,
+            @Named("${Moidom.TAG}.${StreamingService.TV}") accountChangeSubject: UserAccountSubject
+    )
+    : TvBrowseCursorLocalStore = TvBrowseCursorLocalStoreDelegate(localBoxStore, accountChangeSubject)
 
     /**     Login Event Subject
      */
