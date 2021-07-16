@@ -74,6 +74,14 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     }
 
     fun onResume() {
+// This is not necessary to have correct "page" in Browse Cursor for the sake of
+// "onChannelSelected" called back by the RecyclerView upon redraw
+//
+//        browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
+//            TvBrowseCursorMoveUseCase.Params(
+//                page = TvBrowsePage.CHANNELS,
+//                reuse = true
+//            ))
         browseCursorGetUseCase.execute(BrowseCursorSubscriber())
     }
 

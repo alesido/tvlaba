@@ -55,7 +55,7 @@ class TvProgramDetailsViewModel @Inject constructor (
     fun scheduleItemPositionOf(item: TvProgramIssue): Int?
             = snapshot.cursor?.schedule?.positionOf(item)
 
-    fun weekDayPositionOf(item: TvWeekDay): Int? =
+    fun weekDayPositionOf(item: TvWeekDay): Int =
             snapshot.weekDayRange?.getWeekDayPosition(item.date)?: 0
 
     fun onTvProgramIssueAction(programIssue: TvProgramIssue) {
@@ -83,6 +83,16 @@ class TvProgramDetailsViewModel @Inject constructor (
                     date = weekDay.date
             ))
         }
+    }
+
+    /** Act upon returning back by back press
+     */
+    fun onBackNavigation() {
+        browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
+            TvBrowseCursorMoveUseCase.Params(
+                page = TvBrowsePage.PROGRAM,
+                reuse = true
+            ))
     }
 
     fun dispose() {

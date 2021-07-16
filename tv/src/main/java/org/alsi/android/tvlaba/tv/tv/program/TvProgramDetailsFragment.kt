@@ -40,6 +40,8 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
     private var initialRow = RowKind.DETAILS
 
+    private var isNavigatedBack = false
+
     // region Life Cycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +54,14 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     override fun onStart() {
         super.onStart()
         launchViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isNavigatedBack)
+            detailsViewModel.onBackNavigation()
+        else
+            isNavigatedBack = true
     }
 
     override fun onDestroy() {

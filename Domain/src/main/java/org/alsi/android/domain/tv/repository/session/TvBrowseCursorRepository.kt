@@ -35,7 +35,7 @@ abstract class TvBrowseCursorRepository {
                 category = if (reuse && null == category) previousCursor.category else category,
                 channel = if (reuse && null == channel) previousCursor.channel else channel,
                 schedule = if (reuse && null == schedule) previousCursor.schedule else schedule,
-                program = program,
+                program = if (reuse && null == program) previousCursor.program else program,
                 page = page)
         return finalizeCursorSetting(previousCursor)
     }
