@@ -24,9 +24,8 @@ interface TvPlayCursorLocalStore {
     fun getLastPlayCursor(): Single<TvPlayCursor?>
 
     /** Get latest play cursor position over all users
-     *
      */
-    fun getLatestPlayCursor(): Single<UserActivityRecord?>
+    fun getMostRecentActivity(): Single<UserActivityRecord?>
 
     /**
      */
