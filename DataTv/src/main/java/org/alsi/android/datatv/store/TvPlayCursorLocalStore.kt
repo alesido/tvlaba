@@ -19,6 +19,10 @@ interface TvPlayCursorLocalStore {
      */
     fun putPlayCursor(cursor: TvPlayCursor): Completable
 
+    /**
+     */
+    fun updateSeekTime(seekTime: Long): Completable
+
     /** Get latest play cursor position for current user
      */
     fun getLastPlayCursor(): Single<TvPlayCursor?>

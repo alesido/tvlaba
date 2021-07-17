@@ -1,5 +1,6 @@
 package org.alsi.android.datatv.repository
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
@@ -33,8 +34,9 @@ abstract class TvPlayCursorDataRepository(
         }
     }
 
+    override fun updateCursor(seekTime: Long): Completable = local.updateSeekTime(seekTime)
 
-    /** Subscribe to cursor updates
+    /** To Subscribe to cursor updates
      */
     override fun current(): Observable<TvPlayback> = currentPlaybackSubject
 

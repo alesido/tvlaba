@@ -1,5 +1,6 @@
 package org.alsi.android.domain.tv.repository.session
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.alsi.android.domain.context.model.UserActivityRecord
@@ -44,6 +45,10 @@ abstract class TvPlayCursorRepository {
      * have playback history.
      */
     protected abstract fun finalizeCursorSetting(previousCursor: TvPlayCursor?): Single<TvPlayback>
+
+    /** Update [seek position in] cursor.
+     */
+    abstract fun updateCursor(seekTime: Long): Completable
 
     /** Subscribe to updates on current playback. Implementation should get actual URI of the stream from the
      * remote or get it cached from the local store.

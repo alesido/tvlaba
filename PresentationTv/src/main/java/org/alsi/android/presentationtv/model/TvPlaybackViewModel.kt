@@ -3,6 +3,7 @@ package org.alsi.android.presentationtv.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
@@ -22,6 +23,7 @@ class TvPlaybackViewModel @Inject constructor(
         private val nextPlaybackUseCase: TvNextPlaybackUseCase,
         private val switchToLivePlaybackUseCase: TvSwitchToLivePlaybackUseCase,
         private val switchToArchivePlaybackUseCase: TvSwitchToArchivePlaybackUseCase,
+        private val updatePlaybackCursorUseCase: TvUpdatePlaybackCursorUseCase,
         private val getSettingsUseCase: StreamingSettingsUseCase
 
 ) : ViewModel() {
@@ -82,11 +84,26 @@ class TvPlaybackViewModel @Inject constructor(
                 TvSwitchToArchivePlaybackUseCase.Params(playback))
     }
 
+    /** Update the playback cursor to current playback position and whether it paused
+     */
+    fun recordPlaybackState(seekTime: Long) {
+        updatePlaybackCursorUseCase.execute(object: DisposableCompletableObserver() {
+            override fun onComplete() {
+                // do not reflect this in the user interface
+            }
+            override fun onError(e: Throwable) {
+                // not critical error
+            }
+        },
+            TvUpdatePlaybackCursorUseCase.Params(seekTime))
+    }
+
     fun dispose() {
         currentPlaybackUseCase.dispose()
         newPlaybackUseCase.dispose()
         nextPlaybackUseCase.dispose()
         switchToLivePlaybackUseCase.dispose()
+        updatePlaybackCursorUseCase.dispose()
         getSettingsUseCase.dispose()
     }
 
