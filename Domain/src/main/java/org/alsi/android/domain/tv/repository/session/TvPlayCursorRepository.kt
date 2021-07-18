@@ -61,7 +61,7 @@ abstract class TvPlayCursorRepository {
 
     /** Get data on latest cursor record over all users
      */
-    abstract fun latest(): Single<UserActivityRecord?>
+    abstract fun mostRecent(): Single<UserActivityRecord?>
 
     /** Get playback history. Returns all the history stored.
      */

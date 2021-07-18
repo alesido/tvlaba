@@ -2,6 +2,7 @@ package org.alsi.android.domain.tv.repository.session
 
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
@@ -57,4 +58,5 @@ abstract class TvBrowseCursorRepository {
     /** Get cursor observable
      */
     abstract fun observeCursor(): Observable<TvBrowseCursor>
+    abstract fun mostRecent(): Single<UserActivityRecord?>
 }
