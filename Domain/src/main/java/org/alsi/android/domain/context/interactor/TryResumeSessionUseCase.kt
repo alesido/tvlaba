@@ -8,6 +8,7 @@ import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
 import org.alsi.android.domain.streaming.model.ServiceProvider
+import org.alsi.android.domain.streaming.model.service.StreamingServiceRegistry
 import org.alsi.android.domain.tv.repository.session.TvSessionRepository
 import org.joda.time.DateTimeUtils
 import java.util.concurrent.TimeUnit
@@ -19,27 +20,24 @@ import javax.inject.Inject
  *  or the last user activity was too long ago.
  */
 open class  TryResumeSessionUseCase @Inject constructor(
-    private val presentationManager: PresentationManager,
+    private val registry: StreamingServiceRegistry,
     private val provider: ServiceProvider,
     executionThread: PostExecutionThread)
     : SingleObservableUseCase<SessionActivityType, Nothing?>(executionThread)
 {
     override fun buildUseCaseObservable(params: Nothing?): Single<SessionActivityType> {
 
-        val session = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.session
-        if (session !is TvSessionRepository)
-            return Single.error(Throwable("The TV Directory Repository is N/A!"))
-
-        return Single.zip(session.browse.mostRecent(), session.play.mostRecent(), { browse, play ->
-            Pair(browse, play)
-        }).flatMap {
-            val (browse, play) = it
-            if (browse.isEmpty() && play.isEmpty())
+        return Single.zip(registry.map { it.session.mostRecent(it.id) }) { zipArray ->
+            val nonEmpties = zipArray.filter { !(it as UserActivityRecord).isEmpty() }
+            if (nonEmpties.isEmpty())
+                UserActivityRecord.empty()
+            else
+                nonEmpties.sortedByDescending { (it as UserActivityRecord).timeStamp }[0]
+        }.flatMap {
+            val activity = it as UserActivityRecord
+            if (activity.isEmpty())
                 return@flatMap Single.just(SessionActivityType.LOGIN)
-            if (play.isEmpty())
-                return@flatMap resumeActivity(browse)
-            return@flatMap resumeActivity(
-                if (browse.timeStamp > play.timeStamp) browse else play)
+            return@flatMap resumeActivity(activity)
         }
     }
 

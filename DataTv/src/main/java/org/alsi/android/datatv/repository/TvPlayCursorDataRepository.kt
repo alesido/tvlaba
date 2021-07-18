@@ -42,7 +42,7 @@ abstract class TvPlayCursorDataRepository(
 
     override fun last(): Single<TvPlayCursor?> = local.getLastPlayCursor()
 
-    override fun mostRecent(): Single<UserActivityRecord?> = local.getMostRecentActivity()
+    override fun mostRecent(serviceId: Long): Single<UserActivityRecord?> = local.getMostRecentActivity(serviceId)
 
     override fun history(): Single<List<TvPlayCursor>?> {
         return local.getPlayHistory()

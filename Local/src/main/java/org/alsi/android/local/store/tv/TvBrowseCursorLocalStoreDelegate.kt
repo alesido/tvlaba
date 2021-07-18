@@ -73,12 +73,12 @@ class TvBrowseCursorLocalStoreDelegate (
             TvBrowseCursorReference.empty()
     }
 
-    override fun getMostRecentActivity(): Single<UserActivityRecord?> = Single.fromCallable {
+    override fun getMostRecentActivity(serviceId: Long): Single<UserActivityRecord?> = Single.fromCallable {
         val record = cursorBox.query {
             orderDesc(TvBrowseCursorEntity_.timeStamp)
         }.findFirst()
         if (record != null)
-            UserActivityRecord(record.userLoginName, -1L, SessionActivityType.BROWSING_TV, record.timeStamp)
+            UserActivityRecord(record.userLoginName, serviceId, SessionActivityType.BROWSING_TV, record.timeStamp)
         else
             UserActivityRecord.empty()
     }

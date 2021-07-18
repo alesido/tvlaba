@@ -99,12 +99,12 @@ class TvPlayCursorLocalStoreDelegate (
         if (record != null) playCursorMapper.mapFromEntity(record) else null
     }
 
-    override fun getMostRecentActivity(): Single<UserActivityRecord?> = Single.fromCallable {
+    override fun getMostRecentActivity(serviceId: Long): Single<UserActivityRecord?> = Single.fromCallable {
         val record = cursorBox.query {
             orderDesc(TvPlayCursorEntity_.timeStamp)
         }.findFirst()
         if (record != null)
-            UserActivityRecord(record.userLoginName, -1L, SessionActivityType.PLAYBACK_TV, record.timeStamp)
+            UserActivityRecord(record.userLoginName, serviceId, SessionActivityType.PLAYBACK_TV, record.timeStamp)
         else
             UserActivityRecord.empty()
     }

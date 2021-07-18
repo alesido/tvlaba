@@ -58,5 +58,5 @@ abstract class TvBrowseCursorRepository {
     /** Get cursor observable
      */
     abstract fun observeCursor(): Observable<TvBrowseCursor>
-    abstract fun mostRecent(): Single<UserActivityRecord?>
+    abstract fun mostRecent(serviceId: Long): Single<UserActivityRecord?>
 }

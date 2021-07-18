@@ -23,5 +23,5 @@ open class TvBrowseCursorDataRepository(
 
     override fun observeCursor(): Observable<TvBrowseCursor> = browsingSubject
 
-    override fun mostRecent(): Single<UserActivityRecord?> = local.getMostRecentActivity()
+    override fun mostRecent(serviceId: Long): Single<UserActivityRecord?> = local.getMostRecentActivity(serviceId)
 }
