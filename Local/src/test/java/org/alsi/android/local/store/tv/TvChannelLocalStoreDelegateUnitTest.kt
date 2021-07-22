@@ -7,6 +7,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.local.model.MyObjectBox
+import org.alsi.android.local.model.user.UserAccountSubject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +31,7 @@ class TvChannelLocalStoreDelegateUnitTest {
         boxStore = MyObjectBox.builder().directory(TEST_DATA_DIRECTORY)
                 .debugFlags(DebugFlags.LOG_QUERIES or DebugFlags.LOG_QUERY_PARAMETERS)
                 .build()
-        storeDelegate = TvChannelLocalStoreDelegate(boxStore, "TestUser")
+        storeDelegate = TvChannelLocalStoreDelegate(boxStore, UserAccountSubject.create())
     }
 
     @Test
@@ -253,7 +254,7 @@ class TvChannelLocalStoreDelegateUnitTest {
         assertEquals(favoriteChannels.size, 1)
         assertEquals(favoriteChannels[0].id, 1L)
 
-        val storeDelegate002 = TvChannelLocalStoreDelegate(boxStore, "TestUser002")
+        val storeDelegate002 = TvChannelLocalStoreDelegate(boxStore, UserAccountSubject.create())
         val testObserver002 = TestObserver<List<TvChannel>>()
         storeDelegate002.addChannelToFavorites(20L).subscribe {
             storeDelegate002.getFavoriteChannels().subscribe(testObserver002)

@@ -4,12 +4,10 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
 import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.framework.Now
 import org.alsi.android.framework.RxUtils
-import org.alsi.android.moidom.model.LoginEvent
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

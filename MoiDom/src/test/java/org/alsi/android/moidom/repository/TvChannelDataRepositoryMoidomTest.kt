@@ -7,13 +7,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.Single
-import io.reactivex.subjects.PublishSubject
 import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.MyObjectBox
+import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
-import org.alsi.android.moidom.model.LoginEvent
-import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.model.tv.GetTvGroupResponse
 import org.alsi.android.moidom.repository.tv.TvChannelDataExpiration
@@ -58,10 +56,10 @@ class TvChannelDataRepositoryMoidomTest {
         repository = TvChannelDataRepositoryMoidom()
 
         moidomServiceTestBoxStore = moidomServiceTestBoxStore()
-        repository.local = TvChannelLocalStoreDelegate(moidomServiceTestBoxStore, "guest")
 
-        repository.loginSubject = PublishSubject.create()
-        repository.loginSubject?.onNext(testLoginEvent())
+        val accountSubject = UserAccountSubject.create<UserAccount>()
+        repository.local = TvChannelLocalStoreDelegate(moidomServiceTestBoxStore, accountSubject)
+        accountSubject.onNext(testAccount())
 
         stubRemoteService()
         stubRemoteSession()
@@ -166,10 +164,8 @@ class TvChannelDataRepositoryMoidomTest {
                 .build()
     }
 
-    private fun testLoginEvent(): LoginEvent {
-        return LoginEvent(
-                account = UserAccount("testLoginName", "testLoginPassword", listOf()),
-                data = gson.fromJson(getJson("json/login.json"), LoginResponse::class.java))
+    private fun testAccount(): UserAccount {
+        return UserAccount("testLoginName", "testLoginPassword", listOf())
     }
 
     private fun stubRemoteService(

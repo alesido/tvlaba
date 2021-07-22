@@ -45,6 +45,7 @@ dependencies {
     testImplementation(Libs.jUnit)
     testImplementation(Libs.kotlinJUnit)
     testImplementation(Libs.mockitoKotlin)
+    testImplementation(Libs.mockitoAndroid)
     testImplementation(Libs.assertJ)
     testImplementation(Libs.okHttpMockWebServer)
     testImplementation(Libs.timberUnitRule)

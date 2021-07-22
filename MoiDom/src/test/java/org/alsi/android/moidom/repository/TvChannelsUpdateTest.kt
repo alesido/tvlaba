@@ -13,6 +13,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.framework.Now
 import org.alsi.android.local.model.MyObjectBox
+import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.model.LoginResponse
@@ -66,10 +67,10 @@ class TvChannelsUpdateTest {
         repository = TvChannelDataRepositoryMoidom()
 
         moidomServiceTestBoxStore = moidomServiceTestBoxStore()
-        repository.local = TvChannelLocalStoreDelegate(moidomServiceTestBoxStore, "guest")
 
-        repository.loginSubject = PublishSubject.create()
-        repository.loginSubject?.onNext(testLoginEvent())
+        val accountSubject = UserAccountSubject.create<UserAccount>()
+        repository.local = TvChannelLocalStoreDelegate(moidomServiceTestBoxStore, accountSubject)
+        accountSubject.onNext(testAccount())
 
         stubRemoteService()
         stubRemoteSession()
@@ -124,11 +125,8 @@ class TvChannelsUpdateTest {
                 .debugFlags(DebugFlags.LOG_QUERIES or DebugFlags.LOG_QUERY_PARAMETERS)
                 .build()
     }
-
-    private fun testLoginEvent(): LoginEvent {
-        return LoginEvent(
-                account = UserAccount("testLoginName", "testLoginPassword", listOf()),
-                data = gson.fromJson(getJson("json/login.json"), LoginResponse::class.java))
+    private fun testAccount(): UserAccount {
+        return UserAccount("testLoginName", "testLoginPassword", listOf())
     }
 
     private fun stubRemoteService() {
