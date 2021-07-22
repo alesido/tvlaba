@@ -4,7 +4,7 @@
 buildscript {
 
     val kotlinVersion = "1.4.31"
-    val androidGradlePluginVersion = "4.2.1"
+    val androidGradlePluginVersion = "4.2.2"
     val objectboxVersion = "2.7.0"
     val navigationVersion = "2.3.0"
 
