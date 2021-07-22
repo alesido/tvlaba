@@ -4,6 +4,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import org.alsi.android.tvlaba.tv.AppStartFragment
 import org.alsi.android.tvlaba.tv.AppStartFragmentModule
+import org.alsi.android.tvlaba.tv.tv.TvGuideStartFragment
+import org.alsi.android.tvlaba.tv.tv.TvGuideStartFragmentModule
 import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragment
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragment
 import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragmentModule
@@ -18,6 +20,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [AppStartFragmentModule::class])
     abstract fun bindAppStartFragment(): AppStartFragment
+
+    @ContributesAndroidInjector(modules = [TvGuideStartFragmentModule::class])
+    abstract fun bindTvGuideStartFragment(): TvGuideStartFragment
 
     @ContributesAndroidInjector(modules = [TvChannelDirectoryFragmentModule::class])
     abstract fun bindTvChannelDirectoryFragment(): TvChannelDirectoryFragment

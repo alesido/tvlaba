@@ -21,6 +21,11 @@ abstract class PresentationModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(TvGuideStartViewModel::class)
+    abstract fun bindTvGuideStartViewModel(viewModel: TvGuideStartViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(TvChannelDirectoryBrowseViewModel::class)
     abstract fun bindTvChannelDirectoryBrowseViewModel(viewModel: TvChannelDirectoryBrowseViewModel) : ViewModel
 
