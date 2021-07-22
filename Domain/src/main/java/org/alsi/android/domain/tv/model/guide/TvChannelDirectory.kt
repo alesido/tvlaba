@@ -11,6 +11,10 @@ class TvChannelDirectory(
          */
         val index: Map<Long, List<TvChannel>>
 ) {
+    val categoryById = categories.map { it.id to it }.toMap()
+
+    val channelById = channels.map { it.id to it }.toMap()
+
     /** changes from the last update
      */
     var change: TvChannelsChange? = null

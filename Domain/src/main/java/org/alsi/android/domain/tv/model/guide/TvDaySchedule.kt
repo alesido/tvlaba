@@ -98,6 +98,8 @@ class TvDaySchedule(
         return candidateProgram
     }
 
+    fun programById(id: Long) = idMap[id]
+
     fun programAtTime(issueDateTime: LocalDateTime): TvProgramIssue? {
         val programStart = timeLine.floor(issueDateTime.toDateTime().millis) ?: return null
         return timeMap[programStart]!!.starting!!

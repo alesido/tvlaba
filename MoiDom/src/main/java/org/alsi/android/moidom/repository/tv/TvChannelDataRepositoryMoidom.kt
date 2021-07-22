@@ -57,7 +57,7 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      *
      * This method provides cache with expiration functionality.
      */
-    override fun getDirectory(): Observable<TvChannelDirectory> {
+    override fun observeDirectory(): Observable<TvChannelDirectory> {
         val s = local.getDirectory().flatMap { directory ->
             if (expiration.directoryExpired(directory)) {
                 expiration.checkInDirectory()
@@ -75,6 +75,20 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
         })
         disposables.add(s)
         return directorySubject
+    }
+
+    override fun getDirectory(): Single<TvChannelDirectory> {
+        return local.getDirectory().flatMap { directory ->
+            if (expiration.directoryExpired(directory)) {
+                expiration.checkInDirectory()
+                remote.getDirectory().flatMap {
+                    local.putDirectory(it).toSingle {it}
+                }
+            }
+            else {
+                Single.just(directory)
+            }
+        }
     }
 
     /** Read directory from local store and share with subscribers if there are any (avoiding overhead
