@@ -1,12 +1,19 @@
 package org.alsi.android.tvlaba.tv.tv
 
 import android.os.Bundle
-import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.context.model.SessionActivityType.*
+import org.alsi.android.domain.tv.model.guide.TvStartContext
+import org.alsi.android.domain.tv.model.session.TvBrowsePage.*
+import org.alsi.android.presentation.state.Resource
+import org.alsi.android.presentation.state.ResourceState
+import org.alsi.android.presentationtv.model.TvGuideStartViewModel
 import org.alsi.android.tvlaba.R
-import timber.log.Timber
+import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import javax.inject.Inject
 
 /**
  * Start destination in TV Guide's navigation graph.
@@ -17,33 +24,71 @@ import timber.log.Timber
  */
 class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // TODO Get the last guide context an decide to which destination navigate
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
-        view.findNavController().addOnDestinationChangedListener { navController, destination, _ ->
-            Timber.d("### Destination Changed to %s/%s", navController.previousBackStackEntry?.destination?.id, destination.id)
-        }
+    private lateinit var viewModel: TvGuideStartViewModel
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, object:
-            OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    Timber.d("### OnBackPressedCallback")
-                }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(TvGuideStartViewModel::class.java)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getLiveData().observe(this, { handleGettingStartContext(it) })
+    }
+
+    private fun handleGettingStartContext(resource: Resource<TvStartContext>) {
+        when (resource.status) {
+            ResourceState.LOADING -> {
+                //progressBarManager.show()
             }
-        )
+            ResourceState.SUCCESS -> {
+                //progressBarManager.hide()
+                handleContextRestored(resource.data)
+            }
+            ResourceState.ERROR -> {
+                //progressBarManager.hide()
+            }
+            else -> {
+            }
+        }
+    }
 
-        view.findNavController().navigate(
-            TvGuideStartFragmentDirections.actionTvGuideStartFragmentToTvChannelDirectoryFragment()
-        )
+    private fun handleContextRestored(startContext: TvStartContext?) {
+        startContext?: return
+        when (startContext.activity.activityType) {
+            BROWSING_TV -> when (startContext.browse.page) {
+                CATEGORIES, CHANNELS -> navigateChannelDirectory()
+                PROGRAM -> navigateProgramDetails()
+                PLAYBACK -> navigatePlaybackAndSchedule()
+                else -> navigateChannelDirectory()
+            }
+            PLAYBACK_TV -> navigatePlaybackAndSchedule()
+            BROWSING_VOD -> TODO("Implement initial navigation to browse VOD Directory")
+            PLAYBACK_VOD -> TODO("Implement initial navigation to play back VOD item")
+            else -> navigateChannelDirectory()
+        }
+    }
 
-// This method rather works, though could not checked back stack synthesis
-//        val deepLinkRequest = NavDeepLinkRequest.Builder
-//            .fromUri(
-//                "android-app://tvlaba.android.alsi.org/tv/tvPlaybackAndScheduleFragment".toUri()
-//            ).build()
-//
-//        findNavController(this).navigate(deepLinkRequest)
+    private fun navigateChannelDirectory() {
+        findNavController(this).navigate(
+            TvGuideStartFragmentDirections
+                .actionTvGuideStartFragmentToTvChannelDirectoryFragment()
+        )
+    }
+
+    private fun navigateProgramDetails() {
+        findNavController(this).navigate(TvGuideStartFragmentDirections
+            .actionTvGuideStartFragmentToTvProgramDetailsFragment())
+    }
+
+    private fun navigatePlaybackAndSchedule() {
+        findNavController(this).navigate(TvGuideStartFragmentDirections
+            .actionTvGuideStartFragmentToTvPlaybackAndScheduleFragment())
     }
 }

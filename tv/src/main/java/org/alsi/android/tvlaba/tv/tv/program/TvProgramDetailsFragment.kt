@@ -4,13 +4,16 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -49,6 +52,35 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         super.onCreate(savedInstanceState)
         setupViewModel()
         setupAdapter()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        addBackPressedCallback()
+    }
+
+    private fun addBackPressedCallback() {
+        val navController = NavHostFragment.findNavController(this)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object:
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                    remove() // remove this listener
+
+                    if (null == navController.previousBackStackEntry) {
+                        // previous destination was the start fragment of the navigation graph,
+                        // which was popped up out by the attributes - navigate back manually:
+                        navController.navigate(
+                            TvProgramDetailsFragmentDirections
+                            .actionTvProgramDetailsFragmentToTvChannelDirectoryFragment())
+                    }
+                    else {
+                        requireActivity().onBackPressed()
+                    }
+                }
+            }
+        )
     }
 
     override fun onStart() {

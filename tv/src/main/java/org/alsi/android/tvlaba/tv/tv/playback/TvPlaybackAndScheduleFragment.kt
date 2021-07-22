@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.STATE_ENDED
@@ -99,6 +101,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         savedInstanceState: Bundle?
     ): View? {
         _vb = LbPlaybackFragmentBinding.inflate(inflater, container, false)
+        addBackPressedCallback()
         // FIXME Should return vb.root, otherwise the view binding won't work. Though, there is an exception while doing correctly.
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -207,6 +210,29 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 //            Timber.d("@onSeekStarted")
 //        }
 //    }
+
+    private fun addBackPressedCallback() {
+        val navController = findNavController(this)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object:
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                    remove() // remove this listener
+
+                    if (null == navController.previousBackStackEntry) {
+                        // previous destination was the start fragment of the navigation graph,
+                        // which was popped up out by the attributes
+                        navController.navigate(TvPlaybackAndScheduleFragmentDirections
+                            .actionTvPlaybackAndScheduleFragmentToTvProgramDetailsFragment())
+                    }
+                    else {
+                        requireActivity().onBackPressed()
+                    }
+                }
+            }
+        )
+    }
 
     override fun onStart() {
         super.onStart()

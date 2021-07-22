@@ -18,12 +18,14 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/appStartFragment"
             app:popUpToInclusive="true"
+            app:launchSingleTop="true"
             />
         <action
             android:id="@+id/action_appStartFragment_to_tvGuide"
             app:destination="@id/tvGuideNavigation"
             app:popUpTo="@id/appStartFragment"
             app:popUpToInclusive="true"
+            app:launchSingleTop="true"
             />
     </fragment>
     <!--
@@ -103,6 +105,21 @@
                 app:destination="@id/tvChannelDirectoryFragment"
                 app:popUpTo="@id/tvGuideStartFragment"
                 app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+            <action
+                android:id="@+id/action_tvGuideStartFragment_to_tvProgramDetailsFragment"
+                app:destination="@id/tvProgramDetailsFragment"
+                app:popUpTo="@id/tvGuideStartFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+            <action
+                android:id="@+id/action_tvGuideStartFragment_to_tvPlaybackAndScheduleFragment"
+                app:destination="@id/tvPlaybackAndScheduleFragment"
+                app:popUpTo="@id/tvGuideStartFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
                 />
         </fragment>
         <fragment
@@ -116,16 +133,6 @@
                 />
         </fragment>
         <fragment
-            android:id="@+id/tvPlaybackAndScheduleFragment"
-            android:name="org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragment"
-            android:label="TvPlaybackAndScheduleFragment"
-            >
-            <deepLink
-                android:id="@+id/deepLink"
-                app:uri="android-app://tvlaba.android.alsi.org/tv/tvPlaybackAndScheduleFragment"
-                />
-        </fragment>
-        <fragment
             android:id="@+id/tvProgramDetailsFragment"
             android:name="org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragment"
             android:label="TvProgramDetailsFragment"
@@ -133,6 +140,26 @@
             <action
                 android:id="@+id/action_tvProgramDetailsFragment_to_tvPlaybackAndScheduleFragment"
                 app:destination="@id/tvPlaybackAndScheduleFragment"
+                />
+            <action
+                android:id="@+id/action_tvProgramDetailsFragment_to_tvChannelDirectoryFragment"
+                app:destination="@id/tvChannelDirectoryFragment"
+                app:popUpTo="@id/tvProgramDetailsFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+        </fragment>
+        <fragment
+            android:id="@+id/tvPlaybackAndScheduleFragment"
+            android:name="org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragment"
+            android:label="TvPlaybackAndScheduleFragment"
+            >
+            <action
+                android:id="@+id/action_tvPlaybackAndScheduleFragment_to_tvProgramDetailsFragment"
+                app:destination="@id/tvProgramDetailsFragment"
+                app:popUpTo="@id/tvPlaybackAndScheduleFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
                 />
         </fragment>
     </navigation>

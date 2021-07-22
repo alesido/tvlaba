@@ -219,13 +219,23 @@
                                 <LayoutPositions>
                                   <option name="myPosition">
                                     <Point>
-                                      <option name="x" value="-184" />
-                                      <option name="y" value="82" />
+                                      <option name="x" value="232" />
+                                      <option name="y" value="-349" />
                                     </Point>
                                   </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvGuideStartFragment_to_tvChannelDirectoryFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_tvGuideStartFragment_to_tvPlaybackAndScheduleFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_tvGuideStartFragment_to_tvProgramDetailsFragment">
                                         <value>
                                           <LayoutPositions />
                                         </value>
@@ -243,15 +253,6 @@
                                       <option name="x" value="511" />
                                       <option name="y" value="84" />
                                     </Point>
-                                  </option>
-                                  <option name="myPositions">
-                                    <map>
-                                      <entry key="deepLink">
-                                        <value>
-                                          <LayoutPositions />
-                                        </value>
-                                      </entry>
-                                    </map>
                                   </option>
                                 </LayoutPositions>
                               </value>

@@ -41,6 +41,12 @@ abstract class TvPlayCursorRepository {
         return finalizeCursorSetting(previousCursor)
     }
 
+    fun setCursorTo(anotherCursor: TvPlayCursor) : Single<TvPlayback> {
+        val previousCursor = cursor
+        cursor = anotherCursor
+        return finalizeCursorSetting(previousCursor)
+    }
+
     /** Store current cursor value. It is reasonable to store a few last cursor values to
      * have playback history.
      */
