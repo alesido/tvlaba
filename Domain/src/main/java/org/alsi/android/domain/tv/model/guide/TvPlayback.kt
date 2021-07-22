@@ -84,6 +84,13 @@ class TvPlayback (
     /** Current video playback position.
      */
     var position: Long = 0L
+
+
+   fun isEmpty() = channelId == -1L && stream == null
+
+    companion object {
+            fun empty() = TvPlayback(channelId = -1L, stream = null)
+    }
 }
 
 enum class TvPlaybackState {

@@ -6,8 +6,12 @@ class Resource<out T> constructor(val status: ResourceState,
                                   val throwable: Throwable? = null) {
     companion object {
 
-        fun <T> success(data: T): Resource<T> {
+        fun <T> success(data: T?): Resource<T> {
             return Resource(ResourceState.SUCCESS, data, null)
+        }
+
+        fun <T> success(): Resource<T> {
+            return Resource(ResourceState.SUCCESS, null, null)
         }
 
         fun <T> error(message: String?): Resource<T> {

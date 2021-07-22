@@ -7,10 +7,8 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
-import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.interactor.guide.*
-import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.presentation.state.Resource

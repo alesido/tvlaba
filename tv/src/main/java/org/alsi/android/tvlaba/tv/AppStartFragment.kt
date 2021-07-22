@@ -1,8 +1,10 @@
 package org.alsi.android.tvlaba.tv
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.context.model.SessionActivityType
@@ -31,13 +33,6 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
             .get(AppStartViewModel::class.java)
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        view.findNavController().navigate(
-//            AppStartFragmentDirections.actionAppStartFragmentToTvGuide()
-//        )
-//    }
-
     override fun onStart() {
         super.onStart()
 
@@ -62,7 +57,6 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
         }
     }
 
-
     private fun navigateToInitialTarget(activityType: SessionActivityType?) {
         val navController = findNavController(this)
         when(activityType) {
@@ -72,6 +66,8 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
 
             SessionActivityType.PLAYBACK_TV,  SessionActivityType.BROWSING_TV ->
                 navController.navigate(AppStartFragmentDirections.actionAppStartFragmentToTvGuide())
+
+            else -> navController.navigate(AppStartFragmentDirections.actionAppStartFragmentToTvGuide())
         }
     }
 }

@@ -96,7 +96,7 @@ class TvPlayCursorLocalStoreDelegate (
             equal(TvPlayCursorEntity_.userLoginName, userLoginName)
             orderDesc(TvPlayCursorEntity_.timeStamp)
         }.findFirst()
-        if (record != null) playCursorMapper.mapFromEntity(record) else null
+        if (record != null) playCursorMapper.mapFromEntity(record) else TvPlayCursor.empty()
     }
 
     override fun getMostRecentActivity(serviceId: Long): Single<UserActivityRecord?> = Single.fromCallable {

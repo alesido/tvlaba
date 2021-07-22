@@ -7,4 +7,10 @@ class TvPlayCursor(
         var playback: TvPlayback,
         var timeStamp: Long,
         var seekTime: Long
-)
+) {
+        fun isEmpty() = categoryId == -1L
+
+        companion object {
+                fun empty() = TvPlayCursor(-1L, playback = TvPlayback.empty(), timeStamp = -1L, seekTime = -1L)
+        }
+}
