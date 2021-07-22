@@ -18,7 +18,7 @@ open class TvChannelDirectoryObservationUseCase @Inject constructor(
         val directory = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.directory
         return if (directory is TvDirectoryRepository) {
             // get channel directory as an observation subject
-            directory.channels.getDirectory()
+            directory.channels.observeDirectory()
         }
         else {
             Observable.error(Throwable("TV Channel Directory is N/A!"))

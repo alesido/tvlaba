@@ -90,7 +90,7 @@ class TvChannelsUpdateTest {
     fun simpleUpdateSequence() {
 
         // load initial channel list
-        val observer = repository.getDirectory().test()
+        val observer = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
 

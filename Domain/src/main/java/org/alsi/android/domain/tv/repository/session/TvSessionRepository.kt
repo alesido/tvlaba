@@ -10,7 +10,7 @@ class TvSessionRepository (
 
 ): SessionRepository() {
 
-        override fun mostRecent(serviceId: Long): Single<UserActivityRecord?> {
+        override fun mostRecentActivity(serviceId: Long): Single<UserActivityRecord?> {
                 return Single.zip(browse.mostRecent(serviceId), play.mostRecent(serviceId), {
                                 browsing, playing -> Pair(browsing, playing)
                 }).flatMap {

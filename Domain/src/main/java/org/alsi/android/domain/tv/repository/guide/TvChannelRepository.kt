@@ -19,7 +19,8 @@ import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 interface TvChannelRepository
 {
     // region Directory
-    fun getDirectory(): Observable<TvChannelDirectory>
+    fun observeDirectory(): Observable<TvChannelDirectory>
+    fun getDirectory(): Single<TvChannelDirectory>
 
     // endregion
     // region Categories

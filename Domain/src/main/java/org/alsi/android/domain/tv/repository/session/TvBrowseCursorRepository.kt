@@ -8,6 +8,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.domain.tv.model.session.TvBrowseCursor
+import org.alsi.android.domain.tv.model.session.TvBrowseCursorReference
 import org.alsi.android.domain.tv.model.session.TvBrowsePage
 
 abstract class TvBrowseCursorRepository {
@@ -54,6 +55,11 @@ abstract class TvBrowseCursorRepository {
     /** Get current cursor
      */
     abstract fun getCursor(): Single<TvBrowseCursor>
+
+    /** Get locally stored cursor reference to restore it (in order to continue from the
+     * last browsing point)
+     */
+    abstract fun getStoredCursorReference(): Single<TvBrowseCursorReference?>
 
     /** Get cursor observable
      */

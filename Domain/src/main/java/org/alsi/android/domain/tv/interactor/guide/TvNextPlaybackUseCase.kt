@@ -41,7 +41,7 @@ class TvNextPlaybackUseCase @Inject constructor(
     private fun navigateChannel(directory: TvDirectoryRepository, session: TvSessionRepository,
                         target: TvNextPlayback): Single<TvPlayback> {
 
-        return Single.zip( session.play.last(), directory.channels.getDirectory().firstOrError(), {
+        return Single.zip( session.play.last(), directory.channels.observeDirectory().firstOrError(), {
                     cursor, channelDirectory -> Pair(cursor, channelDirectory)
                 }
 
@@ -86,7 +86,7 @@ class TvNextPlaybackUseCase @Inject constructor(
             directory: TvDirectoryRepository, session: TvSessionRepository, target: TvNextPlayback
     ): Single<TvPlayback> {
 
-        return Single.zip( session.play.last(), directory.channels.getDirectory().firstOrError(), {
+        return Single.zip( session.play.last(), directory.channels.observeDirectory().firstOrError(), {
                     cursor, channelDirectory -> Pair(cursor, channelDirectory)
                 }
         ).flatMap {

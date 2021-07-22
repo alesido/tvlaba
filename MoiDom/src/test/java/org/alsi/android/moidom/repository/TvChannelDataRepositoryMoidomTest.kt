@@ -68,7 +68,7 @@ class TvChannelDataRepositoryMoidomTest {
 
     @Test
     fun shouldGetDirectory() {
-        val observer = repository.getDirectory().test()
+        val observer = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
 
@@ -83,13 +83,13 @@ class TvChannelDataRepositoryMoidomTest {
     @Test
     fun shouldGetLocalDirectoryAsNotExpired() {
         // get from remote
-        val observer = repository.getDirectory().test()
+        val observer = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
         assertEquals(observer.valueCount(), 1)
         val directory = observer.values()[0]
 
-        val observer2 = repository.getDirectory().test()
+        val observer2 = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
         assertEquals(observer2.valueCount(), 1)
@@ -108,14 +108,14 @@ class TvChannelDataRepositoryMoidomTest {
     @Test
     fun shouldGetRemoteDirectoryAsExpired() {
         // initially data loaded from the remote store
-        val observer = repository.getDirectory().test()
+        val observer = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
         assertEquals(observer.valueCount(), 1)
         val directory = observer.values()[0]
 
         // this time data loaded from local store and they are the same
-        val observer2 = repository.getDirectory().test()
+        val observer2 = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
         assertEquals(observer2.valueCount(), 1)
@@ -137,7 +137,7 @@ class TvChannelDataRepositoryMoidomTest {
 
         stubRemoteService("json/tv_group2.json", "json/channel_list2.json")
 
-        val observer3 = repository.getDirectory().test()
+        val observer3 = repository.observeDirectory().test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
 
