@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.text.Cue
 import com.google.android.exoplayer2.text.TextOutput
+import com.google.android.exoplayer2.ui.SubtitleView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.common.net.HttpHeaders.USER_AGENT
@@ -61,11 +62,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
     private lateinit var trackLanguageSelection: ExoplayerTrackLanguageSelection
 
+    private var subtitlesView: SubtitleView? = null
+
     private lateinit var errorMessaging: TvErrorMessaging
-
-    private var _vb: LbPlaybackFragmentBinding? = null
-    private val vb get() = _vb!!
-
 
     private var videoLayoutCalculator: VideoLayoutCalculator? = null
 
@@ -100,10 +99,10 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _vb = LbPlaybackFragmentBinding.inflate(inflater, container, false)
+        val rootView = super.onCreateView(inflater, container, savedInstanceState)
+        subtitlesView = rootView?.findViewById(R.id.leanbackSubtitles)
         addBackPressedCallback()
-        // FIXME Should return vb.root, otherwise the view binding won't work. Though, there is an exception while doing correctly.
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return rootView
     }
 
     private fun setupPlayer() {
@@ -454,7 +453,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
     // Subtitles
 
     override fun onCues(cues: MutableList<Cue>) {
-        vb.leanbackSubtitles.setCues(cues)
+        subtitlesView?.setCues(cues)
     }
 
     // endregion
