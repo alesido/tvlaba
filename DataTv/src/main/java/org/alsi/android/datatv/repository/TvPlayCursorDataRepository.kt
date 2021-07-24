@@ -31,7 +31,7 @@ abstract class TvPlayCursorDataRepository(
         }
     }
 
-    override fun updateCursor(seekTime: Long): Completable = local.updateSeekTime(seekTime)
+    override fun updateCursor(playback: TvPlayback): Completable = local.updatePlayCursor(playback)
 
     /** To Subscribe to cursor updates
      */

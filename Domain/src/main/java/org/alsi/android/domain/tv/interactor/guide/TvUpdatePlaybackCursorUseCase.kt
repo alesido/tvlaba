@@ -5,6 +5,7 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
+import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.repository.session.TvSessionRepository
 import javax.inject.Inject
 
@@ -21,8 +22,8 @@ class TvUpdatePlaybackCursorUseCase @Inject constructor(
         if (session !is TvSessionRepository)
             return Completable.error(Throwable("The TV Directory Repository is N/A!"))
 
-        return session.play.updateCursor(params.seekTime) // update playback cursor asynchronously
+        return session.play.updateCursor(params.currentPlayback) // update playback cursor asynchronously
     }
 
-    class Params constructor (val seekTime: Long)
+    class Params(val currentPlayback: TvPlayback)
 }

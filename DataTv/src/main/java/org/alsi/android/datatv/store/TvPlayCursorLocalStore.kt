@@ -3,6 +3,7 @@ package org.alsi.android.datatv.store
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.domain.context.model.UserActivityRecord
+import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.session.TvPlayCursor
 
 interface TvPlayCursorLocalStore {
@@ -21,7 +22,7 @@ interface TvPlayCursorLocalStore {
 
     /**
      */
-    fun updateSeekTime(seekTime: Long): Completable
+    fun updatePlayCursor(currentPlayback: TvPlayback): Completable
 
     /** Get latest play cursor position for current user
      */

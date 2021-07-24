@@ -80,8 +80,8 @@ class TvPlayCursorLocalStoreDelegate (
         }
     }
 
-    override fun updateSeekTime(seekTime: Long): Completable = Completable.fromCallable {
-        val record = cursorBox.query {
+    override fun updatePlayCursor(currentPlayback: TvPlayback): Completable = Completable.fromCallable {
+        val cursor = cursorBox.query {
             equal(TvPlayCursorEntity_.userLoginName, userLoginName)
             orderDesc(TvPlayCursorEntity_.timeStamp)
         }.findFirst()

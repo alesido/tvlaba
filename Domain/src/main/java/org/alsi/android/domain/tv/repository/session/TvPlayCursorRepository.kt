@@ -54,7 +54,7 @@ abstract class TvPlayCursorRepository {
 
     /** Update [seek position in] cursor.
      */
-    abstract fun updateCursor(seekTime: Long): Completable
+    abstract fun updateCursor(playback: TvPlayback): Completable
 
     /** Subscribe to updates on current playback. Implementation should get actual URI of the stream from the
      * remote or get it cached from the local store.

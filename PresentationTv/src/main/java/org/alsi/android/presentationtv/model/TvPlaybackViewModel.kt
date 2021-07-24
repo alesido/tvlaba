@@ -85,15 +85,20 @@ class TvPlaybackViewModel @Inject constructor(
     /** Update the playback cursor to current playback position and whether it paused
      */
     fun recordPlaybackState(seekTime: Long) {
-        updatePlaybackCursorUseCase.execute(object: DisposableCompletableObserver() {
-            override fun onComplete() {
-                // do not reflect this in the user interface
-            }
-            override fun onError(e: Throwable) {
-                // not critical error
-            }
-        },
-            TvUpdatePlaybackCursorUseCase.Params(seekTime))
+        liveData.value?.data?.let { currentPlayback ->
+            currentPlayback.position = seekTime
+            updatePlaybackCursorUseCase.execute(
+                object : DisposableCompletableObserver() {
+                    override fun onComplete() {
+                        // do not reflect this in the user interface
+                    }
+                    override fun onError(e: Throwable) {
+                        // not critical error
+                    }
+                },
+                TvUpdatePlaybackCursorUseCase.Params(currentPlayback)
+            )
+        }
     }
 
     fun dispose() {
