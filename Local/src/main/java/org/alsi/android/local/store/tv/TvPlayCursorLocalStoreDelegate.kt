@@ -11,9 +11,11 @@ import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.store.TvPlayCursorLocalStore
 import org.alsi.android.domain.context.model.SessionActivityType
 import org.alsi.android.domain.context.model.UserActivityRecord
+import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.session.TvPlayCursor
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.mapper.TvPlayCursorEntityMapper
+import org.alsi.android.local.mapper.TvPlaybackEntityMapper
 import org.alsi.android.local.model.tv.TvPlayCursorEntity
 import org.alsi.android.local.model.tv.TvPlayCursorEntity_
 import org.alsi.android.local.model.tv.TvPlaybackEntity_
@@ -30,6 +32,8 @@ class TvPlayCursorLocalStoreDelegate (
     private val cursorBox: Box<TvPlayCursorEntity> = serviceBoxStore.boxFor()
 
     private val playCursorMapper = TvPlayCursorEntityMapper()
+
+    private val playbackMapper = TvPlaybackEntityMapper()
 
     private val disposables = CompositeDisposable()
 
@@ -85,9 +89,10 @@ class TvPlayCursorLocalStoreDelegate (
             equal(TvPlayCursorEntity_.userLoginName, userLoginName)
             orderDesc(TvPlayCursorEntity_.timeStamp)
         }.findFirst()
-        record?.let {
-            record.seekTime = seekTime
-            cursorBox.put(record)
+        cursor?.let {
+            cursor.seekTime = currentPlayback.position
+            cursor.playback.target = playbackMapper.mapToEntity(currentPlayback)
+            cursorBox.put(cursor)
         }
     }
 
@@ -96,7 +101,13 @@ class TvPlayCursorLocalStoreDelegate (
             equal(TvPlayCursorEntity_.userLoginName, userLoginName)
             orderDesc(TvPlayCursorEntity_.timeStamp)
         }.findFirst()
-        if (record != null) playCursorMapper.mapFromEntity(record) else TvPlayCursor.empty()
+        record?.let {
+            // video seek time of the cursor updated instead of playback position to save time,
+            // it is just restored here
+            val resultCursor = playCursorMapper.mapFromEntity(record)
+            resultCursor.playback.position = resultCursor.seekTime
+            resultCursor
+        } ?: TvPlayCursor.empty()
     }
 
     override fun getMostRecentActivity(serviceId: Long): Single<UserActivityRecord?> = Single.fromCallable {

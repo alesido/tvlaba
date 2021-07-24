@@ -55,6 +55,6 @@ class TvVideoStreamLocalStoreDelegate(
             = Completable.fromRunnable { streamBox.put(mapper.from(program, stream, accessCode))}
 
     companion object {
-        const val EXPIRATION_ARCHIVE_STREAM = DateUtils.MINUTE_IN_MILLIS * 60
+        const val EXPIRATION_ARCHIVE_STREAM = DateUtils.MINUTE_IN_MILLIS
     }
 }
