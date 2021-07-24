@@ -250,7 +250,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
     override fun onPause() {
         super.onPause()
         playbackViewModel.recordPlaybackState(player.currentPosition)
-        player.release()
+        player.stop()
     }
 
     override fun onDestroy() {
