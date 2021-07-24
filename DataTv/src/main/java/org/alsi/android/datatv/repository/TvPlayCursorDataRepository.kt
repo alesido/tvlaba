@@ -21,14 +21,11 @@ abstract class TvPlayCursorDataRepository(
     /** Save current playback cursor to the storage asynchronously.
      */
     override fun finalizeCursorSetting(previousCursor: TvPlayCursor?) : Single<TvPlayback> {
-        return local.putPlayCursor(cursor).andThen(
-            local.getLastPlayCursor()
-        ).flatMap { //TODO Compare memory and stored cursor and give an error if they do not match
-//            cursor = storedCursor
-//            currentPlaybackSubject.onNext(storedCursor.playback)
-            currentPlaybackSubject.onNext(cursor.playback)
+        currentPlaybackSubject.onNext(cursor.playback)
+        return local.putPlayCursor(cursor).andThen (
             Single.just(cursor.playback)
-        }.doOnError {
+        )
+        .doOnError {
             if (previousCursor != null)
                 cursor = previousCursor
         }
