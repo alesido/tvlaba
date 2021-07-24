@@ -32,6 +32,7 @@ interface TvChannelRepository
     // region Channels
 
     fun getChannels(categoryId: Long): Observable<List<TvChannel>>
+    fun findChannelById(channelId: Long): Single<TvChannel?>
     fun findChannelByNumber(channelNumber: Int): Single<TvChannel?>
 
     // endregion

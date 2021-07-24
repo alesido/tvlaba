@@ -43,6 +43,8 @@ abstract class TvChannelDataRepository: TvChannelRepository {
     // endregion
     // region Channels
 
+    override fun findChannelById(channelId: Long): Single<TvChannel?> = local.findChannelById(channelId)
+
     override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> = local.findChannelByNumber(channelNumber)
 
     override fun getChannelsVisibilitySubject() = visibilitySubject

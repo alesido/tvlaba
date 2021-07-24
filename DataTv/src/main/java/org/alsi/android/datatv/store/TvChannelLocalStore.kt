@@ -35,6 +35,7 @@ interface TvChannelLocalStore {
     fun getChannels(): Single<List<TvChannel>>
     fun getChannels(categoryId: Long): Single<List<TvChannel>>
 
+    fun findChannelById(channelId: Long): Single<TvChannel?>
     fun findChannelByNumber(channelNumber: Int): Single<TvChannel?>
 
     fun getChannelWindowExpirationMillis(channelIds: List<Long>): Long?

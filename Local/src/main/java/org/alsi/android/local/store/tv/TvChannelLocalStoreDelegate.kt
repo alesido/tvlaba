@@ -136,6 +136,10 @@ class TvChannelLocalStoreDelegate(
                 .map { channel -> channelMapper.mapFromEntity(channel) }
     }
 
+    override fun findChannelById(channelId: Long): Single<TvChannel?> = Single.fromCallable {
+        channelMapper.mapFromEntity(channelBox.get(channelId))
+    }
+
     override fun findChannelByNumber(channelNumber: Int): Single<TvChannel?> = Single.fromCallable {
         val found = channelBox.query { equal(TvChannelEntity_.number, channelNumber.toLong()) }.findUnique()
         found?.let { channelMapper.mapFromEntity(it) }
