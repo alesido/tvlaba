@@ -9,6 +9,12 @@ import org.alsi.android.domain.tv.model.guide.TvStartContext
 import org.alsi.android.domain.tv.repository.session.TvSessionRepository
 import javax.inject.Inject
 
+/**
+ *  Get initial (restored) browsing and playback context of current user.
+ *
+ *  Assumed that "current user" is "attached" to local stores, i.e. selected
+ *  local stores belonging to the user (configured to work with data of the user).
+ */
 class TvGetStartContextUseCase @Inject constructor(
     private val presentationManager: PresentationManager,
     executionThread: PostExecutionThread
