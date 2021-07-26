@@ -58,14 +58,9 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     private fun handleLoginResult(resource: Resource<Unit>) {
         when(resource.status) {
             LOADING -> {}
-            SUCCESS -> {
-                // FIXME Temporary solution to support development. To be replaced later with global destination to the App Router
-                findNavController(this).navigate(LoginFragmentDirections
-                    .actionLoginFragmentToTvGuide())
-            }
-            ERROR -> {
-                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
-            }
+            SUCCESS -> findNavController(this).navigate(R.id.actionGlobalLoggedIn)
+            ERROR -> Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
+
         }
     }
 }
