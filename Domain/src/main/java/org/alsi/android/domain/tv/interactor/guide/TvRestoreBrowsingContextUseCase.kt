@@ -45,7 +45,7 @@ class TvRestoreBrowsingContextUseCase @Inject constructor(
 
             session.browse.moveCursorTo(
                 category = category,
-                channel = channel,
+                channel = if (!ref.isEmpty()) channel else null, // to focus on category initially
                 page = if (!ref.isEmpty()) params.browseCursorReference.page else TvBrowsePage.CHANNELS)
             Single.just(dir)
 
