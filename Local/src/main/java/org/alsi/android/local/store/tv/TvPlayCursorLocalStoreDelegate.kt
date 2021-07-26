@@ -1,5 +1,6 @@
 package org.alsi.android.local.store.tv
 
+import android.util.Log
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
@@ -92,6 +93,7 @@ class TvPlayCursorLocalStoreDelegate (
         cursor?.let {
             cursor.seekTime = currentPlayback.position
             cursor.playback.target = playbackMapper.mapToEntity(currentPlayback)
+            Log.d(TvPlayCursorLocalStoreDelegate::class.java.simpleName, String.format("### @updatePlayCursor, seekTime %d", cursor.seekTime))
             cursorBox.put(cursor)
         }
     }
@@ -106,6 +108,7 @@ class TvPlayCursorLocalStoreDelegate (
             // it is just restored here
             val resultCursor = playCursorMapper.mapFromEntity(record)
             resultCursor.playback.position = resultCursor.seekTime
+            Log.d(TvPlayCursorLocalStoreDelegate::class.java.simpleName, String.format("### @getLastPlayCursor, playback position %d", resultCursor.playback.position))
             resultCursor
         } ?: TvPlayCursor.empty()
     }
