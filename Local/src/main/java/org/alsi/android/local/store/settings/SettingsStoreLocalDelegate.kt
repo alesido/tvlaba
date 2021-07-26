@@ -13,6 +13,7 @@ import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.user.model.UserAccount
+import org.alsi.android.local.mapper.AccountEntityMapper
 import org.alsi.android.local.model.settings.*
 import org.alsi.android.local.model.user.UserAccountEntity
 import org.alsi.android.local.model.user.UserAccountEntity_
@@ -35,8 +36,14 @@ class SettingsStoreLocalDelegate(
 
     private var settingsQuery = settingsQuery()
 
-    fun attach(domainAccount: UserAccount) {
-        this.accountId = accountBox.query{ equal(UserAccountEntity_.loginName, domainAccount.loginName) }.findFirst()?.id?:0L
+    fun attach(account: UserAccount) {
+        accountId = accountBox.query{ equal(UserAccountEntity_.loginName, account.loginName) }.findFirst()?.id?: 0L
+        if (accountId == 0L) {
+            // the account haven't been stored yet
+            val accountMapper = AccountEntityMapper()
+            val entity = accountMapper.mapToEntity(account)
+            accountId = accountBox.put(entity)
+        }
         this.settingsQuery = settingsQuery()
     }
 
