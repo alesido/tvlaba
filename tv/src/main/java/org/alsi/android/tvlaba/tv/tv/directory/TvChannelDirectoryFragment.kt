@@ -213,7 +213,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private fun selectDirectoryPosition(position: TvChannelDirectoryPosition?) {
         position?.let {
             Timber.d("@selectDirectoryPosition %s", position)
-            val setItemPositionTask = if (it.channelIndex >= 0) SelectItemViewHolderTask(it.channelIndex) else null
+            val setItemPositionTask = if (it.channelIndex > 0) SelectItemViewHolderTask(it.channelIndex) else null
+            // ^^^ convention: show categories when a 1st channel in the list to be selected
             setItemPositionTask?.isSmoothScroll = false
             setSelectedPosition(it.categoryIndex, false, setItemPositionTask)
         }
