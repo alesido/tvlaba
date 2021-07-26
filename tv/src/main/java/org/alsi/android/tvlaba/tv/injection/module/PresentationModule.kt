@@ -7,6 +7,7 @@ import dagger.MapKey
 import dagger.Module
 import dagger.multibindings.IntoMap
 import org.alsi.android.presentation.AppStartViewModel
+import org.alsi.android.presentation.auth.login.model.LoginViewModel
 import org.alsi.android.presentationtv.model.*
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import kotlin.reflect.KClass
@@ -23,6 +24,11 @@ abstract class PresentationModule {
     @IntoMap
     @ViewModelKey(TvGuideStartViewModel::class)
     abstract fun bindTvGuideStartViewModel(viewModel: TvGuideStartViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel::class)
+    abstract fun bindLoginViewModel(viewModel: LoginViewModel) : ViewModel
 
     @Binds
     @IntoMap

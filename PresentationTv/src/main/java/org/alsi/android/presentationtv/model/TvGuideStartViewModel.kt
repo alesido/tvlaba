@@ -54,7 +54,10 @@ open class TvGuideStartViewModel @Inject constructor (
     inner class GetStartContextSubscriber: DisposableSingleObserver<TvStartContext>() {
         override fun onSuccess(t: TvStartContext) {
             startContext = t
-            restoreBrowsingContext()
+            if (startContext.browse.isEmpty())
+                liveData.postValue(Resource.success(startContext))
+            else
+                restoreBrowsingContext()
         }
         override fun onError(e: Throwable) {
             liveData.postValue(Resource.error(e))
@@ -64,7 +67,10 @@ open class TvGuideStartViewModel @Inject constructor (
     fun restoreBrowsingContext() {
         restoreBrowsingContextUseCase.execute(object: DisposableCompletableObserver() {
             override fun onComplete() {
-                restorePlaybackContext()
+                if (startContext.play.isEmpty())
+                    liveData.postValue(Resource.success(startContext))
+                else
+                    restorePlaybackContext()
             }
             override fun onError(e: Throwable) {
                 liveData.postValue(Resource.error(e))

@@ -10,10 +10,11 @@
         android:id="@+id/appLogoView"
         android:layout_width="206dp"
         android:layout_height="213dp"
-        app:layout_constraintEnd_toStartOf="@+id/editTextNumber"
+        app:layout_constraintEnd_toStartOf="@+id/loginPinCodeEdit"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/loginButtonLanguageEnglish"
-        app:srcCompat="@drawable/logo_kinopoisk_bold"
+        android:src="@drawable/logo_kinopoisk_bold"
         tools:ignore="ContentDescription"
         />
 
@@ -22,8 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="English"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumber"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumber"
+        app:layout_constraintBottom_toTopOf="@+id/loginPinCodeEdit"
+        app:layout_constraintStart_toStartOf="@+id/loginPinCodeEdit"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
         />
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:text="Русский"
         app:layout_constraintBottom_toBottomOf="@+id/loginButtonLanguageEnglish"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNumber"
+        app:layout_constraintEnd_toEndOf="@+id/loginPinCodeEdit"
         app:layout_constraintTop_toTopOf="@+id/loginButtonLanguageEnglish"
         />
 
@@ -47,7 +48,7 @@
         app:layout_constraintEnd_toStartOf="@+id/loginButtonWifi"
         app:layout_constraintStart_toEndOf="@+id/loginButtonLanguageRussian"
         app:layout_constraintTop_toTopOf="@+id/loginButtonLanguageRussian"
-        app:srcCompat="@android:drawable/ic_menu_manage"
+        android:src="@android:drawable/ic_menu_manage"
         />
 
     <ImageButton
@@ -58,9 +59,65 @@
         app:layout_constraintBottom_toBottomOf="@+id/loginButtonBluetooth"
         app:layout_constraintStart_toEndOf="@+id/loginButtonBluetooth"
         app:layout_constraintTop_toTopOf="@+id/loginButtonBluetooth"
-        app:srcCompat="@android:drawable/ic_menu_set_as"
+        android:src="@android:drawable/ic_menu_set_as"
         />
 
+    <EditText
+        android:id="@+id/loginPinCodeEdit"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/loginPasswordEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButtonLanguageEnglish"
+        />
+
+    <EditText
+        android:id="@+id/loginPasswordEdit"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberPassword"
+        app:layout_constraintBottom_toTopOf="@+id/loginButtonSubmit"
+        app:layout_constraintEnd_toEndOf="@+id/loginPinCodeEdit"
+        app:layout_constraintStart_toStartOf="@+id/loginPinCodeEdit"
+        app:layout_constraintTop_toBottomOf="@+id/loginPinCodeEdit"
+        />
+
+    <ImageButton
+        android:id="@+id/loginButtonAllowEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/loginButtonSubmit"
+        app:layout_constraintEnd_toStartOf="@+id/loginButtonReset"
+        app:layout_constraintStart_toEndOf="@+id/loginButtonSubmit"
+        app:layout_constraintTop_toTopOf="@+id/loginButtonSubmit"
+        android:src="@android:drawable/ic_menu_edit"
+        />
+
+    <ImageButton
+        android:id="@+id/loginButtonReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/loginButtonAllowEdit"
+        app:layout_constraintStart_toEndOf="@+id/loginButtonAllowEdit"
+        app:layout_constraintTop_toTopOf="@+id/loginButtonAllowEdit"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        />
+
+    <Button
+        android:id="@+id/loginButtonSubmit"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        app:layout_constraintBottom_toTopOf="@+id/loginTextVersion"
+        app:layout_constraintStart_toStartOf="@+id/loginPasswordEdit"
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordEdit"
+        />
 
     <TextView
         android:id="@+id/loginTextVersion"
@@ -73,61 +130,5 @@
         app:layout_constraintTop_toBottomOf="@+id/loginButtonSubmit"
         />
 
-    <EditText
-        android:id="@+id/editTextNumberPassword"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="numberPassword"
-        app:layout_constraintBottom_toTopOf="@+id/loginButtonSubmit"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNumber"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumber"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber"
-        />
-
-    <EditText
-        android:id="@+id/editTextNumber"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButtonLanguageEnglish"
-        />
-
-    <ImageButton
-        android:id="@+id/loginButtonAllowEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/loginButtonSubmit"
-        app:layout_constraintEnd_toStartOf="@+id/loginButtonReset"
-        app:layout_constraintStart_toEndOf="@+id/loginButtonSubmit"
-        app:layout_constraintTop_toTopOf="@+id/loginButtonSubmit"
-        app:srcCompat="@android:drawable/ic_menu_edit"
-        />
-
-    <ImageButton
-        android:id="@+id/loginButtonReset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/loginButtonAllowEdit"
-        app:layout_constraintStart_toEndOf="@+id/loginButtonAllowEdit"
-        app:layout_constraintTop_toTopOf="@+id/loginButtonAllowEdit"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-        />
-
-    <Button
-        android:id="@+id/loginButtonSubmit"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        app:layout_constraintBottom_toTopOf="@+id/loginTextVersion"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumberPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberPassword"
-        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
