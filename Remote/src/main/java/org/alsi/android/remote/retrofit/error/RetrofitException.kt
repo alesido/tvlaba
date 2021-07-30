@@ -58,15 +58,15 @@ class RetrofitException(
         val errorBody = errorResponse?.errorBody()
         if (it is HttpException && errorBody != null) {
             try {
-                val converter : Converter<ResponseBody, Any> =
-                        requestRetrofit.responseBodyConverter(responseType, arrayOfNulls<Annotation>(0))
+                val converter : Converter<ResponseBody, Any> = requestRetrofit
+                    .responseBodyConverter(responseType, arrayOfNulls<Annotation>(0))
                 val result = converter.convert(errorBody)
                 (result as RetrofitExceptionSource).let { apiResponseCode = it.getApiResponseCode()
                     apiErrorMessage = it.getErrorMessage() }
                 result
-        }
+            }
             catch (x: IOException) {
-                System.out.println(String.format("Retrofit server error deserialization. %s", x.message))
+                println(String.format("Retrofit server error deserialization. %s", x.message))
             }
         }
         else null

@@ -183,7 +183,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             navigate()
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
     }
 
