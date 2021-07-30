@@ -24,6 +24,7 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseLiveData
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -35,8 +36,8 @@ import javax.inject.Inject
  */
 class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
 
@@ -169,6 +170,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             }
             ResourceState.ERROR -> {
                 progressBarManager.hide()
+                errorHandler.handle(this, resource.throwable)
             }
             else -> {
             }

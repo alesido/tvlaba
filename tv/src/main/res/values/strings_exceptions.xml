@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation"
+    >
+
+    <string name="exception_message_generic_error">An error occurred.</string>
+    <string name="noInternetConnection" translatable="false">Please check your Internet connection.</string>
+    <string name="serverAccessError">Server access error.</string>
+    <string name="dataProcessingError">Error processing data.</string>
+
+</resources>

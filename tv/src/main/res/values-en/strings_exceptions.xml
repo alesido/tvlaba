@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="exception_message_generic_error">An error occurred.</string>
+    <string name="noInternetConnection">Please check your Internet connection.</string>
+    <string name="serverAccessError">Server access error.</string>
+
+</resources>

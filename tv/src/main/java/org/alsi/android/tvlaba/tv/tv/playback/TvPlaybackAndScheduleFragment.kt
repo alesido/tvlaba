@@ -27,6 +27,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.common.net.HttpHeaders.USER_AGENT
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.exception.model.ClassifiedException
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
@@ -37,6 +38,7 @@ import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
 import org.alsi.android.presentationtv.model.*
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.databinding.LbPlaybackFragmentBinding
+import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
@@ -47,8 +49,8 @@ import javax.inject.Inject
 
 class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, TextOutput
 {
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
     private lateinit var playbackViewModel: TvPlaybackViewModel
     private lateinit var preferencesViewModel: TvPlaybackPreferencesViewModel
@@ -268,7 +270,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             ResourceState.LOADING -> {
             }
             ResourceState.ERROR -> {
-                Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
+                errorHandler.handle(this, resource.throwable as ClassifiedException)
             }
             else -> {}
         }
