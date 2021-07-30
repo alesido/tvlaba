@@ -1,6 +1,7 @@
 package org.alsi.android.moidom.store
 
 import com.google.gson.GsonBuilder
+import org.alsi.android.remote.retrofit.RetrofitErrorPostProcessor
 import org.alsi.android.remote.retrofit.RetrofitServiceBuilder
 import org.alsi.android.remote.retrofit.json.IntEnablingMap
 import org.alsi.android.remote.retrofit.json.JsonDeserializerForIntEnablingMap
@@ -10,10 +11,10 @@ import org.alsi.android.remote.retrofit.json.JsonDeserializerForIntEnablingMap
  */
 object DataServiceFactoryMoidom {
 
-    fun makeRestServiceMoidom(): RestServiceMoidom {
+    fun makeRestServiceMoidom(errorPostProcessor: RetrofitErrorPostProcessor): RestServiceMoidom {
         val gson = GsonBuilder().registerTypeAdapter(IntEnablingMap::class.java, JsonDeserializerForIntEnablingMap()).create()
         return RetrofitServiceBuilder(RestServiceMoidom::class.java, RestServiceMoidom.SERVICE_URL)
-                .enableRxErrorHandlingCallAdapterFactory()
+                .enableRxErrorHandlingCallAdapterFactory(errorPostProcessor)
                 .setGson(gson).enableLogging().build()
     }
 }

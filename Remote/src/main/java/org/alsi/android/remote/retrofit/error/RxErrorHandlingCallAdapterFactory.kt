@@ -2,6 +2,7 @@ package org.alsi.android.remote.retrofit.error
 
 import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
+import org.alsi.android.remote.retrofit.RetrofitErrorPostProcessor
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
@@ -15,7 +16,9 @@ import java.lang.reflect.Type
  *  @see "https://gist.github.com/yitz-grocerkey/61a66a15a0c22e8ea5149484676618c9#file-rxerrorhandlingcalladapterfactory-kt"
  *  @see "https://bytes.babbel.com/en/articles/2016-03-16-retrofit2-rxjava-error-handling.html"
  */
-class RxErrorHandlingCallAdapterFactory: CallAdapter.Factory() {
+class RxErrorHandlingCallAdapterFactory(
+    val postErrorProcessor: RetrofitErrorPostProcessor? = null
+) : CallAdapter.Factory() {
 
     private val original by lazy {
         RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
@@ -30,7 +33,7 @@ class RxErrorHandlingCallAdapterFactory: CallAdapter.Factory() {
 
     /** Wrapper of RX retrofit2 adapter.
      */
-    private class RxCallAdapterWrapper<R>(val retrofit: Retrofit, val wrappedCallAdapter: CallAdapter<R, *>)
+    private inner class RxCallAdapterWrapper<R>(val retrofit: Retrofit, val wrappedCallAdapter: CallAdapter<R, *>)
         : CallAdapter<R, Any> {
 
         override fun responseType(): Type = wrappedCallAdapter.responseType()
@@ -40,8 +43,7 @@ class RxErrorHandlingCallAdapterFactory: CallAdapter.Factory() {
          */
         @Suppress("UNCHECKED_CAST")
         override fun adapt(call: Call<R>): Any {
-            val emitter = wrappedCallAdapter.adapt(call)
-            return when (emitter) {
+            return when (val emitter = wrappedCallAdapter.adapt(call)) {
 
                 is Observable<*> -> emitter.flatMap { response -> rexR(call, response)?.let {
                     Observable.error<R>(it) } ?: Observable.just(response)
@@ -65,15 +67,21 @@ class RxErrorHandlingCallAdapterFactory: CallAdapter.Factory() {
             }
         }
 
+        /**
+         *  Find out if normal HTTP response contains API error response.
+         */
         private fun rexR(call: Call<R>, response : Any): RetrofitException? {
             return if (response is RetrofitExceptionSource && response.isErrorResponse()) {
                 RetrofitException(call, response, retrofit, wrappedCallAdapter.responseType())
             } else null
         }
 
-        /** Create RetrofitException from a throwable
+        /** Convert Throwable or Retrofit Exception to Retrofit Exception or post processed error
          */
-        private fun rexT(t: Throwable) : RetrofitException? = t as? RetrofitException
+        private fun rexT(t: Throwable) : Throwable {
+            val result = t as? RetrofitException
                 ?: RetrofitException(t, retrofit, wrappedCallAdapter.responseType())
+            return postErrorProcessor?.let {  it(result) } ?: result
+        }
     }
 }

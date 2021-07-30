@@ -15,6 +15,7 @@ import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.AccountStoreLocalDelegate
 import org.alsi.android.local.store.tv.*
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
+import org.alsi.android.moidom.mapper.RetrofitExceptionMapper
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.model.tv.MyObjectBox
 import org.alsi.android.moidom.repository.AccountDataServiceMoidom
@@ -62,7 +63,8 @@ class MoidomModule {
 
     /**     MoiDom REST service
      */
-    @Singleton @Provides fun provideRestServiceMoiDom() = DataServiceFactoryMoidom.makeRestServiceMoidom()
+    @Singleton @Provides fun provideRestServiceMoiDom(retrofitExceptionMapper: RetrofitExceptionMapper)
+    = DataServiceFactoryMoidom.makeRestServiceMoidom(retrofitExceptionMapper::map)
 
     /**     Moidom service-wide Local Store for TV data
      */

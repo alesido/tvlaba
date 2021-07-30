@@ -8,8 +8,8 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import org.alsi.android.remote.retrofit.error.RetrofitException
 import org.alsi.android.remote.retrofit.error.RxErrorHandlingCallAdapterFactory
-import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -31,6 +31,8 @@ class RetrofitServiceBuilder<API>
     private val baseServiceUrl: String
 )
 {
+    private var errorPostProcessor: RetrofitErrorPostProcessor? = null
+
     private var queryParamProvider: QueryParamsProvider? = null
     private var queryPostProcessor: QueryPostProcessor? = null
 
@@ -103,8 +105,11 @@ class RetrofitServiceBuilder<API>
         return this
     }
 
-    fun enableRxErrorHandlingCallAdapterFactory(): RetrofitServiceBuilder<API> {
+    fun enableRxErrorHandlingCallAdapterFactory(
+        postErrorProcessor: ((retrofitException: RetrofitException) -> Throwable)? = null
+    ): RetrofitServiceBuilder<API> {
         this.isRxErrorHandlingCallAdapterFactoryEnabled = true
+        this.errorPostProcessor = postErrorProcessor
         return this
     }
 
@@ -156,11 +161,16 @@ class RetrofitServiceBuilder<API>
         val retrofit = Retrofit.Builder()
                 .baseUrl(baseServiceUrl)
                 .client(clientBuilder.build())
-                .addCallAdapterFactory(if (isRxErrorHandlingCallAdapterFactoryEnabled)
-                    RxErrorHandlingCallAdapterFactory() else RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(
+                    if (isRxErrorHandlingCallAdapterFactoryEnabled)
+                        RxErrorHandlingCallAdapterFactory(errorPostProcessor)
+                    else
+                        RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson?: Gson()))
                 .build()
 
         return retrofit.create(apiDefinitionClass)
     }
 }
+
+typealias RetrofitErrorPostProcessor = (retrofitException: RetrofitException) -> Throwable
