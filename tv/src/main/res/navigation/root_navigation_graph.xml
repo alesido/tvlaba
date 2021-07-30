@@ -51,22 +51,32 @@
     </fragment>
     <action
         app:destination="@id/appRouterFragment"
-        android:id="@+id/actionGlobalLoggedIn"
+        android:id="@+id/actionGlobalOnLogIn"
         >
         <argument
             android:name="route"
             app:argType="org.alsi.android.tvlaba.tv.AppRoute"
-            android:defaultValue="LoggedIn"
+            android:defaultValue="OnLogIn"
             />
     </action>
     <action
         app:destination="@id/appRouterFragment"
-        android:id="@+id/actionGlobalSessionInvalid"
+        android:id="@+id/actionGlobalOnSessionInvalid"
         >
         <argument
             android:name="route"
             app:argType="org.alsi.android.tvlaba.tv.AppRoute"
-            android:defaultValue="SubscriptionExpired"
+            android:defaultValue="OnSessionInvalid"
+            />
+    </action>
+    <action
+        app:destination="@id/appRouterFragment"
+        android:id="@+id/actionGlobalOnContractInvalid"
+        >
+        <argument
+            android:name="route"
+            app:argType="org.alsi.android.tvlaba.tv.AppRoute"
+            android:defaultValue="OnContractInvalid"
             />
     </action>
     <action

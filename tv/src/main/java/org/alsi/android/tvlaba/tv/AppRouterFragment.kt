@@ -17,14 +17,16 @@ class AppRouterFragment : Fragment(R.layout.app_start_fragment) {
 
         arguments?.let {
             when (AppRouterFragmentArgs.fromBundle(it).route) {
-                LoggedIn -> {
+                OnLogIn -> {
                     // navigate to last visited section TV or VOD
                     findNavController(this).navigate(
                         AppRouterFragmentDirections.actionAppRouterFragmentToTvGuideNavigation()
                     )
                 }
-                SubscriptionExpired -> {
-                    // ...
+                OnSessionInvalid, OnContractInvalid -> {
+                    findNavController(this).navigate(
+                        AppRouterFragmentDirections.actionAppRouterFragmentToLoginFragment()
+                    )
                 }
                 LogOut -> {
                     // fulfil log out and navigate to login screen

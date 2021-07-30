@@ -56,9 +56,10 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     }
 
     private fun handleLoginResult(resource: Resource<Unit>) {
+
         when(resource.status) {
             LOADING -> {}
-            SUCCESS -> findNavController(this).navigate(R.id.actionGlobalLoggedIn)
+            SUCCESS -> findNavController(this).navigate(R.id.actionGlobalOnLogIn)
             ERROR -> Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
 
         }
