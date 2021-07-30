@@ -281,6 +281,7 @@ class ResizingTextView extends TextView {
      * See
      * {@link TextViewCompat#setCustomSelectionActionModeCallback(TextView, ActionMode.Callback)}
      */
+    @SuppressLint("RestrictedApi")
     @Override
     public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
         super.setCustomSelectionActionModeCallback(TextViewCompat

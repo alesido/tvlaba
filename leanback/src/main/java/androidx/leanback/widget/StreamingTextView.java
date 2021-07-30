@@ -305,6 +305,7 @@ class StreamingTextView extends EditText {
      * See
      * {@link androidx.core.widget.TextViewCompat#setCustomSelectionActionModeCallback(TextView, ActionMode.Callback)}
      */
+    @SuppressLint("RestrictedApi")
     @Override
     public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
         super.setCustomSelectionActionModeCallback(TextViewCompat
