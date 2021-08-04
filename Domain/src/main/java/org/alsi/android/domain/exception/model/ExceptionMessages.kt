@@ -18,8 +18,8 @@ interface ExceptionMessages {
     // Service
 
     fun serviceIsNotAvailable(): String
-    fun visitSiteToSubscribeService(siteUrl: String, serviceName: String): String
-    fun checkServiceSubscriptionAtSite(siteUrl: String, serviceName: String): String
+    fun visitSiteToSubscribeService(siteUrl: String? = null, serviceName: String? = null): String
+    fun checkServiceSubscriptionAtSite(siteUrl: String? = null, serviceName: String? = null): String
 
     // TV Channel Directory
 

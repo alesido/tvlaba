@@ -5,8 +5,15 @@
     >
 
     <string name="exception_message_generic_error">An error occurred.</string>
+
     <string name="noInternetConnection" translatable="false">Please check your Internet connection.</string>
     <string name="serverAccessError">Server access error.</string>
     <string name="dataProcessingError">Error processing data.</string>
+
+    <string name="visitSiteToSubscribeService">Please visit the site to subscribe.</string>
+    <string name="visitSiteToSubscribeService2">Please visit %1$s to subscribe %2$s.</string>
+
+    <string name="checkServiceSubscriptionAtSite">Please check your subscription at the site.</string>
+    <string name="checkServiceSubscriptionAtSite2">Please check your %1$s subscription at %2$s.</string>
 
 </resources>

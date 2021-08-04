@@ -21,11 +21,17 @@ class ExceptionMessageStrings @Inject constructor(val context: Context): Excepti
     override fun serviceIsNotAvailable() =
         s(R.string.exception_message_generic_error)
 
-    override fun visitSiteToSubscribeService(siteUrl: String, serviceName: String) =
-        s(R.string.exception_message_generic_error)
+    override fun visitSiteToSubscribeService(siteUrl: String?, serviceName: String?)
+    = if (null == siteUrl || null == serviceName)
+        s(R.string.visitSiteToSubscribeService)
+    else
+        context.getString(R.string.visitSiteToSubscribeService2, siteUrl, serviceName)
 
-    override fun checkServiceSubscriptionAtSite(siteUrl: String, serviceName: String) =
-        s(R.string.exception_message_generic_error)
+    override fun checkServiceSubscriptionAtSite(siteUrl: String?, serviceName: String?)
+    = if (null == siteUrl || null == serviceName)
+        s(R.string.checkServiceSubscriptionAtSite)
+    else
+        context.getString(R.string.checkServiceSubscriptionAtSite2, serviceName, siteUrl)
 
     override fun errorGettingTvChannelCategories() =
         s(R.string.exception_message_generic_error)

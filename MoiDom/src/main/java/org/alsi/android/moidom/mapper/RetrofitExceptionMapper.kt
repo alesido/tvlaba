@@ -5,30 +5,33 @@ import org.alsi.android.domain.exception.model.ClassifiedExceptionFactory
 import org.alsi.android.domain.exception.model.ExceptionMessages
 import org.alsi.android.moidom.model.base.RequestErrorDirectory
 import org.alsi.android.remote.retrofit.error.RetrofitException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class RetrofitExceptionMapper @Inject constructor(
-    val factory: ClassifiedExceptionFactory,
-    val resources: ExceptionMessages
+    private val factory: ClassifiedExceptionFactory,
+    private val messages: ExceptionMessages
 ) {
 
-    fun map(re: RetrofitException): ClassifiedException {
-        return when(re.errorKind) {
+    fun map(rex: RetrofitException): ClassifiedException {
+        return when(rex.errorKind) {
 
-            RetrofitException.Kind.NETWORK -> factory.networkException()
-            RetrofitException.Kind.HTTP -> factory.serverException()
+            RetrofitException.Kind.NETWORK -> if (rex.cause is SocketTimeoutException)
+                factory.serverException(t = rex) else factory.networkException(t = rex)
 
-            RetrofitException.Kind.REST_API -> mapApiException(re)
+            RetrofitException.Kind.HTTP -> factory.serverException(t = rex)
+
+            RetrofitException.Kind.REST_API -> mapApiException(rex)
 
             RetrofitException.Kind.UNEXPECTED -> factory.processingException()
-            else -> factory.processingException()
+            else -> factory.processingException(t = rex.cause)
         }
     }
 
-    private fun mapApiException(re: RetrofitException): ClassifiedException {
+    private fun mapApiException(rex: RetrofitException): ClassifiedException {
 
-        val serverCode: Long? = re.apiResponseCode
-        val serverMessage: String? = re.apiErrorMessage
+        val serverCode: Long? = rex.apiResponseCode
+        val serverMessage: String? = rex.apiErrorMessage
 
         if (null == serverCode && null == serverMessage)
             return factory.processingException() // TODO Return unknown error with message if not null
@@ -36,17 +39,19 @@ class RetrofitExceptionMapper @Inject constructor(
         return when(RequestErrorDirectory.valueByCode[serverCode]) {
 
             RequestErrorDirectory.ANOTHER_LOGGED
-            -> factory.userSessionInvalid()
+            -> factory.userSessionInvalid(m = rex.apiErrorMessage, t = rex)
 
             RequestErrorDirectory.CONTRACT_INACTIVE,
             RequestErrorDirectory.CONTRACT_PAUSED,
             RequestErrorDirectory.PACKET_EXPIRED
-            -> factory.userContractInactive()
+            -> factory.userContractInactive(
+                m = rex.apiErrorMessage,
+                t = rex)
 
             RequestErrorDirectory.UNKNOWN_ERROR
-            -> factory.unknownApiError(t = re)
+            -> factory.unknownApiError(t = rex)
 
-            else -> factory.requestError(t = re)
+            else -> factory.requestError(m = rex.apiErrorMessage, t = rex)
         }
     }
 }
