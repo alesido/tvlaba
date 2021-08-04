@@ -17,7 +17,7 @@ import java.lang.reflect.Type
  *  @see "https://bytes.babbel.com/en/articles/2016-03-16-retrofit2-rxjava-error-handling.html"
  */
 class RxErrorHandlingCallAdapterFactory(
-    val postErrorProcessor: RetrofitErrorPostProcessor? = null
+    val errorPostProcessor: RetrofitErrorPostProcessor? = null
 ) : CallAdapter.Factory() {
 
     private val original by lazy {
@@ -79,9 +79,9 @@ class RxErrorHandlingCallAdapterFactory(
         /** Convert Throwable or Retrofit Exception to Retrofit Exception or post processed error
          */
         private fun rexT(t: Throwable) : Throwable {
-            val result = t as? RetrofitException
+            val rex = t as? RetrofitException
                 ?: RetrofitException(t, retrofit, wrappedCallAdapter.responseType())
-            return postErrorProcessor?.let {  it(result) } ?: result
+            return errorPostProcessor?.let {  it(rex) } ?: rex
         }
     }
 }

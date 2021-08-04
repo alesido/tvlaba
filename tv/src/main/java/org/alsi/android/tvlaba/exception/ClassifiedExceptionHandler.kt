@@ -25,8 +25,8 @@ class ClassifiedExceptionHandler @Inject constructor(
 
         when(e) {
 
-            is NetworkException -> dialog(e.message?: "", "Network Connection")
-            is ServerException -> dialog(e.message?: "", "Server Access")
+            is NetworkException -> dialog(e.message?: "", messages.noInternetConnection())
+            is ServerException -> dialog(e.message?: "", messages.serverAccessError())
             is ProcessingException -> toast(e.message?: messages.genericErrorMessage())
 
             is ApiException -> when(e) {
@@ -36,7 +36,7 @@ class ClassifiedExceptionHandler @Inject constructor(
                     }
 
                     is UserSessionInvalid -> {
-                        dialog(e.message?: "", "Session") {
+                        dialog(e.message?: "", messages.serviceIsNotAvailable()) {
                             findNavController(f).navigate(R.id.actionGlobalOnSessionInvalid)
                         }
                     }
@@ -50,7 +50,7 @@ class ClassifiedExceptionHandler @Inject constructor(
         return true
     }
 
-    fun toast(message: String) {
+    private fun toast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
