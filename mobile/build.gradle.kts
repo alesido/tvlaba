@@ -39,7 +39,9 @@ dependencies {
     implementation(Libs.exoplayer)
     implementation(Libs.exoplayerLeanback)
 
-    //
+    //Navigation
     implementation(Libs.jetPackNavigationFragment)
     implementation(Libs.jetPackNavigationKtx)
+
+    implementation(Libs.jodaTime)
 }
