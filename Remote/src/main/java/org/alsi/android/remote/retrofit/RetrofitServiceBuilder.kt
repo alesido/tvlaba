@@ -44,6 +44,8 @@ class RetrofitServiceBuilder<API>
 
     private val extraQueryParams = LinkedHashMap<String, String>()
 
+    private val interceptors: MutableList<Interceptor> = mutableListOf()
+
     private var isRxErrorHandlingCallAdapterFactoryEnabled: Boolean = false
 
     /** Interface to define a source of default query parameters changing
@@ -105,6 +107,11 @@ class RetrofitServiceBuilder<API>
         return this
     }
 
+    fun addInterceptor(interceptor: Interceptor): RetrofitServiceBuilder<API>  {
+        interceptors.add(interceptor)
+        return this
+    }
+
     fun enableRxErrorHandlingCallAdapterFactory(
         postErrorProcessor: ((retrofitException: RetrofitException) -> Throwable)? = null
     ): RetrofitServiceBuilder<API> {
@@ -156,6 +163,12 @@ class RetrofitServiceBuilder<API>
 
             clientBuilder.addInterceptor(loggingInterceptor)
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        if (interceptors.isNotEmpty()) {
+            interceptors.forEach {
+                clientBuilder.addInterceptor(it)
+            }
         }
 
         val retrofit = Retrofit.Builder()
