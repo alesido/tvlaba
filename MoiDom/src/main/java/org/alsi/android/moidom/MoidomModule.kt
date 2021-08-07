@@ -29,6 +29,7 @@ import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import org.alsi.android.moidom.store.tv.TvProgramRemoteStoreMoidom
 import org.alsi.android.moidom.store.tv.TvVideoStreamRemoteStoreMoidom
+import org.alsi.android.remote.retrofit.error.RetrofitExceptionProducer
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -63,8 +64,11 @@ class MoidomModule {
 
     /**     MoiDom REST service
      */
-    @Singleton @Provides fun provideRestServiceMoiDom(retrofitExceptionMapper: RetrofitExceptionMapper)
-    = DataServiceFactoryMoidom.makeRestServiceMoidom(retrofitExceptionMapper::map)
+    @Singleton @Provides fun provideRestServiceMoiDom(
+        retrofitExceptionMapper: RetrofitExceptionMapper,
+        instrumentedTestInterceptor: RetrofitExceptionProducer
+    ) = DataServiceFactoryMoidom.makeRestServiceMoidom(
+        retrofitExceptionMapper::map, instrumentedTestInterceptor)
 
     /**     Moidom service-wide Local Store for TV data
      */

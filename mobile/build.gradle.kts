@@ -39,6 +39,12 @@ dependencies {
     implementation(Libs.exoplayer)
     implementation(Libs.exoplayerLeanback)
 
+    // Retrofit (to support exception testing)
+    implementation(Libs.retrofit)
+    implementation(Libs.retrofitGson)
+    implementation(Libs.retrofitAdapter)
+
+
     //Navigation
     implementation(Libs.jetPackNavigationFragment)
     implementation(Libs.jetPackNavigationKtx)

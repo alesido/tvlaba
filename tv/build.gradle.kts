@@ -22,6 +22,8 @@ android {
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
 
+        testInstrumentationRunner = "org.alsi.android.tvlaba.tv.TvLabATestRunner"
+
         applicationVariants.all {
             outputs.all {
                 (this as ApkVariantOutputImpl).outputFileName =
@@ -78,6 +80,12 @@ dependencies {
     implementation(AndroidX.navigation.fragment)
     implementation(AndroidX.navigation.uiKtx)
 
+    //Retrofit (to support exception testing)
+    implementation(Libs.retrofit)
+    implementation(Libs.retrofitGson)
+    implementation(Libs.retrofitAdapter)
+
+    //Time
     implementation(Libs.jodaTime)
 
     //Instrumented testing

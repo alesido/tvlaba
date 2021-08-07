@@ -10,10 +10,7 @@ import org.alsi.android.tvlaba.tv.injection.DaggerApplicationComponent
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * Created on 7/7/18.
- */
-class TvVideoStreamingApplication : Application(), HasActivityInjector, HasSupportFragmentInjector {
+open class TvVideoStreamingApplication : Application(), HasActivityInjector, HasSupportFragmentInjector {
 
     @Inject lateinit var activityInjector: DispatchingAndroidInjector<Activity>
     @Inject lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -21,18 +18,17 @@ class TvVideoStreamingApplication : Application(), HasActivityInjector, HasSuppo
     override fun activityInjector() = activityInjector
     override fun supportFragmentInjector() = fragmentInjector
 
-    override fun onCreate() {
-        super.onCreate()
-        setupTimber()
+    open lateinit var component: ApplicationComponent
 
-        DaggerApplicationComponent
-                .builder()
-                .application(this)
-                .build()
-                .inject(this)
+    open fun initializeComponent(): ApplicationComponent {
+        val component = DaggerApplicationComponent.builder().application(this).build()
+        component.inject(this)
+        return component
     }
 
-    private fun setupTimber() {
+    override fun onCreate() {
+        super.onCreate()
         Timber.plant(Timber.DebugTree())
+        component = initializeComponent()
     }
 }

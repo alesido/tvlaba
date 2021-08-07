@@ -8,6 +8,7 @@ import org.alsi.android.domain.DomainModule
 import org.alsi.android.local.LocalModule
 import org.alsi.android.moidom.MoidomModule
 import org.alsi.android.presentationtv.PresentationTvModule
+import org.alsi.android.remote.RemoteModule
 import org.alsi.android.tvlaba.mobile.MobileVideoStreamingApplication
 import org.alsi.android.tvlaba.mobile.injection.module.*
 import javax.inject.Singleton
@@ -23,6 +24,7 @@ import javax.inject.Singleton
         DomainModule::class,
         DataModule::class,
         LocalModule::class,
+        RemoteModule::class,
         MoidomModule::class,
         StreamingServicesModule::class
 ])

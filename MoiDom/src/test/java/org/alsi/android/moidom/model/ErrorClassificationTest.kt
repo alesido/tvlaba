@@ -6,7 +6,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.domain.exception.model.*
-import org.alsi.android.moidom.framework.ExceptionTestingInterceptor
+import org.alsi.android.remote.retrofit.error.RetrofitExceptionProducer
 import org.alsi.android.moidom.mapper.RetrofitExceptionMapper
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.retrofit.RetrofitErrorPostProcessor
@@ -23,6 +23,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
+import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
@@ -53,19 +54,23 @@ class ErrorClassificationTest {
         mockServer.start()
     }
 
-    private fun setupRestService(interceptor: ExceptionTestingInterceptor? = null) {
+    private fun setupRestService(testException: Throwable? = null) {
         val builder = RetrofitServiceBuilder(RestServiceMoidom::class.java, mockServer.url("/").toString())
             .enableRxErrorHandlingCallAdapterFactory(errorPostProcessor())
             .setGson(gson).enableLogging()
-        interceptor?.let { builder.addInterceptor(interceptor) }
+        if (testException != null) {
+            val interceptor = RetrofitExceptionProducer(isActivated = true, testException = testException)
+            builder.addInterceptor(interceptor)
+            interceptor.start(1)
+        }
         restService = builder.build()
     }
 
     @Test
     fun testSocketTimeout() {
         // REST
-        setupRestService( ExceptionTestingInterceptor(SocketTimeoutException(
-            "Test SocketTimeoutException - have to be classified as a Server Exception")))
+        setupRestService( SocketTimeoutException(
+            "Test SocketTimeoutException - have to be classified as a Server Exception"))
 
         // Observer
         val observer = TestObserver<LoginResponse>()
@@ -85,7 +90,8 @@ class ErrorClassificationTest {
     @Test
     fun testIOException() {
         // REST
-        setupRestService( ExceptionTestingInterceptor() )
+        setupRestService( IOException(
+            "Test IOException - have to be classified as a Network Exception") )
 
         // Observer
         val observer = TestObserver<LoginResponse>()
@@ -148,7 +154,7 @@ class ErrorClassificationTest {
     }
 
     private fun subscribeLoginRequest(observer: TestObserver<LoginResponse>) {
-        restService.login("20172017", "testPassword",
+        restService.login("test", "testPassword",
                 "settings", "deviceType", 0, 0,
                 "s/n", "mac", "model", "man")
                 .subscribe(observer)

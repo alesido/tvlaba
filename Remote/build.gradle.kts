@@ -1,8 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("kotlin")
-    id("kotlin-kapt")
+    id("android-library-module")
 }
 
 tasks.withType<KotlinCompile> {
@@ -16,8 +15,7 @@ dependencies {
     implementation(Libs.kotlinReflect)
 
     // Dependency Injection
-    implementation(Libs.javaxAnnotation)
-    implementation(Libs.javaxInject)
+    dependencyInjection()
 
     // RX
     implementation(Libs.rxKotlin)
