@@ -25,7 +25,7 @@ android {
         applicationVariants.all {
             outputs.all {
                 (this as ApkVariantOutputImpl).outputFileName =
-                        "tvlaba-${flavorName}-${name}-${versionCode}.apk"
+                        "tvlaba-${name}-${versionCode}.apk"
             }
         }
     }
@@ -79,4 +79,21 @@ dependencies {
     implementation(AndroidX.navigation.uiKtx)
 
     implementation(Libs.jodaTime)
+
+    //Instrumented testing
+    androidTestImplementation(Libs.androidAnnotations)
+    androidTestImplementation(Libs.espressoCore)
+
+    androidTestImplementation(Libs.androidSupportRunner)
+    androidTestImplementation(Libs.androidSupportRules)
+
+    androidTestImplementation(Libs.jUnit)
+
+    androidTestImplementation(AndroidX.test.ext.junit)
+    androidTestImplementation(AndroidX.test.monitor)
+
+    kaptAndroidTest(Libs.daggerCompiler)
+    kaptAndroidTest(Libs.daggerProcessor)
+
+    androidTestImplementation("com.squareup.rx.idler:rx2-idler:0.11.0")
 }
