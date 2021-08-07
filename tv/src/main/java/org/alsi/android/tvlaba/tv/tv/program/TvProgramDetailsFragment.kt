@@ -25,6 +25,7 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvProgramDetailsLiveData
 import org.alsi.android.presentationtv.model.TvProgramDetailsViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
@@ -32,8 +33,9 @@ import javax.inject.Inject
 
 class TvProgramDetailsFragment : DetailsSupportFragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
+
 
     private lateinit var detailsViewModel: TvProgramDetailsViewModel
 
@@ -119,9 +121,8 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         when (resource.status) {
             ResourceState.SUCCESS -> bindProgramData(resource.data)
             ResourceState.LOADING -> {}
-            ResourceState.ERROR -> {
-                Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
-            }
+            ResourceState.ERROR -> errorHandler.run(this, resource.throwable)
+
             else -> {}
         }
     }

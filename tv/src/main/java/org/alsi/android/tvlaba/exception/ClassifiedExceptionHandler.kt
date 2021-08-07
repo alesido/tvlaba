@@ -15,7 +15,7 @@ class ClassifiedExceptionHandler @Inject constructor(
     private val messages: ExceptionMessages
 ) {
 
-    fun handle(
+    fun run(
         f: Fragment,
         e: Throwable?
     ): Boolean {

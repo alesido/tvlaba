@@ -170,7 +170,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             }
             ResourceState.ERROR -> {
                 progressBarManager.hide()
-                errorHandler.handle(this, resource.throwable)
+                errorHandler.run(this, resource.throwable)
             }
             else -> {
             }

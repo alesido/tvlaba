@@ -27,7 +27,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.common.net.HttpHeaders.USER_AGENT
 import dagger.android.support.AndroidSupportInjection
-import org.alsi.android.domain.exception.model.ClassifiedException
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
@@ -37,7 +36,6 @@ import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
 import org.alsi.android.presentationtv.model.*
 import org.alsi.android.tvlaba.R
-import org.alsi.android.tvlaba.databinding.LbPlaybackFragmentBinding
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
@@ -271,7 +269,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             }
             ResourceState.ERROR -> {
                 //Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
-                errorHandler.handle(this, resource.throwable as ClassifiedException)
+                errorHandler.run(this, resource.throwable)
             }
             else -> {}
         }
@@ -329,7 +327,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             ResourceState.LOADING -> {
             }
             ResourceState.ERROR -> {
-                Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
+                errorHandler.run(this, resource.throwable)
             }
             else -> {
             }
@@ -369,7 +367,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             ResourceState.LOADING -> {
             }
             ResourceState.ERROR -> {
-                Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
+                errorHandler.run(this, resource.throwable)
             }
             else -> {
             }

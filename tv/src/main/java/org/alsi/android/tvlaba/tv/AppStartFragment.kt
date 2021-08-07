@@ -12,6 +12,7 @@ import org.alsi.android.presentation.AppStartViewModel
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
 
@@ -20,8 +21,8 @@ import javax.inject.Inject
  */
 class AppStartFragment: Fragment(R.layout.app_start_fragment) {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
     private lateinit var appStartViewModel: AppStartViewModel
 
@@ -51,6 +52,7 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
             }
             ResourceState.ERROR -> {
                 //progressBarManager.hide()
+                errorHandler.run(this, resource.throwable)
             }
             else -> {
             }

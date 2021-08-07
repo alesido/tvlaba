@@ -12,6 +12,7 @@ import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvGuideStartViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
 
@@ -24,8 +25,9 @@ import javax.inject.Inject
  */
 class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
+
 
     private lateinit var viewModel: TvGuideStartViewModel
 
@@ -53,6 +55,7 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
             }
             ResourceState.ERROR -> {
                 //progressBarManager.hide()
+                errorHandler.run(this, resource.throwable)
             }
             else -> {
             }
