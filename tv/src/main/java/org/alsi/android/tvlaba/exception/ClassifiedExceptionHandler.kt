@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import org.alsi.android.domain.exception.model.*
 import org.alsi.android.tvlaba.R
+import timber.log.Timber
 import javax.inject.Inject
 
 class ClassifiedExceptionHandler @Inject constructor(
@@ -44,7 +45,10 @@ class ClassifiedExceptionHandler @Inject constructor(
                     else -> toast(e.message?: messages.genericErrorMessage())
                 }
 
-            else -> toast(e.message?: messages.genericErrorMessage())
+            else -> {
+                Timber.e(e, "### An unclassified exception.")
+                toast(e.message?: messages.genericErrorMessage())
+            }
         }
 
         return true
