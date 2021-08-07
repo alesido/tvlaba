@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
+import org.alsi.android.tvlaba.tv.injection.ApplicationComponent
 import org.alsi.android.tvlaba.tv.injection.DaggerApplicationComponent
 import timber.log.Timber
 import javax.inject.Inject
