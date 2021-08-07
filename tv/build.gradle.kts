@@ -55,7 +55,7 @@ configurations.all {
         substitute(
             module("androidx.leanback:leanback"))
             .because("using customized copy of the leanback library")
-            .with(project(":leanback")
+            .using(project(":leanback")
         )
     }
 }
