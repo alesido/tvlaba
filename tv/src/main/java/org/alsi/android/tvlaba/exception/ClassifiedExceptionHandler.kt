@@ -2,9 +2,7 @@ package org.alsi.android.tvlaba.exception
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.widget.Toast
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import org.alsi.android.domain.exception.model.*
@@ -13,7 +11,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ClassifiedExceptionHandler @Inject constructor(
-    private val context: Context,
+    private val appContext: Context,
     private val messages: ExceptionMessages
 ) {
 
@@ -26,8 +24,8 @@ class ClassifiedExceptionHandler @Inject constructor(
 
         when(e) {
 
-            is NetworkException -> dialog(e.message?: "", messages.noInternetConnection())
-            is ServerException -> dialog(e.message?: "", messages.serverAccessError())
+            is NetworkException -> dialog(f.context, e.message?: "", messages.noInternetConnection())
+            is ServerException -> dialog(f.context,e.message?: "", messages.serverAccessError())
             is ProcessingException -> toast(e.message?: messages.genericErrorMessage())
 
             is ApiException -> when(e) {
@@ -37,7 +35,7 @@ class ClassifiedExceptionHandler @Inject constructor(
                     }
 
                     is UserSessionInvalid -> {
-                        dialog(e.message?: "", messages.serviceIsNotAvailable()) {
+                        dialog(f.context, e.message?: "", messages.serviceIsNotAvailable()) {
                             findNavController(f).navigate(R.id.actionGlobalOnSessionInvalid)
                         }
                     }
@@ -55,11 +53,12 @@ class ClassifiedExceptionHandler @Inject constructor(
     }
 
     private fun toast(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(appContext, message, Toast.LENGTH_LONG).show()
     }
 
-    private fun dialog(message: String, title: String? = null, iconResId: Int? = null,  ok: (() -> Unit)? = null) {
-        val b = AlertDialog.Builder(context).setMessage(message)
+    private fun dialog(activityContext: Context?, message: String, title: String? = null, iconResId: Int? = null,  ok: (() -> Unit)? = null) {
+        activityContext?: return
+        val b = AlertDialog.Builder(activityContext).setMessage(message)
         iconResId?.let { b.setIcon(it) }
         title?.let { b.setTitle(it) }
         b.setPositiveButton("OK") { dialog, _ ->
