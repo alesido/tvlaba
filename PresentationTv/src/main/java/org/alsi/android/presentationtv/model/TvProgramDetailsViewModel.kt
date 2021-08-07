@@ -139,7 +139,7 @@ class TvProgramDetailsViewModel @Inject constructor (
             }
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
         override fun onComplete() { /* not applicable */ }
     }
@@ -151,7 +151,7 @@ class TvProgramDetailsViewModel @Inject constructor (
         override fun onError(e: Throwable) {
             // TODO Exit program details fragment upon error while getting schedule
             //  to complete browse cursor when just started from the channel directory
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
     }
 
@@ -161,7 +161,7 @@ class TvProgramDetailsViewModel @Inject constructor (
             navigate()
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
     }
 
@@ -180,7 +180,7 @@ class TvProgramDetailsViewModel @Inject constructor (
             liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
     }
 
@@ -194,7 +194,7 @@ class TvProgramDetailsViewModel @Inject constructor (
         }
 
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
     }
 }

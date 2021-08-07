@@ -55,7 +55,7 @@ open class TvCategoryBrowseViewModel @Inject constructor(
             categoriesUseCase.execute(ChannelCategoriesSubscriber())
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
     }
 
@@ -68,7 +68,7 @@ open class TvCategoryBrowseViewModel @Inject constructor(
             // seems not applicable
         }
         override fun onError(e: Throwable) {
-            liveData.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveData.postValue(Resource.error(e))
         }
     }
 }

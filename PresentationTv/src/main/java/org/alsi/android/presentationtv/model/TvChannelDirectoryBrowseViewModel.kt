@@ -111,7 +111,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             directoryObservationUseCase.execute(ChannelDirectorySubscriber())
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
     }
 
@@ -121,7 +121,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             browseCursorGetUseCase.execute(BrowseCursorSubscriber())
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
         override fun onComplete() { /* not applicable */ }
     }
@@ -131,7 +131,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             //
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
     }
 
@@ -151,7 +151,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                     TvChannelDirectoryBrowseLiveData(dir, position), null))
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
     }
 
@@ -160,7 +160,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             // silently accept it's OK
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
     }
 
@@ -172,7 +172,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                     TvNewPlaybackUseCase.Params(channel.categoryId, channel))
         }
         override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource(ResourceState.ERROR, null, e.localizedMessage))
+            liveDirectory.postValue(Resource.error(e))
         }
     }
 
