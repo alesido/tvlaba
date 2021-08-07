@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.Single
-import io.reactivex.subjects.PublishSubject
 import net.lachlanmckee.timberjunit.TimberTestRule
 import org.alsi.android.data.framework.test.getJson
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
@@ -15,8 +14,6 @@ import org.alsi.android.framework.Now
 import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegate
-import org.alsi.android.moidom.model.LoginEvent
-import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.repository.tv.TvChannelDataRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
