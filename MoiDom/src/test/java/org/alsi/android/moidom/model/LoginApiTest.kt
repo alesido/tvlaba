@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.alsi.android.data.framework.test.getJson
+import org.alsi.android.data.framework.test.readJsonResourceFile
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.retrofit.RetrofitServiceBuilder
 import org.alsi.android.remote.retrofit.error.RetrofitException
@@ -16,7 +16,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 /** Tests:
@@ -49,7 +48,7 @@ class LoginApiTest {
     @Test
     fun testSuccessfulLogin() {
         val observer = TestObserver<LoginResponse>()
-        val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/login.json"))
+        val mockResponse = MockResponse().setResponseCode(200).setBody(readJsonResourceFile("json/login.json"))
         mockServer.enqueue(mockResponse)
 
         subscribeLoginRequest(observer)
@@ -71,7 +70,7 @@ class LoginApiTest {
     @Test
     fun testLoginApiError() {
         val observer = TestObserver<LoginResponse>()
-        val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/login.error.json"))
+        val mockResponse = MockResponse().setResponseCode(200).setBody(readJsonResourceFile("json/login.error.json"))
         mockServer.enqueue(mockResponse)
 
         subscribeLoginRequest(observer)
@@ -87,7 +86,7 @@ class LoginApiTest {
     @Test
     fun testLoginHttpAndApiError() {
         val observer = TestObserver<LoginResponse>()
-        val mockResponse = MockResponse().setResponseCode(422).setBody(getJson("json/login.error.json"))
+        val mockResponse = MockResponse().setResponseCode(422).setBody(readJsonResourceFile("json/login.error.json"))
         mockServer.enqueue(mockResponse)
 
         subscribeLoginRequest(observer)

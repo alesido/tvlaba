@@ -58,9 +58,10 @@ class ClassifiedExceptionHandler @Inject constructor(
 
     private fun dialog(activityContext: Context?, message: String, title: String? = null, iconResId: Int? = null,  ok: (() -> Unit)? = null) {
         activityContext?: return
-        val b = AlertDialog.Builder(activityContext).setMessage(message)
+        val b = AlertDialog.Builder(activityContext)
         iconResId?.let { b.setIcon(it) }
         title?.let { b.setTitle(it) }
+        if (message != title) b.setMessage(message)
         b.setPositiveButton("OK") { dialog, _ ->
             if (ok != null) ok() else dialog.dismiss()
         }

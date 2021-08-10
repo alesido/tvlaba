@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.Single
-import org.alsi.android.data.framework.test.getJson
+import org.alsi.android.data.framework.test.readJsonResourceFile
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.local.model.user.UserAccountSubject
@@ -173,10 +173,10 @@ class TvChannelDataRepositoryMoidomTest {
             channelsJsonPath: String = "json/channel_list.json") {
 
         whenever(remoteService.getGroups("testRemoteSessionId")).thenReturn(Single.just(
-                gson.fromJson(getJson(categoriesJsonPath), GetTvGroupResponse::class.java)))
+                gson.fromJson(readJsonResourceFile(categoriesJsonPath), GetTvGroupResponse::class.java)))
 
         whenever(remoteService.getAllChannels("testRemoteSessionId", "+0300")).thenReturn(
-                Single.just(gson.fromJson(getJson(channelsJsonPath), ChannelListResponse::class.java)))
+                Single.just(gson.fromJson(readJsonResourceFile(channelsJsonPath), ChannelListResponse::class.java)))
     }
 
     private fun stubRemoteSession() {

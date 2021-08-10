@@ -1,12 +1,9 @@
 package org.alsi.android.moidom.model
 
 import com.google.gson.GsonBuilder
-import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.alsi.android.data.framework.test.getJson
-import org.alsi.android.moidom.model.tv.ChannelListResponse
-import org.alsi.android.moidom.model.tv.GetTvGroupResponse
+import org.alsi.android.data.framework.test.readJsonResourceFile
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.retrofit.RetrofitServiceBuilder
 import org.alsi.android.remote.retrofit.json.IntEnablingMap
@@ -20,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 /** Tests:
@@ -52,7 +48,7 @@ class TvChannelApiTest {
 
     @Test
     fun shouldGetCategories() {
-        val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/tv_group.json"))
+        val mockResponse = MockResponse().setResponseCode(200).setBody(readJsonResourceFile("json/tv_group.json"))
         mockServer.enqueue(mockResponse)
 
         val observer = moiDomService.getGroups("testSessionId").test()
@@ -69,7 +65,7 @@ class TvChannelApiTest {
 
     @Test
     fun shouldGetChannels() {
-        val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/channel_list.json"))
+        val mockResponse = MockResponse().setResponseCode(200).setBody(readJsonResourceFile("json/channel_list.json"))
         mockServer.enqueue(mockResponse)
 
         val observer = moiDomService.getAllChannels("testSessionId",

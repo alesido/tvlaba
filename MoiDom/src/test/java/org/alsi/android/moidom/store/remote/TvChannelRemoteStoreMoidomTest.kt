@@ -3,7 +3,7 @@ package org.alsi.android.moidom.store.remote
 import com.google.gson.GsonBuilder
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
-import org.alsi.android.data.framework.test.getJson
+import org.alsi.android.data.framework.test.readJsonResourceFile
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.model.tv.GetTvGroupResponse
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
@@ -81,10 +81,10 @@ class TvChannelRemoteStoreMoidomTest {
         val gson = GsonBuilder().registerTypeAdapter(IntEnablingMap::class.java, JsonDeserializerForIntEnablingMap()).create()
 
         whenever(remoteService.getGroups("testRemoteSessionId")).thenReturn(Single.just(
-                gson.fromJson(getJson("json/tv_group.json"), GetTvGroupResponse::class.java)))
+                gson.fromJson(readJsonResourceFile("json/tv_group.json"), GetTvGroupResponse::class.java)))
 
         whenever(remoteService.getAllChannels("testRemoteSessionId", "+0300")).thenReturn(
-                Single.just( gson.fromJson(getJson("json/channel_list.json"), ChannelListResponse::class.java)))
+                Single.just( gson.fromJson(readJsonResourceFile("json/channel_list.json"), ChannelListResponse::class.java)))
     }
 
     private fun stubRemoteSession() {

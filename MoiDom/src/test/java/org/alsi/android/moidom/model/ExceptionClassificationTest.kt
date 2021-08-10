@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.alsi.android.data.framework.test.getJson
+import org.alsi.android.data.framework.test.readJsonResourceFile
 import org.alsi.android.domain.exception.model.*
 import org.alsi.android.remote.retrofit.error.RetrofitExceptionProducer
 import org.alsi.android.moidom.mapper.RetrofitExceptionMapper
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit
  *
  */
 @RunWith(JUnit4::class)
-class ErrorClassificationTest {
+class ExceptionClassificationTest {
 
     private lateinit var mockServer: MockWebServer
     private lateinit var restService: RestServiceMoidom
@@ -115,7 +115,7 @@ class ErrorClassificationTest {
 
         // Test Observer
         val observer = TestObserver<LoginResponse>()
-        val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/another_user_session_active.error.json"))
+        val mockResponse = MockResponse().setResponseCode(200).setBody(readJsonResourceFile("json/another_user_session_active.error.json"))
         mockServer.enqueue(mockResponse)
 
         // Run
@@ -135,7 +135,7 @@ class ErrorClassificationTest {
 
         // Test Observer
         val observer = TestObserver<LoginResponse>()
-        val mockResponse = MockResponse().setResponseCode(200).setBody(getJson("json/contract_inactive.error.json"))
+        val mockResponse = MockResponse().setResponseCode(200).setBody(readJsonResourceFile("json/contract_inactive.error.json"))
         mockServer.enqueue(mockResponse)
 
         // Run

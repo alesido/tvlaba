@@ -7,7 +7,7 @@ import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.Single
 import net.lachlanmckee.timberjunit.TimberTestRule
-import org.alsi.android.data.framework.test.getJson
+import org.alsi.android.data.framework.test.readJsonResourceFile
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.framework.Now
@@ -132,7 +132,7 @@ class TvChannelsUpdateTest {
                     val sourceFileName = String.format("%s%d%s",
                             "json/channel_list_update_", testChannelsFileIndex++, ".json")
                     println(sourceFileName)
-                    val sourceJson = getJson(sourceFileName)
+                    val sourceJson = readJsonResourceFile(sourceFileName)
                     Single.just(gson.fromJson(sourceJson, ChannelListResponse::class.java))
                 }
     }
