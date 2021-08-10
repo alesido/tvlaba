@@ -1,7 +1,10 @@
 package org.alsi.android.remote.retrofit.error
 
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Response
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.IOException
 import java.util.*
 
@@ -37,8 +40,17 @@ class RetrofitExceptionProducer(
         GET_URL("/get_url?");
     }
 
+    enum class Mode {
+        EXCEPTION_PRODUCER,
+        RESPONSE_REPLACEMENT
+    }
+
+    private var mode: Mode = Mode.EXCEPTION_PRODUCER
+
     private var throwException = false
     private var throwCounter = 0
+
+    private var responseBodyReplacement: ResponseBody? = null
 
     /** ... to support scenarios in instrumentation tests
      */
@@ -47,9 +59,16 @@ class RetrofitExceptionProducer(
     /** ... to initialize scenario in instrumentation test
      */
     fun start(throwCounter: Int = 1, aTestException: Throwable? = null) {
+        this.mode = Mode.EXCEPTION_PRODUCER
         this.throwCounter = throwCounter
         aTestException?.let { this.testException = aTestException }
         this.throwException = true
+    }
+
+    fun start(responseBodyReplacementJsonString: String) {
+        this.mode = Mode.RESPONSE_REPLACEMENT
+        this.responseBodyReplacement = responseBodyReplacementJsonString
+            .toResponseBody("application/json; charset=utf-8".toMediaTypeOrNull())
     }
 
     fun stop() {
@@ -66,6 +85,13 @@ class RetrofitExceptionProducer(
 
     //@Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+        return if (mode == Mode.EXCEPTION_PRODUCER)
+            produceException(chain)
+        else
+            replaceResponseBody(chain)
+    }
+
+    private fun produceException(chain: Interceptor.Chain): Response {
         if (!throwException)
             return chain.proceed(chain.request())
 
@@ -76,6 +102,11 @@ class RetrofitExceptionProducer(
             throw testException
         }
         return chain.proceed(chain.request())
+    }
+
+    private fun replaceResponseBody(chain: Interceptor.Chain): Response {
+        val response = chain.proceed(chain.request())
+        return response.newBuilder().body(responseBodyReplacement).build()
     }
 
     private fun getRequestEndPoint(requestUrl: String): String {
