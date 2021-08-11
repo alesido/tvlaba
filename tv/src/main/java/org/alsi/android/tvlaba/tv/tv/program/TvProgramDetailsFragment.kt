@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
@@ -54,6 +56,16 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         super.onCreate(savedInstanceState)
         setupViewModel()
         setupAdapter()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+        val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
+        view.addView(progressView)
+        progressBarManager.enableProgressBar()
+        progressBarManager.setProgressBarView(progressView)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,11 +131,18 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
     private fun handleDetailsChangeEvent(resource: Resource<TvProgramDetailsLiveData>) {
         when (resource.status) {
-            ResourceState.SUCCESS -> bindProgramData(resource.data)
-            ResourceState.LOADING -> {}
-            ResourceState.ERROR -> errorHandler.run(this, resource.throwable)
+            ResourceState.SUCCESS -> {
+                bindProgramData(resource.data)
+            }
+            ResourceState.LOADING -> {
 
-            else -> {}
+            }
+            ResourceState.ERROR -> {
+                errorHandler.run(this, resource.throwable)
+            }
+            else -> {
+
+            }
         }
     }
 

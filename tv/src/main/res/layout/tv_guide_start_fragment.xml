@@ -4,17 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     >
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/tvGuideStartProgressView"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_kinopoisk_bold"
-        tools:ignore="ContentDescription"
+        app:SpinKit_Color="@android:color/holo_blue_dark"
+        android:visibility="invisible"
+        tools:visibility="visible"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

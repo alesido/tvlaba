@@ -88,6 +88,9 @@ dependencies {
     //Time
     implementation(Libs.jodaTime)
 
+    //Progress
+    implementation("com.github.ybq:Android-SpinKit:1.4.0")
+
     //Instrumented testing
     androidTestImplementation(Libs.androidAnnotations)
     androidTestImplementation(Libs.espressoCore)

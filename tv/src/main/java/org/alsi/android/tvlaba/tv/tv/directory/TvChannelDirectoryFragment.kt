@@ -2,7 +2,9 @@ package org.alsi.android.tvlaba.tv.tv.directory
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
@@ -82,6 +84,19 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 )
             }
         }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+
+        val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
+        view.addView(progressView)
+
+        progressBarManager.enableProgressBar()
+        progressBarManager.setProgressBarView(progressView)
+
+        return view
     }
 
     override fun onStart() {

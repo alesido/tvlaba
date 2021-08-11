@@ -1,6 +1,9 @@
 package org.alsi.android.tvlaba.tv.tv
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
@@ -12,6 +15,7 @@ import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvGuideStartViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.TvGuideStartFragmentBinding
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
@@ -28,8 +32,10 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelFactory
     @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
-
     private lateinit var viewModel: TvGuideStartViewModel
+
+    private var _vb: TvGuideStartFragmentBinding? = null
+    private val vb get() = _vb!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -37,6 +43,12 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(TvGuideStartViewModel::class.java)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View {
+        _vb = TvGuideStartFragmentBinding.inflate(inflater, container, false)
+        return vb.root
     }
 
     override fun onStart() {
@@ -47,14 +59,14 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
     private fun handleGettingStartContext(resource: Resource<TvStartContext>) {
         when (resource.status) {
             ResourceState.LOADING -> {
-                //progressBarManager.show()
+                showProgress()
             }
             ResourceState.SUCCESS -> {
-                //progressBarManager.hide()
+                dismissProgress()
                 handleContextRestored(resource.data)
             }
             ResourceState.ERROR -> {
-                //progressBarManager.hide()
+                dismissProgress()
                 errorHandler.run(this, resource.throwable)
             }
             else -> {
@@ -94,4 +106,13 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
         findNavController(this).navigate(TvGuideStartFragmentDirections
             .actionTvGuideStartFragmentToTvPlaybackAndScheduleFragment())
     }
+
+    private fun showProgress() {
+        vb.tvGuideStartProgressView.visibility = View.VISIBLE
+    }
+
+    private fun dismissProgress() {
+        vb.tvGuideStartProgressView.visibility = View.INVISIBLE
+    }
+
 }

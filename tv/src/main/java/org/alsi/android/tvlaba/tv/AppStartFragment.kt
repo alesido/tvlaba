@@ -1,10 +1,11 @@
 package org.alsi.android.tvlaba.tv
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.context.model.SessionActivityType
@@ -12,6 +13,7 @@ import org.alsi.android.presentation.AppStartViewModel
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.databinding.AppStartFragmentBinding
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
@@ -26,12 +28,21 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
 
     private lateinit var appStartViewModel: AppStartViewModel
 
+    private var _vb: AppStartFragmentBinding? = null
+    private val vb get() = _vb!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         appStartViewModel = ViewModelProvider(this, viewModelFactory)
             .get(AppStartViewModel::class.java)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
+        _vb = AppStartFragmentBinding.inflate(inflater, container, false)
+        return vb.root
     }
 
     override fun onStart() {
@@ -44,17 +55,18 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
     private fun handleNavigationDataState(resource: Resource<SessionActivityType>) {
         when (resource.status) {
             ResourceState.LOADING -> {
-                //progressBarManager.show()
+                showProgress()
             }
             ResourceState.SUCCESS -> {
-                //progressBarManager.hide()
+                dismissProgress()
                 navigateToInitialTarget(resource.data)
             }
             ResourceState.ERROR -> {
-                //progressBarManager.hide()
+                dismissProgress()
                 errorHandler.run(this, resource.throwable)
             }
             else -> {
+                dismissProgress()
             }
         }
     }
@@ -71,5 +83,13 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
 
             else -> navController.navigate(AppStartFragmentDirections.actionAppStartFragmentToTvGuide())
         }
+    }
+
+    private fun showProgress() {
+        vb.appStartProgressView.visibility = View.VISIBLE
+    }
+
+    private fun dismissProgress() {
+        vb.appStartProgressView.visibility = View.INVISIBLE
     }
 }

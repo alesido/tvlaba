@@ -98,11 +98,18 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val rootView = super.onCreateView(inflater, container, savedInstanceState)
-        subtitlesView = rootView?.findViewById(R.id.leanbackSubtitles)
+    ): View {
+        val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+
+        subtitlesView = view.findViewById(R.id.leanbackSubtitles)
         addBackPressedCallback()
-        return rootView
+
+        val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
+        view.addView(progressView)
+        progressBarManager.enableProgressBar()
+        progressBarManager.setProgressBarView(progressView)
+
+        return view
     }
 
     private fun setupPlayer() {
