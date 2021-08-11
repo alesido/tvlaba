@@ -34,22 +34,13 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     private var directory: TvChannelDirectory? = null
 
     init {
-        //fetchChannelDirectory()
+        liveDirectory.postValue(Resource.loading())
         directoryObservationUseCase.execute(ChannelDirectorySubscriber())
     }
 
     fun getLiveDirectory(): LiveData<Resource<TvChannelDirectoryBrowseLiveData>> = liveDirectory
 
     // region Interface
-
-    private fun fetchChannelDirectory() {
-        liveDirectory.postValue(Resource(ResourceState.LOADING, null, null))
-        startSessionUseCase.execute(StartSessionSubscriber(),
-                StartSessionUseCase.Params(
-                        loginName = "52",
-                        loginPassword = "123"
-                ))
-    }
 
     @Suppress("UNUSED_PARAMETER")
     fun onChannelSelected(categoryPosition: Int, channelPosition: Int, channel: TvChannel) {
