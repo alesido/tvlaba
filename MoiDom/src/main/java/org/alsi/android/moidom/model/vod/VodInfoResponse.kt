@@ -65,7 +65,7 @@ data class VodInfoResponse(
                 val url: String,
                 val size: Int,
                 val codec: String,
-                val lenght: Int,
+                @Suppress("SpellCheckingInspection") val lenght: Int,
                 val width: Int,
                 val height: Int,
                 val track1_codec: String,
