@@ -6,4 +6,5 @@ plugins {
 dependencies {
 
     implementation(Libs.jodaTime)
+    implementation(project(mapOf("path" to ":DataVod")))
 }

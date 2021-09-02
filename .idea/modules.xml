@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/TvLabA.iml" filepath="$PROJECT_DIR$/TvLabA.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Data/TvLabA.Data.iml" filepath="$PROJECT_DIR$/.idea/modules/Data/TvLabA.Data.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/DataTv/TvLabA.DataTv.iml" filepath="$PROJECT_DIR$/.idea/modules/DataTv/TvLabA.DataTv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DataVod/TvLabA.DataVod.iml" filepath="$PROJECT_DIR$/.idea/modules/DataVod/TvLabA.DataVod.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Domain/TvLabA.Domain.iml" filepath="$PROJECT_DIR$/.idea/modules/Domain/TvLabA.Domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/DomainTv/TvLabA.DomainTv.iml" filepath="$PROJECT_DIR$/.idea/modules/DomainTv/TvLabA.DomainTv.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/DomainUser/TvLabA.DomainUser.iml" filepath="$PROJECT_DIR$/.idea/modules/DomainUser/TvLabA.DomainUser.iml" />

@@ -4,4 +4,4 @@ plugins {
 ////                            # available:"0.11.0"
 }
 
-include(":mobile", ":tv", ":DomainTv", ":DomainVod", ":DomainUser", ":PresentationTv", ":PresentationVod", ":Presentation", ":Domain", ":Data", ":DataTv", ":Remote", ":MoiDom", ":Local", ":leanback")
+include(":mobile", ":tv", ":DomainTv", ":DomainVod", ":DomainUser", ":PresentationTv", ":PresentationVod", ":Presentation", ":Domain", ":Data", ":DataTv", ":DataVod", ":Remote", ":MoiDom", ":Local", ":leanback")
