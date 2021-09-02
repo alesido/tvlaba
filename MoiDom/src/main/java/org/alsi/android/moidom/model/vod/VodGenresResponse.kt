@@ -14,6 +14,6 @@ data class VodGenresResponse(
     data class Genre(
             val id: String,
             val name: String,
-            val count: String
+            val count: Int?
     )
 }

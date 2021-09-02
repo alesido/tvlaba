@@ -120,8 +120,8 @@ interface RestServiceMoidom {
     @GET("vod_list")
     fun getGenreVodList(
             @Query("PATKER_SSID") sid: String,
-            @Query("type") type: String,
-            @Query("genre") genreId: Int?,
+            @Query("type") type: String?,
+            @Query("genre") genreId: Long?,
             @Query("page") pageNumber: Int?,
             @Query("nums") numberOfItemsPerPage: Int?
     ): Single<VodListResponse>
@@ -139,7 +139,7 @@ interface RestServiceMoidom {
     fun searchGenreVodList(
             @Query("PATKER_SSID") sid: String,
             @Query("type") type: String,
-            @Query("genre") genreId: Int?,
+            @Query("genre") genreId: Long?,
             @Query("query") query: String
     ): Single<VodListResponse>
 
@@ -149,7 +149,7 @@ interface RestServiceMoidom {
     @GET("vod_info")
     fun getVodInfo(
             @Query("PATKER_SSID") sid: String,
-            @Query("programId") vodItemId: String
+            @Query("vid") vodItemId: Long
     ): Single<VodInfoResponse>
 
     /**
@@ -157,15 +157,13 @@ interface RestServiceMoidom {
      */
     /**
      *
-     * @param vodVideoFileId ID of a video file of a VOD to get URL to video stream of.
+     * @param videoId ID of a video file of a VOD to get URL to video stream of.
      * @return
      */
-    @GET("vod_geturl")
+    @GET("vod_get_url")
     fun getVodStreamUrl(
             @Query("PATKER_SSID") sid: String,
-            @Query("fileid") vodVideoFileId: Long?,
-            @Query("stream_mode") streamMode: String,
-            @Query("playlist") playlistVariant: String
+            @Query("vid") videoId: Long
     ): Single<GetVodUrlResponse>
 
     @GET("settings")
@@ -209,7 +207,7 @@ interface RestServiceMoidom {
 
         val UPGRADE_URL = "http://android.moidom.tv/android_new/updatemoidom.php"
 
-        val BASE_URL_VOD_POSTERS = "http://iptv.moi-dom.tv/" // http://iptv.moi-dom.tv/img/ico_245x140/74.png
+        val BASE_URL_VOD_POSTERS = "http://iptv.moi-dom.tv" // http://iptv.moi-dom.tv/img/ico_245x140/74.png
 
         val TAG_SERVICE_MOIDOM_TV = "tv"
         val TAG_SERVICE_MOIDOM_VOD = "vod"
@@ -244,7 +242,10 @@ interface RestServiceMoidom {
 
         val TOKEN_NO_EPG_CHANNEL = "NO EPG"
 
-        val EXTRA_GENRE_BEST_ID = -1001
-        val EXTRA_GENRE_LAST_ID = -1002
+        val VOD_SECTION_ID = -1L
+        val UNKNOWN_UNIT_ID = -1000L
+
+        val EXTRA_GENRE_BEST_ID = -1001L
+        val EXTRA_GENRE_LAST_ID = -1002L
     }
 }
