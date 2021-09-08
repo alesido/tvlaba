@@ -17,8 +17,8 @@ abstract class VodRepository (streamingServiceId: Long) : DirectoryRepository(st
      *  NOTE The returned page item contains a subset of data sufficient to display it in a list.
      */
     abstract fun getListingPage(
-        sectionId: Int,
-        unitId: Int,
+        sectionId: Long,
+        unitId: Long,
         page: Int,
         count: Int
     ): Single<VodListingPage>
@@ -35,8 +35,13 @@ abstract class VodRepository (streamingServiceId: Long) : DirectoryRepository(st
      *  then search in all units of the section. If ID of section  is not set too,
      *  provide global search.
      */
-    abstract fun search(sectionId: Int?, unitId: Int?, titleSubstring: String): Single<VodListingPage>
-
+    abstract fun search(
+        titleSubstring: String,
+        sectionId: Long?,
+        unitId: Long?,
+        page: Int,
+        count: Int
+    ): Single<VodListingPage>
 
     /** Get detailed data on a VOD listing item, i.e. item content variant for the VOD digest.
      *

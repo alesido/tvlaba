@@ -12,15 +12,15 @@ data class VodListingItem(
     val title: String,
     val description: String? = null,
 
-    val posters: Posters? = null,
-
     val video: Video? = null,
+    val posters: Posters? = null,
+    val attributes: Attributes? = null,
 
-    val attributes: Attributes? = null
+    val timeStamp: Long? = null
 ) {
     // Video
 
-    sealed class Video() {
+    sealed class Video {
 
         data class Single(
             val id: Long,

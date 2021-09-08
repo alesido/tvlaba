@@ -1,8 +1,17 @@
 package org.alsi.android.domain.vod.model.guide.directory
 
 
-class VodDirectory(val sections: List<VodSection>) {
+class VodDirectory(
+    val sections: List<VodSection>,
+    val timeStamp: Long? = null
+) {
     val sectionById: Map<Long, VodSection> = sections.map { it.id to it}.toMap()
+
+    fun isEmpty(): Boolean = sections.isEmpty()
+
+    companion object {
+        fun empty() = VodDirectory(listOf())
+    }
 }
 
 /**
