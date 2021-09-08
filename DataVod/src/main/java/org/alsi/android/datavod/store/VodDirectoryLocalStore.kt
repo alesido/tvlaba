@@ -17,7 +17,26 @@ interface VodDirectoryLocalStore {
     fun getDirectory(): Single<VodDirectory>
 
     fun putListingPage(page: VodListingPage): Completable
-    fun getListingPage(): Single<VodListingPage>
+    fun getListingPage(sectionId: Long, unitId: Long, page: Int, count: Int): Single<VodListingPage>
+
+    fun putPromoPage(promoPage: VodListingPage): Completable
+    fun getPromoPage(): Single<VodListingPage>
+
+    fun putSearchResultPage(
+        titleSubstring: String,
+        sectionId: Long?,
+        unitId: Long?,
+        page: Int,
+        count: Int
+    ): Completable
+
+    fun getSearchResultPage(
+        titleSubstring: String,
+        sectionId: Long?,
+        unitId: Long?,
+        page: Int,
+        count: Int
+    ): Single<VodListingPage>
 
     fun putListingItem(item: VodListingItem): Completable
     fun getListingItem(vodItemId: Long): Single<VodListingItem>
