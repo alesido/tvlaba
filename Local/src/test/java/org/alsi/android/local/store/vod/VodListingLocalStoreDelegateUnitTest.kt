@@ -155,6 +155,124 @@ class VodListingLocalStoreDelegateUnitTest {
         }
     }
 
+    @Test
+    fun shouldStoreSingleVideoItem() {
+        val testObserver = TestObserver<VodListingItem>()
+
+        val testItem = VodListingTestDataFactory.videoSingleItem(1)
+
+        storeDelegate.putListingItem(testItem).subscribe {
+            (storeDelegate.getListingItem(testItem.id)).subscribe(testObserver)
+        }
+        onTestObserverTermination(testObserver, "shouldStoreSingleVideoItem")
+
+        val readItem = testObserver.values()[0]
+
+        // video single assertion
+        with(testItem) {
+
+            assertEquals(id, readItem.id)
+            assertEquals(title, readItem.title)
+            assertEquals(description, readItem.description)
+            assertNotNull(readItem.timeStamp)
+
+            assert(video is VodListingItem.Video.Single)
+            assert(readItem.video is VodListingItem.Video.Single)
+
+            val testVideo = video as VodListingItem.Video.Single
+            val readVideo = readItem.video as VodListingItem.Video.Single
+            with (testVideo) {
+                assertEquals(id, readVideo.id)
+                assertEquals(title, readVideo.title)
+                assertEquals(description, readVideo.description)
+                assertEquals(uri, readVideo.uri)
+                assertEquals(tracks?.size, readVideo.tracks?.size)
+                assertEquals(tracks?.elementAt(0)?.languageCode, readVideo.tracks?.elementAt(0)?.languageCode)
+                assertEquals(tracks?.elementAt(0)?.title, readVideo.tracks?.elementAt(0)?.title)
+                assertEquals(durationMillis, readVideo.durationMillis)
+            }
+
+            posters?.let {
+                val readPosters = readItem.posters
+                assertEquals(it.poster, readPosters?.poster)
+                assertEquals(it.gallery?.size, readPosters?.gallery?.size)
+                assertEquals(it.gallery?.elementAt(0), readPosters?.gallery?.elementAt(0))
+                assertEquals(it.gallery?.elementAt(2), readPosters?.gallery?.elementAt(2))
+            }
+
+            attributes?.let {
+                val readAttrs = readItem.attributes
+                assertEquals(it.durationMillis, readAttrs?.durationMillis)
+                assertEquals(it.genres?.size, readAttrs?.genres?.size)
+                assertEquals(it.genres?.elementAt(0)?.genreId, readAttrs?.genres?.elementAt(0)?.genreId)
+                assertEquals(it.genres?.elementAt(0)?.title, readAttrs?.genres?.elementAt(0)?.title)
+            }
+        }
+    }
+
+    @Test
+    fun shouldStoreSerialVideoItem() {
+        val testObserver = TestObserver<VodListingItem>()
+
+        val testItem = VodListingTestDataFactory.videoSerialItem(1)
+
+        storeDelegate.putListingItem(testItem).subscribe {
+            (storeDelegate.getListingItem(testItem.id)).subscribe(testObserver)
+        }
+        onTestObserverTermination(testObserver, "shouldStoreSingleVideoItem")
+
+        val serialItem = testObserver.values()[0]
+
+        // video serial assertion
+        with(testItem) {
+
+            assertEquals(id, serialItem.id)
+            assertEquals(title, serialItem.title)
+            assertEquals(description, serialItem.description)
+            assertNotNull(serialItem.timeStamp)
+
+            posters?.let {
+                val readPosters = serialItem.posters
+                assertEquals(it.poster, readPosters?.poster)
+                assertEquals(it.gallery?.size, readPosters?.gallery?.size)
+                assertEquals(it.gallery?.elementAt(0), readPosters?.gallery?.elementAt(0))
+                assertEquals(it.gallery?.elementAt(2), readPosters?.gallery?.elementAt(2))
+            }
+
+            attributes?.let {
+                val readAttrs = serialItem.attributes
+                assertEquals(it.durationMillis, readAttrs?.durationMillis)
+                assertEquals(it.genres?.size, readAttrs?.genres?.size)
+                assertEquals(it.genres?.elementAt(0)?.genreId, readAttrs?.genres?.elementAt(0)?.genreId)
+                assertEquals(it.genres?.elementAt(0)?.title, readAttrs?.genres?.elementAt(0)?.title)
+            }
+
+            assert(video is VodListingItem.Video.Serial)
+            assert(serialItem.video is VodListingItem.Video.Serial)
+            val testSerial = video as VodListingItem.Video.Serial
+            val readSerial = serialItem.video as VodListingItem.Video.Serial
+            with (testSerial) {
+                assertEquals(id, readSerial.id)
+                assertEquals(title, readSerial.title)
+                assertEquals(description, readSerial.description)
+
+                assertEquals(series.size, readSerial.series.size)
+                val testSeries = series[0]
+                val readSeries = readSerial.series[0]
+                with(testSeries) {
+                    assertEquals(id, readSeries.id)
+                    assertEquals(title, readSeries.title)
+                    assertEquals(description, readSeries.description)
+                    assertEquals(uri, readSeries.uri)
+                    assertEquals(tracks?.size, readSeries.tracks?.size)
+                    assertEquals(tracks?.elementAt(0)?.languageCode, readSeries.tracks?.elementAt(0)?.languageCode)
+                    assertEquals(tracks?.elementAt(0)?.title, readSeries.tracks?.elementAt(0)?.title)
+                    assertEquals(durationMillis, readSeries.durationMillis)
+                }
+            }
+        }
+    }
+
     private fun onTestObserverTermination(testObserver: TestObserver<*>, testTag: String) {
         testObserver.awaitTerminalEvent(1, TimeUnit.SECONDS)
         if (testObserver.errorCount() > 0) {
