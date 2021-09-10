@@ -32,8 +32,8 @@ class VodListingPageUseCase  @Inject constructor(
     }
 
     class Params (
-        val sectionId: Int,
-        val unitId: Int,
+        val sectionId: Long,
+        val unitId: Long,
         val page: Int,
         val count: Int
     )

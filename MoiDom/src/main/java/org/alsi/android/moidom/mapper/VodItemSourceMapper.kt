@@ -50,7 +50,7 @@ class VodItemSourceMapper: SourceDataMapper<VodInfoResponse, VodListingItem> {
             durationMillis = duration?.let { it * DateUtils.MINUTE_IN_MILLIS },
             credits = dstCredits,
             genres = genre?.let { listString -> listString.split(",")
-                .mapIndexed { index, name -> VodListingItem.Genre(index + 1, name) }
+                .mapIndexed { index, name -> VodListingItem.Genre((index + 1).toLong(), name) }
             },
             year = year,
             country = country,

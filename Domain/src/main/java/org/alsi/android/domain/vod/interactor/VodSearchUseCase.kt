@@ -20,9 +20,11 @@ class VodSearchUseCase  @Inject constructor(
         val repo = presentationManager.provideContext(ServicePresentationType.VOD_GUIDE)?.directory
         return if (repo is VodRepository) {
             repo.search(
+                params.substring,
                 params.sectionId,
                 params.unitId,
-                params.substring,
+                params.page,
+                params.count
             )
         }
         else {
@@ -31,8 +33,10 @@ class VodSearchUseCase  @Inject constructor(
     }
 
     class Params (
-        val sectionId: Int,
-        val unitId: Int,
         val substring: String,
+        val sectionId: Long,
+        val unitId: Long,
+        val page: Int,
+        val count: Int
     )
 }
