@@ -7,7 +7,13 @@ class VideoStream (
         val kind: VideoStreamKind = VideoStreamKind.UNKNOWN,
         val subtitles: URI? = null,
         val timeStamp: Long? = null
-)
+) {
+    fun isEmpty() = null == uri
+
+    companion object {
+        fun empty() = VideoStream(null)
+    }
+}
 
 enum class VideoStreamKind {
     UNKNOWN, LIVE, RECORD

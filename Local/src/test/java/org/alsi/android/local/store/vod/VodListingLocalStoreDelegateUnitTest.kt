@@ -3,10 +3,13 @@ package org.alsi.android.local.store.vod
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.observers.TestObserver
+import org.alsi.android.domain.streaming.model.VideoStream
+import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
 import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.local.model.user.UserAccountSubject
+import org.alsi.android.local.model.vod.VodVideoSingleStreamEntity
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegateUnitTest
 import org.junit.After
 import org.junit.Before
@@ -14,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import java.io.File
+import java.net.URI
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -270,6 +274,48 @@ class VodListingLocalStoreDelegateUnitTest {
                     assertEquals(durationMillis, readSeries.durationMillis)
                 }
             }
+        }
+    }
+
+    @Test
+    fun shouldStoreVideoSingleStream() {
+        val testObserver = TestObserver<VideoStream>()
+
+        val testStream = VideoStream(
+            uri = URI.create("http://test.example.com/stream/single/1"),
+            kind = VideoStreamKind.RECORD
+        )
+
+        storeDelegate.putSingleVideoStream(123L, testStream).subscribe {
+            (storeDelegate.getSingleVideoStream(123L)).subscribe(testObserver)
+        }
+        onTestObserverTermination(testObserver, "shouldStoreSingleVideoItem")
+
+        val readStream = testObserver.values()[0]
+        with (testStream) {
+            assertEquals(uri, readStream.uri)
+            assertNotNull(readStream.timeStamp)
+        }
+    }
+
+    @Test
+    fun shouldStoreVideoSeriesStream() {
+        val testObserver = TestObserver<VideoStream>()
+
+        val testStream = VideoStream(
+            uri = URI.create("http://test.example.com/stream/single/1"),
+            kind = VideoStreamKind.RECORD
+        )
+
+        storeDelegate.putSeriesVideoStream(123L, testStream).subscribe {
+            (storeDelegate.getSeriesVideoStream(123L)).subscribe(testObserver)
+        }
+        onTestObserverTermination(testObserver, "shouldStoreSingleVideoItem")
+
+        val readStream = testObserver.values()[0]
+        with (testStream) {
+            assertEquals(uri, readStream.uri)
+            assertNotNull(readStream.timeStamp)
         }
     }
 

@@ -9,6 +9,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import org.alsi.android.datavod.store.VodDirectoryLocalStore
 import org.alsi.android.domain.streaming.model.VideoStream
+import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.vod.model.guide.directory.VodDirectory
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
@@ -29,6 +30,9 @@ class VodDirectoryLocalDelegate(
 
     private val pageBox: Box<VodListingPageEntity> = serviceBoxStore.boxFor()
     private val itemBox: Box<VodListingItemEntity> = serviceBoxStore.boxFor()
+
+    private val videoSingleBox: Box<VodVideoSingleStreamEntity> = serviceBoxStore.boxFor()
+    private val videoSeriesBox: Box<VodVideoSeriesStreamEntity> = serviceBoxStore.boxFor()
 
     private val directoryMapper = VodDirectoryEntityMapper()
     private val sectionMapper = VodSectionEntityMapper()
@@ -137,19 +141,31 @@ class VodDirectoryLocalDelegate(
         itemMapperWriter.mapFromEntity(itemBox.get(vodItemId))
     }
 
-    override fun putSingleVideoStream(vodItemId: Long, stream: VideoStream): Completable {
-        TODO("Not yet implemented")
+    override fun putSingleVideoStream(vodItemId: Long, stream: VideoStream) = Completable.fromRunnable {
+        videoSingleBox.put(VodVideoSingleStreamEntity(vodItemId = vodItemId, streamUri = stream.uri,
+            subtitlesUri = stream.subtitles, timeStamp = System.currentTimeMillis()))
     }
 
-    override fun getSingleVideoStream(vodItemId: Long): Single<VideoStream> {
-        TODO("Not yet implemented")
+    override fun getSingleVideoStream(vodItemId: Long): Single<VideoStream> = Single.fromCallable {
+        val entity = videoSingleBox.query {
+            equal(VodVideoSingleStreamEntity_.vodItemId, vodItemId)
+        }.findUnique()
+        entity?.let {
+            VideoStream(it.streamUri, VideoStreamKind.RECORD, it.subtitlesUri, it.timeStamp)
+        } ?: VideoStream.empty()
     }
 
-    override fun putSeriesVideoStream(seriesId: Long, stream: VideoStream): Completable {
-        TODO("Not yet implemented")
+    override fun putSeriesVideoStream(seriesId: Long, stream: VideoStream) = Completable.fromRunnable {
+        videoSeriesBox.put(VodVideoSeriesStreamEntity(seriesId = seriesId, streamUri = stream.uri,
+            subtitlesUri = stream.subtitles, timeStamp = System.currentTimeMillis()))
     }
 
-    override fun getSeriesVideoStream(seriesId: Long): Single<VideoStream> {
-        TODO("Not yet implemented")
+    override fun getSeriesVideoStream(seriesId: Long) = Single.fromCallable {
+        val entity = videoSeriesBox.query {
+            equal(VodVideoSeriesStreamEntity_.seriesId, seriesId)
+        }.findUnique()
+        entity?.let {
+            VideoStream(it.streamUri, VideoStreamKind.RECORD, it.subtitlesUri, it.timeStamp)
+        } ?: VideoStream.empty()
     }
 }

@@ -752,14 +752,14 @@
     },
     {
       "id": "20:7168401301432301296",
-      "lastPropertyId": "3:6981210280216927075",
+      "lastPropertyId": "4:1719013907313559913",
       "name": "VodGenreEntity",
       "properties": [
         {
           "id": "1:9044353483120843953",
           "name": "id",
           "type": 6,
-          "flags": 129
+          "flags": 1
         },
         {
           "id": "2:9201946842050963884",
@@ -773,6 +773,12 @@
           "type": 11,
           "flags": 1548,
           "relationTarget": "VodAttributesEntity"
+        },
+        {
+          "id": "4:1719013907313559913",
+          "name": "genreId",
+          "type": 6,
+          "flags": 2
         }
       ],
       "relations": []

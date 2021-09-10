@@ -1256,10 +1256,86 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "33:3062485260046791997",
+      "lastPropertyId": "5:1436700358241970760",
+      "name": "VodVideoSingleStreamEntity",
+      "properties": [
+        {
+          "id": "1:8652862819913446612",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1139311255074892061",
+          "name": "vodItemId",
+          "indexId": "47:6463028497071008928",
+          "type": 6,
+          "flags": 10
+        },
+        {
+          "id": "3:7141726941555601466",
+          "name": "streamUri",
+          "type": 9
+        },
+        {
+          "id": "4:4949321700008975450",
+          "name": "subtitlesUri",
+          "type": 9
+        },
+        {
+          "id": "5:1436700358241970760",
+          "name": "timeStamp",
+          "indexId": "48:7572790911526960789",
+          "type": 6,
+          "flags": 12
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "34:9009704069572706058",
+      "lastPropertyId": "5:4325608271716879044",
+      "name": "VodVideoSeriesStreamEntity",
+      "properties": [
+        {
+          "id": "1:1215605847906778430",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2595184585407850077",
+          "name": "seriesId",
+          "indexId": "49:6393554250015766843",
+          "type": 6,
+          "flags": 10
+        },
+        {
+          "id": "3:1485082704914869222",
+          "name": "streamUri",
+          "type": 9
+        },
+        {
+          "id": "4:7799468209231201329",
+          "name": "subtitlesUri",
+          "type": 9
+        },
+        {
+          "id": "5:4325608271716879044",
+          "name": "timeStamp",
+          "indexId": "50:5644433031206063983",
+          "type": 6,
+          "flags": 12
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "32:8176934378581559692",
-  "lastIndexId": "46:3118232057476655731",
+  "lastEntityId": "34:9009704069572706058",
+  "lastIndexId": "50:5644433031206063983",
   "lastRelationId": "7:661188029526077298",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
