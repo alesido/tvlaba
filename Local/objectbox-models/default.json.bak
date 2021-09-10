@@ -694,11 +694,567 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "19:5398649960296256770",
+      "lastPropertyId": "8:415511494137573339",
+      "name": "TvBrowseCursorEntity",
+      "properties": [
+        {
+          "id": "1:43290567578883495",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3218254550344696796",
+          "name": "userLoginName",
+          "type": 9
+        },
+        {
+          "id": "3:6488058140890580177",
+          "name": "categoryId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "4:7174699307006457281",
+          "name": "channelId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "5:6309582334665934657",
+          "name": "scheduleDate",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "6:1180859313982828362",
+          "name": "programId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "7:1457461304638611690",
+          "name": "page",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "8:415511494137573339",
+          "name": "timeStamp",
+          "type": 6,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "20:7168401301432301296",
+      "lastPropertyId": "3:6981210280216927075",
+      "name": "VodGenreEntity",
+      "properties": [
+        {
+          "id": "1:9044353483120843953",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:9201946842050963884",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:6981210280216927075",
+          "name": "vodAttributesId",
+          "indexId": "40:6367259222617951152",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodAttributesEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "21:8060340071404557538",
+      "lastPropertyId": "4:5199190248621406414",
+      "name": "VodCreditEntity",
+      "properties": [
+        {
+          "id": "1:982538332050458633",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4831473475183065359",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:8944761628466114878",
+          "name": "role",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "4:5199190248621406414",
+          "name": "vodAttributesId",
+          "indexId": "41:7419983982913739460",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodAttributesEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "22:3930932325940457608",
+      "lastPropertyId": "3:3899621159052561994",
+      "name": "VideoSerialEntity",
+      "properties": [
+        {
+          "id": "1:4418924042387375618",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:9211895980091143785",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:3899621159052561994",
+          "name": "description",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "23:381104293907546963",
+      "lastPropertyId": "4:2858449051014248236",
+      "name": "VodUnitEntity",
+      "properties": [
+        {
+          "id": "1:1183116420415391169",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:7701758594899359126",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:1917094191045340987",
+          "name": "total",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "4:2858449051014248236",
+          "name": "sectionId",
+          "indexId": "34:2128924149427001861",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodSectionEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "24:8745230614053688247",
+      "lastPropertyId": "8:8232063287238100401",
+      "name": "VodAttributesEntity",
+      "properties": [
+        {
+          "id": "1:6632171492550877892",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3207106237442895126",
+          "name": "durationMillis",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "3:437259699877145363",
+          "name": "year",
+          "type": 9
+        },
+        {
+          "id": "4:1485506018363677601",
+          "name": "country",
+          "type": 9
+        },
+        {
+          "id": "5:1330141973623907260",
+          "name": "quality",
+          "type": 9
+        },
+        {
+          "id": "6:8510618636054739586",
+          "name": "ageLimit",
+          "type": 9
+        },
+        {
+          "id": "7:5709284914778700635",
+          "name": "kinopoiskRate",
+          "type": 9
+        },
+        {
+          "id": "8:8232063287238100401",
+          "name": "imdbRate",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "25:7997949683414172146",
+      "lastPropertyId": "8:3522932223917628373",
+      "name": "VideoSeriesEntity",
+      "properties": [
+        {
+          "id": "1:3674541880724453535",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:9202737219024015645",
+          "name": "season",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:6890484268157957820",
+          "name": "episode",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "4:520635728008398237",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "5:3035566251439651639",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "6:5912544136464389415",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "7:5219031813755866353",
+          "name": "durationMillis",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "8:3522932223917628373",
+          "name": "videoSerialId",
+          "indexId": "42:6804155434150897789",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VideoSerialEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "26:537017461013989185",
+      "lastPropertyId": "6:1586245736197474052",
+      "name": "VodTrackEntity",
+      "properties": [
+        {
+          "id": "1:5225178200767402782",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2067102219879272886",
+          "name": "type",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "3:3807747620305518974",
+          "name": "languageCode",
+          "type": 9
+        },
+        {
+          "id": "4:283883688257329969",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "5:7259540087933104003",
+          "name": "videoSingleId",
+          "indexId": "43:505815902518757519",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VideoSingleEntity"
+        },
+        {
+          "id": "6:1586245736197474052",
+          "name": "videoSeriesId",
+          "indexId": "44:9172535708815625057",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VideoSeriesEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "27:3549092460836633083",
+      "lastPropertyId": "7:483585474653745176",
+      "name": "VodListingPageEntity",
+      "properties": [
+        {
+          "id": "1:2474075452856602484",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1647299828497930447",
+          "name": "sectionId",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "3:630304820279384599",
+          "name": "unitId",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "4:2363230992762715182",
+          "name": "total",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "5:6766023372869130699",
+          "name": "pageNumber",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "6:265122040888605248",
+          "name": "count",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "7:483585474653745176",
+          "name": "timeStamp",
+          "type": 6,
+          "flags": 2
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "28:1509122092974179466",
+      "lastPropertyId": "3:1565816807122317889",
+      "name": "VodPosterEntity",
+      "properties": [
+        {
+          "id": "1:8515861596605843108",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4168094995599670814",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "3:1565816807122317889",
+          "name": "videoSingleId",
+          "indexId": "45:8344569108544303789",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodListingItemEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "29:4575891197919757315",
+      "lastPropertyId": "10:5269114227209548764",
+      "name": "VodListingItemEntity",
+      "properties": [
+        {
+          "id": "1:7765078796293374354",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:5871166495759036891",
+          "name": "sectionId",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "3:4873095731442115217",
+          "name": "unitId",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "4:6198898083637809778",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "5:8952519605971827546",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "6:1263898192621806523",
+          "name": "timeStamp",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "7:6053612642730575572",
+          "name": "videoSingleId",
+          "indexId": "36:2892440151936440011",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VideoSingleEntity"
+        },
+        {
+          "id": "8:1452941178705169688",
+          "name": "videoSerialId",
+          "indexId": "37:183646972293453505",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VideoSerialEntity"
+        },
+        {
+          "id": "9:548633048969276147",
+          "name": "attributesId",
+          "indexId": "38:8979470319881174983",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodAttributesEntity"
+        },
+        {
+          "id": "10:5269114227209548764",
+          "name": "listingPageId",
+          "indexId": "46:3118232057476655731",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodListingPageEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "30:5812511921231181247",
+      "lastPropertyId": "3:8620823452049231218",
+      "name": "VodSectionEntity",
+      "properties": [
+        {
+          "id": "1:6853872044947642933",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:6913521803363908554",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:8620823452049231218",
+          "name": "directoryId",
+          "indexId": "39:2986437080438987218",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodDirectoryEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "31:2335080230581621871",
+      "lastPropertyId": "2:2420240509403217756",
+      "name": "VodDirectoryEntity",
+      "properties": [
+        {
+          "id": "1:5847837863430592736",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:2420240509403217756",
+          "name": "timeStamp",
+          "type": 6,
+          "flags": 2
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "32:8176934378581559692",
+      "lastPropertyId": "5:8680591761530569871",
+      "name": "VideoSingleEntity",
+      "properties": [
+        {
+          "id": "1:1427482013694992008",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:6312266886114247459",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:3223111547054855575",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:6855765236466854158",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "5:8680591761530569871",
+          "name": "durationMillis",
+          "type": 6,
+          "flags": 2
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "18:3638758981994868413",
-  "lastIndexId": "33:3801068196188206420",
-  "lastRelationId": "0:0",
+  "lastEntityId": "32:8176934378581559692",
+  "lastIndexId": "46:3118232057476655731",
+  "lastRelationId": "7:661188029526077298",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
@@ -713,7 +1269,8 @@
     7764979993992228997,
     2187969593749072192,
     2922034967181324700,
-    5782574556914128443
+    5782574556914128443,
+    2089400378575079551
   ],
   "retiredPropertyUids": [
     6905912384517656670,
@@ -738,6 +1295,14 @@
     311508341229991225,
     6677953404487234715
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    661188029526077298,
+    8460982835405050096,
+    8648360968212526695,
+    6842970005434727794,
+    4944362682195960614,
+    5317604444773745010,
+    7747080991329789927
+  ],
   "version": 1
 }

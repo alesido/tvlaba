@@ -9,6 +9,7 @@ dependencies {
     api(project(":Domain"))
     api(project(":Data"))
     api(project(":DataTv"))
+    api(project(":DataVod"))
 
     implementation(Libs.kotlin)
     implementation(Libs.rxKotlin)

@@ -134,7 +134,7 @@ class VodDirectoryRemoteStoreMoiDomTest {
         assertEquals(item.attributes?.year, "2014")
         assertEquals(item.attributes?.country, "США ,Канада ,Великобритания ")
 
-        assertEquals(item.attributes?.genres?.elementAt(0)?.id, 1)
+        assertEquals(item.attributes?.genres?.elementAt(0)?.genreId, 1)
         assertEquals(item.attributes?.genres?.elementAt(0)?.title, "Фантастика")
     }
 

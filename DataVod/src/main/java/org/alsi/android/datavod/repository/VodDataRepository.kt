@@ -65,12 +65,11 @@ abstract class VodDataRepository(
         local.getSearchResultPage(titleSubstring, sectionId, unitId, page, count).flatMap { localPage ->
             if (isSearchResultPageExpired(localPage))
                 remote.search(titleSubstring, sectionId, unitId, page, count).flatMap { remotePage ->
-                    local.putSearchResultPage(titleSubstring, sectionId, unitId, page, count).toSingle { remotePage }
+                    local.putSearchResultPage(remotePage, titleSubstring).toSingle { remotePage }
                 }
             else
                 Single.just(localPage)
         }
-
 
     override fun getListingItem(vodItemId: Long): Single<VodListingItem> =
         local.getListingItem(vodItemId).flatMap { localItem ->

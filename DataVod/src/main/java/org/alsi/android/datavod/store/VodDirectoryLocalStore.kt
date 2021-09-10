@@ -22,21 +22,10 @@ interface VodDirectoryLocalStore {
     fun putPromoPage(promoPage: VodListingPage): Completable
     fun getPromoPage(): Single<VodListingPage>
 
-    fun putSearchResultPage(
-        titleSubstring: String,
-        sectionId: Long?,
-        unitId: Long?,
-        page: Int,
-        count: Int
-    ): Completable
+    fun putSearchResultPage(page: VodListingPage, titleSubstring: String): Completable
 
-    fun getSearchResultPage(
-        titleSubstring: String,
-        sectionId: Long?,
-        unitId: Long?,
-        page: Int,
-        count: Int
-    ): Single<VodListingPage>
+    fun getSearchResultPage(titleSubstring: String,
+        sectionId: Long?, unitId: Long?, page: Int, count: Int): Single<VodListingPage>
 
     fun putListingItem(item: VodListingItem): Completable
     fun getListingItem(vodItemId: Long): Single<VodListingItem>
