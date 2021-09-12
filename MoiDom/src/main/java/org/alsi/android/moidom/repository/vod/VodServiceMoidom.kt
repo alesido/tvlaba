@@ -11,12 +11,13 @@ import javax.inject.Singleton
 @Singleton
 class VodServiceMoidom @Inject constructor(
         @Named("${Moidom.TAG}.${VOD}") serviceId: Long,
+        directory: VodDirectoryRepositoryMoidom,
         configuration: SettingsRepositoryMoidom
 ) : StreamingService(
         serviceId,
         kind = StreamingServiceKind.TV,
         tag = "${Moidom.TAG}.${VOD}",
-        directory = VodDirectoryRepositoryMoidom(),
+        directory = directory,
         session = VodSessionRepositoryMoidom(),
         configuration = configuration
 )

@@ -7,6 +7,8 @@ import io.objectbox.BoxStore
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.datatv.repository.TvVideoStreamDataRepository
 import org.alsi.android.datatv.store.*
+import org.alsi.android.datavod.store.VodDirectoryLocalStore
+import org.alsi.android.datavod.store.VodDirectoryRemoteStore
 import org.alsi.android.domain.streaming.model.ServiceProvider
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
@@ -14,6 +16,7 @@ import org.alsi.android.local.Local
 import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.AccountStoreLocalDelegate
 import org.alsi.android.local.store.tv.*
+import org.alsi.android.local.store.vod.VodDirectoryLocalStoreDelegate
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.mapper.RetrofitExceptionMapper
 import org.alsi.android.moidom.model.LoginEvent
@@ -23,12 +26,14 @@ import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.repository.ServiceProviderMoidom
 import org.alsi.android.moidom.repository.SettingsRepositoryMoidom
 import org.alsi.android.moidom.repository.tv.TvServiceMoidom
+import org.alsi.android.moidom.repository.vod.VodDirectoryRepositoryMoidom
 import org.alsi.android.moidom.repository.vod.VodServiceMoidom
 import org.alsi.android.moidom.store.DataServiceFactoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import org.alsi.android.moidom.store.tv.TvProgramRemoteStoreMoidom
 import org.alsi.android.moidom.store.tv.TvVideoStreamRemoteStoreMoidom
+import org.alsi.android.moidom.store.vod.VodDirectoryRemoteStoreMoiDom
 import org.alsi.android.remote.retrofit.error.RetrofitExceptionProducer
 import javax.inject.Named
 import javax.inject.Singleton
@@ -43,13 +48,6 @@ class MoidomModule {
     @Singleton @Provides @Named(Moidom.TAG) fun provideServicesMoidom(
             tvServiceMoiDom: TvServiceMoidom, vodServiceMoidom: VodServiceMoidom)
             : MutableList<StreamingService> = mutableListOf(tvServiceMoiDom, vodServiceMoidom)
-
-    /**     MoiDom VOD service
-     */
-    @Singleton @Provides fun provideVodServiceMoidom(
-            @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long,
-            settings: SettingsRepositoryMoidom)
-            = VodServiceMoidom(serviceId, settings)
 
     /**     MoiDom Service Provider
      */
@@ -83,6 +81,15 @@ class MoidomModule {
             context: Context,
             @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long): BoxStore
             = org.alsi.android.local.model.MyObjectBox.builder().name("${Moidom.TAG}.${StreamingService.TV}.$serviceId")
+            .androidContext(context).build()
+
+    /**     Moidom service-wide Local Store for VOD data
+     */
+    @Named("${Moidom.TAG}.${StreamingService.VOD}")
+    @Singleton @Provides fun provideVodServiceLocalStoreMoidom(
+            context: Context,
+            @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long): BoxStore
+            = org.alsi.android.local.model.MyObjectBox.builder().name("${Moidom.TAG}.${StreamingService.VOD}.$serviceId")
             .androidContext(context).build()
 
     @Singleton @Provides fun provideAccountStoreLocalDelegate(
@@ -120,6 +127,23 @@ class MoidomModule {
     @Singleton @Provides fun provideTvVideoStreamLocalStoreMoidomDelegate(
             @Named("${Moidom.TAG}.${StreamingService.TV}") localBoxStore: BoxStore)
     : TvVideoStreamLocalStore = TvVideoStreamLocalStoreDelegate(localBoxStore)
+
+    /**
+     *  VOD Service Local Store
+     */
+    @Named("${Moidom.TAG}.${StreamingService.VOD}")
+    @Singleton @Provides fun provideVodServiceLocalStore(
+        @Named("${Moidom.TAG}.${StreamingService.VOD}") localBoxStore: BoxStore,
+        @Named("${Moidom.TAG}.${StreamingService.TV}") accountSubject: UserAccountSubject
+    ): VodDirectoryLocalStore = VodDirectoryLocalStoreDelegate(localBoxStore, accountSubject)
+
+    /**
+     *  VOD Service Remote Store
+     */
+    @Named("${Moidom.TAG}.${StreamingService.VOD}")
+    @Singleton @Provides fun provideVodServiceRemoteStore(
+        remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom
+    ): VodDirectoryRemoteStore = VodDirectoryRemoteStoreMoiDom(remoteService, remoteSession)
 
     /**     TV Video Stream Remote Store
      */
