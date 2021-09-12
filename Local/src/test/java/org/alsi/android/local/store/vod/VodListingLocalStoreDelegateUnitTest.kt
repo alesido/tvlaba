@@ -9,7 +9,6 @@ import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
 import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.local.model.user.UserAccountSubject
-import org.alsi.android.local.model.vod.VodVideoSingleStreamEntity
 import org.alsi.android.local.store.tv.TvChannelLocalStoreDelegateUnitTest
 import org.junit.After
 import org.junit.Before
@@ -28,7 +27,7 @@ class VodListingLocalStoreDelegateUnitTest {
 
     private lateinit var boxStore: BoxStore
 
-    private lateinit var storeDelegate: VodDirectoryLocalDelegate
+    private lateinit var storeDelegate: VodDirectoryLocalStoreDelegate
 
     @Before
     fun setUp() {
@@ -36,7 +35,7 @@ class VodListingLocalStoreDelegateUnitTest {
         boxStore = MyObjectBox.builder().directory(TEST_DATA_DIRECTORY)
             .debugFlags(DebugFlags.LOG_QUERIES or DebugFlags.LOG_QUERY_PARAMETERS)
             .build()
-        storeDelegate = VodDirectoryLocalDelegate(boxStore, UserAccountSubject.create())
+        storeDelegate = VodDirectoryLocalStoreDelegate(boxStore, UserAccountSubject.create())
     }
 
     @After

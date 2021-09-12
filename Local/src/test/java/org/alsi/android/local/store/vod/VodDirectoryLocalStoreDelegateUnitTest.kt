@@ -22,7 +22,7 @@ class VodDirectoryLocalStoreDelegateUnitTest {
 
     private lateinit var boxStore: BoxStore
 
-    private lateinit var storeDelegate: VodDirectoryLocalDelegate
+    private lateinit var storeDelegate: VodDirectoryLocalStoreDelegate
 
     @Before
     fun setUp() {
@@ -30,7 +30,7 @@ class VodDirectoryLocalStoreDelegateUnitTest {
         boxStore = MyObjectBox.builder().directory(TEST_DATA_DIRECTORY)
             .debugFlags(DebugFlags.LOG_QUERIES or DebugFlags.LOG_QUERY_PARAMETERS)
             .build()
-        storeDelegate = VodDirectoryLocalDelegate(boxStore, UserAccountSubject.create())
+        storeDelegate = VodDirectoryLocalStoreDelegate(boxStore, UserAccountSubject.create())
     }
 
     @After

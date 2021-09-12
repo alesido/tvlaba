@@ -17,7 +17,7 @@ import org.alsi.android.local.mapper.vod.*
 import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.model.vod.*
 
-class VodDirectoryLocalDelegate(
+class VodDirectoryLocalStoreDelegate(
     private val serviceBoxStore: BoxStore,
     accountSubject: UserAccountSubject
 ): VodDirectoryLocalStore {
