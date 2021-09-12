@@ -108,12 +108,17 @@
                       <LayoutPositions />
                     </value>
                   </entry>
-                  <entry key="actionGlobalLoggedIn">
+                  <entry key="actionGlobalOnContractInvalid">
                     <value>
                       <LayoutPositions />
                     </value>
                   </entry>
-                  <entry key="actionGlobalSessionInvalid">
+                  <entry key="actionGlobalOnLogIn">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="actionGlobalOnSessionInvalid">
                     <value>
                       <LayoutPositions />
                     </value>
@@ -188,7 +193,7 @@
                         <option name="myPosition">
                           <Point>
                             <option name="x" value="304" />
-                            <option name="y" value="-153" />
+                            <option name="y" value="-151" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -198,7 +203,7 @@
                                 <LayoutPositions>
                                   <option name="myPosition">
                                     <Point>
-                                      <option name="x" value="46" />
+                                      <option name="x" value="-15" />
                                       <option name="y" value="82" />
                                     </Point>
                                   </option>
@@ -250,9 +255,18 @@
                                 <LayoutPositions>
                                   <option name="myPosition">
                                     <Point>
-                                      <option name="x" value="511" />
-                                      <option name="y" value="84" />
+                                      <option name="x" value="588" />
+                                      <option name="y" value="85" />
                                     </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_tvPlaybackAndScheduleFragment_to_tvProgramDetailsFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
                                   </option>
                                 </LayoutPositions>
                               </value>
@@ -263,11 +277,16 @@
                                   <option name="myPosition">
                                     <Point>
                                       <option name="x" value="282" />
-                                      <option name="y" value="84" />
+                                      <option name="y" value="83" />
                                     </Point>
                                   </option>
                                   <option name="myPositions">
                                     <map>
+                                      <entry key="action_tvProgramDetailsFragment_to_tvChannelDirectoryFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
                                       <entry key="action_tvProgramDetailsFragment_to_tvPlaybackAndScheduleFragment">
                                         <value>
                                           <LayoutPositions />

@@ -28,6 +28,7 @@ import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.model.TvMenuItem
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -69,6 +70,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                                     .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment())
                 }
             }
+            else if (item is TvMenuItem) {
+                println("Menu action \"${item.title}\"")
+            }
         }
 
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
@@ -77,7 +81,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 val rowPosition = this@TvChannelDirectoryFragment.selectedPosition
                 val itemPosition = (rowViewHolder as ListRowPresenter.ViewHolder)
                         .gridView.selectedPosition
-                browseViewModel.onChannelSelected(rowPosition, itemPosition, item)
+                browseViewModel.onChannelSelected(rowPosition - 1, itemPosition, item)
                 // schedule next channel lives update
                 browseViewModel.onItemsVisibilityChange(
                         visibleChannelDirectoryItemIds()
@@ -196,15 +200,30 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         data?.directory?.let { directory ->
             // recreate category channels rows
             val categoryRows = directory.categories.mapIndexed { idx, category ->
-                val header = HeaderItem(idx.toLong(), category.title)
+                val header = HeaderItem((idx + 1).toLong(), category.title)
                 val listRowAdapter = TvCategoryChannelsListRowAdapter(
                         TvDirectoryChannelCardPresenter()).apply {
                     setItems(directory.index[category.id], null)
                 }
                 ListRow(header, listRowAdapter)
             }
+
+            // add top and bottom menu
+            val topMenuHeader = HeaderItem(0L, getString(R.string.label_menu))
+            val bottomMenuHeader = HeaderItem((categoryRows.size + 1).toLong(), getString(R.string.label_menu))
+            val mixedRows: MutableList<ListRow> = mutableListOf()
+            val menuRowAdapter = TvMenuRowAdapter(TvMenuCardPresenter()).apply {
+                setItems(listOf(
+                    TvMenuItem(1L,"VOD", 0),
+                    TvMenuItem(2L,"Settings", 0),
+                ), null)
+            }
+            mixedRows.add(ListRow(topMenuHeader, menuRowAdapter))
+            mixedRows.addAll(categoryRows)
+            mixedRows.add(ListRow(bottomMenuHeader, menuRowAdapter))
+
             // set fresh new rows to the adapter
-            (adapter as ArrayObjectAdapter).setItems(categoryRows, null)
+            (adapter as ArrayObjectAdapter).setItems(mixedRows, null)
             // ensure correct initial position & schedule update
             onRowsLayoutReady(data.position)
         }
@@ -286,6 +305,12 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 class TvCategoryChannelsListRowAdapter(presenter: Presenter): ArrayObjectAdapter(presenter) {
     override fun getId(position: Int): Long {
         return (get(position) as TvChannel).id
+    }
+}
+
+class TvMenuRowAdapter(presenter: Presenter): ArrayObjectAdapter(presenter) {
+    override fun getId(position: Int): Long {
+        return (get(position) as TvMenuItem).id
     }
 }
 

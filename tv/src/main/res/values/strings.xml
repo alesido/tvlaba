@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">TvLabA</string>
 
+    <string name="label_menu">Меню</string>
+
     <string name="content_description_tv_channel_card_poster">Изображение логотипа телеканала</string>
     <string name="content_description_video_poster_card">Изображение постера видео</string>
 
