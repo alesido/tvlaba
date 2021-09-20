@@ -121,9 +121,9 @@ interface RestServiceMoidom {
     fun getGenreVodList(
             @Query("PATKER_SSID") sid: String,
             @Query("type") type: String?,
-            @Query("genre") genreId: Long?,
-            @Query("page") pageNumber: Int?,
-            @Query("nums") numberOfItemsPerPage: Int?
+            @Query("genres") genreId: Long?,
+            @Query("current_page") pageNumber: Int?,
+            @Query("per_page") numberOfItemsPerPage: Int?
     ): Single<VodListResponse>
 
     /** Find VODs of a genre which title contains query substring.
@@ -140,7 +140,7 @@ interface RestServiceMoidom {
             @Query("PATKER_SSID") sid: String,
             @Query("type") type: String,
             @Query("genre") genreId: Long?,
-            @Query("query") query: String
+            @Query("filter") query: String
     ): Single<VodListResponse>
 
     /** Get details of a MDVodVideo-On-Demand given by  ID including list of videos
@@ -205,47 +205,59 @@ interface RestServiceMoidom {
 //        const val SERVICE_URL = "http://iptv.moi-dom.tv/api/json/"
         const val SERVICE_URL = "https://api.telecola.tv/api/json/"
 
-        val UPGRADE_URL = "http://android.moidom.tv/android_new/updatemoidom.php"
+        const val UPGRADE_URL = "http://android.moidom.tv/android_new/updatemoidom.php"
 
-        val BASE_URL_VOD_POSTERS = "http://iptv.moi-dom.tv" // http://iptv.moi-dom.tv/img/ico_245x140/74.png
+        const val BASE_URL_VOD_POSTERS = "http://iptv.moi-dom.tv" // http://iptv.moi-dom.tv/img/ico_245x140/74.png
 
-        val TAG_SERVICE_MOIDOM_TV = "tv"
-        val TAG_SERVICE_MOIDOM_VOD = "vod"
-        val TAG_SERVICE_MEGOGO_VOD = "megogo"
-        val TAG_SERVICE_TIMESHIFT = "timeshift"
+        const val TAG_SERVICE_MOIDOM_TV = "tv"
+        const val TAG_SERVICE_MOIDOM_VOD = "vod"
+        const val TAG_SERVICE_MEGOGO_VOD = "megogo"
+        const val TAG_SERVICE_TIMESHIFT = "timeshift"
 
-        val QUERY_PARAM_LOGIN_SETTINGS_DEFAULT = "all"
-        val QUERY_PARAM_DEVICE_TYPE = "android"
-        val QUERY_PARAM_DEFAULT_CHANNEL_SELECTOR = "all"
+        const val QUERY_PARAM_LOGIN_SETTINGS_DEFAULT = "all"
+        const val QUERY_PARAM_DEVICE_TYPE = "android"
+        const val QUERY_PARAM_DEFAULT_CHANNEL_SELECTOR = "all"
 
-        val DEFAULT_APP_INTERFACE_LANGUAGE_CODE = "en"
-        val DEFAULT_APP_INTERFACE_LANGUAGE_NAME = "English"
+        const val DEFAULT_APP_INTERFACE_LANGUAGE_CODE = "en"
+        const val DEFAULT_APP_INTERFACE_LANGUAGE_NAME = "English"
 
-        val DEFAULT_DEVICE_MODEL_ID = -1L
+        const val DEFAULT_DEVICE_MODEL_ID = -1L
 
-        val QUERY_PARAM_STREAM_MODE_HLS = "hls"
-        val QUERY_PARAM_STREAM_MODE_HLS_SIMPLE = "hls_simple"
-        val QUERY_PARAM_STREAM_MODE_MPEG_TS = "mpegts"
+        const val QUERY_PARAM_STREAM_MODE_HLS = "hls"
+        const val QUERY_PARAM_STREAM_MODE_HLS_SIMPLE = "hls_simple"
+        const val QUERY_PARAM_STREAM_MODE_MPEG_TS = "mpegts"
 
-        val QUERY_PARAM_SETTING_NAME_PCODE = "pcode"
-        val QUERY_PARAM_SETTING_NAME_HTTP_CACHING = "http_caching"
-        val QUERY_PARAM_SETTING_NAME_STREAM_SERVER = "stream_server"
-        val QUERY_PARAM_SETTING_DEVICE_NAME_MODEL = "device_model"
-        val QUERY_PARAM_SETTING_NAME_LANGUAGE = "language"
-        val QUERY_PARAM_SETTING_NAME_TIMESHIFT = "timeshift"
-        val QUERY_PARAM_SETTING_NAME_TIMEZONE = "timezone"
-        val QUERY_PARAM_SETTING_NAME_BITRATE = "bitrate"
+        const val QUERY_PARAM_SETTING_NAME_PCODE = "pcode"
+        const val QUERY_PARAM_SETTING_NAME_HTTP_CACHING = "http_caching"
+        const val QUERY_PARAM_SETTING_NAME_STREAM_SERVER = "stream_server"
+        const val QUERY_PARAM_SETTING_DEVICE_NAME_MODEL = "device_model"
+        const val QUERY_PARAM_SETTING_NAME_LANGUAGE = "language"
+        const val QUERY_PARAM_SETTING_NAME_TIMESHIFT = "timeshift"
+        const val QUERY_PARAM_SETTING_NAME_TIMEZONE = "timezone"
+        const val QUERY_PARAM_SETTING_NAME_BITRATE = "bitrate"
 
-        val QUERY_PARAM_VOD_LISTING_TYPE_BEST = "best"
-        val QUERY_PARAM_VOD_LISTING_TYPE_LAST = "last"
-        val QUERY_PARAM_VOD_LISTING_TYPE_TEXT = "text"
+        const val QUERY_PARAM_VOD_LISTING_TYPE_BEST = "best"
+        const val QUERY_PARAM_VOD_LISTING_TYPE_LAST = "last"
+        const val QUERY_PARAM_VOD_LISTING_TYPE_TEXT = "text"
 
-        val TOKEN_NO_EPG_CHANNEL = "NO EPG"
+        const val TOKEN_NO_EPG_CHANNEL = "NO EPG"
 
-        val VOD_SECTION_ID = -1L
-        val UNKNOWN_UNIT_ID = -1000L
+        /**
+         *  There are no sections in this API, so a section substitute used
+         *  to not break common VOD Directory structure.
+         *
+         *  An ID of the section substitute should be legal for database (object box currently),
+         *  so as the directory structure could be stored in database.
+         */
+        const val VOD_SECTION_SUBSTITUTE_ID = 1L
 
-        val EXTRA_GENRE_BEST_ID = -1001L
-        val EXTRA_GENRE_LAST_ID = -1002L
+        /**
+         * This API provides 2 special units (subsections) w/o IDs, so to not break
+         *  the VOD Directory structure and be able to store these units in database,
+         *  they assigned the IDs, and normal IDs are shifted by given offset.
+         */
+        const val EXTRA_GENRE_ID_OFFSET = 100L
+        const val EXTRA_GENRE_BEST_ID = 1L
+        const val EXTRA_GENRE_LAST_ID = 2L
     }
 }
