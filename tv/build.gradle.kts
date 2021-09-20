@@ -66,6 +66,7 @@ dependencies {
     //Modules
     implementation(project(":Domain"))
     implementation(project(":PresentationTv"))
+    implementation(project(":PresentationVod"))
     implementation(project(":MoiDom"))
 
     //Leanback
