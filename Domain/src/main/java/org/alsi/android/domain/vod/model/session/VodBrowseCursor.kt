@@ -15,6 +15,16 @@ import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 class VodBrowseCursor(
         val section: VodSection? = null,
         val unit: VodUnit? = null,
-        val listingPosition: Int? = null,
         val item: VodListingItem? = null,
+        val itemPosition: Int? = null,
+        val page: VodBrowsePage? = null,
+        val timeStamp: Long = System.currentTimeMillis()
 )
+
+enum class VodBrowsePage {
+        UNKNOWN,
+        SECTIONS, // sections list in channel a directory or a standalone category selection screen
+        UNITS,
+        ITEM,     // standalone page, a.k.a. digest, or in a playback footer
+        PLAYBACK
+}
