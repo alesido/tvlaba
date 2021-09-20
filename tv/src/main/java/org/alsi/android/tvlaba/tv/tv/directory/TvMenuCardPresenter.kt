@@ -3,7 +3,7 @@ package org.alsi.android.tvlaba.tv.tv.directory
 import android.graphics.Color
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
-import org.alsi.android.tvlaba.tv.model.TvMenuItem
+import org.alsi.android.tvlaba.tv.model.CardMenuItem
 
 class TvMenuCardPresenter: Presenter() {
 
@@ -14,11 +14,11 @@ class TvMenuCardPresenter: Presenter() {
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
 
-        val tvMenuItem = item as TvMenuItem
+        val tvMenuItem = item as CardMenuItem
         val cardView = viewHolder.view as TvMenuCardView
 
         // channel title
-        cardView.menuTitleText = tvMenuItem.title
+        cardView.menuTitleText = tvMenuItem.title?:""
 
         // logo drawable ...
     }

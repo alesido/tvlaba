@@ -11,6 +11,7 @@ import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.AndroidSupportInjection
@@ -28,7 +29,7 @@ import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
-import org.alsi.android.tvlaba.tv.model.TvMenuItem
+import org.alsi.android.tvlaba.tv.model.CardMenuItem
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -44,8 +45,6 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
 
-    private val topListRowPresenter = ListRowPresenter()
-
     private var liveTimeIndicatorTaskSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +58,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         browseViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvChannelDirectoryBrowseViewModel::class.java)
 
-        adapter = ArrayObjectAdapter(topListRowPresenter)
+        adapter = ArrayObjectAdapter( ListRowPresenter())
 
         setOnItemViewClickedListener { _, item, _, _ ->
             if (item is TvChannel) {
@@ -70,8 +69,12 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                                     .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment())
                 }
             }
-            else if (item is TvMenuItem) {
-                println("Menu action \"${item.title}\"")
+            else if (item is CardMenuItem) {
+                when(item.title) {
+                    "VOD" -> NavHostFragment.findNavController(this)
+                        .navigate(R.id.actionGlobalNavigateVodSection)
+                    "Settings" -> println("Menu action \"${item.title}\"")
+                }
             }
         }
 
@@ -81,7 +84,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 val rowPosition = this@TvChannelDirectoryFragment.selectedPosition
                 val itemPosition = (rowViewHolder as ListRowPresenter.ViewHolder)
                         .gridView.selectedPosition
-                browseViewModel.onChannelSelected(rowPosition - 1, itemPosition, item)
+                browseViewModel.onChannelSelected(
+                    if (rowPosition > 0) rowPosition - 1 else 0, itemPosition, item)
                 // schedule next channel lives update
                 browseViewModel.onItemsVisibilityChange(
                         visibleChannelDirectoryItemIds()
@@ -214,8 +218,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             val mixedRows: MutableList<ListRow> = mutableListOf()
             val menuRowAdapter = TvMenuRowAdapter(TvMenuCardPresenter()).apply {
                 setItems(listOf(
-                    TvMenuItem(1L,"VOD", 0),
-                    TvMenuItem(2L,"Settings", 0),
+                    CardMenuItem(1,"VOD", 0),
+                    CardMenuItem(2,"Settings", 0),
                 ), null)
             }
             mixedRows.add(ListRow(topMenuHeader, menuRowAdapter))
@@ -231,7 +235,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
         data?.directory?: return
-        for (i in 0 until adapter.size()) {
+        for (i in 1 until adapter.size() - 2) {
             data.directory.index[data.directory.categories[i].id]?.let {
                 ((adapter[i] as ListRow).adapter as ArrayObjectAdapter)
                     .setItems(it, tvCategoryChannelsDiff)
@@ -310,7 +314,7 @@ class TvCategoryChannelsListRowAdapter(presenter: Presenter): ArrayObjectAdapter
 
 class TvMenuRowAdapter(presenter: Presenter): ArrayObjectAdapter(presenter) {
     override fun getId(position: Int): Long {
-        return (get(position) as TvMenuItem).id
+        return (get(position) as CardMenuItem).id
     }
 }
 

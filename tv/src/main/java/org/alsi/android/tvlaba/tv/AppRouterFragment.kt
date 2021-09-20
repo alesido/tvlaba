@@ -18,11 +18,20 @@ class AppRouterFragment : Fragment(R.layout.app_start_fragment) {
         arguments?.let {
             when (AppRouterFragmentArgs.fromBundle(it).route) {
                 OnLogIn -> {
-                    // navigate to last visited section TV or VOD
+                    // TODO navigate to last visited section TV or VOD
                     findNavController(this).navigate(
                         AppRouterFragmentDirections.actionAppRouterFragmentToTvGuideNavigation()
                     )
                 }
+
+                TvSection -> {}
+                VodSection -> {
+                    findNavController(this).navigate(
+                        AppRouterFragmentDirections.actionAppRouterFragmentToVodGuideNavigation()
+                    )
+                }
+                SettingsSection -> {}
+
                 OnSessionInvalid, OnContractInvalid -> {
                     findNavController(this).navigate(
                         AppRouterFragmentDirections.actionAppRouterFragmentToLoginFragment()

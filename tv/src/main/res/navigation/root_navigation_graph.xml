@@ -27,6 +27,13 @@
             app:popUpToInclusive="true"
             app:launchSingleTop="true"
             />
+        <action
+            android:id="@+id/action_appStartFragment_to_vodGuide"
+            app:destination="@id/vodGuideNavigation"
+            app:popUpTo="@id/appStartFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
+            />
     </fragment>
     <!--
             App Router
@@ -48,7 +55,14 @@
             android:id="@+id/action_appRouterFragment_to_tvGuideNavigation"
             app:destination="@id/tvGuideNavigation"
             />
+        <action
+            android:id="@+id/action_appRouterFragment_to_vodGuideNavigation"
+            app:destination="@id/vodGuideNavigation"
+            />
     </fragment>
+    <!--
+            App Router: global entry destinations
+    -->
     <action
         app:destination="@id/appRouterFragment"
         android:id="@+id/actionGlobalOnLogIn"
@@ -57,6 +71,36 @@
             android:name="route"
             app:argType="org.alsi.android.tvlaba.tv.AppRoute"
             android:defaultValue="OnLogIn"
+            />
+    </action>
+    <action
+        app:destination="@id/appRouterFragment"
+        android:id="@+id/actionGlobalNavigateTvSection"
+        >
+        <argument
+            android:name="route"
+            app:argType="org.alsi.android.tvlaba.tv.AppRoute"
+            android:defaultValue="TvSection"
+            />
+    </action>
+    <action
+        app:destination="@id/appRouterFragment"
+        android:id="@+id/actionGlobalNavigateVodSection"
+        >
+        <argument
+            android:name="route"
+            app:argType="org.alsi.android.tvlaba.tv.AppRoute"
+            android:defaultValue="VodSection"
+            />
+    </action>
+    <action
+        app:destination="@id/appRouterFragment"
+        android:id="@+id/actionGlobalNavigateSettingsSection"
+        >
+        <argument
+            android:name="route"
+            app:argType="org.alsi.android.tvlaba.tv.AppRoute"
+            android:defaultValue="SettingsSection"
             />
     </action>
     <action
@@ -168,6 +212,82 @@
                 android:id="@+id/action_tvPlaybackAndScheduleFragment_to_tvProgramDetailsFragment"
                 app:destination="@id/tvProgramDetailsFragment"
                 app:popUpTo="@id/tvPlaybackAndScheduleFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+        </fragment>
+    </navigation>
+    <!--
+            VOD Section
+    -->
+    <navigation
+        android:id="@+id/vodGuideNavigation"
+        android:label="TvGuideNavigation"
+        app:startDestination="@id/vodGuideStartFragment"
+        >
+        <fragment
+            android:id="@+id/vodGuideStartFragment"
+            android:name="org.alsi.android.tvlaba.tv.vod.VodGuideStartFragment"
+            android:label="TvGuideStartFragment"
+            >
+            <action
+                android:id="@+id/action_vodGuideStartFragment_to_vodDirectoryFragment"
+                app:destination="@id/vodDirectoryFragment"
+                app:popUpTo="@id/vodGuideStartFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+            <action
+                android:id="@+id/action_vodGuideStartFragment_to_vodDigestFragment"
+                app:destination="@id/vodDigestFragment"
+                app:popUpTo="@id/vodGuideStartFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+            <action
+                android:id="@+id/action_vodGuideStartFragment_to_vodPlaybackFragment"
+                app:destination="@id/vodPlaybackFragment"
+                app:popUpTo="@id/vodGuideStartFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+        </fragment>
+        <fragment
+            android:id="@+id/vodDirectoryFragment"
+            android:name="org.alsi.android.tvlaba.tv.vod.directory.VodDirectoryFragment"
+            android:label="VodDirectoryFragment"
+            >
+            <action
+                android:id="@+id/action_vodDirectoryFragment_to_vodDigestFragment"
+                app:destination="@id/vodDigestFragment"
+                />
+        </fragment>
+        <fragment
+            android:id="@+id/vodDigestFragment"
+            android:name="org.alsi.android.tvlaba.tv.vod.digest.VodDigestFragment"
+            android:label="TvProgramDetailsFragment"
+            >
+            <action
+                android:id="@+id/action_vodDigestFragment_to_vodPlaybackFragment"
+                app:destination="@id/vodPlaybackFragment"
+                />
+            <action
+                android:id="@+id/action_vodDigestFragment_to_vodDirectoryFragment"
+                app:destination="@id/vodDirectoryFragment"
+                app:popUpTo="@id/vodDigestFragment"
+                app:popUpToInclusive="true"
+                app:launchSingleTop="true"
+                />
+        </fragment>
+        <fragment
+            android:id="@+id/vodPlaybackFragment"
+            android:name="org.alsi.android.tvlaba.tv.vod.playback.VodPlaybackFragment"
+            android:label="TvPlaybackAndScheduleFragment"
+            >
+            <action
+                android:id="@+id/action_vodPlaybackFragment_to_vodDigestFragment"
+                app:destination="@id/vodDigestFragment"
+                app:popUpTo="@id/vodPlaybackFragment"
                 app:popUpToInclusive="true"
                 app:launchSingleTop="true"
                 />

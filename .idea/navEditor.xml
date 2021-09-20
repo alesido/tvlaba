@@ -108,6 +108,21 @@
                       <LayoutPositions />
                     </value>
                   </entry>
+                  <entry key="actionGlobalNavigateSettingsSection">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="actionGlobalNavigateTvSection">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="actionGlobalNavigateVodSection">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="actionGlobalOnContractInvalid">
                     <value>
                       <LayoutPositions />
@@ -144,6 +159,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_appRouterFragment_to_vodGuideNavigation">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -170,6 +190,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_appStartFragment_to_vodGuide">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -192,8 +217,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="304" />
-                            <option name="y" value="-151" />
+                            <option name="x" value="382" />
+                            <option name="y" value="-211" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -201,12 +226,6 @@
                             <entry key="tvChannelDirectoryFragment">
                               <value>
                                 <LayoutPositions>
-                                  <option name="myPosition">
-                                    <Point>
-                                      <option name="x" value="-15" />
-                                      <option name="y" value="82" />
-                                    </Point>
-                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvChannelDirectoryFragment_to_tvProgramDetailsFragment">
@@ -222,12 +241,6 @@
                             <entry key="tvGuideStartFragment">
                               <value>
                                 <LayoutPositions>
-                                  <option name="myPosition">
-                                    <Point>
-                                      <option name="x" value="232" />
-                                      <option name="y" value="-349" />
-                                    </Point>
-                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvGuideStartFragment_to_tvChannelDirectoryFragment">
@@ -253,12 +266,6 @@
                             <entry key="tvPlaybackAndScheduleFragment">
                               <value>
                                 <LayoutPositions>
-                                  <option name="myPosition">
-                                    <Point>
-                                      <option name="x" value="588" />
-                                      <option name="y" value="85" />
-                                    </Point>
-                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvPlaybackAndScheduleFragment_to_tvProgramDetailsFragment">
@@ -274,12 +281,6 @@
                             <entry key="tvProgramDetailsFragment">
                               <value>
                                 <LayoutPositions>
-                                  <option name="myPosition">
-                                    <Point>
-                                      <option name="x" value="282" />
-                                      <option name="y" value="83" />
-                                    </Point>
-                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvProgramDetailsFragment_to_tvChannelDirectoryFragment">
@@ -288,6 +289,121 @@
                                         </value>
                                       </entry>
                                       <entry key="action_tvProgramDetailsFragment_to_tvPlaybackAndScheduleFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="vodGuideNavigation">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="557" />
+                            <option name="y" value="-105" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="vodDigestFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="722" />
+                                      <option name="y" value="12" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_vodDigestFragment_to_vodDirectoryFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_vodDigestFragment_to_vodPlaybackFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="vodDirectoryFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="392" />
+                                      <option name="y" value="12" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_vodDirectoryFragment_to_vodDigestFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="vodGuideStartFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="308" />
+                                      <option name="y" value="-418" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_vodGuideStartFragment_to_vodDigestFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_vodGuideStartFragment_to_vodDirectoryFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                      <entry key="action_vodGuideStartFragment_to_vodPlaybackFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                </LayoutPositions>
+                              </value>
+                            </entry>
+                            <entry key="vodPlaybackFragment">
+                              <value>
+                                <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="1059" />
+                                      <option name="y" value="13" />
+                                    </Point>
+                                  </option>
+                                  <option name="myPositions">
+                                    <map>
+                                      <entry key="action_vodPlaybackFragment_to_vodDigestFragment">
                                         <value>
                                           <LayoutPositions />
                                         </value>
