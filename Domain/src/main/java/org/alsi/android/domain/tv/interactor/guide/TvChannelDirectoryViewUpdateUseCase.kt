@@ -24,10 +24,10 @@ open class TvChannelDirectoryViewUpdateUseCase @Inject constructor(
         return Completable.fromRunnable{
             val directory = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.directory
             if (directory is TvDirectoryRepository) {
-                directory.channels.scheduleChannelsUpdate(params.window)
+                directory.channels.scheduleChannelsUpdate(params.window, params.cancelUpdate)
             }
         }
     }
 
-    class Params constructor (val window: TvChannelListWindow)
+    class Params constructor (val window: TvChannelListWindow, val cancelUpdate: Boolean = false)
 }

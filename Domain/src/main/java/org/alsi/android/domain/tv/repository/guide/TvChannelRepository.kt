@@ -39,7 +39,7 @@ interface TvChannelRepository
     // region Actualization
 
     fun getChannelsVisibilitySubject(): PublishSubject<TvChannelListWindow>
-    fun scheduleChannelsUpdate(window: TvChannelListWindow)
+    fun scheduleChannelsUpdate(window: TvChannelListWindow, cancelUpdate: Boolean = false)
 
     // endregion
     // region Favorite Channels

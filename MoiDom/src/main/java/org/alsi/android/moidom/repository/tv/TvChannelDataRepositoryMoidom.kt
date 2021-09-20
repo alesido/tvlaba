@@ -150,7 +150,7 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      * * Cancel current task on a next incoming task if it's different.
      * * Repeat update request until there are all channels are up to date.
      */
-    override fun scheduleChannelsUpdate(window: TvChannelListWindow) {
+    override fun scheduleChannelsUpdate(window: TvChannelListWindow, cancelUpdate: Boolean) {
 
         // check if the task is a duplicate
         if (updateTask.window.ids == window.ids && !updateTask.isCancelled) {
@@ -161,6 +161,8 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
 
         // simple solution: cancel current task despite it's state - it isn't actual any more
         updateTask.onCancelled(window)
+        if (cancelUpdate)
+            return
 
         // create the new task
         updateTask = TvChannelsUpdateTask(window, now,

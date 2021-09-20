@@ -122,6 +122,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     override fun onPause() {
         super.onPause()
+        browseViewModel.onPause()
         stopLiveTimeIndicatorTask()
     }
 
