@@ -16,6 +16,10 @@ import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesFragment
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesFragmentModule
 import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragment
 import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragmentModule
+import org.alsi.android.tvlaba.tv.vod.VodGuideStartFragment
+import org.alsi.android.tvlaba.tv.vod.VodGuideStartFragmentModule
+import org.alsi.android.tvlaba.tv.vod.directory.VodDirectoryFragment
+import org.alsi.android.tvlaba.tv.vod.directory.VodDirectoryFragmentModule
 
 @Module
 abstract class ActivityModule {
@@ -23,11 +27,13 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [AppStartFragmentModule::class])
     abstract fun bindAppStartFragment(): AppStartFragment
 
-    @ContributesAndroidInjector(modules = [TvGuideStartFragmentModule::class])
-    abstract fun bindTvGuideStartFragment(): TvGuideStartFragment
-
     @ContributesAndroidInjector(modules = [LoginFragmentModule::class])
     abstract fun bindLoginFragment(): LoginFragment
+
+    // TV --
+
+    @ContributesAndroidInjector(modules = [TvGuideStartFragmentModule::class])
+    abstract fun bindTvGuideStartFragment(): TvGuideStartFragment
 
     @ContributesAndroidInjector(modules = [TvChannelDirectoryFragmentModule::class])
     abstract fun bindTvChannelDirectoryFragment(): TvChannelDirectoryFragment
@@ -40,4 +46,12 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [TvProgramDetailsFragmentModule::class])
     abstract fun bindTvProgramDetailsFragment(): TvProgramDetailsFragment
+
+    // VOD --
+
+    @ContributesAndroidInjector(modules = [VodGuideStartFragmentModule::class])
+    abstract fun bindVodGuideStartFragment(): VodGuideStartFragment
+
+    @ContributesAndroidInjector(modules = [VodDirectoryFragmentModule::class])
+    abstract fun bindVodDirectoryFragment(): VodDirectoryFragment
 }
