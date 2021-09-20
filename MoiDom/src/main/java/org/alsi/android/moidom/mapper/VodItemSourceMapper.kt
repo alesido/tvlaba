@@ -1,10 +1,10 @@
 package org.alsi.android.moidom.mapper
 
 import android.text.format.DateUtils
+import org.alsi.android.domain.vod.model.guide.directory.VodUnit
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.moidom.model.vod.VodInfoResponse
-import org.alsi.android.moidom.store.RestServiceMoidom.Companion.UNKNOWN_UNIT_ID
-import org.alsi.android.moidom.store.RestServiceMoidom.Companion.VOD_SECTION_ID
+import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.mapper.SourceDataMapper
 import java.net.URI
 
@@ -58,7 +58,9 @@ class VodItemSourceMapper: SourceDataMapper<VodInfoResponse, VodListingItem> {
         )}
 
         return with(source) { VodListingItem(
-            id, VOD_SECTION_ID, UNKNOWN_UNIT_ID,
+            id,
+            RestServiceMoidom.VOD_SECTION_SUBSTITUTE_ID,
+            VodUnit.UNKNOWN_UNIT_ID,
             title = name,
             description = description,
             posters = image_url?.let { VodListingItem.Posters(poster = URI.create(it)) },

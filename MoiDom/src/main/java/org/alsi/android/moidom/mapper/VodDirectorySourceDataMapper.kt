@@ -12,7 +12,7 @@ class VodDirectorySourceDataMapper: SourceDataMapper<VodGenresResponse, VodDirec
     override fun mapFromSource(source: VodGenresResponse): VodDirectory {
 
         val dstUnits = source.genres.map { rec -> VodUnit(
-            id = rec.id.toLong(),
+            id = rec.id.toLong() + RestServiceMoidom.EXTRA_GENRE_ID_OFFSET,
             title = rec.name,
             total = rec.count
         )}.toMutableList()
@@ -21,6 +21,11 @@ class VodDirectorySourceDataMapper: SourceDataMapper<VodGenresResponse, VodDirec
         dstUnits.add(0, VodUnit(id = RestServiceMoidom.EXTRA_GENRE_BEST_ID, title = "BEST"))
         dstUnits.add(1, VodUnit(id = RestServiceMoidom.EXTRA_GENRE_LAST_ID, title = "LAST"))
 
-        return VodDirectory(listOf(VodSection(RestServiceMoidom.VOD_SECTION_ID, units = dstUnits)))
+        return VodDirectory(listOf(
+            VodSection(
+                RestServiceMoidom.VOD_SECTION_SUBSTITUTE_ID,
+                units = dstUnits,
+                isSectionSubstitute = true)
+        ))
     }
 }

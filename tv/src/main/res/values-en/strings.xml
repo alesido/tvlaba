@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">TvLabA</string>
+    <string name="app_section_tv">TvLabA TV</string>
+    <string name="app_section_vod">TvLabA VOD</string>
 
     <string name="label_menu">Menu</string>
 
@@ -85,5 +87,8 @@
     <string name="preference_subtitles_is_off">Off</string>
     <string name="tv_program_details_action_play_live">Live</string>
     <string name="tv_program_details_action_play_record">Record</string>
+    <string name="content_description_vod_unit_card_poster">VOD Item Poster</string>
+
+    <string name="label_vod_sections_and_navigation">Sections</string>
 
 </resources>

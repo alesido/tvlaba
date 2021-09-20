@@ -9,7 +9,7 @@ data class VodListingItem(
     val sectionId: Long? = null,
     val unitId: Long? = null,
 
-    val title: String?,
+    val title: String? = null,
     val description: String? = null,
 
     val video: Video? = null,
@@ -105,6 +105,12 @@ data class VodListingItem(
 
     enum class Role {
         UNKNOWN, ACTOR, ARTIST, WRITER, COMPOSER, OPERATOR, PRODUCER, DIRECTOR
+    }
+
+    fun isEmpty() = id < 0L
+
+    companion object {
+        fun empty() = VodListingItem(-1L)
     }
 }
 

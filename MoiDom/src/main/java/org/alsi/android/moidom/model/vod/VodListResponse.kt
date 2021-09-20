@@ -6,7 +6,7 @@ import org.alsi.android.moidom.model.base.RequestError
 
 data class VodListResponse(
         val total: Int,
-        val vods: List<Vod>,
+        var vods: List<Vod>,
         override val error: RequestError?,
         override val servertime: Int
 
