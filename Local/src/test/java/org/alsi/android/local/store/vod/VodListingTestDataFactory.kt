@@ -23,7 +23,7 @@ object VodListingTestDataFactory {
         items.add(videoSerialItem(variant + 6))
 
         return VodListingPage(variant + 1L, variant + 2L, 345 + variant,
-            variant, 3, items)
+            variant, items)
     }
 
     fun videoSingleItem(variant: Int): VodListingItem {

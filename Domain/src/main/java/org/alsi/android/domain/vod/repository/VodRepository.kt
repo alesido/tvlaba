@@ -19,8 +19,8 @@ abstract class VodRepository (streamingServiceId: Long) : DirectoryRepository(st
     abstract fun getListingPage(
         sectionId: Long,
         unitId: Long,
-        page: Int,
-        count: Int
+        start: Int,
+        length: Int
     ): Single<VodListingPage>
 
     /** Get the promotional listing, all items at once. Or, an empty one if not supported&
@@ -39,8 +39,8 @@ abstract class VodRepository (streamingServiceId: Long) : DirectoryRepository(st
         titleSubstring: String,
         sectionId: Long?,
         unitId: Long?,
-        page: Int,
-        count: Int
+        start: Int,
+        length: Int
     ): Single<VodListingPage>
 
     /** Get detailed data on a VOD listing item, i.e. item content variant for the VOD digest.

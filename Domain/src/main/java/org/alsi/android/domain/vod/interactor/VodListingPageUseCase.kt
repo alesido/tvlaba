@@ -5,7 +5,6 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
-import org.alsi.android.domain.vod.model.guide.directory.VodDirectory
 import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
 import org.alsi.android.domain.vod.repository.VodRepository
 import javax.inject.Inject
@@ -22,8 +21,8 @@ class VodListingPageUseCase  @Inject constructor(
             repo.getListingPage(
                 params.sectionId,
                 params.unitId,
-                params.page,
-                params.count
+                params.start,
+                params.length
             )
         }
         else {
@@ -34,7 +33,7 @@ class VodListingPageUseCase  @Inject constructor(
     class Params (
         val sectionId: Long,
         val unitId: Long,
-        val page: Int,
-        val count: Int
+        val start: Int,
+        val length: Int
     )
 }

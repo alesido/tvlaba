@@ -17,9 +17,9 @@ interface VodDirectoryRemoteStore {
     fun getDirectory(): Single<VodDirectory>
     fun getSections(): Single<List<VodSection>>
     fun getUnits(sectionId: Long): Single<List<VodUnit>>
-    fun getListingPage(sectionId: Long, unitId: Long, page: Int, count: Int): Single<VodListingPage>
+    fun getListingPage(sectionId: Long, unitId: Long, start: Int, length: Int): Single<VodListingPage>
     fun getPromoPage(): Single<VodListingPage>
-    fun search(titleSubstring: String, sectionId: Long?, unitId: Long?, page: Int, count: Int): Single<VodListingPage>
+    fun search(titleSubstring: String, sectionId: Long?, unitId: Long?, start: Int, length: Int): Single<VodListingPage>
     fun getListingItem(vodItemId: Long): Single<VodListingItem>
     fun getSingleVideoStream(vodItemId: Long): Single<VideoStream>
     fun getSeriesVideoStream(seriesId: Long): Single<VideoStream>

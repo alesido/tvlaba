@@ -4,6 +4,7 @@ import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.kotlin.boxFor
 import io.objectbox.kotlin.query
+import io.objectbox.query.OrderFlags
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -87,9 +88,9 @@ class VodDirectoryLocalStoreDelegate(
     }
 
     override fun getDirectory(): Single<VodDirectory> = Single.fromCallable {
-        directoryMapper.mapFromEntity(
-            directoryBox.get(VodDirectoryEntity.SINGLE_RECORD_DIRECTORY_ID)
-        )
+        directoryBox.get(VodDirectoryEntity.SINGLE_RECORD_DIRECTORY_ID)?.let {
+            directoryMapper.mapFromEntity(it)
+        } ?: VodDirectory.empty()
     }
 
     override fun putListingPage(page: VodListingPage) = Completable.fromRunnable {
@@ -99,16 +100,15 @@ class VodDirectoryLocalStoreDelegate(
     override fun getListingPage(
         sectionId: Long,
         unitId: Long,
-        page: Int,
-        count: Int
+        start: Int
     ): Single<VodListingPage> = Single.fromCallable {
         val found = pageBox.query {
             equal(VodListingPageEntity_.sectionId, sectionId)
             equal(VodListingPageEntity_.unitId, unitId)
-            equal(VodListingPageEntity_.pageNumber, page.toLong())
-            equal(VodListingPageEntity_.count, count.toLong())
-        }.findUnique()
-        found?.let {pageMapperWriter.mapFromEntity(it) }
+            equal(VodListingPageEntity_.start, start.toLong())
+            order(VodListingPageEntity_.timeStamp, OrderFlags.DESCENDING)
+        }.findFirst()
+        found?.let { pageMapperWriter.mapFromEntity(it) } ?: VodListingPage.empty()
     }
 
     override fun putPromoPage(promoPage: VodListingPage): Completable {
@@ -138,7 +138,7 @@ class VodDirectoryLocalStoreDelegate(
     }
 
     override fun getListingItem(vodItemId: Long): Single<VodListingItem> = Single.fromCallable {
-        itemMapperWriter.mapFromEntity(itemBox.get(vodItemId))
+        itemBox.get(vodItemId)?.let {  itemMapperWriter.mapFromEntity(it) } ?: VodListingItem.empty()
     }
 
     override fun putSingleVideoStream(vodItemId: Long, stream: VideoStream) = Completable.fromRunnable {

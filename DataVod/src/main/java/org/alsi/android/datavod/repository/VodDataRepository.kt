@@ -33,12 +33,12 @@ abstract class VodDataRepository(
     override fun getListingPage(
         sectionId: Long,
         unitId: Long,
-        page: Int,
-        count: Int
+        start: Int,
+        length: Int
     ): Single<VodListingPage> =
-        local.getListingPage(sectionId, unitId, page, count).flatMap { localPage ->
+        local.getListingPage(sectionId, unitId, start).flatMap { localPage ->
             if (isPageExpired(localPage))
-                remote.getListingPage(sectionId, unitId, page, count).flatMap { remotePage ->
+                remote.getListingPage(sectionId, unitId, start, length).flatMap { remotePage ->
                     local.putListingPage(remotePage).toSingle { remotePage }
                 }
             else
@@ -59,12 +59,12 @@ abstract class VodDataRepository(
         titleSubstring: String,
         sectionId: Long?,
         unitId: Long?,
-        page: Int,
-        count: Int
+        start: Int,
+        length: Int
     ): Single<VodListingPage> =
-        local.getSearchResultPage(titleSubstring, sectionId, unitId, page, count).flatMap { localPage ->
+        local.getSearchResultPage(titleSubstring, sectionId, unitId, start, length).flatMap { localPage ->
             if (isSearchResultPageExpired(localPage))
-                remote.search(titleSubstring, sectionId, unitId, page, count).flatMap { remotePage ->
+                remote.search(titleSubstring, sectionId, unitId, start, length).flatMap { remotePage ->
                     local.putSearchResultPage(remotePage, titleSubstring).toSingle { remotePage }
                 }
             else
@@ -129,9 +129,9 @@ abstract class VodDataRepository(
     fun now(): Long = System.currentTimeMillis()
 
     companion object {
-         val EXPIRATION_DIRECTORY_MILLIS = TimeUnit.MILLISECONDS.toHours(1)
-         val EXPIRATION_PAGE_MILLIS = TimeUnit.MILLISECONDS.toHours(1)
-         val EXPIRATION_ITEM_MILLIS = TimeUnit.MILLISECONDS.toHours(1)
-         val EXPIRATION_STREAM_MILLIS = TimeUnit.MILLISECONDS.toHours(1)
+         val EXPIRATION_DIRECTORY_MILLIS = TimeUnit.HOURS.toMillis(0)
+         val EXPIRATION_PAGE_MILLIS = TimeUnit.HOURS.toMillis(0)
+         val EXPIRATION_ITEM_MILLIS = TimeUnit.HOURS.toMillis(0)
+         val EXPIRATION_STREAM_MILLIS = TimeUnit.HOURS.toMillis(0)
     }
 }

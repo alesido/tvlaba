@@ -1,5 +1,6 @@
 package org.alsi.android.moidom.store.vod
 
+import androidx.core.math.MathUtils.clamp
 import io.reactivex.Single
 import org.alsi.android.datavod.store.VodDirectoryRemoteStore
 import org.alsi.android.domain.streaming.model.VideoStream
@@ -18,8 +19,8 @@ import org.alsi.android.moidom.store.RestServiceMoidom.Companion.EXTRA_GENRE_BES
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.EXTRA_GENRE_LAST_ID
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_VOD_LISTING_TYPE_BEST
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_VOD_LISTING_TYPE_LAST
-import org.alsi.android.moidom.store.RestServiceMoidom.Companion.UNKNOWN_UNIT_ID
-import org.alsi.android.moidom.store.RestServiceMoidom.Companion.VOD_SECTION_ID
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_VOD_LISTING_TYPE_TEXT
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.VOD_SECTION_SUBSTITUTE_ID
 import java.net.URI
 import javax.inject.Inject
 
@@ -50,22 +51,28 @@ class VodDirectoryRemoteStoreMoiDom @Inject constructor(
     override fun getListingPage(
         sectionId: Long,
         unitId: Long,
-        page: Int,
-        count: Int
+        start: Int,
+        length: Int
     ): Single<VodListingPage> {
-        var vodListingType: String? = null
+        // define listing type and genre parameters
+        val vodListingType: String?
         var requestParamGenreId: Long? = null
         when (unitId) {
             EXTRA_GENRE_BEST_ID -> vodListingType = QUERY_PARAM_VOD_LISTING_TYPE_BEST
             EXTRA_GENRE_LAST_ID -> vodListingType = QUERY_PARAM_VOD_LISTING_TYPE_LAST
-            else -> requestParamGenreId = unitId
+            else -> {
+                vodListingType = QUERY_PARAM_VOD_LISTING_TYPE_TEXT
+                requestParamGenreId = unitId - RestServiceMoidom.EXTRA_GENRE_ID_OFFSET
+            }
         }
+        // execute request
         return remoteSession.getSessionId()
             .flatMap {
-                remoteService.getGenreVodList(it, vodListingType, requestParamGenreId, page, count)
+                remoteService.getGenreVodList(it, vodListingType, requestParamGenreId,
+                    start/length + 1, length)
             }
             .map {
-                pageSourceMapper.mapFromSource(sectionId, unitId, page, count, it)
+                pageSourceMapper.mapFromSource(sectionId, unitId, start, it)
             }
     }
 
@@ -75,12 +82,25 @@ class VodDirectoryRemoteStoreMoiDom @Inject constructor(
         titleSubstring: String,
         sectionId: Long?,
         unitId: Long?,
-        page: Int,
-        count: Int
+        start: Int,
+        length: Int
     ): Single<VodListingPage> = remoteSession.getSessionId()
         .flatMap { remoteService.searchGenreVodList(
-            it, RestServiceMoidom.QUERY_PARAM_VOD_LISTING_TYPE_TEXT, sectionId, titleSubstring) }
-        .map { pageSourceMapper.mapFromSource(VOD_SECTION_ID, UNKNOWN_UNIT_ID, page, count, it) }
+            it, QUERY_PARAM_VOD_LISTING_TYPE_TEXT,
+            unitId?.let { id -> id - RestServiceMoidom.EXTRA_GENRE_ID_OFFSET},
+            titleSubstring) }
+        .map {
+            // this API does not support paging of search results
+            val actualStart = clamp(start, 0, it.vods.size - 1)
+            val actualEnd = clamp(start + length, 0, it.vods.size - 1)
+            it.vods = it.vods.subList(fromIndex = actualStart, toIndex = actualEnd)
+            pageSourceMapper.mapFromSource(
+                VOD_SECTION_SUBSTITUTE_ID,
+                VodUnit.UNKNOWN_UNIT_ID,
+                actualStart,
+                it
+            )
+        }
 
     override fun getListingItem(vodItemId: Long): Single<VodListingItem> = remoteSession.getSessionId()
         .flatMap { remoteService.getVodInfo(it, vodItemId) }

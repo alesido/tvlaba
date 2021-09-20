@@ -22,9 +22,8 @@ import java.net.URI
 class VodListingPageEntityMapperWriter: EntityMapper<VodListingPageEntity, VodListingPage> {
     private val itemMapperWriter = VodListingItemEntityMapperWriter()
     override fun mapFromEntity(entity: VodListingPageEntity) = with(entity) { VodListingPage (
-        sectionId?: -1L, unitId?: -1L,
-        total, pageNumber, count,
-        items.map { itemMapperWriter.mapFromEntity(it) },
+        sectionId?: -1L, unitId?: -1L, total,
+        start, items.map { itemMapperWriter.mapFromEntity(it) },
         timeStamp
     )}
     override fun mapToEntity(domain: VodListingPage): VodListingPageEntity = with(domain) {
@@ -32,7 +31,7 @@ class VodListingPageEntityMapperWriter: EntityMapper<VodListingPageEntity, VodLi
             id = 0L,
             if (sectionId > 0) sectionId else null,
             if (unitId > 0) unitId else null,
-            total, pageNumber, count, System.currentTimeMillis()
+            total, start, System.currentTimeMillis()
         )
         entity.items.addAll(items.map { itemMapperWriter.mapToEntity(it) })
         entity
@@ -42,7 +41,7 @@ class VodListingPageEntityMapperWriter: EntityMapper<VodListingPageEntity, VodLi
             id = 0L,
             if (sectionId > 0) sectionId else null,
             if (unitId > 0) unitId else null,
-            total, pageNumber, count, System.currentTimeMillis()
+            total, start, System.currentTimeMillis()
         )
         val itemEntities = items.map { itemMapperWriter.putEntity(store, it) }
         store.boxFor(VodListingItemEntity::class.java).put(itemEntities) // Rule#2
@@ -66,7 +65,7 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
                 else -> null
             },
             postersMapper.mapFromEntity(posters),
-            attributesMapper.mapFromEntity(attributes.target),
+            attributes.target?.let { attributesMapper.mapFromEntity(it) },
             timeStamp
         )
     }
@@ -88,7 +87,7 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
         val entity = VodListingItemEntity (id, sectionId, unitId, title, description,
             System.currentTimeMillis())
         itemBox.attach(entity) // Rule#1
-        video.let {
+        video?.let {
             if (video is Video.Single)
                 entity.videoSingle.target = singleMapper.putEntity(store, video as Video.Single) // Rule#2
             else

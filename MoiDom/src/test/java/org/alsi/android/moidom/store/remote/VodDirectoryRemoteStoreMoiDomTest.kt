@@ -84,17 +84,16 @@ class VodDirectoryRemoteStoreMoiDomTest {
         )
 
         val observer = remoteStore.getListingPage(
-            sectionId = RestServiceMoidom.VOD_SECTION_ID,
+            sectionId = RestServiceMoidom.VOD_SECTION_SUBSTITUTE_ID,
             unitId = EXTRA_GENRE_LAST_ID,
-            page = 1, count = 20).test()
+            start = 1, length = 20).test()
         observer.awaitTerminalEvent(1, TimeUnit.SECONDS)
         observer.assertNoErrors()
 
         assertEquals(observer.valueCount(), 1)
         val list = observer.values()[0]
         assertEquals(list.total, 3229)
-        assertEquals(list.pageNumber, 1)
-        assertEquals(list.count, 20)
+        assertEquals(list.start, 1)
         assertEquals(list.items[1].id, 2511)
         assertEquals(list.items[1].title, "Домоправитель")
         assertEquals(list.items[19].id, 2526)

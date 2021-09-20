@@ -8,9 +8,9 @@ import java.net.URI
 
 class VodListingPageMapper: SourceDataMapper<VodListResponse, VodListingPage> {
 
-    fun mapFromSource(sectionId: Long, unitId: Long, page: Int, count: Int, source: VodListResponse)
+    fun mapFromSource(sectionId: Long, unitId: Long, start: Int, source: VodListResponse)
     : VodListingPage =
-        VodListingPage(sectionId, unitId, source.total, page, count,
+        VodListingPage(sectionId, unitId, source.total, start,
             source.vods.map { VodListingItem(
                 it.id, sectionId, unitId,
                 it.name, it.description,

@@ -15,8 +15,7 @@ data class VodListingPageEntity (
     var unitId: Long? = null,
 
     var total: Int? = 0,
-    var pageNumber: Int? = 1,
-    var count: Int? = 0,
+    var start: Int = 0,
 
     var timeStamp: Long? = null
 ) {

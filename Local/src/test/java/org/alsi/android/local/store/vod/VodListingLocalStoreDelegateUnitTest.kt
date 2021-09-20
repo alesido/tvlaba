@@ -56,8 +56,7 @@ class VodListingLocalStoreDelegateUnitTest {
                 storeDelegate.getListingPage(
                     sectionId,
                     unitId,
-                    pageNumber?: 1,
-                    count?: 0)
+                    start)
             }.subscribe(testObserver)
         }
         onTestObserverTermination(testObserver, "shouldStoreListingPage")
