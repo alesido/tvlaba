@@ -20,7 +20,6 @@ import javax.inject.Inject
  *
  */
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
-        private val startSessionUseCase: StartSessionUseCase,
         private val directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
         private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
@@ -80,7 +79,6 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     // region Dispose
 
     fun dispose() {
-        startSessionUseCase.dispose()
         directoryObservationUseCase.dispose()
         directoryViewUpdateUseCase.dispose()
         newPlaybackUseCase.dispose()
@@ -96,15 +94,6 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 
     // endregion
     // region Subscribers
-
-    inner class StartSessionSubscriber: DisposableCompletableObserver() {
-        override fun onComplete() {
-            directoryObservationUseCase.execute(ChannelDirectorySubscriber())
-        }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
-    }
 
     private inner class ChannelDirectorySubscriber: DisposableObserver<TvChannelDirectory>() {
         override fun onNext(directory: TvChannelDirectory) {

@@ -42,6 +42,6 @@ enum class TvBrowsePageProperty(val id: Long, val value: TvBrowsePage) {
 }
 
 class TvBrowsePageConverter: PropertyConverter<TvBrowsePageProperty, Long> {
-        override fun convertToDatabaseValue(entityProperty: TvBrowsePageProperty?): Long = entityProperty?.id?: IconTypeProperty.UNKNOWN.id
+        override fun convertToDatabaseValue(entityProperty: TvBrowsePageProperty?): Long = entityProperty?.id?: TvBrowsePageProperty.UNKNOWN.id
         override fun convertToEntityProperty(databaseValue: Long?): TvBrowsePageProperty = TvBrowsePageProperty.valueById[databaseValue]?: TvBrowsePageProperty.UNKNOWN
 }

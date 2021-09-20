@@ -5,9 +5,7 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
-import org.alsi.android.domain.vod.model.guide.directory.VodDirectory
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
-import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
 import org.alsi.android.domain.vod.repository.VodRepository
 import javax.inject.Inject
 
