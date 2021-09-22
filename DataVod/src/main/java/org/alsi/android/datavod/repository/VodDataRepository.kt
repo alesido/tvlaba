@@ -129,9 +129,9 @@ abstract class VodDataRepository(
     fun now(): Long = System.currentTimeMillis()
 
     companion object {
-         val EXPIRATION_DIRECTORY_MILLIS = TimeUnit.HOURS.toMillis(0)
-         val EXPIRATION_PAGE_MILLIS = TimeUnit.HOURS.toMillis(0)
-         val EXPIRATION_ITEM_MILLIS = TimeUnit.HOURS.toMillis(0)
-         val EXPIRATION_STREAM_MILLIS = TimeUnit.HOURS.toMillis(0)
+         val EXPIRATION_DIRECTORY_MILLIS = TimeUnit.HOURS.toMillis(1)
+         val EXPIRATION_PAGE_MILLIS = TimeUnit.HOURS.toMillis(1)
+         val EXPIRATION_ITEM_MILLIS = TimeUnit.HOURS.toMillis(1)
+         val EXPIRATION_STREAM_MILLIS = TimeUnit.HOURS.toMillis(1)
     }
 }

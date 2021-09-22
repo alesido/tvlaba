@@ -64,7 +64,7 @@ class VodDirectoryLocalStoreDelegate(
         directory.sections.forEach { section ->
             // Rule#2: put targets of ToMany relation to store before adding them to the ToMany
             // property of the owner entity, of course, only if they have @Id(assignable = true):
-            val unitEntities = section.units.map { unitMapper.mapToEntity(it) }
+            val unitEntities = section.units.mapIndexed { index, unit -> unitMapper.mapToEntity(unit, index) }
             unitsBox.put(unitEntities)
 
             // Rule#1: If the owning, source Object uses @Id(assignable = true) attach its Box
@@ -134,7 +134,7 @@ class VodDirectoryLocalStoreDelegate(
     }
 
     override fun putListingItem(item: VodListingItem) = Completable.fromRunnable {
-        itemMapperWriter.putEntity(serviceBoxStore, item, true)
+        itemMapperWriter.putEntity(serviceBoxStore, item, writeEntity = true)
     }
 
     override fun getListingItem(vodItemId: Long): Single<VodListingItem> = Single.fromCallable {

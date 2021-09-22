@@ -23,7 +23,7 @@ class VodListingPageEntityMapperWriter: EntityMapper<VodListingPageEntity, VodLi
     private val itemMapperWriter = VodListingItemEntityMapperWriter()
     override fun mapFromEntity(entity: VodListingPageEntity) = with(entity) { VodListingPage (
         sectionId?: -1L, unitId?: -1L, total,
-        start, items.map { itemMapperWriter.mapFromEntity(it) },
+        start, items.map{ itemMapperWriter.mapFromEntity(it, sectionId!!, unitId!!) },
         timeStamp
     )}
     override fun mapToEntity(domain: VodListingPage): VodListingPageEntity = with(domain) {
@@ -57,7 +57,8 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
     private val serialMapper = VideoSerialEntityMapperWriter()
     private val postersMapper = VodPostersMapper()
     private val attributesMapper = VodAttributesMapper()
-    override fun mapFromEntity(entity: VodListingItemEntity) = with(entity) {
+    override fun mapFromEntity(entity: VodListingItemEntity): VodListingItem = throw IllegalAccessError("Not applicable, see other version")
+    fun mapFromEntity(entity: VodListingItemEntity, sectionId: Long, unitId: Long) = with(entity) {
         VodListingItem(id, sectionId, unitId, title, description,
             when {
                 videoSingle.target != null -> singleMapper.mapFromEntity(videoSingle.target)
@@ -70,8 +71,7 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
         )
     }
     override fun mapToEntity(domain: VodListingItem) = with(domain) {
-        val entity = VodListingItemEntity (id, sectionId, unitId, title, description,
-            System.currentTimeMillis())
+        val entity = VodListingItemEntity (id, title, description, System.currentTimeMillis())
         video.let {
             if (video is Video.Single)
                 entity.videoSingle.target = singleMapper.mapToEntity(video as Video.Single)
@@ -84,8 +84,7 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
     }
     fun putEntity(store: BoxStore, domain: VodListingItem, writeEntity: Boolean = false): VodListingItemEntity  = with(domain) {
         val itemBox: Box<VodListingItemEntity> = store.boxFor()
-        val entity = VodListingItemEntity (id, sectionId, unitId, title, description,
-            System.currentTimeMillis())
+        val entity = VodListingItemEntity (id, title, description, System.currentTimeMillis())
         itemBox.attach(entity) // Rule#1
         video?.let {
             if (video is Video.Single)
@@ -99,7 +98,7 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
             // Rule#2 indirect: genres of attributes have assigned IDs
             entity.attributes.target = attributesMapper.mapToEntity(it)
         }
-        // Rule#2 May br delegated to a caller in order of optimization by putting a list of listing item entities at once
+        // Rule#2 May be delegated to a caller in order of optimization by putting a list of listing item entities at once
         if (writeEntity) itemBox.put(entity)
         entity
     }

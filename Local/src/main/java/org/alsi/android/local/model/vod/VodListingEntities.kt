@@ -19,7 +19,7 @@ data class VodListingPageEntity (
 
     var timeStamp: Long? = null
 ) {
-    @Backlink(to = "listingPage")
+    @Backlink(to = "listingPages")
     lateinit var items: ToMany<VodListingItemEntity>
 }
 
@@ -27,15 +27,12 @@ data class VodListingPageEntity (
 data class VodListingItemEntity (
     @Id(assignable = true) var id: Long = 0L,
 
-    var sectionId: Long? = null,
-    var unitId: Long? = null,
-
     var title: String? = null,
     var description: String? = null,
 
     var timeStamp: Long? = null
 ) {
-    lateinit var listingPage: ToOne<VodListingPageEntity>
+    lateinit var listingPages: ToMany<VodListingPageEntity>
 
     lateinit var videoSingle: ToOne<VideoSingleEntity>
     lateinit var videoSerial: ToOne<VideoSerialEntity>

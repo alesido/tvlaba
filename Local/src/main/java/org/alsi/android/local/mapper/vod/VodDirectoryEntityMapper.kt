@@ -13,7 +13,7 @@ class VodDirectoryEntityMapper: EntityMapper<VodDirectoryEntity, VodDirectory> {
     private val sectionMapper = VodSectionEntityMapper()
 
     override fun mapFromEntity(entity: VodDirectoryEntity) = VodDirectory(
-        sections = entity.sections.map { sectionMapper.mapFromEntity(it) },
+        sections = entity.sections.sortedBy{ it.ordinal }.map{ sectionMapper.mapFromEntity(it) },
         timeStamp = entity.timeStamp
     )
 
@@ -21,7 +21,7 @@ class VodDirectoryEntityMapper: EntityMapper<VodDirectoryEntity, VodDirectory> {
         val entity = VodDirectoryEntity(
             VodDirectoryEntity.SINGLE_RECORD_DIRECTORY_ID,
             System.currentTimeMillis())
-        entity.sections.addAll( domain.sections.map { sectionMapper.mapToEntity(it) })
+        entity.sections.addAll( domain.sections.mapIndexed { index, section -> sectionMapper.mapToEntity(section, index) })
         return entity
     }
 }
@@ -31,14 +31,19 @@ class VodSectionEntityMapper: EntityMapper<VodSectionEntity, VodSection> {
     private val unitMapper = VodUnitEntityMapper()
 
     override fun mapFromEntity(entity: VodSectionEntity) = with(entity) { VodSection(
-            id, title, units.map { unitMapper.mapFromEntity(it) }
+            id, title, units.sortedBy{ it.ordinal }.map { unitMapper.mapFromEntity(it) }
         )}
 
+    fun mapToEntity(domain: VodSection, index: Int): VodSectionEntity {
+        val entity = VodSectionEntity(domain.id, domain.title, index)
+        entity.units.addAll( domain.units.mapIndexed { unitIndex, unit ->
+            unitMapper.mapToEntity(unit, unitIndex)
+        })
+        return entity
+    }
 
     override fun mapToEntity(domain: VodSection): VodSectionEntity {
-        val entity = VodSectionEntity(domain.id, domain.title)
-        entity.units.addAll( domain.units.map { unitMapper.mapToEntity(it) })
-        return entity
+        TODO("Not applicable, see another variant")
     }
 }
 
@@ -47,6 +52,10 @@ class VodUnitEntityMapper: EntityMapper<VodUnitEntity, VodUnit> {
     override fun mapFromEntity(entity: VodUnitEntity): VodUnit
     = with(entity) { VodUnit(id, entity.section.targetId, title, total) }
 
-    override fun mapToEntity(domain: VodUnit): VodUnitEntity
-    = with(domain) { VodUnitEntity(id, title, total) }
+    fun mapToEntity(domain: VodUnit, index: Int): VodUnitEntity
+    = with(domain) { VodUnitEntity(id, title, total, index) }
+
+    override fun mapToEntity(domain: VodUnit): VodUnitEntity {
+        TODO("Not applicable, see another variant")
+    }
 }

@@ -23,6 +23,7 @@ data class VodDirectoryEntity(
 data class VodSectionEntity(
     @Id(assignable = true) var id: Long = 0L,
     var title: String? = null,
+    var ordinal: Int? = null
 ) {
     lateinit var directory: ToOne<VodDirectoryEntity>
 
@@ -34,7 +35,8 @@ data class VodSectionEntity(
 data class VodUnitEntity(
     @Id(assignable = true) var id: Long = 0L,
     var title: String? = null,
-    var total: Int? = null
+    var total: Int? = null,
+    var ordinal: Int? = null
 ) {
     lateinit var section: ToOne<VodSectionEntity>
 }

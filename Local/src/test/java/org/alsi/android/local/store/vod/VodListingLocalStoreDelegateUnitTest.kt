@@ -65,56 +65,70 @@ class VodListingLocalStoreDelegateUnitTest {
         assertEquals(testPage.items.size, readPage.items.size)
 
         // video single assertion
-        val singleItem = readPage.items[0]
-        with(testPage.items[0]) {
+        for (i in 0..2) {
+            val singleItem = readPage.items[i]
+            with(testPage.items[i]) {
 
-            assertEquals(id, singleItem.id)
-            assertEquals(title, singleItem.title)
-            assertEquals(description, singleItem.description)
-            assertNotNull(singleItem.timeStamp)
+                assertEquals(id, singleItem.id)
+                assertEquals(title, singleItem.title)
+                assertEquals(description, singleItem.description)
+                assertNotNull(singleItem.timeStamp)
 
-            assert(video is VodListingItem.Video.Single)
-            assert(singleItem.video is VodListingItem.Video.Single)
+                assert(video is VodListingItem.Video.Single) { println("Video is not of type \"Single\" @$i: $video") }
+                assert(singleItem.video is VodListingItem.Video.Single)
 
-            val testVideo = video as VodListingItem.Video.Single
-            val readVideo = singleItem.video as VodListingItem.Video.Single
-            with (testVideo) {
-                assertEquals(id, readVideo.id)
-                assertEquals(title, readVideo.title)
-                assertEquals(description, readVideo.description)
-                assertEquals(uri, readVideo.uri)
-                assertEquals(tracks?.size, readVideo.tracks?.size)
-                assertEquals(tracks?.elementAt(0)?.languageCode, readVideo.tracks?.elementAt(0)?.languageCode)
-                assertEquals(tracks?.elementAt(0)?.title, readVideo.tracks?.elementAt(0)?.title)
-                assertEquals(durationMillis, readVideo.durationMillis)
+                val testVideo = video as VodListingItem.Video.Single
+                val readVideo = singleItem.video as VodListingItem.Video.Single
+                with(testVideo) {
+                    assertEquals(id, readVideo.id)
+                    assertEquals(title, readVideo.title)
+                    assertEquals(description, readVideo.description)
+                    assertEquals(uri, readVideo.uri)
+                    assertEquals(tracks?.size, readVideo.tracks?.size)
+                    assertEquals(
+                        tracks?.elementAt(0)?.languageCode,
+                        readVideo.tracks?.elementAt(0)?.languageCode
+                    )
+                    assertEquals(tracks?.elementAt(0)?.title, readVideo.tracks?.elementAt(0)?.title)
+                    assertEquals(durationMillis, readVideo.durationMillis)
+                }
+
+                posters?.let {
+                    val readPosters = singleItem.posters
+                    assertEquals(it.poster, readPosters?.poster)
+                    assertEquals(it.gallery?.size, readPosters?.gallery?.size)
+                    assertEquals(it.gallery?.elementAt(0), readPosters?.gallery?.elementAt(0))
+                    assertEquals(it.gallery?.elementAt(2), readPosters?.gallery?.elementAt(2))
+                }
+
+                attributes?.let {
+                    val readAttrs = singleItem.attributes
+                    assertEquals(it.durationMillis, readAttrs?.durationMillis)
+                    assertEquals(it.genres?.size, readAttrs?.genres?.size)
+                    assertEquals(
+                        it.genres?.elementAt(0)?.genreId,
+                        readAttrs?.genres?.elementAt(0)?.genreId
+                    )
+                    assertEquals(
+                        it.genres?.elementAt(0)?.title,
+                        readAttrs?.genres?.elementAt(0)?.title
+                    )
+                }
             }
+        }
 
-            posters?.let {
-                val readPosters = singleItem.posters
-                assertEquals(it.poster, readPosters?.poster)
-                assertEquals(it.gallery?.size, readPosters?.gallery?.size)
-                assertEquals(it.gallery?.elementAt(0), readPosters?.gallery?.elementAt(0))
-                assertEquals(it.gallery?.elementAt(2), readPosters?.gallery?.elementAt(2))
-            }
-
-            attributes?.let {
-                val readAttrs = singleItem.attributes
-                assertEquals(it.durationMillis, readAttrs?.durationMillis)
-                assertEquals(it.genres?.size, readAttrs?.genres?.size)
-                assertEquals(it.genres?.elementAt(0)?.genreId, readAttrs?.genres?.elementAt(0)?.genreId)
-                assertEquals(it.genres?.elementAt(0)?.title, readAttrs?.genres?.elementAt(0)?.title)
-            }
-
+        // video serials assertion
+        for (i in 3..5) {
             // video serial assertion
-            val serialItem = readPage.items[3]
-            with(testPage.items[3]) {
+            val serialItem = readPage.items[i]
+            with(testPage.items[i]) {
 
                 assertEquals(id, serialItem.id)
                 assertEquals(title, serialItem.title)
                 assertEquals(description, serialItem.description)
                 assertNotNull(serialItem.timeStamp)
 
-                testPage.items[3].posters?.let {
+                posters?.let {
                     val readPosters = serialItem.posters
                     assertEquals(it.poster, readPosters?.poster)
                     assertEquals(it.gallery?.size, readPosters?.gallery?.size)
@@ -122,19 +136,25 @@ class VodListingLocalStoreDelegateUnitTest {
                     assertEquals(it.gallery?.elementAt(2), readPosters?.gallery?.elementAt(2))
                 }
 
-                testPage.items[3].attributes?.let {
+                attributes?.let {
                     val readAttrs = serialItem.attributes
                     assertEquals(it.durationMillis, readAttrs?.durationMillis)
                     assertEquals(it.genres?.size, readAttrs?.genres?.size)
-                    assertEquals(it.genres?.elementAt(0)?.genreId, readAttrs?.genres?.elementAt(0)?.genreId)
-                    assertEquals(it.genres?.elementAt(0)?.title, readAttrs?.genres?.elementAt(0)?.title)
+                    assertEquals(
+                        it.genres?.elementAt(0)?.genreId,
+                        readAttrs?.genres?.elementAt(0)?.genreId
+                    )
+                    assertEquals(
+                        it.genres?.elementAt(0)?.title,
+                        readAttrs?.genres?.elementAt(0)?.title
+                    )
                 }
 
                 assert(video is VodListingItem.Video.Serial)
                 assert(serialItem.video is VodListingItem.Video.Serial)
                 val testSerial = video as VodListingItem.Video.Serial
                 val readSerial = serialItem.video as VodListingItem.Video.Serial
-                with (testSerial) {
+                with(testSerial) {
                     assertEquals(id, readSerial.id)
                     assertEquals(title, readSerial.title)
                     assertEquals(description, readSerial.description)
@@ -148,8 +168,14 @@ class VodListingLocalStoreDelegateUnitTest {
                         assertEquals(description, readSeries.description)
                         assertEquals(uri, readSeries.uri)
                         assertEquals(tracks?.size, readSeries.tracks?.size)
-                        assertEquals(tracks?.elementAt(0)?.languageCode, readSeries.tracks?.elementAt(0)?.languageCode)
-                        assertEquals(tracks?.elementAt(0)?.title, readSeries.tracks?.elementAt(0)?.title)
+                        assertEquals(
+                            tracks?.elementAt(0)?.languageCode,
+                            readSeries.tracks?.elementAt(0)?.languageCode
+                        )
+                        assertEquals(
+                            tracks?.elementAt(0)?.title,
+                            readSeries.tracks?.elementAt(0)?.title
+                        )
                         assertEquals(durationMillis, readSeries.durationMillis)
                     }
                 }
