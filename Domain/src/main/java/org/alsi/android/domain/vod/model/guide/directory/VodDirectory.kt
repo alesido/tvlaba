@@ -30,7 +30,7 @@ class VodSection(
      *  a substitute section introduced to not break VOD Directory structure.
      *  This flag marks such a structure.
      */
-    val isSectionSubstitute: Boolean = false
+    val isSectionSubstitute: Boolean? = false
 ) {
     val unitById: Map<Long, VodUnit> = units.map { it.id to it }.toMap()
     val unitPositionById: Map<Long, Int> = units.mapIndexed { index, unit -> unit.id to index}.toMap()

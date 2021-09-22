@@ -141,7 +141,7 @@ class VodDirectoryFragment : BrowseSupportFragment() {
             val menuHeader = HeaderItem(0L, getString(R.string.label_vod_sections_and_navigation))
             val menuItems: MutableList<CardMenuItem> = mutableListOf()
             // .. sections
-            if (directory.sections.size > 1 || !directory.sections[0].isSectionSubstitute) {
+            if (directory.sections.size > 1 || directory.sections[0].isSectionSubstitute != true) {
                 menuItems.addAll(directory.sections.mapIndexed { index, section ->
                     CardMenuItem(index.toLong(), section.title, payload = section)
                 })

@@ -31,11 +31,12 @@ class VodSectionEntityMapper: EntityMapper<VodSectionEntity, VodSection> {
     private val unitMapper = VodUnitEntityMapper()
 
     override fun mapFromEntity(entity: VodSectionEntity) = with(entity) { VodSection(
-            id, title, units.sortedBy{ it.ordinal }.map { unitMapper.mapFromEntity(it) }
-        )}
+        id, title, units.sortedBy{ it.ordinal }.map { unitMapper.mapFromEntity(it) },
+        isSectionSubstitute
+    )}
 
     fun mapToEntity(domain: VodSection, index: Int): VodSectionEntity {
-        val entity = VodSectionEntity(domain.id, domain.title, index)
+        val entity = VodSectionEntity(domain.id, domain.title, index, domain.isSectionSubstitute)
         entity.units.addAll( domain.units.mapIndexed { unitIndex, unit ->
             unitMapper.mapToEntity(unit, unitIndex)
         })

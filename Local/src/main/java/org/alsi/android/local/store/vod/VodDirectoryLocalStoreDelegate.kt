@@ -62,15 +62,17 @@ class VodDirectoryLocalStoreDelegate(
     override fun putDirectory(directory: VodDirectory) = Completable.fromRunnable {
 
         val sectionEntities: MutableList<VodSectionEntity> = mutableListOf()
-        directory.sections.forEach { section ->
+        directory.sections.forEachIndexed { sectionIndex, section ->
             // Rule#2: put targets of ToMany relation to store before adding them to the ToMany
             // property of the owner entity, of course, only if they have @Id(assignable = true):
-            val unitEntities = section.units.mapIndexed { index, unit -> unitMapper.mapToEntity(unit, index) }
+            val unitEntities = section.units.mapIndexed {
+                    unitIndex, unit -> unitMapper.mapToEntity(unit, unitIndex) }
             unitsBox.put(unitEntities)
 
             // Rule#1: If the owning, source Object uses @Id(assignable = true) attach its Box
             // before modifying its ToMany:
-            val sectionEntity = VodSectionEntity(section.id, section.title)
+            val sectionEntity = VodSectionEntity(
+                section.id, section.title, sectionIndex, section.isSectionSubstitute)
             sectionsBox.attach(sectionEntity)
             sectionEntity.units.addAll(unitEntities)
             sectionEntities.add(sectionEntity)

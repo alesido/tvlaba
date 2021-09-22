@@ -23,7 +23,8 @@ data class VodDirectoryEntity(
 data class VodSectionEntity(
     @Id(assignable = true) var id: Long = 0L,
     var title: String? = null,
-    var ordinal: Int? = null
+    var ordinal: Int? = null,
+    var isSectionSubstitute: Boolean? = null
 ) {
     lateinit var directory: ToOne<VodDirectoryEntity>
 

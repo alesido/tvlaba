@@ -1163,7 +1163,7 @@
     },
     {
       "id": "30:5812511921231181247",
-      "lastPropertyId": "4:1691000487157221426",
+      "lastPropertyId": "5:7071521175427938846",
       "name": "VodSectionEntity",
       "properties": [
         {
@@ -1189,6 +1189,12 @@
           "id": "4:1691000487157221426",
           "name": "ordinal",
           "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "5:7071521175427938846",
+          "name": "isSectionSubstitute",
+          "type": 1,
           "flags": 2
         }
       ],
