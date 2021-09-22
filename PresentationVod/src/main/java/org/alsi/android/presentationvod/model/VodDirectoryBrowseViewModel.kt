@@ -135,13 +135,12 @@ class VodDirectoryBrowseViewModel @Inject constructor (
         else {
             section = t.section?: return
             unit = t.unit?: return
-            itemPosition = t.itemPosition
+            itemPosition = t.itemPosition?: 0
         }
 
         // set position
         val sectionIndex = directory?.sectionPositionById?.getValue(section.id)?: return
         val unitIndex = section.unitPositionById[unit.id]?: return
-        itemPosition?: return
 
         position = VodDirectoryPosition(sectionIndex, unitIndex, itemPosition)
 

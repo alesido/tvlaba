@@ -32,8 +32,6 @@ class VodDirectoryFragment : BrowseSupportFragment() {
 
     private lateinit var browseViewModel : VodDirectoryBrowseViewModel
 
-    private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -69,7 +67,7 @@ class VodDirectoryFragment : BrowseSupportFragment() {
 
     private fun setSelectedListener() {
 
-        setOnItemViewSelectedListener { itemViewHolder, item, rowViewHolder, row ->
+        setOnItemViewSelectedListener { _, item, rowViewHolder, row ->
             // NOTE If item is null, rowViewHolder can be
             if (null == item && row != null) {
                 if (row.id > 0) {
@@ -185,10 +183,18 @@ class VodDirectoryFragment : BrowseSupportFragment() {
                     loadDirectoryView(browseData)
                 }
                 it.isUnitUpdate() -> {
+                    // update in scope
+                    val section = directory.sections[it.sectionIndex!!]
                     ((adapter[it.unitIndex!! + 1] as ListRow).adapter as ArrayObjectAdapter)
-                    .setItems(
-                        directory.sections[it.sectionIndex!!].units[it.unitIndex!!].window!!.items,
-                        null)
+                    .setItems(section.units[it.unitIndex!!].window!!.items,null)
+                    // check skipped updates
+                    for (i in 1 until adapter.size() - 1) {
+                        val unit = section.units[i - 1]
+                        val rowAdapter = ((adapter[i] as ListRow).adapter as ArrayObjectAdapter)
+                        if (unit.window != null && rowAdapter.size() == 0) {
+                            rowAdapter.setItems(unit.window!!.items, null)
+                        }
+                    }
                 }
                 it.isItemUpdate() -> {
                     ((adapter[it.unitIndex!!] as ListRow).adapter as ArrayObjectAdapter)
