@@ -42,6 +42,16 @@ data class VodListingItemEntity (
 }
 
 @Entity
+data class VodListingOrderEntity (
+    @Id var id: Long = 0L,
+
+    @Index var pageId: Long? = null,
+    @Index var itemId: Long? = null,
+
+    var ordinal: Int? = null
+)
+
+@Entity
 data class VideoSingleEntity(
     @Id(assignable = true) var id: Long = 0L,
     var title: String? = null,

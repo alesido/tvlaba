@@ -30,6 +30,7 @@ class VodDirectoryLocalStoreDelegate(
     private val unitsBox: Box<VodUnitEntity> = serviceBoxStore.boxFor()
 
     private val pageBox: Box<VodListingPageEntity> = serviceBoxStore.boxFor()
+    private val orderBox: Box<VodListingOrderEntity> = serviceBoxStore.boxFor()
     private val itemBox: Box<VodListingItemEntity> = serviceBoxStore.boxFor()
 
     private val videoSingleBox: Box<VodVideoSingleStreamEntity> = serviceBoxStore.boxFor()
@@ -108,7 +109,21 @@ class VodDirectoryLocalStoreDelegate(
             equal(VodListingPageEntity_.start, start.toLong())
             order(VodListingPageEntity_.timeStamp, OrderFlags.DESCENDING)
         }.findFirst()
-        found?.let { pageMapperWriter.mapFromEntity(it) } ?: VodListingPage.empty()
+        found?.let { entity ->
+            with(entity) {
+                val order = orderBox.query {
+                    equal(VodListingOrderEntity_.pageId, id)
+                    order(VodListingOrderEntity_.ordinal)
+                }.find()
+                val idMap = items.map { it.id to it }.toMap()
+                VodListingPage (sectionId, unitId, total,
+                    start, order.map {
+                        itemMapperWriter.mapFromEntity(idMap[it.itemId]!!, sectionId, unitId)
+                    },
+                    timeStamp)
+            }
+            //pageMapperWriter.mapFromEntity(it)
+        } ?: VodListingPage.empty()
     }
 
     override fun putPromoPage(promoPage: VodListingPage): Completable {

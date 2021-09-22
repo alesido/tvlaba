@@ -43,11 +43,18 @@ class VodListingPageEntityMapperWriter: EntityMapper<VodListingPageEntity, VodLi
             if (unitId > 0) unitId else null,
             total, start, System.currentTimeMillis()
         )
+        // items
         val itemEntities = items.map { itemMapperWriter.putEntity(store, it) }
         store.boxFor(VodListingItemEntity::class.java).put(itemEntities) // Rule#2
         entity.items.clear() // precaution
         entity.items.addAll(itemEntities)
-        store.boxFor(VodListingPageEntity::class.java).put(entity)
+        // put page
+        val pageId = store.boxFor(VodListingPageEntity::class.java).put(entity)
+        // ordering
+        val orderEntities = items.mapIndexed { index, item -> VodListingOrderEntity(
+            pageId = pageId, itemId = item.id, ordinal = index) }
+        store.boxFor(VodListingOrderEntity::class.java).put(orderEntities)
+        // return page entity
         entity
     }
 }
