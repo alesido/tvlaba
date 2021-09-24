@@ -148,9 +148,20 @@ class VodDirectoryBrowseViewModel @Inject constructor (
 
         // get current page of current unit if it's not loaded yet
         unit.window?: executedUseCasesCounter++
-        unit.window?: listingPageUseCase.execute(ListingPageSubscriber(),
-            VodListingPageUseCase.Params(section.id, unit.id, itemPosition,
-                DEFAULT_LISTING_PAGE_SIZE))
+        if (unit.window != null) {
+            if (unit.window!!.items.size - itemPosition < 10) {
+                // load next page
+                listingPageUseCase.execute(ListingPageSubscriber(),
+                    VodListingPageUseCase.Params(section.id, unit.id, unit.window!!.items.size,
+                        DEFAULT_LISTING_PAGE_SIZE))
+            }
+        }
+        else {
+            // load first page
+            listingPageUseCase.execute(ListingPageSubscriber(),
+                VodListingPageUseCase.Params(section.id, unit.id, itemPosition,
+                    DEFAULT_LISTING_PAGE_SIZE))
+        }
 
         // get initial pages of some not loaded yet NEXT units
         if (unitIndex < section.units.size - 1) {
@@ -199,14 +210,22 @@ class VodDirectoryBrowseViewModel @Inject constructor (
 
     private inner class ListingPageSubscriber: DisposableSingleObserver<VodListingPage>() {
         override fun onSuccess(page: VodListingPage) {
-            directory?: return
-            position?: return
-            val unit = directory?.sectionById?.getValue(page.sectionId)?.unitById?.getValue(page.unitId)?: return
+            if (null == directory || null == position || page.items.isEmpty()) {
+                liveDirectory.postValue(Resource.success())
+                return
+            }
+            val unit = directory?.sectionById?.getValue(page.sectionId)?.unitById?.getValue(page.unitId)
+            if (null == unit) {
+                liveDirectory.postValue(Resource.success())
+                return
+            }
             // window update
-            if (null == unit.window)
+            if (null == unit.window) {
                 unit.window = VodListingWindow(page)
-            else
+            }
+            else {
                 unit.window?.add(page)
+            }
             // update scope
             val sectionIndex = directory?.sectionPositionById?.getValue(page.sectionId)
             val unitIndex = directory?.sectionById?.getValue(page.sectionId)?.unitPositionById?.getValue(unit.id)

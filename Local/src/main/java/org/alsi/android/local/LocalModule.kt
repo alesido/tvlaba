@@ -15,6 +15,7 @@ class LocalModule {
     @Provides
     @Named(Local.STORE_NAME)
     fun provideCommonLocalStore(context: Context): BoxStore {
-        return MyObjectBox.builder().name(Local.STORE_NAME).androidContext(context).build()
+        return MyObjectBox.builder().name(Local.STORE_NAME).androidContext(context)
+            .maxReaders(252).build()
     }
 }

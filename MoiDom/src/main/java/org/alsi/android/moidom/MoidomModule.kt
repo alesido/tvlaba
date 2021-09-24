@@ -82,7 +82,7 @@ class MoidomModule {
             context: Context,
             @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long): BoxStore
             = org.alsi.android.local.model.MyObjectBox.builder().name("${Moidom.TAG}.${StreamingService.TV}.$serviceId")
-            .androidContext(context).build()
+            .androidContext(context).maxReaders(252).build()
 
     /**     Moidom service-wide Local Store for VOD data
      */
@@ -91,7 +91,7 @@ class MoidomModule {
             context: Context,
             @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long): BoxStore
             = org.alsi.android.local.model.MyObjectBox.builder().name("${Moidom.TAG}.${StreamingService.VOD}.$serviceId")
-            .androidContext(context).build()
+            .androidContext(context).maxReaders(252).build()
 
     @Singleton @Provides fun provideAccountStoreLocalDelegate(
         @Named(Local.STORE_NAME) boxStore: BoxStore,

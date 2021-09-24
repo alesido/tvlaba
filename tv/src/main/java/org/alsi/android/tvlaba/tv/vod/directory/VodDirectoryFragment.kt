@@ -82,9 +82,6 @@ class VodDirectoryFragment : BrowseSupportFragment() {
                         title = item.payload.title
                         browseViewModel.onSectionSelected(item.payload)
                     }
-//                    else {
-//                        // TODO navigate by menu item ID
-//                    }
                 }
                 is VodUnit -> browseViewModel.onUnitSelected(item)
                 is VodListingItem -> browseViewModel.onListingItemSelected(item,
