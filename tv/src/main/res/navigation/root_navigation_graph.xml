@@ -54,10 +54,16 @@
         <action
             android:id="@+id/action_appRouterFragment_to_tvGuideNavigation"
             app:destination="@id/tvGuideNavigation"
+            app:popUpTo="@id/appRouterFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
             />
         <action
             android:id="@+id/action_appRouterFragment_to_vodGuideNavigation"
             app:destination="@id/vodGuideNavigation"
+            app:popUpTo="@id/appRouterFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
             />
     </fragment>
     <!--
