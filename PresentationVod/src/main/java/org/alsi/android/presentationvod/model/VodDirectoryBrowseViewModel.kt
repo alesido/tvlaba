@@ -30,8 +30,9 @@ class VodDirectoryBrowseViewModel @Inject constructor (
     private val liveDirectory: MutableLiveData<Resource<VodDirectoryBrowseLiveData>> = MutableLiveData()
 
     private var directory: VodDirectory? = null
-
     private var position: VodDirectoryPosition? = null
+
+    private var isOnResume: Boolean = true
 
     init {
         browseCursorObserveUseCase.execute(BrowseCursorSubscriber())
@@ -144,6 +145,17 @@ class VodDirectoryBrowseViewModel @Inject constructor (
 
         position = VodDirectoryPosition(sectionIndex, unitIndex, itemPosition)
 
+        // request initial directory display in case the cursor stores preloaded directory part
+        if (isOnResume && unit.window != null) {
+            isOnResume = false
+            val sectionsUpdate: MutableList<VodSection> = directory!!.sections.toMutableList()
+            sectionsUpdate[sectionIndex] = section
+            directory = VodDirectory(sectionsUpdate, t.timeStamp)
+            liveDirectory.postValue(Resource.success(VodDirectoryBrowseLiveData(directory!!, position!!)))
+            return
+        }
+
+        // proceed to load initial or subsequently requested parts of the directory
         var executedUseCasesCounter = 0
 
         // get current page of current unit if it's not loaded yet

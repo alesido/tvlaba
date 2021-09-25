@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.vod.model.guide.directory.VodDirectoryPosition
 import org.alsi.android.domain.vod.model.guide.directory.VodSection
@@ -91,7 +92,16 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     }
 
     private fun setClickedListener() {
-
+        setOnItemViewClickedListener { _, item, _, _ ->
+            when (item) {
+                is CardMenuItem -> {
+                    when (item.id) {
+                        MENU_ITEM_TV_ID -> NavHostFragment.findNavController(this).popBackStack()
+                        MENU_ITEM_SETTINGS_ID -> println("Menu action \"${item.title}\"")
+                    }
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -144,8 +154,8 @@ class VodDirectoryFragment : BrowseSupportFragment() {
                 })
             }
             // .. menu
-            menuItems.add(CardMenuItem(MENU_ITEM_TV_ID, "TV"))
-            menuItems.add(CardMenuItem(MENU_ITEM_SETTINGS, "SETTINGS"))
+            menuItems.add(CardMenuItem(MENU_ITEM_TV_ID, getString(R.string.label_menu_generic_tv)))
+            menuItems.add(CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings)))
             val menuRowAdapter = VodMenuRowAdapter(VodMenuCardPresenter()).apply {
                 setItems(menuItems, null)
             }
@@ -237,6 +247,6 @@ class VodDirectoryFragment : BrowseSupportFragment() {
 
     companion object {
         const val MENU_ITEM_TV_ID = 1001L
-        const val MENU_ITEM_SETTINGS = 1002L
+        const val MENU_ITEM_SETTINGS_ID = 1002L
     }
 }

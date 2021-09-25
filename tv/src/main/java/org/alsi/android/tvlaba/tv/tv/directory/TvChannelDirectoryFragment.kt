@@ -70,10 +70,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 }
             }
             else if (item is CardMenuItem) {
-                when(item.title) {
-                    "VOD" -> NavHostFragment.findNavController(this)
+                when(item.id) {
+                    MENU_ITEM_VOD_ID -> NavHostFragment.findNavController(this)
                         .navigate(R.id.actionGlobalNavigateVodSection)
-                    "Settings" -> println("Menu action \"${item.title}\"")
+                    MENU_ITEM_SETTINGS_ID -> println("Menu action \"${item.title}\"")
                 }
             }
         }
@@ -219,8 +219,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             val mixedRows: MutableList<ListRow> = mutableListOf()
             val menuRowAdapter = TvMenuRowAdapter(TvMenuCardPresenter()).apply {
                 setItems(listOf(
-                    CardMenuItem(1,"VOD", 0),
-                    CardMenuItem(2,"Settings", 0),
+                    CardMenuItem(MENU_ITEM_VOD_ID, getString(R.string.label_menu_generic_vod), 0),
+                    CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings), 0),
                 ), null)
             }
             mixedRows.add(ListRow(topMenuHeader, menuRowAdapter))
@@ -304,6 +304,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     companion object {
         const val TIMER_INTERVAL_MINUTES_LIVE_TIME_TASK = 1L
+
+        const val MENU_ITEM_VOD_ID = 1001L
+        const val MENU_ITEM_SETTINGS_ID = 1002L
     }
 }
 

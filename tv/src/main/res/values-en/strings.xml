@@ -91,4 +91,8 @@
 
     <string name="label_vod_sections_and_navigation">Sections</string>
 
+    <string name="label_menu_generic_tv">TV</string>
+    <string name="label_menu_generic_vod">VOD</string>
+    <string name="label_menu_settings">Settings</string>
+
 </resources>

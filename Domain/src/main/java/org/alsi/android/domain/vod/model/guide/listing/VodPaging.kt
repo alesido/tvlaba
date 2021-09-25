@@ -86,7 +86,8 @@ class VodListingWindow (
     }
 
 
-    fun isEmpty() = sectionId == -1L
+    fun isEmpty() = sectionId == -1L || items.isEmpty()
+    fun isNotEmpty() = sectionId != -1L && items.isNotEmpty()
 
     companion object {
         const val DEFAULT_PAGE_SIZE: Int = 20
