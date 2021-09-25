@@ -24,7 +24,7 @@ class VodItemCardPresenter: Presenter() {
         // logo
         val activity = cardView.vb.vodItemPoster.context as Activity
         if (!activity.isFinishing && !activity.isDestroyed) {
-            Glide.with(activity).load(vodItem.posters?.poster.toString())
+            Glide.with(activity).load(vodItem.posters?.poster.toString()).centerCrop()
                 .into(cardView.vb.vodItemPoster)
         }
     }
