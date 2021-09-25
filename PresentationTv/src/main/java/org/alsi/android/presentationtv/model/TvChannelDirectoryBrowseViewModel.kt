@@ -44,6 +44,8 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     @Suppress("UNUSED_PARAMETER")
     fun onChannelSelected(categoryPosition: Int, channelPosition: Int, channel: TvChannel) {
         directory?: return
+        if (categoryPosition < 0 || categoryPosition >= directory!!.categories.size)
+            return // category position could be wrong due to extra, non category row added
         val category = directory!!.categories[categoryPosition]
         browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
                 TvBrowseCursorMoveUseCase.Params(
