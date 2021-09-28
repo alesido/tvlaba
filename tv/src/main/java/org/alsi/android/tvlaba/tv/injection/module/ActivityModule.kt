@@ -18,6 +18,8 @@ import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragment
 import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragmentModule
 import org.alsi.android.tvlaba.tv.vod.VodGuideStartFragment
 import org.alsi.android.tvlaba.tv.vod.VodGuideStartFragmentModule
+import org.alsi.android.tvlaba.tv.vod.digest.VodDigestFragment
+import org.alsi.android.tvlaba.tv.vod.digest.VodDigestFragmentModule
 import org.alsi.android.tvlaba.tv.vod.directory.VodDirectoryFragment
 import org.alsi.android.tvlaba.tv.vod.directory.VodDirectoryFragmentModule
 
@@ -54,4 +56,7 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [VodDirectoryFragmentModule::class])
     abstract fun bindVodDirectoryFragment(): VodDirectoryFragment
+
+    @ContributesAndroidInjector(modules = [VodDigestFragmentModule::class])
+    abstract fun bindVodDigestFragment(): VodDigestFragment
 }
