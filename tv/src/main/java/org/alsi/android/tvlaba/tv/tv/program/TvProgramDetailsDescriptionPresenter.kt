@@ -28,6 +28,9 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Any) = (holder as MyViewHolder).bind(item as TvProgramDetailsLiveData)
 
+    override fun onUnbindViewHolder(viewHolder: ViewHolder?) { /** not applicable here **/ }
+
+
     inner class MyViewHolder(private val ib: TvProgramDetailsDescriptionExtendedBinding) : ViewHolder(ib.root) {
         fun bind(item: TvProgramDetailsLiveData) {
             val program = item.cursor!!.program
@@ -58,54 +61,9 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
                 bindRate(ib.tvProgramDetailsBannerKinopoiskRate,
                     ib.tvProgramDetailsBannerKinopoiskLogo, it?.rateKinopoisk)
                 bindRate(ib.tvProgramDetailsBannerImdbRate,
-                    ib.tvProgramDetailsBannerImdbLogo, it?.rateKinopoisk)
+                    ib.tvProgramDetailsBannerImdbLogo, it?.rateImdb)
             }
         }
-    }
-
-
-    /*
-    @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
-        val data = item as TvProgramDetailsLiveData
-        val program = data.cursor!!.program
-        val channel = data.cursor!!.channel
-        with(viewHolder.view) {
-            program.let {
-
-                // title
-                tvProgramDetailsPrimaryTitle.text = it?.title
-
-                // subtitle: time & channel's title
-                val programTime = it?.time?.shortString?:""
-                val channelReferences = if (channel != null) context.getString(
-                        R.string.statement_program_on_channel, channel.title) else ""
-                tvProgramDetailsSecondaryTitle.text = "$programTime $channelReferences"
-
-                // body
-                tvProgramDetailsDescriptionText.text = buildBodyText(program)
-
-                // timeline
-                tvProgramDetailsProgress.progress = it?.time?.progress?:0
-
-                // age limitation
-                if (it?.ageGroup != null && it.ageGroup!! > 0)
-                    tvProgramDetailsBannerAgeLimitation.text = "${it.ageGroup}+"
-                else tvProgramDetailsBannerAgeLimitation.visibility = GONE
-
-                // rates
-                bindRate(tvProgramDetailsBannerKinopoiskRate,
-                        tvProgramDetailsBannerKinopoiskLogo, it?.rateKinopoisk)
-                bindRate(tvProgramDetailsBannerImdbRate,
-                        tvProgramDetailsBannerImdbLogo, it?.rateKinopoisk)
-            }
-        }
-    }
-
-    */
-
-    override fun onUnbindViewHolder(viewHolder: ViewHolder?) {
-        // not applicable here
     }
 
     private fun buildBodyText(program: TvProgramIssue?): String? {

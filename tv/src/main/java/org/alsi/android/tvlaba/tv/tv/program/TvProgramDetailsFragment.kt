@@ -132,16 +132,16 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     private fun handleDetailsChangeEvent(resource: Resource<TvProgramDetailsLiveData>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
+                progressBarManager.hide()
                 bindProgramData(resource.data)
             }
-            ResourceState.LOADING -> {
-
-            }
+            ResourceState.LOADING -> progressBarManager.show()
             ResourceState.ERROR -> {
+                progressBarManager.hide()
                 errorHandler.run(this, resource.throwable)
             }
             else -> {
-
+                progressBarManager.hide()
             }
         }
     }
@@ -234,6 +234,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         var isInitialWeekDaySelection = true
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
             if (isInitialProgramSelection && item is TvProgramIssue) {
+                // set initial position in the schedule row as soon as it redrawn upon "setItems"
                 val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
                 if (detailsViewModel.currentScheduleItemPosition
                         != detailsViewModel.scheduleItemPositionOf(item))
@@ -242,6 +243,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
             }
             if (isInitialWeekDaySelection && item is TvWeekDay) {
+                // set initial position in the weekdays row as soon as it redrawn upon "setItems"
                 val gridView = (rowViewHolder as ListRowPresenter.ViewHolder).gridView
                 if (detailsViewModel.selectedWeekDayPosition != detailsViewModel.weekDayPositionOf(item))
                     gridView.selectedPosition = detailsViewModel.selectedWeekDayPosition
