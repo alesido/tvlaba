@@ -56,9 +56,14 @@ class VodDirectoryBrowseViewModel @Inject constructor (
 
     fun onUnitSelected(unit: VodUnit) {
         directory?: return
-        liveDirectory.postValue(Resource.loading())
-        browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
-            VodBrowseCursorMoveUseCase.Params(directory!!.sectionById[unit.sectionId], unit))
+        if (null == unit.window) {
+            // load unit's listing only when it's empty
+            liveDirectory.postValue(Resource.loading())
+            browseCursorMoveUseCase.execute(
+                BrowseCursorMoveSubscriber(),
+                VodBrowseCursorMoveUseCase.Params(directory!!.sectionById[unit.sectionId], unit)
+            )
+        }
     }
 
     fun onUnitSelected(selectedUnitIndex: Int) {
@@ -66,35 +71,39 @@ class VodDirectoryBrowseViewModel @Inject constructor (
         position?.sectionIndex?: return
         val section = directory!!.sections[position!!.sectionIndex]
         val unit = section.units[selectedUnitIndex]
-        liveDirectory.postValue(Resource.loading())
-        browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
-            VodBrowseCursorMoveUseCase.Params(section, unit))
+        if (null == unit.window) {
+            // load unit's listing only when it's empty
+            liveDirectory.postValue(Resource.loading())
+            browseCursorMoveUseCase.execute(
+                BrowseCursorMoveSubscriber(),
+                VodBrowseCursorMoveUseCase.Params(section, unit)
+            )
+        }
     }
 
     fun onListingItemSelected(item: VodListingItem, itemIndex: Int) {
+        // preconditions
         directory?: return
+        val section = directory!!.sectionById[item.sectionId]?: return
+        val unit = section.unitById[item.unitId]?: return
         liveDirectory.postValue(Resource.loading())
         browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
-            VodBrowseCursorMoveUseCase.Params(
-                directory!!.sectionById[item.sectionId],
-                directory!!.sectionById[item.sectionId]!!.unitById[item.unitId],
-                item, itemIndex))
+            VodBrowseCursorMoveUseCase.Params(section, unit, item, itemIndex))
     }
 
-    fun onListingItemAction(sectionIndex: Int, unitIndex: Int, itemIndex: Int, navigate: () -> Unit) {
+    fun onListingItemAction(item: VodListingItem, itemIndex: Int, navigate: () -> Unit) {
+        // preconditions
         directory?: return
+        val section = directory!!.sectionById[item.sectionId]?: return
+        val unit = section.unitById[item.unitId]?: return
         // ensure browse cursor in a correct position before navigating to the details fragment
         liveDirectory.postValue(Resource.loading())
         browseCursorMoveUseCase.execute(BrowseCursorMoveOnActionSubscriber(navigate),
-            VodBrowseCursorMoveUseCase.Params(
-                directory!!.sections[sectionIndex],
-                directory!!.sections[sectionIndex].units[unitIndex],
-                directory!!.sections[sectionIndex].units[unitIndex].window!!.items[itemIndex],
-                itemIndex
-            ))
+            VodBrowseCursorMoveUseCase.Params(section, unit, item, itemIndex))
     }
 
     fun onResume() {
+        isOnResume = true
         browseCursorGetUseCase.execute(GetBrowseCursorSubscriber())
     }
 
@@ -151,7 +160,8 @@ class VodDirectoryBrowseViewModel @Inject constructor (
             val sectionsUpdate: MutableList<VodSection> = directory!!.sections.toMutableList()
             sectionsUpdate[sectionIndex] = section
             directory = VodDirectory(sectionsUpdate, t.timeStamp)
-            liveDirectory.postValue(Resource.success(VodDirectoryBrowseLiveData(directory!!, position!!)))
+            liveDirectory.postValue(Resource.success(VodDirectoryBrowseLiveData(
+                directory!!, position!!, VodDirectoryUpdateScope(sectionIndex))))
             return
         }
 
@@ -213,7 +223,7 @@ class VodDirectoryBrowseViewModel @Inject constructor (
     inner class BrowseCursorMoveOnActionSubscriber(private val navigate: () -> Unit)
         : DisposableSingleObserver<VodBrowseCursor>() {
         override fun onSuccess(t: VodBrowseCursor) {
-            // TODO Execute a UC to prepare for the digest display and navigate when it ready
+            navigate()
         }
         override fun onError(e: Throwable) {
             liveDirectory.postValue(Resource.error(e))

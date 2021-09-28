@@ -69,8 +69,8 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     private fun setSelectedListener() {
 
         setOnItemViewSelectedListener { _, item, rowViewHolder, row ->
-            // NOTE If item is null, rowViewHolder can be
             if (null == item && row != null) {
+                // an empty row selected or too early selection (?)
                 if (row.id > 0) {
                     // ID of a row by convention is an index of a VOD Unit if it > 0
                     browseViewModel.onUnitSelected((row.id - 1).toInt())
@@ -92,12 +92,20 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     }
 
     private fun setClickedListener() {
-        setOnItemViewClickedListener { _, item, _, _ ->
+        setOnItemViewClickedListener { _, item, rowViewHolder, _ ->
             when (item) {
                 is CardMenuItem -> {
                     when (item.id) {
                         MENU_ITEM_TV_ID -> NavHostFragment.findNavController(this).popBackStack()
                         MENU_ITEM_SETTINGS_ID -> println("Menu action \"${item.title}\"")
+                    }
+                }
+                is VodListingItem -> {
+                    browseViewModel.onListingItemAction(item,
+                        (rowViewHolder as ListRowPresenter.ViewHolder).gridView.selectedPosition) {
+                        NavHostFragment.findNavController(this)
+                            .navigate(VodDirectoryFragmentDirections
+                                .actionVodDirectoryFragmentToVodDigestFragment())
                     }
                 }
             }
