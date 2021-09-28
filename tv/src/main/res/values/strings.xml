@@ -12,6 +12,7 @@
     <string name="tv_program_details_action_watch">Смотреть</string>
     <string name="tv_program_details_action_schedule">Программа</string>
     <string name="error_message_no_program_data_available">Нет данных о программе!</string>
+    <string name="error_message_no_vod_data_available">Нет данных о видео!</string>
     <string name="statement_program_on_channel">На канале \"%1$s\"</string>
 
     <string name="program_details_item_production">Производство: %1$s</string>
@@ -91,5 +92,9 @@
     <string name="label_menu_generic_tv">Телевидение</string>
     <string name="label_menu_generic_vod">Видеотека</string>
     <string name="label_menu_settings">Настройки</string>
+    <string name="vod_digest_action_watch">Смотреть</string>
+    <string name="vod_digest_action_next">Далее</string>
+    <string name="vod_digest_action_listing">Список</string>
+    <string name="label_vod_more_in_unit">Другие видео в разделе</string>
 
 </resources>
