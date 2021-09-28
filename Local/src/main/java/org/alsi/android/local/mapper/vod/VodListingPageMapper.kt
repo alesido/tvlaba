@@ -64,8 +64,8 @@ class VodListingItemEntityMapperWriter: EntityMapper<VodListingItemEntity, VodLi
     private val serialMapper = VideoSerialEntityMapperWriter()
     private val postersMapper = VodPostersMapper()
     private val attributesMapper = VodAttributesMapper()
-    override fun mapFromEntity(entity: VodListingItemEntity): VodListingItem = throw IllegalAccessError("Not applicable, see other version")
-    fun mapFromEntity(entity: VodListingItemEntity, sectionId: Long, unitId: Long) = with(entity) {
+    override fun mapFromEntity(entity: VodListingItemEntity): VodListingItem = mapFromEntity(entity, null, null)
+    fun mapFromEntity(entity: VodListingItemEntity, sectionId: Long?, unitId: Long?) = with(entity) {
         VodListingItem(id, sectionId, unitId, title, description,
             when {
                 videoSingle.target != null -> singleMapper.mapFromEntity(videoSingle.target)
@@ -228,14 +228,14 @@ class VodAttributesMapper: EntityMapper<VodAttributesEntity, VodListingItem.Attr
             genres.map { genreMapper.mapFromEntity(it) },
             credits.map { creditMapper.mapFromEntity(it) },
             year, country,
-            quality, ageLimit, kinopoiskRate, imdbRate
+            quality, ageLimit?.toInt(), kinopoiskRate?.toFloat(), imdbRate?.toFloat()
         )
     }
     override fun mapToEntity(domain: VodListingItem.Attributes) = with(domain)  {
         val entity = VodAttributesEntity(
             0L, durationMillis,
             year, country,
-            quality, ageLimit, kinopoiskRate, imdbRate
+            quality, ageLimit?.toString(), kinopoiskRate?.toString(), imdbRate?.toString()
         )
         genres?.let { list -> entity.genres.addAll( list.map { genreMapper.mapToEntity(it) }) }
         credits?.let { list -> entity.credits.addAll( list.map { creditMapper.mapToEntity(it) }) }

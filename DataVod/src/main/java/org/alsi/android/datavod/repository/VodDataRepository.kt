@@ -118,7 +118,9 @@ abstract class VodDataRepository(
         null == page.timeStamp || now() - (page.timeStamp?: 0L) > EXPIRATION_PAGE_MILLIS
 
     open fun isLocalItemExpired(item: VodListingItem) =
-        null == item.timeStamp || now() - (item.timeStamp?: 0L) > EXPIRATION_ITEM_MILLIS
+        null == item.timeStamp
+                || null == item.description || item.description?.isEmpty() == true // item is not complete = need loading
+                || now() - (item.timeStamp?: 0L) > EXPIRATION_ITEM_MILLIS
 
     open fun isStreamDataExpired(stream: VideoStream) =
         null == stream.timeStamp || now() - (stream.timeStamp?: 0L) > EXPIRATION_STREAM_MILLIS

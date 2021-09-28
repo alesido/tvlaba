@@ -53,8 +53,8 @@ class VodItemSourceMapper: SourceDataMapper<VodInfoResponse, VodListingItem> {
                 .mapIndexed { index, name -> VodListingItem.Genre((index + 1).toLong(), name) }
             },
             year = year,
-            country = country,
-            ageLimit = min_age.toString() + "+"
+            country = country?.replace(Regex("\\s,"), ", "),
+            ageLimit = min_age
         )}
 
         return with(source) { VodListingItem(

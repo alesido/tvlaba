@@ -68,9 +68,9 @@ object VodListingTestDataFactory {
                 ),
                 year = "1981",
                 country = "Germany, Spain",
-                ageLimit = "18+",
-                kinopoiskRate = "8.5",
-                imdbRate = "7.6"
+                ageLimit = 18,
+                kinopoiskRate = 8.5f,
+                imdbRate = 7.6f
             )
         )
     }
@@ -110,9 +110,9 @@ object VodListingTestDataFactory {
                 ),
                 year = (1981 + variant).toString(),
                 country = "Spain, Italy",
-                ageLimit = "12+",
-                kinopoiskRate = "8.0",
-                imdbRate = "4.6"
+                ageLimit = 12,
+                kinopoiskRate = 8.0f,
+                imdbRate = 4.6f
             )
         )
     }

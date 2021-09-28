@@ -78,9 +78,9 @@ data class VodListingItem(
         val year: String? = null,
         val country: String? = null,
         val quality: String? = null,
-        val ageLimit: String? = null,
-        val kinopoiskRate: String? = null,
-        val imdbRate: String? = null,
+        val ageLimit: Int? = null,
+        val kinopoiskRate: Float? = null,
+        val imdbRate: Float? = null,
     )
 
     /**
