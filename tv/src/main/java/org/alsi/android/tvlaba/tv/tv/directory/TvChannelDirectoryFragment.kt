@@ -64,7 +64,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             if (item is TvChannel) {
                 // navigate to program details fragment
                 browseViewModel.onChannelAction(item) {
-                    Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
+                    NavHostFragment.findNavController(this)
                             .navigate(TvChannelDirectoryFragmentDirections
                                     .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment())
                 }
@@ -236,8 +236,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
         data?.directory?: return
-        for (i in 1 until adapter.size() - 2) {
-            data.directory.index[data.directory.categories[i].id]?.let {
+        for (i in 1 until adapter.size() - 1) {
+            data.directory.index[data.directory.categories[i - 1].id]?.let {
                 ((adapter[i] as ListRow).adapter as ArrayObjectAdapter)
                     .setItems(it, tvCategoryChannelsDiff)
             }
