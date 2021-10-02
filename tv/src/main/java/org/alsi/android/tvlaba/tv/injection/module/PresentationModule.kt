@@ -9,8 +9,7 @@ import dagger.multibindings.IntoMap
 import org.alsi.android.presentation.AppStartViewModel
 import org.alsi.android.presentation.auth.login.model.LoginViewModel
 import org.alsi.android.presentationtv.model.*
-import org.alsi.android.presentationvod.model.VodDigestViewModel
-import org.alsi.android.presentationvod.model.VodDirectoryBrowseViewModel
+import org.alsi.android.presentationvod.model.*
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import kotlin.reflect.KClass
 
@@ -66,6 +65,21 @@ abstract class PresentationModule {
     @IntoMap
     @ViewModelKey(VodDigestViewModel::class)
     abstract fun bindVodDigestViewModel(viewModel: VodDigestViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VodPlaybackViewModel::class)
+    abstract fun bindVodPlaybackViewModel(viewModel: VodPlaybackViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VodPlaybackPreferencesViewModel::class)
+    abstract fun bindVodPlaybackPreferencesViewModel(viewModel: VodPlaybackPreferencesViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(VodPlaybackFooterViewModel::class)
+    abstract fun bindVodPlaybackFooterViewModel(viewModel: VodPlaybackFooterViewModel) : ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
