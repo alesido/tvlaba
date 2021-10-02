@@ -93,7 +93,7 @@ class TvPlayCursorLocalStoreDelegate (
         cursor?.let {
             cursor.seekTime = currentPlayback.position
             cursor.playback.target = playbackMapper.mapToEntity(currentPlayback)
-            Log.d(TvPlayCursorLocalStoreDelegate::class.java.simpleName, String.format("### @updatePlayCursor, seekTime %d", cursor.seekTime))
+            //Log.d(TvPlayCursorLocalStoreDelegate::class.java.simpleName, String.format("### @updatePlayCursor, seekTime %d", cursor.seekTime))
             cursorBox.put(cursor)
         }
     }
@@ -104,11 +104,9 @@ class TvPlayCursorLocalStoreDelegate (
             orderDesc(TvPlayCursorEntity_.timeStamp)
         }.findFirst()
         record?.let {
-            // video seek time of the cursor updated instead of playback position to save time,
-            // it is just restored here
             val resultCursor = playCursorMapper.mapFromEntity(record)
             resultCursor.playback.position = resultCursor.seekTime
-            Log.d(TvPlayCursorLocalStoreDelegate::class.java.simpleName, String.format("### @getLastPlayCursor, playback position %d", resultCursor.playback.position))
+            //Log.d(TvPlayCursorLocalStoreDelegate::class.java.simpleName, String.format("### @getLastPlayCursor, playback position %d", resultCursor.playback.position))
             resultCursor
         } ?: TvPlayCursor.empty()
     }
@@ -123,7 +121,7 @@ class TvPlayCursorLocalStoreDelegate (
             UserActivityRecord.empty()
     }
 
-    override fun getPlayHistory() = Single.fromCallable() {
+    override fun getPlayHistory() = Single.fromCallable {
         cursorBox.query {
             equal(TvPlayCursorEntity_.userLoginName, userLoginName)
             orderDesc(TvPlayCursorEntity_.timeStamp)
