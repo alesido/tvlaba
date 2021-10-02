@@ -2,12 +2,11 @@ package org.alsi.android.tvlaba.framework
 
 import android.content.Context
 import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.RendererCapabilities
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.SelectionOverride
 import com.google.android.exoplayer2.ui.DefaultTrackNameProvider
-import org.alsi.android.presentationtv.model.LanguageTrackSelection
+import org.alsi.android.presentation.model.LanguageTrackSelection
 
 class ExoplayerTrackLanguageSelection(context: Context): LanguageTrackSelection() {
 

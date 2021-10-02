@@ -1,4 +1,4 @@
-package org.alsi.android.presentationtv.model
+package org.alsi.android.presentation.model
 
 import org.alsi.android.domain.streaming.model.options.LanguageOption
 
