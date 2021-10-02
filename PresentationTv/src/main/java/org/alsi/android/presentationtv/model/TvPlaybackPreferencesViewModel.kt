@@ -6,6 +6,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
+import org.alsi.android.presentation.model.LanguageTrackSelection
 import org.alsi.android.presentation.state.Resource
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class TvPlaybackPreferencesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val changeLiveData:
-            MutableLiveData<Resource<PlaybackPreferenceChangeEvent>> = MutableLiveData()
+            MutableLiveData<Resource<TvPlaybackPreferenceChangeEvent>> = MutableLiveData()
 
     init {
         changeLiveData.postValue(Resource.loading())
@@ -33,7 +34,7 @@ class TvPlaybackPreferencesViewModel @Inject constructor(
     fun getPreferenceChangeLiveData() = changeLiveData
 
     fun onAspectRatioChanged(aspectRatio: VideoAspectRatio) {
-        val event = PlaybackAspectRatioChanged(aspectRatio)
+        val event = TvPlaybackAspectRatioChanged(aspectRatio)
         changeLiveData.value = Resource.success(event)
     }
 

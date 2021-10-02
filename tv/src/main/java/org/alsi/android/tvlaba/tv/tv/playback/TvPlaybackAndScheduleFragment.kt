@@ -112,14 +112,67 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         return view
     }
 
+    private fun addBackPressedCallback() {
+        val navController = findNavController(this)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object:
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                    remove() // remove this listener
+
+                    if (null == navController.previousBackStackEntry) {
+                        // previous destination was the start fragment of the navigation graph,
+                        // which was popped up out by the attributes
+                        navController.navigate(TvPlaybackAndScheduleFragmentDirections
+                            .actionTvPlaybackAndScheduleFragmentToTvProgramDetailsFragment())
+                    }
+                    else {
+                        requireActivity().onBackPressed()
+                    }
+                }
+            }
+        )
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        playbackViewModel.getLiveData().observe(this, {
+            if (it != null) handlePlaybackRequestEvent(it)
+        })
+        preferencesViewModel.getPreferenceChangeLiveData().observe(requireActivity(), {
+            if (it != null) handlePreferenceChangeEvent(it)
+        })
+        footerViewModel.getLiveData().observe(this, {
+            if (it != null) handleFooterDataChange(it)
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        playbackViewModel.recordPlaybackState(player.currentPosition)
+        player.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        playbackViewModel.dispose()
+        footerViewModel.dispose()
+    }
+
+    //endregion
+    //region Player Setup
+
+
     private fun setupPlayer() {
 
         player = SimpleExoPlayer.Builder(requireContext())
-                .setTrackSelector(trackLanguageSelection.trackSelector)
-                .build()
+            .setTrackSelector(trackLanguageSelection.trackSelector)
+            .build()
 
         val playerAdapter = LeanbackPlayerAdapter(
-                requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
+            requireContext(), player, PLAYER_UPDATE_INTERVAL_MILLIS)
 
         player.addListener(this)
 
@@ -177,7 +230,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                     playbackViewModel.onPlayCompleted {
                         // not sure, but does "view?.findNavController()?" get the same navigation controller?
                         val navController = Navigation.findNavController(
-                                requireActivity(), R.id.tvGuideNavigationHost)
+                            requireActivity(), R.id.tvGuideNavigationHost)
                         navController.currentDestination?.id?.let {
                             navController.popBackStack(it, true)
                         }
@@ -195,7 +248,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 if (! player.isPlaying) return@setPreferencesCallback
                 trackLanguageSelection.update()
                 TvPlaybackPreferencesDialogFragment.newInstance().show(childFragmentManager,
-                        TvPlaybackPreferencesDialogFragment::class.java.simpleName)
+                    TvPlaybackPreferencesDialogFragment::class.java.simpleName)
             }
 
             // start playback or order it to start automatically
@@ -217,65 +270,18 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 //        }
 //    }
 
-    private fun addBackPressedCallback() {
-        val navController = findNavController(this)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner, object:
-                OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-
-                    remove() // remove this listener
-
-                    if (null == navController.previousBackStackEntry) {
-                        // previous destination was the start fragment of the navigation graph,
-                        // which was popped up out by the attributes
-                        navController.navigate(TvPlaybackAndScheduleFragmentDirections
-                            .actionTvPlaybackAndScheduleFragmentToTvProgramDetailsFragment())
-                    }
-                    else {
-                        requireActivity().onBackPressed()
-                    }
-                }
-            }
-        )
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        playbackViewModel.getLiveData().observe(this, {
-            if (it != null) handlePlaybackRequestEvent(it)
-        })
-        preferencesViewModel.getPreferenceChangeLiveData().observe(requireActivity(), {
-            if (it != null) handlePreferenceChangeEvent(it)
-        })
-        footerViewModel.getLiveData().observe(this, {
-            if (it != null) handleFooterDataChange(it)
-        })
-    }
-
-    override fun onPause() {
-        super.onPause()
-        playbackViewModel.recordPlaybackState(player.currentPosition)
-        player.stop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        playbackViewModel.dispose()
-        footerViewModel.dispose()
-    }
-
     // endregion
     // region Data Events
 
     private fun handlePlaybackRequestEvent(resource: Resource<TvPlayback>) {
         when (resource.status) {
-            ResourceState.SUCCESS -> startPlayback(resource.data)
-            ResourceState.LOADING -> {
+            ResourceState.LOADING -> progressBarManager.show()
+            ResourceState.SUCCESS -> {
+                progressBarManager.hide()
+                startPlayback(resource.data)
             }
             ResourceState.ERROR -> {
-                //Toast.makeText(context, errorMessaging.m(resource), Toast.LENGTH_LONG).show()
+                progressBarManager.hide()
                 errorHandler.run(this, resource.throwable)
             }
             else -> {}
@@ -317,16 +323,16 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         }
     }
 
-    private fun handlePreferenceChangeEvent(resource: Resource<PlaybackPreferenceChangeEvent>) {
+    private fun handlePreferenceChangeEvent(resource: Resource<TvPlaybackPreferenceChangeEvent>) {
         when (resource.status) {
             ResourceState.SUCCESS -> {
                 when (resource.data) {
-                    is PlaybackAspectRatioChanged -> setAspectRatio(
-                            (resource.data as PlaybackAspectRatioChanged).newAspectRatio)
-                    is PlaybackAudioTrackLanguageChanged -> {
+                    is TvPlaybackAspectRatioChanged -> setAspectRatio(
+                            (resource.data as TvPlaybackAspectRatioChanged).newAspectRatio)
+                    is TvPlaybackAudioTrackLanguageChanged -> {
 
                     }
-                    is PlaybackSubtitlesLanguageChanged -> {
+                    is TvPlaybackSubtitlesLanguageChanged -> {
 
                     }
                 }
