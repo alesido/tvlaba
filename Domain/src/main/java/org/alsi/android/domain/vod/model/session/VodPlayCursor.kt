@@ -1,36 +1,15 @@
 package org.alsi.android.domain.vod.model.session
 
-import org.alsi.android.domain.vod.model.guide.directory.VodSection
-import org.alsi.android.domain.vod.model.guide.directory.VodUnit
-import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
+import org.alsi.android.domain.vod.model.guide.playback.VodPlayback
 
-/**
- *
- */
-class VodPlayCursor(
+data class VodPlayCursor(
+    var playback: VodPlayback,
+    var seekTime: Long,
+    var timeStamp: Long
+) {
+    fun isEmpty() = playback.isEmpty()
 
-        /**
-         *  VOD Directory Section to which the played back item belongs.
-         */
-        val section: VodSection? = null,
-
-        /**
-         * VOD Directory Unit (subsection) to which the played back item belongs.
-         */
-        val unit: VodUnit? = null,
-
-        /**
-         *  Unit/Subsection listing position of the played back item.
-         */
-        val listingPosition: Int? = null,
-
-        /**
-         * Played back listing item.
-         */
-        val listingItem: VodListingItem? = null,
-
-        /**
-         * Played back video of the listing item.
-         */
-        val video: VodListingItem.Video? = null
-)
+    companion object {
+        fun empty() = VodPlayCursor(VodPlayback.empty(), -1L, -1L)
+    }
+}

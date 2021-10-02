@@ -10,6 +10,7 @@ import org.alsi.android.datatv.store.*
 import org.alsi.android.datavod.store.VodBrowseCursorLocalStore
 import org.alsi.android.datavod.store.VodDirectoryLocalStore
 import org.alsi.android.datavod.store.VodDirectoryRemoteStore
+import org.alsi.android.datavod.store.VodPlayCursorLocalStore
 import org.alsi.android.domain.streaming.model.ServiceProvider
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
@@ -19,6 +20,7 @@ import org.alsi.android.local.store.AccountStoreLocalDelegate
 import org.alsi.android.local.store.tv.*
 import org.alsi.android.local.store.vod.VodBrowseCursorLocalStoreDelegate
 import org.alsi.android.local.store.vod.VodDirectoryLocalStoreDelegate
+import org.alsi.android.local.store.vod.VodPlayCursorLocalStoreDelegate
 import org.alsi.android.moidom.Moidom.INTERNAL_STORE_NAME
 import org.alsi.android.moidom.mapper.RetrofitExceptionMapper
 import org.alsi.android.moidom.model.LoginEvent
@@ -175,6 +177,15 @@ class MoidomModule {
     @Singleton @Provides fun provideVodServiceRemoteStore(
         remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom
     ): VodDirectoryRemoteStore = VodDirectoryRemoteStoreMoiDom(remoteService, remoteSession)
+
+    /**     VOD Play Cursor, Local Store
+     */
+    @Named("${Moidom.TAG}.${StreamingService.VOD}")
+    @Singleton @Provides fun provideVodPlayCursorLocalStoreMoidomDelegate(
+        @Named("${Moidom.TAG}.${StreamingService.VOD}") localBoxStore: BoxStore,
+        @Named("${Moidom.TAG}.${StreamingService.TV}") accountChangeSubject: UserAccountSubject // VOD Service uses the same account here as TV Service
+    )
+    : VodPlayCursorLocalStore = VodPlayCursorLocalStoreDelegate(localBoxStore, accountChangeSubject)
 
     /**     VOD Browsing Cursor, Local Store
      */

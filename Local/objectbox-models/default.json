@@ -1419,10 +1419,129 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "37:8764564327956087967",
+      "lastPropertyId": "12:2736819797569780304",
+      "name": "VodPlaybackEntity",
+      "properties": [
+        {
+          "id": "1:8453651474610437639",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5606373629522606063",
+          "name": "sectionId",
+          "indexId": "53:7375814041766020058",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "3:3970666901059451806",
+          "name": "unitId",
+          "indexId": "54:7728162936759322612",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "4:3546225181673014196",
+          "name": "itemId",
+          "indexId": "55:3235253747118876609",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "5:5008615100362603373",
+          "name": "seriesId",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "6:3658293365801188760",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "7:6175630318202573829",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "8:4619231556034214900",
+          "name": "season",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "9:8687037061482500108",
+          "name": "series",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "10:3232836527269107759",
+          "name": "streamUri",
+          "type": 9
+        },
+        {
+          "id": "11:5665759766531187992",
+          "name": "streamKind",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "12:2736819797569780304",
+          "name": "subtitlesUri",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "38:3271201435517240985",
+      "lastPropertyId": "5:6141037087555741648",
+      "name": "VodPlayCursorEntity",
+      "properties": [
+        {
+          "id": "1:6183701472079531360",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4106011858446727758",
+          "name": "userLoginName",
+          "type": 9
+        },
+        {
+          "id": "3:3565470826592345703",
+          "name": "timeStamp",
+          "indexId": "56:327926535328677499",
+          "type": 6,
+          "flags": 12
+        },
+        {
+          "id": "4:8456581990836547331",
+          "name": "seekTime",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "5:6141037087555741648",
+          "name": "playbackId",
+          "indexId": "57:4661512080174886863",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "VodPlaybackEntity"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "36:1547104286536229889",
-  "lastIndexId": "52:4970941488983298084",
+  "lastEntityId": "38:3271201435517240985",
+  "lastIndexId": "57:4661512080174886863",
   "lastRelationId": "8:346666512790390165",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

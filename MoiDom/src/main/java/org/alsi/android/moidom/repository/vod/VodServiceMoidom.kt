@@ -14,12 +14,13 @@ class VodServiceMoidom @Inject constructor(
         @Named("${Moidom.TAG}.${VOD}") serviceId: Long,
         serviceDirectory: VodDirectoryRepositoryMoidom,
         browseCursorRepository: VodBrowseCursorRepositoryMoiDom,
+        playCursorRepository: VodPlayCursorRepositoryMoiDom,
         configuration: SettingsRepositoryMoidom
 ) : StreamingService(
         serviceId,
         kind = StreamingServiceKind.VOD,
         tag = "${Moidom.TAG}.${VOD}",
         directory = serviceDirectory,
-        session = VodSessionRepository(browseCursorRepository),
+        session = VodSessionRepository(browseCursorRepository, playCursorRepository),
         configuration = configuration
 )
