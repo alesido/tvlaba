@@ -8,8 +8,10 @@ import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.vod.interactor.VodBrowseCursorObserveUseCase
 import org.alsi.android.domain.vod.interactor.VodItemUseCase
 import org.alsi.android.domain.vod.interactor.VodListingPageUseCase
+import org.alsi.android.domain.vod.interactor.VodNewPlaybackUseCase
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
+import org.alsi.android.domain.vod.model.guide.playback.VodPlayback
 import org.alsi.android.domain.vod.model.session.VodBrowseCursor
 import org.alsi.android.domain.vod.model.session.VodBrowseCursorMoveUseCase
 import org.alsi.android.domain.vod.model.session.VodBrowsePage
@@ -20,6 +22,7 @@ class VodDigestViewModel @Inject constructor (
 
     private val browseCursorObserveUseCase: VodBrowseCursorObserveUseCase,
     private val browseCursorMoveUseCase: VodBrowseCursorMoveUseCase,
+    private val newPlaybackUseCase: VodNewPlaybackUseCase,
     private val listingPageUseCase: VodListingPageUseCase,
     private val vodItemUseCase: VodItemUseCase,
 
@@ -78,8 +81,9 @@ class VodDigestViewModel @Inject constructor (
         }
     }
 
-    fun onPlaybackAction(navigate: () -> Unit) {
-
+    fun onPlaybackAction(item: VodListingItem, seriesId: Long? = null, navigate: () -> Unit) {
+        newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
+            VodNewPlaybackUseCase.Params(item, seriesId))
     }
 
     //endregion
@@ -91,9 +95,7 @@ class VodDigestViewModel @Inject constructor (
             snapshot.cursor = t
             vodItemUseCase.execute(VodItemSubscriber(), VodItemUseCase.Params(t.item!!.id))
         }
-        override fun onError(e: Throwable) {
-            liveData.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable)  = liveData.postValue(Resource.error(e))
         override fun onComplete() { /* not applicable */ }
     }
 
@@ -108,18 +110,20 @@ class VodDigestViewModel @Inject constructor (
             snapshot.updateScope = VodDigestUpdateScope.DIGEST
             liveData.postValue(Resource.success(snapshot))
         }
-        override fun onError(e: Throwable) {
-            liveData.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable)  = liveData.postValue(Resource.error(e))
     }
 
     inner class VodBrowseCursorMoveSubscriber : DisposableSingleObserver<VodBrowseCursor>() {
         override fun onSuccess(t: VodBrowseCursor) {
             // moving cursor emits cursor change event which is received in the cursor subscriber
         }
-        override fun onError(e: Throwable) {
-            liveData.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable)  = liveData.postValue(Resource.error(e))
+    }
+
+    private inner class NewPlaybackSubscriber (val navigate: () -> Unit)
+        : DisposableSingleObserver<VodPlayback>() {
+        override fun onSuccess(t: VodPlayback) = navigate()
+        override fun onError(e: Throwable)  = liveData.postValue(Resource.error(e))
     }
 
     private inner class ListingPageSubscriber: DisposableSingleObserver<VodListingPage>() {
@@ -135,9 +139,7 @@ class VodDigestViewModel @Inject constructor (
 
             } ?: liveData.postValue(Resource.success())
         }
-        override fun onError(e: Throwable) {
-            liveData.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable)  = liveData.postValue(Resource.error(e))
     }
 
     //endregion

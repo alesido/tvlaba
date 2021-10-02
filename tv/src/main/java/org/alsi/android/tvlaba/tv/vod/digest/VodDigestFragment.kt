@@ -312,9 +312,9 @@ class VodDigestFragment : DetailsSupportFragment() {
     private fun setupActions(item: VodListingItem, detailsOverviewRow: DetailsOverviewRow) {
         val actionsAdapter = SparseArrayObjectAdapter()
 
-        actionsAdapter[ACTION_PLAY] = Action(ACTION_PLAY.toLong(), getString(R.string.vod_digest_action_watch))
-        actionsAdapter[ACTION_NEXT] = Action(ACTION_NEXT.toLong(), getString(R.string.vod_digest_action_next))
-        actionsAdapter[ACTION_NEXT] = Action(ACTION_LISTING.toLong(), getString(R.string.vod_digest_action_listing))
+        actionsAdapter[ACTION_PLAY] = VodDigestAction(ACTION_PLAY.toLong(), getString(R.string.vod_digest_action_watch), item)
+        actionsAdapter[ACTION_NEXT] = VodDigestAction(ACTION_NEXT.toLong(), getString(R.string.vod_digest_action_next), item)
+        actionsAdapter[ACTION_NEXT] = VodDigestAction(ACTION_LISTING.toLong(), getString(R.string.vod_digest_action_listing), item)
 
         detailsOverviewRow.actionsAdapter = actionsAdapter
     }
@@ -323,7 +323,7 @@ class VodDigestFragment : DetailsSupportFragment() {
         detailsPresenter.setOnActionClickedListener {
             when(it.id.toInt()) {
                 ACTION_PLAY -> {
-                    digestViewModel.onPlaybackAction() {
+                    digestViewModel.onPlaybackAction((it as VodDigestAction).item) {
                         Navigation.findNavController(requireActivity(), R.id.tvGuideNavigationHost)
                             .navigate(
                                 VodDigestFragmentDirections
@@ -340,6 +340,8 @@ class VodDigestFragment : DetailsSupportFragment() {
             }
         }
     }
+
+    class VodDigestAction(id: Long, title: String, val item: VodListingItem): Action(id, title)
 
     //endregion
     //region Constants
