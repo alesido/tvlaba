@@ -271,7 +271,7 @@
         <fragment
             android:id="@+id/vodDigestFragment"
             android:name="org.alsi.android.tvlaba.tv.vod.digest.VodDigestFragment"
-            android:label="TvProgramDetailsFragment"
+            android:label="VodDigestFragment"
             >
             <action
                 android:id="@+id/action_vodDigestFragment_to_vodPlaybackFragment"
@@ -288,7 +288,7 @@
         <fragment
             android:id="@+id/vodPlaybackFragment"
             android:name="org.alsi.android.tvlaba.tv.vod.playback.VodPlaybackFragment"
-            android:label="TvPlaybackAndScheduleFragment"
+            android:label="VodPlaybackFragment"
             >
             <action
                 android:id="@+id/action_vodPlaybackFragment_to_vodDigestFragment"
