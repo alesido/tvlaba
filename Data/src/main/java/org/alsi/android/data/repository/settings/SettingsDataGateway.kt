@@ -1,6 +1,7 @@
 package org.alsi.android.data.repository.settings
 
 import io.reactivex.Completable
+import io.reactivex.subjects.BehaviorSubject
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.streaming.repository.SettingsRepository

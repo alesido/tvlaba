@@ -101,16 +101,6 @@
     </action>
     <action
         app:destination="@id/appRouterFragment"
-        android:id="@+id/actionGlobalNavigateSettingsSection"
-        >
-        <argument
-            android:name="route"
-            app:argType="org.alsi.android.tvlaba.tv.AppRoute"
-            android:defaultValue="SettingsSection"
-            />
-    </action>
-    <action
-        app:destination="@id/appRouterFragment"
         android:id="@+id/actionGlobalOnSessionInvalid"
         >
         <argument
