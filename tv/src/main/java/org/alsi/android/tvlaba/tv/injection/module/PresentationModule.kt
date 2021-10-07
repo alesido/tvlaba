@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import org.alsi.android.presentation.AppStartViewModel
 import org.alsi.android.presentation.auth.login.model.LoginViewModel
+import org.alsi.android.presentation.settings.GeneralSettingsViewModel
 import org.alsi.android.presentationtv.model.*
 import org.alsi.android.presentationvod.model.*
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
@@ -30,6 +31,11 @@ abstract class PresentationModule {
     @IntoMap
     @ViewModelKey(LoginViewModel::class)
     abstract fun bindLoginViewModel(viewModel: LoginViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(GeneralSettingsViewModel::class)
+    abstract fun bindGeneralSettingsViewModel(viewModel: GeneralSettingsViewModel) : ViewModel
 
     @Binds
     @IntoMap
