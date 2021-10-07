@@ -13,16 +13,25 @@ open class SettingsDataGateway(
         val local: SettingsDataLocal)
     : SettingsRepository {
 
-    override fun selectServer(serverTag: String): Completable
-            = remote.selectServer(serverTag).andThen(local.setServer(serverTag))
+    protected val valuesSubject: BehaviorSubject<StreamingServiceSettings> = BehaviorSubject.create()
+    protected val profileSubject: BehaviorSubject<StreamingServiceProfile> = BehaviorSubject.create()
 
-    override fun selectLanguage(languageCode: String): Completable
-            = remote.selectLanguage(languageCode).andThen(local.setLanguage(languageCode))
+    override fun selectServer(serverTag: String): Completable =
+        remote.selectServer(serverTag)
+        .andThen(local.setServer(serverTag))
+        .doOnComplete { valuesSubject.onNext(local.values()) }
 
-    override fun selectDevice(modelId: String): Completable
-            = remote.selectDevice(modelId).andThen(local.setDevice(modelId))
+    override fun selectLanguage(languageCode: String): Completable =
+        remote.selectLanguage(languageCode)
+        .andThen(local.setLanguage(languageCode))
+        .doOnComplete { valuesSubject.onNext(local.values()) }
 
-    override fun values(): StreamingServiceSettings = local.values()
+    override fun selectDevice(modelId: String): Completable =
+        remote.selectDevice(modelId)
+        .andThen(local.setDevice(modelId))
+        .doOnComplete { valuesSubject.onNext(local.values()) }
 
-    override fun profile(): StreamingServiceProfile = local.profile()
+    override fun values() = valuesSubject
+
+    override fun profile() = profileSubject
 }

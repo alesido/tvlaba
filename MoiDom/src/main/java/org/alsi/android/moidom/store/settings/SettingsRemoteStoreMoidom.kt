@@ -14,13 +14,12 @@ import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import javax.inject.Inject
 
-class SettingsRemoteStoreMoidom: SettingsDataRemote {
+class SettingsRemoteStoreMoidom @Inject constructor (
+    private val remoteService: RestServiceMoidom,
+    private val remoteSession: RemoteSessionRepositoryMoidom,
+    private val defaults: StreamingServiceDefaults
 
-    @Inject internal lateinit var remoteService: RestServiceMoidom
-
-    @Inject lateinit var defaults: StreamingServiceDefaults
-
-    @Inject lateinit var remoteSession: RemoteSessionRepositoryMoidom
+): SettingsDataRemote {
 
     fun getSourceSettings(source: LoginResponse, profile: StreamingServiceProfile): StreamingServiceSettings {
 

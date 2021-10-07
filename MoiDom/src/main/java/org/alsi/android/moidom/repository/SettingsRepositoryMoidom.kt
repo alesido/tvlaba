@@ -21,11 +21,12 @@ class SettingsRepositoryMoidom @Inject constructor(
 
         @Named(Moidom.TAG) providerId: Long,
         @Named(Local.STORE_NAME) localStore: BoxStore,
+        remote: SettingsRemoteStoreMoidom,
         defaults: StreamingServiceDefaults,
         loginSubject: PublishSubject<LoginEvent>
 )
     : SettingsDataGateway(
-        SettingsRemoteStoreMoidom(),
+        remote,
         SettingsStoreLocalDelegate(
                 ServiceSettingsEntity.SCOPE_PROVIDER,
                 providerId, localStore, defaults)) {
@@ -39,10 +40,14 @@ class SettingsRepositoryMoidom @Inject constructor(
 
         // skipped for dry login (session resumed)
         it.data?.let { data ->
+            // on normal login:
             val profile = remoteMoidom.getSourceProfile(data)
             localMoidom.setProfile(profile)
             localMoidom.setValues(remoteMoidom.getSourceSettings(data, profile))
         }
+
+        profileSubject.onNext(local.profile())
+        valuesSubject.onNext(local.values())
 
     }, {
         Timber.e(it, "Exception Ignored")

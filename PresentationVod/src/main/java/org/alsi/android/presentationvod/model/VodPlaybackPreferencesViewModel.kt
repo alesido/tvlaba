@@ -2,6 +2,7 @@ package org.alsi.android.presentationvod.model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
@@ -51,15 +52,14 @@ class VodPlaybackPreferencesViewModel @Inject constructor(
     }
 
     inner class SettingsSubscriber()
-        : DisposableSingleObserver<StreamingServiceSettings>() {
-        override fun onSuccess(t: StreamingServiceSettings) {
+        : DisposableObserver<StreamingServiceSettings>() {
+        override fun onNext(t: StreamingServiceSettings) {
             settings = t
             trackLanguageSelection?.let {
                 it.preferredLanguage = settings?.language
             }
         }
-        override fun onError(e: Throwable) {
-            changeLiveData.postValue(Resource.error(e))
-        }
+        override fun onComplete() { /** not applicable */ }
+        override fun onError(e: Throwable) = changeLiveData.postValue(Resource.error(e))
     }
 }

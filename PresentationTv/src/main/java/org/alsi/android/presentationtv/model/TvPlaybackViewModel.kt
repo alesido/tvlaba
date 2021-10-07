@@ -146,12 +146,9 @@ class TvPlaybackViewModel @Inject constructor(
     }
 
     inner class SettingsSubscriber(val receiver: (settings: StreamingServiceSettings) -> Unit)
-        : DisposableSingleObserver<StreamingServiceSettings>() {
-        override fun onSuccess(t: StreamingServiceSettings) {
-            receiver(t)
-        }
-        override fun onError(e: Throwable) {
-            liveData.postValue(Resource.error(e))
-        }
+        : DisposableObserver<StreamingServiceSettings>() {
+        override fun onNext(t: StreamingServiceSettings) = receiver(t)
+        override fun onComplete() { /** not applicable */ }
+        override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
     }
 }
