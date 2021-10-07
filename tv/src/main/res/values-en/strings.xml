@@ -100,6 +100,7 @@
     <string name="vod_digest_action_next">Next</string>
     <string name="vod_digest_action_listing">Listing</string>
     <string name="label_vod_more_in_unit">Другие видео в разделе</string>
+    <string name="app_menu_item_settings">Settings</string>
 
 
 </resources>

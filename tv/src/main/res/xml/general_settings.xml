@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/app_menu_item_settings"
+    >
+
+    <PreferenceCategory
+        android:title="@string/pref_title_user_category"
+        android:key="@string/pref_key_user"
+        >
+        <org.alsi.android.tvlaba.settings.LeanbackParentalCodePreference
+            android:key="@string/pref_key_parental_code"
+            android:title="@string/pref_title_user_category_parental_code"
+            />
+        <Preference
+            android:key="@string/pref_key_exit"
+            android:title="@string/pref_title_user_category_exit"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_title_streaming_category"
+        android:key="@string/pref_key_streaming_category"
+        >
+        <ListPreference
+            android:key="@string/pref_key_streaming_server"
+            android:title="@string/pref_title_streaming_category_server"
+            />
+        <ListPreference
+            android:key="@string/pref_key_server_stream_cache_size"
+            android:title="@string/pref_title_server_stream_cache_size"
+            />
+        <ListPreference
+            android:key="@string/pref_key_streaming_bitrate"
+            android:title="@string/pref_title_streaming_category_bitrate"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_title_remote_control_category"
+        android:key="@string/pref_key_remote_control_category"
+        >
+        <ListPreference
+            android:key="@string/pref_key_remote_control_category_model"
+            android:title="@string/pref_title_remote_control_category_model"
+            />
+        <CheckBoxPreference
+            android:key="@string/pref_key_remote_control_no_pause_button"
+            android:title="@string/pref_title_remote_control_category_no_pause_button"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_title_app_category"
+        android:key="@string/pref_key_app_category"
+        >
+        <ListPreference
+            android:key="@string/pref_key_app_language"
+            android:title="@string/pref_title_app_category_language"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_title_common_category"
+        android:key="@string/pref_key_common_category"
+        >
+        <ListPreference
+            android:key="@string/pref_key_font_size"
+            android:title="@string/pref_title_common_category_font_size"
+            android:entries="@array/pref_title_common_category_font_size_titles"
+            android:entryValues="@array/pref_title_common_category_font_size_values"
+            />
+        <ListPreference
+            android:key="@string/pref_key_time_shift"
+            android:title="@string/pref_title_common_category_time_shift"
+            />
+        <CheckBoxPreference
+            android:key="@string/pref_key_select_favorites_upon_start"
+            android:title="@string/pref_title_common_category_show_favourites"
+            />
+        <CheckBoxPreference
+            android:key="@string/pref_key_show_health_monitor"
+            android:title="@string/pref_title_common_category_show_health_monitor"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

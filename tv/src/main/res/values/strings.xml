@@ -96,5 +96,6 @@
     <string name="vod_digest_action_next">Далее</string>
     <string name="vod_digest_action_listing">Список</string>
     <string name="label_vod_more_in_unit">Другие видео в разделе</string>
+    <string name="app_menu_item_settings">Настройки</string>
 
 </resources>

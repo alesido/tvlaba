@@ -20,8 +20,10 @@ import org.alsi.android.presentationvod.model.VodDirectoryBrowseLiveData
 import org.alsi.android.presentationvod.model.VodDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
+import org.alsi.android.tvlaba.settings.GeneralSettingsDialogFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.model.CardMenuItem
+import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragment
 import javax.inject.Inject
 
 class VodDirectoryFragment : BrowseSupportFragment() {
@@ -96,11 +98,15 @@ class VodDirectoryFragment : BrowseSupportFragment() {
             when (item) {
                 is CardMenuItem -> {
                     when (item.id) {
-                        MENU_ITEM_TV_ID -> NavHostFragment.findNavController(this).popBackStack()
-                        MENU_ITEM_SETTINGS_ID -> println("Menu action \"${item.title}\"")
+                        MENU_ITEM_TV_ID -> NavHostFragment.findNavController(this)
+                            .popBackStack()
+                        MENU_ITEM_SETTINGS_ID -> GeneralSettingsDialogFragment.newInstance()
+                            .show(childFragmentManager,
+                                GeneralSettingsDialogFragment::class.java.simpleName)
                     }
                 }
                 is VodListingItem -> {
+
                     browseViewModel.onListingItemAction(item,
                         (rowViewHolder as ListRowPresenter.ViewHolder).gridView.selectedPosition) {
                         NavHostFragment.findNavController(this)

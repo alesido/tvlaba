@@ -7,6 +7,7 @@
         <entry key="tv/src/main/res/drawable/default_background.xml" value="0.4515625" />
         <entry key="tv/src/main/res/drawable/ic_music_note.xml" value="0.17657657657657658" />
         <entry key="tv/src/main/res/layout/app_start_fragment.xml" value="0.42857142857142855" />
+        <entry key="tv/src/main/res/layout/general_settings_dialog_fragment.xml" value="0.44047619047619047" />
         <entry key="tv/src/main/res/layout/progress_view_common.xml" value="0.31614583333333335" />
         <entry key="tv/src/main/res/layout/progress_view_start_screen.xml" value="0.18386243386243387" />
         <entry key="tv/src/main/res/layout/spin_kit_progress_view.xml" value="0.16843033509700175" />
@@ -21,6 +22,7 @@
         <entry key="tv/src/main/res/layout/vod_menu_card_view.xml" value="0.19427083333333334" />
         <entry key="tv/src/main/res/layout/vod_program_playback_details.xml" value="0.43645833333333334" />
         <entry key="tv/src/main/res/layout/vod_unit_card_view.xml" value="0.44047619047619047" />
+        <entry key="tv/src/main/res/xml/general_settings.xml" value="0.18342151675485008" />
       </map>
     </option>
   </component>

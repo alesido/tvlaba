@@ -10,7 +10,6 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +27,7 @@ import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseLiveData
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
+import org.alsi.android.tvlaba.settings.GeneralSettingsDialogFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.model.CardMenuItem
 import timber.log.Timber
@@ -73,7 +73,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 when(item.id) {
                     MENU_ITEM_VOD_ID -> NavHostFragment.findNavController(this)
                         .navigate(R.id.actionGlobalNavigateVodSection)
-                    MENU_ITEM_SETTINGS_ID -> println("Menu action \"${item.title}\"")
+                    MENU_ITEM_SETTINGS_ID -> GeneralSettingsDialogFragment.newInstance()
+                        .show(childFragmentManager,
+                            GeneralSettingsDialogFragment::class.java.simpleName)
+
                 }
             }
         }
