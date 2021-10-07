@@ -154,6 +154,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_appRouterFragment_to_settingsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_appRouterFragment_to_tvGuideNavigation">
                               <value>
                                 <LayoutPositions />
@@ -207,6 +212,18 @@
                           <Point>
                             <option name="x" value="432" />
                             <option name="y" value="-687" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="settingsFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="607" />
+                            <option name="y" value="-950" />
                           </Point>
                         </option>
                       </LayoutPositions>

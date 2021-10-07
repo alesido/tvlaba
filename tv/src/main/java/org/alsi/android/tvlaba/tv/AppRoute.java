@@ -4,7 +4,6 @@ public enum AppRoute {
     OnLogIn,
     TvSection,
     VodSection,
-    SettingsSection,
     OnSessionInvalid,
     OnContractInvalid,
     LogOut,

@@ -24,13 +24,17 @@ class AppRouterFragment : Fragment(R.layout.app_start_fragment) {
                     )
                 }
 
-                TvSection -> {}
+                TvSection -> {
+                    findNavController(this).navigate(
+                        AppRouterFragmentDirections.actionAppRouterFragmentToTvGuideNavigation()
+                    )
+                }
+
                 VodSection -> {
                     findNavController(this).navigate(
                         AppRouterFragmentDirections.actionAppRouterFragmentToVodGuideNavigation()
                     )
                 }
-                SettingsSection -> {}
 
                 OnSessionInvalid, OnContractInvalid -> {
                     findNavController(this).navigate(
