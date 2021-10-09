@@ -64,6 +64,11 @@ abstract class PresentationModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(VodGuideStartViewModel::class)
+    abstract fun bindVodGuideStartViewModel(viewModel: VodGuideStartViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(VodDirectoryBrowseViewModel::class)
     abstract fun bindVodDirectoryBrowseViewModel(viewModel: VodDirectoryBrowseViewModel) : ViewModel
 
