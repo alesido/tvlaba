@@ -1,7 +1,5 @@
 package org.alsi.android.domain.vod.model.session
 
-import org.joda.time.LocalDate
-
 /**
  *  Reference to browsing cursor for VOD introduced to postpone expensive
  *  operation of populating browsing cursor.

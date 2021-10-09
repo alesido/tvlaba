@@ -5,7 +5,6 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
-import org.alsi.android.domain.vod.model.guide.directory.VodDirectory
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.domain.vod.model.guide.playback.VodPlayback
 import org.alsi.android.domain.vod.model.guide.playback.VodPlaybackMapper
@@ -30,10 +29,10 @@ class VodNewPlaybackUseCase @Inject constructor(
             return Single.error(Throwable("The VOD directory repository is not available"))
 
         with(params) {
-            val streamSingle = seriesId?.let {
+            val stream = seriesId?.let {
                 directory.getSeriesVideoStream(seriesId)
             } ?: directory.getSingleVideoStream(vod.id)
-            return streamSingle
+            return stream
                 .map { mapper.from(params.vod, it, seriesId) }
                 .flatMap { session.play.setCursorTo(it) }
         }

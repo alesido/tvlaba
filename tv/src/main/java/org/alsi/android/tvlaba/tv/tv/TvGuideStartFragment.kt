@@ -56,6 +56,11 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
         viewModel.getLiveData().observe(this, { handleGettingStartContext(it) })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.dispose()
+    }
+
     private fun handleGettingStartContext(resource: Resource<TvStartContext>) {
         when (resource.status) {
             ResourceState.LOADING -> {
