@@ -35,6 +35,8 @@ class PresentationManager @Inject constructor(private val registry: StreamingSer
      */
     private var contexts: MutableMap<StreamingServiceKind, StreamingService> = mutableMapOf()
 
+    private var currentContextServiceId: Long? = null
+
     private val presentationForServiceKind = hashMapOf(
                     StreamingServiceKind.TV to ServicePresentationType.TV_GUIDE,
                     StreamingServiceKind.VOD to ServicePresentationType.VOD_GUIDE
@@ -51,17 +53,18 @@ class PresentationManager @Inject constructor(private val registry: StreamingSer
 
     /** Use Case creating context will use this method to set/update context
      */
-    private fun selectContext(serviceId: Long) {
-        registry.serviceById[serviceId]?.let {
-            contexts[it.kind] = it
+    private fun selectContext(serviceId: Long): StreamingService? {
+        currentContextServiceId = serviceId
+        return registry.serviceById[serviceId]?.apply {
+            contexts[kind] = this
         }
     }
 
     /** There are presentation layer objects that will switch, e.g. from TV to VOD,
      * or another VOD presentation and they will use this.
      */
-    fun switchToContext(serviceId: Long) {
-        selectContext(serviceId)
+    fun switchToContext(serviceId: Long): StreamingService? {
+        return selectContext(serviceId)
     }
 
     /** Each Use Case should access their repository through the current presentation context
@@ -69,5 +72,12 @@ class PresentationManager @Inject constructor(private val registry: StreamingSer
      */
     fun provideContext(presentationType: ServicePresentationType): StreamingService? {
         return contexts[ serviceKindForPresentation[presentationType]]
+    }
+
+    /** Use Case dependant on a concrete service (not kind of), for example a settings Use Case,
+     * should use this method to get service context.
+     */
+    fun provideContext(): StreamingService? {
+        return currentContextServiceId?.let { registry.serviceById[currentContextServiceId] }
     }
 }
