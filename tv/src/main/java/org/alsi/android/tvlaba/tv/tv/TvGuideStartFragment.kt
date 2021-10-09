@@ -43,6 +43,9 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(TvGuideStartViewModel::class.java)
+
+        viewModel.initWithService(
+            arguments?.getLong(getString(R.string.navigation_argument_key_service_id)))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -89,8 +92,6 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
                 else -> navigateChannelDirectory()
             }
             PLAYBACK_TV -> navigatePlaybackAndSchedule()
-            BROWSING_VOD -> TODO("Implement initial navigation to browse VOD Directory")
-            PLAYBACK_VOD -> TODO("Implement initial navigation to play back VOD item")
             else -> navigateChannelDirectory()
         }
     }
@@ -119,5 +120,4 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
     private fun dismissProgress() {
         vb.tvGuideStartProgressView.visibility = View.INVISIBLE
     }
-
 }

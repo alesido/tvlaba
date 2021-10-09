@@ -2,6 +2,7 @@ package org.alsi.android.tvlaba.tv
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import org.alsi.android.tvlaba.R
@@ -25,14 +26,18 @@ class AppRouterFragment : Fragment(R.layout.app_start_fragment) {
                 }
 
                 TvSection -> {
+                    val argKey = getString(R.string.navigation_argument_key_service_id)
                     findNavController(this).navigate(
-                        AppRouterFragmentDirections.actionAppRouterFragmentToTvGuideNavigation()
+                        R.id.action_appRouterFragment_to_tvGuideNavigation,
+                        bundleOf(argKey to arguments?.getInt(argKey)?.toLong())
                     )
                 }
 
                 VodSection -> {
+                    val argKey = getString(R.string.navigation_argument_key_service_id)
                     findNavController(this).navigate(
-                        AppRouterFragmentDirections.actionAppRouterFragmentToVodGuideNavigation()
+                        R.id.action_appRouterFragment_to_vodGuideNavigation,
+                        bundleOf(argKey to arguments?.getInt(argKey)?.toLong())
                     )
                 }
 

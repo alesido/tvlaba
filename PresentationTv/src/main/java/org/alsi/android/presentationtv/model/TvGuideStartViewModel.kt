@@ -28,22 +28,23 @@ open class TvGuideStartViewModel @Inject constructor (
 
     fun getLiveData(): LiveData<Resource<TvStartContext>> = liveData
 
-    init {
+    fun initWithService(serviceId: Long?) {
         liveData.postValue(Resource.loading())
-        getStartContextUseCase.execute(GetStartContextSubscriber())
+        switchPresentationContextUseCase.execute(SwitchPresentationContextSubscriber(),
+            SwitchPresentationContextUseCase.Params(
+                serviceId?: StreamingService.DEFAULT_ID))
+    }
+
+    inner class SwitchPresentationContextSubscriber: DisposableSingleObserver<StreamingService>() {
+        override fun onSuccess(t: StreamingService) {
+            getStartContextUseCase.execute(GetStartContextSubscriber())
+        }
+        override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
     }
 
     inner class GetStartContextSubscriber: DisposableSingleObserver<TvStartContext>() {
         override fun onSuccess(t: TvStartContext) {
             startContext = t
-            switchPresentationContextUseCase.execute(SwitchPresentationContextSubscriber(),
-                SwitchPresentationContextUseCase.Params(startContext.activity.serviceId))
-        }
-        override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
-    }
-
-    inner class SwitchPresentationContextSubscriber: DisposableSingleObserver<StreamingService>() {
-        override fun onSuccess(t: StreamingService) {
             if (startContext.browse.isEmpty())
                 liveData.postValue(Resource.success(startContext))
             else

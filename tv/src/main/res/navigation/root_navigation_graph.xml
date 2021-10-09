@@ -26,14 +26,26 @@
             app:popUpTo="@id/appStartFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true"
-            />
+            >
+            <argument
+                android:name="@string/navigation_argument_key_service_id"
+                app:argType="integer"
+                android:defaultValue="1"
+                />
+        </action>
         <action
             android:id="@+id/action_appStartFragment_to_vodGuide"
             app:destination="@id/vodGuideNavigation"
             app:popUpTo="@id/appStartFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true"
-            />
+            >
+            <argument
+                android:name="@string/navigation_argument_key_service_id"
+                app:argType="integer"
+                android:defaultValue="1"
+                />
+        </action>
     </fragment>
     <!--
             App Router
@@ -57,14 +69,26 @@
             app:popUpTo="@id/appRouterFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true"
-            />
+            >
+            <argument
+                android:name="@string/navigation_argument_key_service_id"
+                app:argType="integer"
+                android:defaultValue="1"
+                />
+        </action>
         <action
             android:id="@+id/action_appRouterFragment_to_vodGuideNavigation"
             app:destination="@id/vodGuideNavigation"
             app:popUpTo="@id/appRouterFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true"
-            />
+            >
+            <argument
+                android:name="@string/navigation_argument_key_service_id"
+                app:argType="integer"
+                android:defaultValue="1"
+                />
+        </action>
     </fragment>
     <!--
             App Router: global entry destinations
@@ -88,6 +112,11 @@
             app:argType="org.alsi.android.tvlaba.tv.AppRoute"
             android:defaultValue="TvSection"
             />
+        <argument
+            android:name="@string/navigation_argument_key_service_id"
+            app:argType="integer"
+            android:defaultValue="1"
+            />
     </action>
     <action
         app:destination="@id/appRouterFragment"
@@ -97,6 +126,11 @@
             android:name="route"
             app:argType="org.alsi.android.tvlaba.tv.AppRoute"
             android:defaultValue="VodSection"
+            />
+        <argument
+            android:name="@string/navigation_argument_key_service_id"
+            app:argType="integer"
+            android:defaultValue="1"
             />
     </action>
     <action

@@ -5,26 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableSingleObserver
-import org.alsi.android.domain.context.interactor.StartSessionUseCase
 import org.alsi.android.domain.streaming.interactor.SwitchPresentationContextUseCase
 import org.alsi.android.domain.streaming.model.service.StreamingService
-import org.alsi.android.domain.tv.interactor.guide.TvGetStartContextUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvRestoreBrowsingContextUseCase
-import org.alsi.android.domain.tv.interactor.guide.TvRestorePlaybackUseCase
-import org.alsi.android.domain.tv.model.guide.TvPlayback
-import org.alsi.android.domain.tv.model.guide.TvStartContext
 import org.alsi.android.domain.vod.interactor.VodGetStartContextUseCase
 import org.alsi.android.domain.vod.interactor.VodRestoreBrowsingContextUseCase
 import org.alsi.android.domain.vod.interactor.VodRestorePlaybackUseCase
 import org.alsi.android.domain.vod.model.guide.VodStartContext
 import org.alsi.android.domain.vod.model.guide.playback.VodPlayback
 import org.alsi.android.presentation.state.Resource
-import org.alsi.android.presentation.state.ResourceState
 import javax.inject.Inject
 
 open class VodGuideStartViewModel @Inject constructor (
-    private val getStartContextUseCase: VodGetStartContextUseCase,
     private val switchPresentationContextUseCase: SwitchPresentationContextUseCase,
+    private val getStartContextUseCase: VodGetStartContextUseCase,
     private val restoreBrowsingContextUseCase: VodRestoreBrowsingContextUseCase,
     private val restorePlaybackUseCase: VodRestorePlaybackUseCase
 ) : ViewModel() {
@@ -35,22 +28,23 @@ open class VodGuideStartViewModel @Inject constructor (
 
     fun getLiveData(): LiveData<Resource<VodStartContext>> = liveData
 
-    init {
+    fun initWithService(serviceId: Long?) {
         liveData.postValue(Resource.loading())
-        getStartContextUseCase.execute(GetStartContextSubscriber())
+        switchPresentationContextUseCase.execute(SwitchPresentationContextSubscriber(),
+            SwitchPresentationContextUseCase.Params(
+                serviceId?: StreamingService.DEFAULT_ID))
+    }
+
+    inner class SwitchPresentationContextSubscriber: DisposableSingleObserver<StreamingService>() {
+        override fun onSuccess(t: StreamingService) {
+            getStartContextUseCase.execute(GetStartContextSubscriber())
+        }
+        override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
     }
 
     inner class GetStartContextSubscriber: DisposableSingleObserver<VodStartContext>() {
         override fun onSuccess(t: VodStartContext) {
             startContext = t
-            switchPresentationContextUseCase.execute(SwitchPresentationContextSubscriber(),
-                SwitchPresentationContextUseCase.Params(startContext.activity.serviceId))
-        }
-        override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
-    }
-
-    inner class SwitchPresentationContextSubscriber: DisposableSingleObserver<StreamingService>() {
-        override fun onSuccess(t: StreamingService) {
             if (startContext.browse.isEmpty())
                 liveData.postValue(Resource.success(startContext))
             else
@@ -85,8 +79,8 @@ open class VodGuideStartViewModel @Inject constructor (
     }
 
     fun dispose() {
-        getStartContextUseCase.dispose()
         switchPresentationContextUseCase.dispose()
+        getStartContextUseCase.dispose()
         restoreBrowsingContextUseCase.dispose()
         restorePlaybackUseCase.dispose()
     }

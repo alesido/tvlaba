@@ -12,5 +12,8 @@ class UserActivityRecord (
 
     companion object {
         fun empty() = UserActivityRecord("unknown", -1L, NONE, -1L)
+
+        // ... pseudo activity just to initiate login
+        fun requireLogin() = UserActivityRecord("unknown", -1L, LOGIN, System.currentTimeMillis())
     }
 }

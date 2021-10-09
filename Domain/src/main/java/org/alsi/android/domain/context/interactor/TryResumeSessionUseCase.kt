@@ -2,7 +2,6 @@ package org.alsi.android.domain.context.interactor
 
 import io.reactivex.Single
 import org.alsi.android.domain.context.model.PresentationManager
-import org.alsi.android.domain.context.model.SessionActivityType
 import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
@@ -22,9 +21,9 @@ open class  TryResumeSessionUseCase @Inject constructor(
     private val presentationManager: PresentationManager,
     private val provider: ServiceProvider,
     executionThread: PostExecutionThread)
-    : SingleObservableUseCase<SessionActivityType, Nothing?>(executionThread)
+    : SingleObservableUseCase<UserActivityRecord, Nothing?>(executionThread)
 {
-    override fun buildUseCaseObservable(params: Nothing?): Single<SessionActivityType> {
+    override fun buildUseCaseObservable(params: Nothing?): Single<UserActivityRecord> {
 
         return Single.zip(registry.map { it.session.mostRecentActivity(it.id) }) { zipArray ->
             val nonEmpties = zipArray.filter { !(it as UserActivityRecord).isEmpty() }
@@ -35,26 +34,27 @@ open class  TryResumeSessionUseCase @Inject constructor(
         }.flatMap {
             val activity = it as UserActivityRecord
             if (activity.isEmpty())
-                return@flatMap Single.just(SessionActivityType.LOGIN)
+                // user activity record stub to initiate login
+                return@flatMap Single.just(UserActivityRecord.requireLogin())
             return@flatMap resumeActivity(activity)
         }
     }
 
-    private fun resumeActivity(activity: UserActivityRecord): Single<SessionActivityType> {
+    private fun resumeActivity(activity: UserActivityRecord): Single<UserActivityRecord> {
         val nowTimeStamp = DateTimeUtils.currentTimeMillis()
         return when {
             nowTimeStamp - activity.timeStamp < ELAPSED_TIME_LIMIT_FOR_AUTO_LOGIN -> {
                 presentationManager.switchToContext(activity.serviceId)
                 provider.accountService.resume(activity.loginName, true)
-                    .map { activity.activityType }
+                    .map { activity }
             }
             nowTimeStamp - activity.timeStamp < ELAPSED_TIME_LIMIT_FOR_MANUAL_LOGIN -> {
                 presentationManager.switchToContext(activity.serviceId)
                 provider.accountService.resume(activity.loginName, false)
-                    .map { activity.activityType }
+                    .map { activity }
             }
             else -> {
-                Single.just(SessionActivityType.LOGIN)
+                Single.just(UserActivityRecord.requireLogin())
             }
         }
     }

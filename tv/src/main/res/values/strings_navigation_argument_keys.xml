@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_argument_key_service_id" translatable="false">navigation_argument_service_id</string>
+</resources>

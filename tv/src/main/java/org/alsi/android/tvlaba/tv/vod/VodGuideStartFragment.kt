@@ -42,6 +42,9 @@ class VodGuideStartFragment : Fragment(R.layout.vod_guide_start_fragment) {
 
         viewModel = ViewModelProvider(this, viewModelFactory)
             .get(VodGuideStartViewModel::class.java)
+
+        viewModel.initWithService(
+            arguments?.getLong(getString(R.string.navigation_argument_key_service_id)))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

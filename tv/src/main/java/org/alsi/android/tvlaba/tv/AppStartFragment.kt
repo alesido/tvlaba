@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.context.model.SessionActivityType
+import org.alsi.android.domain.context.model.UserActivityRecord
 import org.alsi.android.presentation.AppStartViewModel
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
@@ -52,7 +54,7 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
             .observe(this, { handleNavigationDataState(it) })
     }
 
-    private fun handleNavigationDataState(resource: Resource<SessionActivityType>) {
+    private fun handleNavigationDataState(resource: Resource<UserActivityRecord>) {
         when (resource.status) {
             ResourceState.LOADING -> {
                 showProgress()
@@ -71,15 +73,21 @@ class AppStartFragment: Fragment(R.layout.app_start_fragment) {
         }
     }
 
-    private fun navigateToInitialTarget(activityType: SessionActivityType?) {
+    private fun navigateToInitialTarget(record: UserActivityRecord?) {
+        record?: return
         val navController = findNavController(this)
-        when(activityType) {
+        when(record.activityType) {
 
             SessionActivityType.NONE, SessionActivityType.LOGIN ->
                 navController.navigate(AppStartFragmentDirections.actionAppStartFragmentToLoginFragment())
 
             SessionActivityType.PLAYBACK_TV,  SessionActivityType.BROWSING_TV ->
-                navController.navigate(AppStartFragmentDirections.actionAppStartFragmentToTvGuide())
+                navController.navigate(R.id.action_appStartFragment_to_tvGuide, bundleOf(
+                    getString(R.string.navigation_argument_key_service_id) to record.serviceId))
+
+            SessionActivityType.PLAYBACK_VOD,  SessionActivityType.BROWSING_VOD ->
+                navController.navigate(R.id.action_appStartFragment_to_vodGuide, bundleOf(
+                    getString(R.string.navigation_argument_key_service_id) to record.serviceId))
 
             else -> navController.navigate(AppStartFragmentDirections.actionAppStartFragmentToTvGuide())
         }

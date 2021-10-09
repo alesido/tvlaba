@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.os.bundleOf
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
@@ -72,7 +73,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             else if (item is CardMenuItem) {
                 when(item.id) {
                     MENU_ITEM_VOD_ID -> NavHostFragment.findNavController(this)
-                        .navigate(R.id.actionGlobalNavigateVodSection)
+                        .navigate(R.id.actionGlobalNavigateVodSection, bundleOf(
+                                getString(R.string.navigation_argument_key_service_id) to 1))
                     MENU_ITEM_SETTINGS_ID -> GeneralSettingsDialogFragment.newInstance()
                         .show(childFragmentManager,
                             GeneralSettingsDialogFragment::class.java.simpleName)
