@@ -2,7 +2,6 @@ package org.alsi.android.domain.streaming.interactor
 
 import io.reactivex.Completable
 import org.alsi.android.domain.context.model.PresentationManager
-import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
 import javax.inject.Inject
@@ -17,13 +16,10 @@ class SelectStreamingServerUseCase @Inject constructor(
 {
     override fun buildUseCaseCompletable(params: Params?): Completable {
         params?: throw IllegalArgumentException("SelectStreamingServerUseCase: Params can't be null!")
-        val configuration = presentationManager.provideContext(
-            presentationType = params.servicePresentationType
-        )?.configuration
-        return configuration!!.selectServer(params.serverTag)
+        val context = presentationManager.provideContext()?: throw IllegalArgumentException(
+            "SelectStreamingServerUseCase: Service context isn't initialized!")
+        return context.configuration.selectServer(params.serverTag)
     }
 
-    class Params constructor (
-        val servicePresentationType: ServicePresentationType,
-        val serverTag: String)
+    class Params constructor (val serverTag: String)
 }

@@ -33,15 +33,13 @@ class GeneralSettingsViewModel @Inject constructor(
 
     init {
         liveSettingValues.postValue(Resource.loading())
-        valuesUseCase.execute(ValuesSubscriber(),
-            StreamingSettingsUseCase.Params(servicePresentationType))
-        profileUseCase.execute(ProfileSubscriber(),
-            StreamingProfileUseCase.Params(servicePresentationType))
+        valuesUseCase.execute(ValuesSubscriber())
+        profileUseCase.execute(ProfileSubscriber())
     }
 
     fun selectStreamingServer(serverTag: String) {
         selectServerUseCase.execute(SelectSettingSubscriber(),
-            SelectStreamingServerUseCase.Params(servicePresentationType, serverTag))
+            SelectStreamingServerUseCase.Params(serverTag))
     }
 
     fun selectStreamingServiceLanguage(languageCode: String) {
