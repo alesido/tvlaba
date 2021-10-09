@@ -5,13 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.context.model.SessionActivityType.BROWSING_VOD
 import org.alsi.android.domain.context.model.SessionActivityType.PLAYBACK_VOD
-import org.alsi.android.domain.tv.model.guide.TvStartContext
+import org.alsi.android.domain.vod.model.guide.VodStartContext
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
+import org.alsi.android.presentationvod.model.VodGuideStartViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.databinding.VodGuideStartFragmentBinding
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
@@ -29,7 +31,7 @@ class VodGuideStartFragment : Fragment(R.layout.vod_guide_start_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelFactory
     @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
-//    private lateinit var viewModel: VodGuideStartViewModel
+    private lateinit var viewModel: VodGuideStartViewModel
 
     private var _vb: VodGuideStartFragmentBinding? = null
     private val vb get() = _vb!!
@@ -38,8 +40,8 @@ class VodGuideStartFragment : Fragment(R.layout.vod_guide_start_fragment) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-//        viewModel = ViewModelProvider(this, viewModelFactory)
-//            .get(VodGuideStartViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)
+            .get(VodGuideStartViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -50,11 +52,11 @@ class VodGuideStartFragment : Fragment(R.layout.vod_guide_start_fragment) {
 
     override fun onStart() {
         super.onStart()
-        //viewModel.getLiveData().observe(this, { handleGettingStartContext(it) })
+        viewModel.getLiveData().observe(this, { handleGettingStartContext(it) })
         navigateVodDirectory()
     }
 
-    private fun handleGettingStartContext(resource: Resource<TvStartContext>) {
+    private fun handleGettingStartContext(resource: Resource<VodStartContext>) {
         when (resource.status) {
             ResourceState.LOADING -> {
                 showProgress()
@@ -72,7 +74,7 @@ class VodGuideStartFragment : Fragment(R.layout.vod_guide_start_fragment) {
         }
     }
 
-    private fun handleContextRestored(startContext: TvStartContext?) {
+    private fun handleContextRestored(startContext: VodStartContext?) {
         startContext?: return
         when (startContext.activity.activityType) {
             BROWSING_VOD -> TODO("Implement initial navigation to browse VOD Directory")
