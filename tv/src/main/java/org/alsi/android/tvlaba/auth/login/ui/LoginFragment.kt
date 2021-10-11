@@ -59,9 +59,12 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 
         when(resource.status) {
             LOADING -> {}
-            SUCCESS -> findNavController(this).navigate(R.id.actionGlobalOnLogIn)
+            SUCCESS -> {
+                val nc = findNavController(this)
+                nc.popBackStack()
+                nc.navigate(R.id.actionGlobalOnLogIn)
+            }
             ERROR -> Toast.makeText(context, resource.message, Toast.LENGTH_LONG).show()
-
         }
     }
 }

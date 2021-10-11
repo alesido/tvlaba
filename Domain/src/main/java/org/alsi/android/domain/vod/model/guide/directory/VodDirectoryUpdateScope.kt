@@ -24,4 +24,10 @@ class VodDirectoryUpdateScope (
         override fun toString(): String {
                 return "($sectionIndex, $unitIndex, $itemIndex)"
         }
+
+        fun isEmpty() = null == sectionIndex
+
+        companion object {
+                fun empty() = VodDirectoryUpdateScope()
+        }
 }
