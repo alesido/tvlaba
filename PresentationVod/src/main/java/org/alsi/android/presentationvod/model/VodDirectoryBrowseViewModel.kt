@@ -38,6 +38,9 @@ class VodDirectoryBrowseViewModel @Inject constructor (
 
     private var isOnResume: Boolean = true
 
+    val currentPresentation: StreamingServicePresentation? get()
+    = presentationManager.provideContext()?.presentation
+
     val tvPresentations: List<StreamingServicePresentation> get()
     = presentationManager.providePresentations(StreamingServiceKind.TV, skipCurrent = false)
 

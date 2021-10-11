@@ -245,6 +245,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private fun loadDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
         data?.directory?.let { directory ->
+            browseViewModel.currentPresentation?.title?.let { title = it }
+
             // recreate category channels rows
             val categoryRows = directory.categories.mapIndexed { idx, category ->
                 val header = HeaderItem((idx + 1).toLong(), category.title)
@@ -267,7 +269,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 items.addAll(browseViewModel.tvPresentations.mapIndexed { idx, item ->
                     CardMenuItem(MENU_ITEM_TV_BASE_ID + idx.toLong(),
                         item.title, payload = item) })
-                items.add(CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings)))
+                items.add(CardMenuItem(MENU_ITEM_SETTINGS_ID,
+                    getString(R.string.label_menu_settings), R.drawable.settings_icon_metal))
                 setItems(items, null)
             }
             mixedRows.add(ListRow(topMenuHeader, menuRowAdapter))

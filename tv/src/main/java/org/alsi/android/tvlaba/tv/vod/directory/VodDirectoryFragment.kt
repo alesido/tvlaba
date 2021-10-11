@@ -199,6 +199,8 @@ class VodDirectoryFragment : BrowseSupportFragment() {
 
     private fun loadDirectoryView(browseData: VodDirectoryBrowseLiveData?) {
         browseData?.directory?.let { directory ->
+            browseViewModel.currentPresentation?.title?.let { title = it }
+
             // row: sections + menu
             val menuHeader = HeaderItem(0L, getString(R.string.label_vod_sections_and_navigation))
             val menuItems: MutableList<CardMenuItem> = mutableListOf()
@@ -214,7 +216,8 @@ class VodDirectoryFragment : BrowseSupportFragment() {
                 CardMenuItem(MENU_ITEM_TV_BASE_ID + idx.toLong(), item.title, payload = item) })
             menuItems.addAll(browseViewModel.vodPresentations.mapIndexed { idx, item ->
                 CardMenuItem(MENU_ITEM_VOD_BASE_ID + idx.toLong(), item.title, payload = item) })
-            menuItems.add(CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings)))
+            menuItems.add(CardMenuItem(MENU_ITEM_SETTINGS_ID,
+                getString(R.string.label_menu_settings), R.drawable.settings_icon_metal))
 
             // row adapter
             val menuRowAdapter = VodMenuRowAdapter(VodMenuCardPresenter()).apply {

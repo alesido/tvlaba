@@ -1,5 +1,6 @@
 package org.alsi.android.presentation.mapper
 
+import android.app.Activity
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import androidx.core.content.res.ResourcesCompat
@@ -16,5 +17,10 @@ fun getDrawableByName(reference: String) : Drawable? {
 fun getDrawableIdentifierByName(reference: String) : Int? {
     val resources = Resources.getSystem()
     return resources.getIdentifier(reference, "drawable", null)
+}
+
+fun getDrawableIdentifierByName(context: Activity, reference: String) : Int? {
+    val resources = context.resources
+    return resources.getIdentifier(reference, "drawable", context.packageName)
 }
 

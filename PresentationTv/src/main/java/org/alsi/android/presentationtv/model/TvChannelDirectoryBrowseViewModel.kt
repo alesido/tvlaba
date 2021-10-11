@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
-import org.alsi.android.domain.context.interactor.StartSessionUseCase
 import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
 import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
@@ -35,6 +34,9 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     private val liveDirectory: MutableLiveData<Resource<TvChannelDirectoryBrowseLiveData>> = MutableLiveData()
 
     private var directory: TvChannelDirectory? = null
+
+    val currentPresentation: StreamingServicePresentation? get()
+    = presentationManager.provideContext()?.presentation
 
     val tvPresentations: List<StreamingServicePresentation> get()
     = presentationManager.providePresentations(StreamingServiceKind.TV, skipCurrent = true)
