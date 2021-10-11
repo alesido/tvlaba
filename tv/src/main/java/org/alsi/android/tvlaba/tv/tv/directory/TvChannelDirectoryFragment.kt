@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
@@ -19,6 +20,8 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
+import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
@@ -71,14 +74,19 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 }
             }
             else if (item is CardMenuItem) {
-                when(item.id) {
-                    MENU_ITEM_VOD_ID -> NavHostFragment.findNavController(this)
-                        .navigate(R.id.actionGlobalNavigateVodSection, bundleOf(
-                                getString(R.string.navigation_argument_key_service_id) to 1))
-                    MENU_ITEM_SETTINGS_ID -> GeneralSettingsDialogFragment.newInstance()
+                if (item.id == MENU_ITEM_SETTINGS_ID) {
+                    GeneralSettingsDialogFragment.newInstance()
                         .show(childFragmentManager,
                             GeneralSettingsDialogFragment::class.java.simpleName)
-
+                }
+                else if (item.payload != null && item.payload is StreamingServicePresentation) {
+                    with(item.payload) {
+                        when(kind) {
+                            StreamingServiceKind.TV -> navigateToTv(serviceId)
+                            StreamingServiceKind.VOD -> navigateToVod(serviceId)
+                            else -> navigateToTv(serviceId)
+                        }
+                    }
                 }
             }
         }
@@ -99,9 +107,26 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         }
     }
 
+    private fun navigateToTv(serviceId: Long) {
+        val nc = NavHostFragment.findNavController(this)
+        nc.popBackStack()
+        nc.navigate(R.id.actionGlobalNavigateTvSection, bundleOf(
+            getString(R.string.navigation_argument_key_service_id) to serviceId))
+    }
+
+    private fun navigateToVod(serviceId: Long) {
+        val nc = NavHostFragment.findNavController(this)
+        nc.popBackStack()
+        nc.navigate(R.id.actionGlobalNavigateVodSection, bundleOf(
+            getString(R.string.navigation_argument_key_service_id) to serviceId))
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+
+        addBackPressedCallback()
 
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
         view.addView(progressView)
@@ -110,6 +135,18 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         progressBarManager.setProgressBarView(progressView)
 
         return view
+    }
+
+    private fun addBackPressedCallback() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, object:
+                OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    remove() // remove this listener
+                    requireActivity().finish()
+                }
+            }
+        )
     }
 
     override fun onStart() {
@@ -223,10 +260,15 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             val bottomMenuHeader = HeaderItem((categoryRows.size + 1).toLong(), getString(R.string.label_menu))
             val mixedRows: MutableList<ListRow> = mutableListOf()
             val menuRowAdapter = TvMenuRowAdapter(TvMenuCardPresenter()).apply {
-                setItems(listOf(
-                    CardMenuItem(MENU_ITEM_VOD_ID, getString(R.string.label_menu_generic_vod), 0),
-                    CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings), 0),
-                ), null)
+                val items: MutableList<CardMenuItem> = mutableListOf()
+                items.addAll(browseViewModel.vodPresentations.mapIndexed { idx, item ->
+                    CardMenuItem(MENU_ITEM_VOD_BASE_ID + idx.toLong(),
+                        item.title, payload = item) })
+                items.addAll(browseViewModel.tvPresentations.mapIndexed { idx, item ->
+                    CardMenuItem(MENU_ITEM_TV_BASE_ID + idx.toLong(),
+                        item.title, payload = item) })
+                items.add(CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings)))
+                setItems(items, null)
             }
             mixedRows.add(ListRow(topMenuHeader, menuRowAdapter))
             mixedRows.addAll(categoryRows)
@@ -310,8 +352,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     companion object {
         const val TIMER_INTERVAL_MINUTES_LIVE_TIME_TASK = 1L
 
-        const val MENU_ITEM_VOD_ID = 1001L
-        const val MENU_ITEM_SETTINGS_ID = 1002L
+        const val MENU_ITEM_VOD_BASE_ID = 1001L
+        const val MENU_ITEM_TV_BASE_ID = 1200L
+        const val MENU_ITEM_SETTINGS_ID = 1300L
     }
 }
 

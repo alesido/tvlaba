@@ -31,8 +31,8 @@ open class TvGuideStartViewModel @Inject constructor (
     fun initWithService(serviceId: Long?) {
         liveData.postValue(Resource.loading())
         switchPresentationContextUseCase.execute(SwitchPresentationContextSubscriber(),
-            SwitchPresentationContextUseCase.Params(
-                serviceId?: StreamingService.DEFAULT_ID))
+            SwitchPresentationContextUseCase.Params(if (serviceId != null && serviceId != 0L)
+                serviceId else StreamingService.DEFAULT_TV_ID))
     }
 
     inner class SwitchPresentationContextSubscriber: DisposableSingleObserver<StreamingService>() {

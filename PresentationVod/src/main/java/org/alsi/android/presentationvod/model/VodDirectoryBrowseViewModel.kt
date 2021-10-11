@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
+import org.alsi.android.domain.context.model.PresentationManager
+import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
+import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
 import org.alsi.android.domain.vod.interactor.VodBrowseCursorGetUseCase
 import org.alsi.android.domain.vod.interactor.VodBrowseCursorObserveUseCase
 import org.alsi.android.domain.vod.interactor.VodDirectoryUseCase
@@ -25,6 +28,7 @@ class VodDirectoryBrowseViewModel @Inject constructor (
     private val browseCursorMoveUseCase: VodBrowseCursorMoveUseCase,
     browseCursorObserveUseCase: VodBrowseCursorObserveUseCase,
     private val listingPageUseCase: VodListingPageUseCase,
+    private val presentationManager: PresentationManager
 ) : ViewModel() {
 
     private val liveDirectory: MutableLiveData<Resource<VodDirectoryBrowseLiveData>> = MutableLiveData()
@@ -33,6 +37,12 @@ class VodDirectoryBrowseViewModel @Inject constructor (
     private var position: VodDirectoryPosition? = null
 
     private var isOnResume: Boolean = true
+
+    val tvPresentations: List<StreamingServicePresentation> get()
+    = presentationManager.providePresentations(StreamingServiceKind.TV, skipCurrent = false)
+
+    val vodPresentations: List<StreamingServicePresentation> get()
+    = presentationManager.providePresentations(StreamingServiceKind.VOD, skipCurrent = true)
 
     init {
         browseCursorObserveUseCase.execute(BrowseCursorSubscriber())
@@ -212,7 +222,8 @@ class VodDirectoryBrowseViewModel @Inject constructor (
         }
 
         if (executedUseCasesCounter == 0)
-            liveDirectory.postValue(Resource.success()) // to remove not needed progress indication
+            liveDirectory.postValue(Resource.success(VodDirectoryBrowseLiveData(
+                directory!!, position!!, VodDirectoryUpdateScope.empty()))) // to remove not needed progress indication
     }
 
     inner class BrowseCursorMoveSubscriber : DisposableSingleObserver<VodBrowseCursor>() {

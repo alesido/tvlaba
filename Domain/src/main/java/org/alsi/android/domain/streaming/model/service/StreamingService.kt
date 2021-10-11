@@ -16,7 +16,8 @@ open class StreamingService (
     companion object {
         const val TV = "tv"
         const val VOD = "vod"
-        const val DEFAULT_ID = 1L
+        const val DEFAULT_TV_ID = 1L
+        const val DEFAULT_VOD_ID = 2L
     }
 }
 

@@ -5,11 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
+import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
 import org.alsi.android.domain.vod.model.guide.directory.VodDirectoryPosition
 import org.alsi.android.domain.vod.model.guide.directory.VodSection
 import org.alsi.android.domain.vod.model.guide.directory.VodUnit
@@ -23,7 +27,6 @@ import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.settings.GeneralSettingsDialogFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.model.CardMenuItem
-import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragment
 import javax.inject.Inject
 
 class VodDirectoryFragment : BrowseSupportFragment() {
@@ -58,6 +61,7 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+        addBackPressedCallback()
 
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
         view.addView(progressView)
@@ -66,6 +70,20 @@ class VodDirectoryFragment : BrowseSupportFragment() {
         progressBarManager.setProgressBarView(progressView)
 
         return view
+    }
+
+    private fun addBackPressedCallback() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner, backPressedCallback
+        )
+    }
+
+    private val backPressedCallback: OnBackPressedCallback = object:
+        OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            remove() // remove this listener
+            requireActivity().finish()
+        }
     }
 
     private fun setSelectedListener() {
@@ -96,17 +114,25 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     private fun setClickedListener() {
         setOnItemViewClickedListener { _, item, rowViewHolder, _ ->
             when (item) {
+
                 is CardMenuItem -> {
-                    when (item.id) {
-                        MENU_ITEM_TV_ID -> NavHostFragment.findNavController(this)
-                            .popBackStack()
-                        MENU_ITEM_SETTINGS_ID -> GeneralSettingsDialogFragment.newInstance()
+                    if (item.id == MENU_ITEM_SETTINGS_ID) {
+                        GeneralSettingsDialogFragment.newInstance()
                             .show(childFragmentManager,
                                 GeneralSettingsDialogFragment::class.java.simpleName)
                     }
+                    else if (item.payload != null && item.payload is StreamingServicePresentation) {
+                        with(item.payload) {
+                            when(kind) {
+                                StreamingServiceKind.TV -> navigateToTv(serviceId)
+                                StreamingServiceKind.VOD -> navigateToVod(serviceId)
+                                else -> navigateToTv(serviceId)
+                            }
+                        }
+                    }
                 }
-                is VodListingItem -> {
 
+                is VodListingItem -> {
                     browseViewModel.onListingItemAction(item,
                         (rowViewHolder as ListRowPresenter.ViewHolder).gridView.selectedPosition) {
                         NavHostFragment.findNavController(this)
@@ -116,6 +142,20 @@ class VodDirectoryFragment : BrowseSupportFragment() {
                 }
             }
         }
+    }
+
+    private fun navigateToTv(serviceId: Long) {
+        val nc = NavHostFragment.findNavController(this)
+        nc.popBackStack()
+        nc.navigate(R.id.actionGlobalNavigateTvSection, bundleOf(
+            getString(R.string.navigation_argument_key_service_id) to serviceId))
+    }
+
+    private fun navigateToVod(serviceId: Long) {
+        val nc = NavHostFragment.findNavController(this)
+        nc.popBackStack()
+        nc.navigate(R.id.actionGlobalNavigateVodSection, bundleOf(
+            getString(R.string.navigation_argument_key_service_id) to serviceId))
     }
 
     override fun onStart() {
@@ -133,6 +173,7 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     override fun onDestroy() {
         super.onDestroy()
         browseViewModel.dispose()
+        //backPressedCallback.remove()
     }
 
     private fun handleDirectoryDataState(resource: Resource<VodDirectoryBrowseLiveData>) {
@@ -167,9 +208,15 @@ class VodDirectoryFragment : BrowseSupportFragment() {
                     CardMenuItem(index.toLong(), section.title, payload = section)
                 })
             }
-            // .. menu
-            menuItems.add(CardMenuItem(MENU_ITEM_TV_ID, getString(R.string.label_menu_generic_tv)))
+            // .. navigation
+
+            menuItems.addAll(browseViewModel.tvPresentations.mapIndexed { idx, item ->
+                CardMenuItem(MENU_ITEM_TV_BASE_ID + idx.toLong(), item.title, payload = item) })
+            menuItems.addAll(browseViewModel.vodPresentations.mapIndexed { idx, item ->
+                CardMenuItem(MENU_ITEM_VOD_BASE_ID + idx.toLong(), item.title, payload = item) })
             menuItems.add(CardMenuItem(MENU_ITEM_SETTINGS_ID, getString(R.string.label_menu_settings)))
+
+            // row adapter
             val menuRowAdapter = VodMenuRowAdapter(VodMenuCardPresenter()).apply {
                 setItems(menuItems, null)
             }
@@ -198,6 +245,7 @@ class VodDirectoryFragment : BrowseSupportFragment() {
 
     private fun updateDirectoryView(browseData: VodDirectoryBrowseLiveData?) {
         val directory = browseData?.directory?: return
+        if (browseData.update?.isEmpty() == true) return
         browseData.update?.let {
             when {
                 it.isSectionUpdate() -> {
@@ -260,7 +308,8 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     }
 
     companion object {
-        const val MENU_ITEM_TV_ID = 1001L
-        const val MENU_ITEM_SETTINGS_ID = 1002L
+        const val MENU_ITEM_TV_BASE_ID = 1001L
+        const val MENU_ITEM_VOD_BASE_ID = 1100L
+        const val MENU_ITEM_SETTINGS_ID = 1300L
     }
 }

@@ -2,6 +2,7 @@ package org.alsi.android.domain.context.model
 
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
+import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
 import org.alsi.android.domain.streaming.model.service.StreamingServiceRegistry
 import javax.inject.Inject
 
@@ -79,5 +80,13 @@ class PresentationManager @Inject constructor(private val registry: StreamingSer
      */
     fun provideContext(): StreamingService? {
         return currentContextServiceId?.let { registry.serviceById[currentContextServiceId] }
+    }
+
+    /**
+     */
+    fun providePresentations(kind: StreamingServiceKind, skipCurrent: Boolean = true)
+    : List<StreamingServicePresentation> {
+        val list = registry.servicesByKind[kind]!!.map { it.presentation }
+        return if (skipCurrent) list.filter { it.serviceId != currentContextServiceId } else list
     }
 }
