@@ -10,8 +10,9 @@ open class StreamingService (
         val tag: String,
         val configuration: SettingsRepository,
         val directory: DirectoryRepository,
-        val session: SessionRepository) {
-
+        val session: SessionRepository,
+        val presentation: StreamingServicePresentation
+) {
     companion object {
         const val TV = "tv"
         const val VOD = "vod"

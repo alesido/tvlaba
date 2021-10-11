@@ -99,8 +99,10 @@
     <string name="vod_digest_action_watch">Watch</string>
     <string name="vod_digest_action_next">Next</string>
     <string name="vod_digest_action_listing">Listing</string>
-    <string name="label_vod_more_in_unit">Другие видео в разделе</string>
+    <string name="label_vod_more_in_unit">Other section\'s videos</string>
     <string name="app_menu_item_settings">Settings</string>
+    <string name="service_title_telecola_tv">Telecola TV</string>
+    <string name="service_title_vod_prime_hd">Prime HD</string>
 
 
 </resources>

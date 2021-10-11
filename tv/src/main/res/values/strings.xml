@@ -97,5 +97,7 @@
     <string name="vod_digest_action_listing">Список</string>
     <string name="label_vod_more_in_unit">Другие видео в разделе</string>
     <string name="app_menu_item_settings">Настройки</string>
+    <string name="service_title_telecola_tv">Телекола ТВ</string>
+    <string name="service_title_vod_prime_hd">Prime HD</string>
 
 </resources>
