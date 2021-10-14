@@ -5,15 +5,22 @@ import android.content.Context
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import io.reactivex.exceptions.CompositeException
 import org.alsi.android.domain.exception.model.*
 import org.alsi.android.tvlaba.R
-import timber.log.Timber
+import org.alsi.android.tvlaba.framework.validateContext
 import javax.inject.Inject
 
 class ClassifiedExceptionHandler @Inject constructor(
-    private val appContext: Context,
+    private var context: Context,
     private val messages: ExceptionMessages
 ) {
+    private val appContext = context
+
+    fun changeContext(replacement: Context) {
+        this.context = validateContext(replacement, appContext)
+        messages.changeContext(this.context)
+    }
 
     fun run(
         f: Fragment,
@@ -44,8 +51,12 @@ class ClassifiedExceptionHandler @Inject constructor(
                 }
 
             else -> {
-                Timber.e(e, "### An unclassified exception.")
-                toast(e.message?: messages.genericErrorMessage())
+                //Timber.e(e, "### An unclassified exception.")
+                toast((if (e is CompositeException)
+                    e.exceptions.reversed().joinToString("\n\n") { it.message.toString() }
+                else
+                    e.message
+                ) ?: messages.genericErrorMessage())
             }
         }
 
@@ -53,7 +64,7 @@ class ClassifiedExceptionHandler @Inject constructor(
     }
 
     private fun toast(message: String) {
-        Toast.makeText(appContext, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(validateContext(context, appContext), message, Toast.LENGTH_LONG).show()
     }
 
     private fun dialog(activityContext: Context?, message: String, title: String? = null, iconResId: Int? = null,  ok: (() -> Unit)? = null) {

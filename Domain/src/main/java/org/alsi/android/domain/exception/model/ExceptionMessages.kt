@@ -2,6 +2,8 @@ package org.alsi.android.domain.exception.model
 
 interface ExceptionMessages {
 
+    fun changeContext(replacementContext: Any)
+
     // General
 
     fun genericErrorMessage(): String
@@ -45,6 +47,8 @@ interface ExceptionMessages {
 
     fun errorSwitchingStreamerServer(): String
     fun errorSettingStreamCacheSize(): String
+
+    fun settingTemporarilyNotAvailable(): String
 
     // App Update
 

@@ -35,6 +35,8 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(GeneralSettingsViewModel::class.java)
 
+        errorHandler.changeContext(requireActivity())
+
         setupPreferences()
     }
 

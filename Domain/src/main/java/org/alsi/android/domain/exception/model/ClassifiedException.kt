@@ -17,3 +17,4 @@ class RequestError          (m: String? = null, t: Throwable? = null) : ApiExcep
 class UserSessionInvalid    (m: String? = null, t: Throwable? = null) : ApiException(m, t)
 class UserContractInactive  (m: String? = null, t: Throwable? = null) : ApiException(m, t)
 class TvChannelProtected    (m: String? = null, t: Throwable? = null) : ApiException(m, t)
+class ApiSuspended      (m: String? = null, t: Throwable? = null) : ApiException(m, t)

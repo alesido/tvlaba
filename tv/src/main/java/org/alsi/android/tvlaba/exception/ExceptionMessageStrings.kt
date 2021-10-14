@@ -4,9 +4,17 @@ import android.content.Context
 import androidx.annotation.StringRes
 import org.alsi.android.domain.exception.model.ExceptionMessages
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.framework.validateContext
 import javax.inject.Inject
 
-class ExceptionMessageStrings @Inject constructor(val context: Context): ExceptionMessages {
+class ExceptionMessageStrings @Inject constructor(private var context: Context): ExceptionMessages {
+
+    private val appContext = context
+
+    override fun changeContext(replacementContext: Any) {
+        if (replacementContext !is Context) return
+        context = validateContext(replacementContext, appContext)
+    }
 
     override fun genericErrorMessage() = s(R.string.exception_message_generic_error)
 
@@ -67,6 +75,9 @@ class ExceptionMessageStrings @Inject constructor(val context: Context): Excepti
     override fun errorSettingStreamCacheSize() =
         s(R.string.exception_message_generic_error)
 
+    override fun settingTemporarilyNotAvailable() =
+        s(R.string.message_setting_temporarily_not_available)
+
     override fun errorCheckingIfAppUpdateAvailable() =
         s(R.string.exception_message_generic_error)
 
@@ -89,7 +100,8 @@ class ExceptionMessageStrings @Inject constructor(val context: Context): Excepti
     override fun wrongNewPlaybackParameters() =
         s(R.string.exception_message_generic_error)
     
-    fun s(@StringRes id: Int) = context.getString(id)
+    fun s(@StringRes id: Int)
+    = validateContext(context, appContext).getString(id)
 }
      
  
