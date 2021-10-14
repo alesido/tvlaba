@@ -3,6 +3,7 @@ package org.alsi.android.tvlaba.settings
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import org.alsi.android.domain.streaming.model.options.StreamBitrateOption
 import org.alsi.android.presentation.settings.GeneralSettingsViewModel
 import org.alsi.android.presentation.state.ResourceState
 
@@ -11,14 +12,24 @@ class StreamBitrateOptionsPresenter(
     owner: PreferenceFragmentCompat,
     private val viewModel: GeneralSettingsViewModel
 ) {
+    private var last: StreamBitrateOption? = null
+
     init {
         viewModel.getLiveSettingValues().observe(owner) { resource ->
             if (resource.status == ResourceState.SUCCESS) {
                 resource.data?.bitrate?.let {
+                    last = it
                     preference.setDefaultValue(it.value.toString())
                     preference.value = it.value.toString()
                     preference.summary = it.title
                 }?: run { preference.isEnabled = false }
+            }
+            if (resource.status == ResourceState.ERROR) {
+                last?.let {
+                    preference.setDefaultValue(it.value.toString())
+                    preference.value = it.value.toString()
+                    preference.summary = it.title
+                }
             }
         }
         

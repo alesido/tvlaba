@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_key_app_category" translatable="false" >pref_key_app_category</string>
-    <string name="pref_key_app_language" translatable="false" >pref_key_app_language</string>
-    <string name="pref_key_app_version" translatable="false" >pref_key_app_version</string>
-    <string name="pref_key_common_category" translatable="false" >pref_key_common_category</string>
-    <string name="pref_key_device_model" translatable="false" >pref_key_device_model</string>
-    <string name="pref_key_exit" translatable="false" >pref_key_exit</string>
-    <string name="pref_key_expires_on" translatable="false" >pref_key_expires_on</string>
-    <string name="pref_key_font_size" translatable="false" >pref_key_font_size</string>
-    <string name="pref_key_info_account" translatable="false" >pref_key_info_account</string>
-    <string name="pref_key_login" translatable="false" >pref_login</string>
-    <string name="pref_key_login_name" translatable="false" >pref_key_login_name</string>
-    <string name="pref_key_now_date" translatable="false" >pref_key_now_date</string>
-    <string name="pref_key_parental_code" translatable="false" >pref_key_user_code</string>
-    <string name="pref_key_recommendations" translatable="false" >pref_recommendations</string>
-    <string name="pref_key_remember_last_playing_channel" translatable="false" >pref_key_remember_last_playing_channel</string>
-    <string name="pref_key_remote_control_category" translatable="false" >pref_key_remote_control_category</string>
-    <string name="pref_key_remote_control_category_model" translatable="false" >pref_key_remote_control_category_model</string>
-    <string name="pref_key_remote_control_no_pause_button" translatable="false" >pref_key_remote_control_no_pause_button</string>
-    <string name="pref_key_remove_favourite_programs" translatable="false" >pref_key_remove_favourite_programs</string>
-    <string name="pref_key_remove_favourites" translatable="false" >pref_key_remove_favourites</string>
-    <string name="pref_key_screen_general" translatable="false" >general_settings</string>
-    <string name="pref_key_screen_signin" translatable="false" >signin</string>
-    <string name="pref_key_select_favorites_upon_start" translatable="false" >pref_key_show_favourites</string>
-    <string name="pref_key_http_cache_size" translatable="false" >pref_key_http_cache_size</string>
-    <string name="pref_key_show_category" translatable="false" >pref_key_show_category</string>
-    <string name="pref_key_show_health_monitor" translatable="false" >pref_key_show_health_monitor</string>
-    <string name="pref_key_stats" translatable="false" >pref_key_stats</string>
-    <string name="pref_key_streaming_bitrate" translatable="false" >pref_key_connection_bitrate</string>
-    <string name="pref_key_streaming_category" translatable="false" >pref_key_connection_category</string>
-    <string name="pref_key_streaming_server" translatable="false" >pref_key_connection_server</string>
-    <string name="pref_key_time_shift" translatable="false" >pref_key_time_shift</string>
-    <string name="pref_key_user" translatable="false" >pref_key_user</string>
-    <string name="pref_key_video_aspect_ratio" translatable="false" >pref_key_video_aspect_ratio</string>
-    <string name="pref_key_warnings_category" translatable="false" >pref_key_warnings_category</string>
+    <string name="pref_key_app_category" translatable="false">pref_key_app_category</string>
+    <string name="pref_key_app_language" translatable="false">pref_key_app_language</string>
+    <string name="pref_key_app_version" translatable="false">pref_key_app_version</string>
+    <string name="pref_key_common_category" translatable="false">pref_key_common_category</string>
+    <string name="pref_key_exit" translatable="false">pref_key_exit</string>
+    <string name="pref_key_expires_on" translatable="false">pref_key_expires_on</string>
+    <string name="pref_key_font_size" translatable="false">pref_key_font_size</string>
+    <string name="pref_key_info_account" translatable="false">pref_key_info_account</string>
+    <string name="pref_key_login" translatable="false">pref_login</string>
+    <string name="pref_key_login_name" translatable="false">pref_key_login_name</string>
+    <string name="pref_key_now_date" translatable="false">pref_key_now_date</string>
+    <string name="pref_key_parental_code" translatable="false">pref_key_user_code</string>
+    <string name="pref_key_recommendations" translatable="false">pref_recommendations</string>
+    <string name="pref_key_remember_last_playing_channel" translatable="false">pref_key_remember_last_playing_channel</string>
+    <string name="pref_key_remote_control_category" translatable="false">pref_key_remote_control_category</string>
+    <string name="pref_key_remote_control_category_model" translatable="false">pref_key_remote_control_category_model</string>
+    <string name="pref_key_remote_control_no_pause_button" translatable="false">pref_key_remote_control_no_pause_button</string>
+    <string name="pref_key_remove_favourite_programs" translatable="false">pref_key_remove_favourite_programs</string>
+    <string name="pref_key_remove_favourites" translatable="false">pref_key_remove_favourites</string>
+    <string name="pref_key_select_favorites_upon_start" translatable="false">pref_key_show_favourites</string>
+    <string name="pref_key_http_cache_size" translatable="false">pref_key_http_cache_size</string>
+    <string name="pref_key_show_category" translatable="false">pref_key_show_category</string>
+    <string name="pref_key_show_health_monitor" translatable="false">pref_key_show_health_monitor</string>
+    <string name="pref_key_stats" translatable="false">pref_key_stats</string>
+    <string name="pref_key_streaming_bitrate" translatable="false">pref_key_connection_bitrate</string>
+    <string name="pref_key_streaming_category" translatable="false">pref_key_connection_category</string>
+    <string name="pref_key_streaming_server" translatable="false">pref_key_connection_server</string>
+    <string name="pref_key_time_shift" translatable="false">pref_key_time_shift</string>
+    <string name="pref_key_user" translatable="false">pref_key_user</string>
+    <string name="pref_key_video_aspect_ratio" translatable="false">pref_key_video_aspect_ratio</string>
+    <string name="pref_key_warnings_category" translatable="false">pref_key_warnings_category</string>
 </resources>

@@ -11,14 +11,22 @@ class HttpCacheSizeOptionsPresenter(
     owner: PreferenceFragmentCompat,
     private val viewModel: GeneralSettingsViewModel
 ) {
+    private var last: String? = null
+
     init {
         viewModel.getLiveSettingValues().observe(owner) { resource ->
             if (resource.status == ResourceState.SUCCESS) {
                 resource.data?.cacheSize?.let {
-                    preference.setDefaultValue(it)
-                    preference.value = it.toString()
-                    preference.summary = it.toString()
-                }?: run { preference.isEnabled = false }
+                    last = it.toString()
+                    preference.setDefaultValue(last)
+                    preference.value = last
+                    preference.summary = last
+                } ?: run { preference.isEnabled = false }
+            }
+            if (resource.status == ResourceState.ERROR) {
+                preference.setDefaultValue(last)
+                preference.value = last
+                preference.summary = last
             }
         }
         

@@ -40,7 +40,7 @@ class AccountServiceRemoteMoidom @Inject constructor(
                 androidSdkNumber = Build.VERSION.SDK_INT,
                 deviceSerialNumber = getDeviceSerialNumber(),
                 macAddress = getMacAddressToIdentifyDevice("UNKNOWN"),
-                deviceModel = "model",// getDeviceModelName(),
+                deviceModel = "model",// TODO getDeviceModelName(),
                 manufacturer = Build.MANUFACTURER)
                 .map { loginResponse ->
                     val account = AccountSourceDataMapper(loginName, loginPassword, serviceRegistry).mapFromSource(loginResponse)
