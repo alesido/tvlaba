@@ -6,9 +6,6 @@ import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
 import javax.inject.Inject
 
-/**
- * Created on 7/18/18.
- */
 class SelectStreamingServerUseCase @Inject constructor(
         private val presentationManager: PresentationManager,
         postExecutionThread: PostExecutionThread)
@@ -22,4 +19,19 @@ class SelectStreamingServerUseCase @Inject constructor(
     }
 
     class Params constructor (val serverTag: String)
+}
+
+class SelectCacheSizeUseCase @Inject constructor(
+    private val presentationManager: PresentationManager,
+    postExecutionThread: PostExecutionThread)
+    : CompletableUseCase<SelectCacheSizeUseCase.Params>(postExecutionThread)
+{
+    override fun buildUseCaseCompletable(params: Params?): Completable {
+        params?: throw IllegalArgumentException("SelectStreamingServerUseCase: Params can't be null!")
+        val context = presentationManager.provideContext()?: throw IllegalArgumentException(
+            "SelectStreamingServerUseCase: Service context isn't initialized!")
+        return context.configuration.selectCacheSize(params.cacheSize)
+    }
+
+    class Params constructor (val cacheSize: Long)
 }
