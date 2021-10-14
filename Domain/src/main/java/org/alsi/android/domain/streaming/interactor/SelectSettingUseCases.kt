@@ -35,3 +35,18 @@ class SelectCacheSizeUseCase @Inject constructor(
 
     class Params constructor (val cacheSize: Long)
 }
+
+class SelectStreamBitrateUseCase @Inject constructor(
+    private val presentationManager: PresentationManager,
+    postExecutionThread: PostExecutionThread)
+    : CompletableUseCase<SelectStreamBitrateUseCase.Params>(postExecutionThread)
+{
+    override fun buildUseCaseCompletable(params: Params?): Completable {
+        params?: throw IllegalArgumentException("SelectStreamBitrateUseCase: Params can't be null!")
+        val context = presentationManager.provideContext()?: throw IllegalArgumentException(
+            "SelectStreamingServerUseCase: Service context isn't initialized!")
+        return context.configuration.selectStreamBitrate(params.bitrate)
+    }
+
+    class Params constructor (val bitrate: Int)
+}

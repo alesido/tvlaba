@@ -27,7 +27,7 @@
             android:title="@string/pref_title_streaming_category_server"
             />
         <ListPreference
-            android:key="@string/pref_key_server_stream_cache_size"
+            android:key="@string/pref_key_http_cache_size"
             android:title="@string/pref_title_server_stream_cache_size"
             />
         <ListPreference

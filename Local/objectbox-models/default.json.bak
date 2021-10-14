@@ -184,7 +184,7 @@
     },
     {
       "id": "8:2367611273685851269",
-      "lastPropertyId": "12:4063646416221110113",
+      "lastPropertyId": "11:3308811457327847902",
       "name": "ServiceSettingsEntity",
       "properties": [
         {
@@ -215,6 +215,12 @@
           "id": "5:8844448560171257207",
           "name": "features",
           "type": 9
+        },
+        {
+          "id": "6:4500013042598815912",
+          "name": "bitrate",
+          "type": 5,
+          "flags": 2
         },
         {
           "id": "7:1689792353872475345",
@@ -253,14 +259,6 @@
           "type": 11,
           "flags": 1548,
           "relationTarget": "DeviceModelOptionEntity"
-        },
-        {
-          "id": "12:4063646416221110113",
-          "name": "bitrateId",
-          "indexId": "49:6836194219897482293",
-          "type": 11,
-          "flags": 1548,
-          "relationTarget": "StreamBitrateOptionEntity"
         }
       ],
       "relations": []
@@ -1637,16 +1635,14 @@
     }
   ],
   "lastEntityId": "40:2491722352469624157",
-  "lastIndexId": "49:6836194219897482293",
+  "lastIndexId": "48:6031296583154067204",
   "lastRelationId": "1:8314157516301926485",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [
-    4500013042598815912
-  ],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }

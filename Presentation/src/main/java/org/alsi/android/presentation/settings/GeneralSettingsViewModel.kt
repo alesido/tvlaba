@@ -5,11 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
-import org.alsi.android.domain.context.model.ServicePresentationType
-import org.alsi.android.domain.streaming.interactor.SelectCacheSizeUseCase
-import org.alsi.android.domain.streaming.interactor.SelectStreamingServerUseCase
-import org.alsi.android.domain.streaming.interactor.StreamingProfileUseCase
-import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
+import org.alsi.android.domain.streaming.interactor.*
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.presentation.state.Resource
@@ -21,8 +17,9 @@ class GeneralSettingsViewModel @Inject constructor(
     private val profileUseCase: StreamingProfileUseCase,
     private val selectServerUseCase: SelectStreamingServerUseCase,
     private val selectCacheSizeUseCase: SelectCacheSizeUseCase,
+    private val selectStreamBitrateUseCase: SelectStreamBitrateUseCase,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val liveSettingValues: MutableLiveData<Resource<StreamingServiceSettings>> = MutableLiveData()
     private val liveSettingsProfile: MutableLiveData<Resource<StreamingServiceProfile>> = MutableLiveData()
@@ -44,6 +41,11 @@ class GeneralSettingsViewModel @Inject constructor(
     fun selectCacheSize(newCacheSize: Long) {
         selectCacheSizeUseCase.execute(SelectSettingSubscriber(),
             SelectCacheSizeUseCase.Params(newCacheSize))
+    }
+
+    fun selectStreamBitrate(newBitrate: Int) {
+        selectStreamBitrateUseCase.execute(SelectSettingSubscriber(),
+            SelectStreamBitrateUseCase.Params(newBitrate))
     }
 
     fun selectStreamingServiceLanguage(languageCode: String) {

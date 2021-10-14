@@ -18,8 +18,12 @@ class StreamingSettingsPresenter(
             ServerSettingPresenter(it, owner, viewModel)
         }
         // cache size options
-        initListPreference(R.string.pref_key_server_stream_cache_size) {
-            StreamCacheSizeOptionsPresenter(it, owner, viewModel)
+        initListPreference(R.string.pref_key_http_cache_size) {
+            HttpCacheSizeOptionsPresenter(it, owner, viewModel)
+        }
+        // stream bitrate options
+        initListPreference(R.string.pref_key_streaming_bitrate) {
+            StreamBitrateOptionsPresenter(it, owner, viewModel)
         }
     }
 

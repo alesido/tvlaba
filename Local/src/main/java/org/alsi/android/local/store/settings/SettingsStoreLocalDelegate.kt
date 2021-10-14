@@ -76,7 +76,9 @@ class SettingsStoreLocalDelegate(
     override fun setBitrate(bitrate: Int): Completable {
         return Completable.fromRunnable {
             val settingsEntity = settingsEntity()
-            settingsEntity.bitrate = bitrate
+            settingsEntity.bitrate.target = bitrateBox.query {
+                equal(StreamBitrateOptionEntity_.value, bitrate.toLong())
+            }.findFirst()
             settingsBox.put(settingsEntity)
         }
     }
@@ -127,7 +129,7 @@ class SettingsStoreLocalDelegate(
         return StreamingServiceSettings(
                 features = entity.features,
                 server = StreamingServerOption(server.reference, server.title, server.description),
-                bitrate = entity.bitrate,
+                bitrate = entity.bitrate.target.let { StreamBitrateOption(it.value, it.title ) },
                 cacheSize = entity.cacheSize,
                 api = api?.let { ApiServerOption(it.title, it.baseUrl) },
                 language = LanguageOption(language.code, language.name),
@@ -158,13 +160,21 @@ class SettingsStoreLocalDelegate(
      */
     override fun setValues(settings: StreamingServiceSettings) {
         with(settingsEntity()) {
+            // features
             features = settings.features
-            settings.server?.tag?.let {
+            // sever
+            settings.server?.let {
                 server.target =
-                    serverBox.query { equal(ServerOptionEntity_.reference, it) }.findFirst()
+                    serverBox.query { equal(ServerOptionEntity_.reference, it.tag) }.findFirst()
+                        ?: ServerOptionEntity(0L, it.tag, it.title, it.description)
             }
-            bitrate = settings.bitrate
+            // bitrate
+            settings.bitrate?.let { bitrate.target = bitrateBox.query {
+               equal(StreamBitrateOptionEntity_.value, it.value.toLong())
+            }.findFirst()?: StreamBitrateOptionEntity(0L, it.value, it.title) }
+            // cache size
             cacheSize = settings.cacheSize
+            // api
             settings.api?.let {
                 api.target = apiBox.query {
                     equal(ApiServerOptionEntity_.title, it.title) }.findFirst()
@@ -173,6 +183,7 @@ class SettingsStoreLocalDelegate(
                         if (allApiServersStored.size > 0) allApiServersStored[0] else null
                     }
             }
+            // language
             settings.language?.code?.let {
                 language.target = languageBox.query {
                     equal(LanguageOptionEntity_.code, it)
@@ -184,6 +195,7 @@ class SettingsStoreLocalDelegate(
                     )
 
             }
+            // device
             settings.device?.name?.let {
                 val deviceEntity =
                     deviceBox.query { equal(DeviceModelOptionEntity_.modelId, it) }.findUnique()

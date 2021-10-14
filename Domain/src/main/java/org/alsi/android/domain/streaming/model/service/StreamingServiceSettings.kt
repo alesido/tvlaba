@@ -1,9 +1,6 @@
 package org.alsi.android.domain.streaming.model.service
 
-import org.alsi.android.domain.streaming.model.options.ApiServerOption
-import org.alsi.android.domain.streaming.model.options.DeviceModelOption
-import org.alsi.android.domain.streaming.model.options.LanguageOption
-import org.alsi.android.domain.streaming.model.options.StreamingServerOption
+import org.alsi.android.domain.streaming.model.options.*
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlMap
 import java.util.*
 
@@ -26,7 +23,7 @@ class StreamingServiceSettings (
 
         /** Selected stream bitrate.
          */
-        val bitrate: Int?,
+        val bitrate: StreamBitrateOption?,
 
         /** Size of http cache for streaming. Used to adjust player buffering parameters.
          */

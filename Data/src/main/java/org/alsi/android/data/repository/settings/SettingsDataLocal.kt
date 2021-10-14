@@ -7,8 +7,8 @@ import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 interface SettingsDataLocal {
 
     fun setServer(serverTag: String): Completable
-    fun setBitrate(bitrate: Int): Completable
     fun setCacheSize(cacheSize: Long): Completable
+    fun setBitrate(bitrate: Int): Completable
     fun setLanguage(languageCode: String): Completable
     fun setDevice(modelId: String): Completable
 

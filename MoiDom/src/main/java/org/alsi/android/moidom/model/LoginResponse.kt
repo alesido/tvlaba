@@ -116,7 +116,7 @@ data class LoginResponse(
         ) {
 
             data class Name(
-                    val value: Int,
+                    val `val`: Int,
                     val title: String
             )
         }

@@ -6,7 +6,7 @@ import androidx.preference.PreferenceFragmentCompat
 import org.alsi.android.presentation.settings.GeneralSettingsViewModel
 import org.alsi.android.presentation.state.ResourceState
 
-class StreamCacheSizeOptionsPresenter(
+class HttpCacheSizeOptionsPresenter(
     preference: ListPreference,
     owner: PreferenceFragmentCompat,
     private val viewModel: GeneralSettingsViewModel
@@ -18,26 +18,29 @@ class StreamCacheSizeOptionsPresenter(
                     preference.setDefaultValue(it)
                     preference.value = it.toString()
                     preference.summary = it.toString()
-                }
+                }?: run { preference.isEnabled = false }
             }
         }
         
         viewModel.getLiveSettingsProfile().observe(owner) { resource ->
             if (resource.status == ResourceState.SUCCESS) {
-                resource.data?.let { profile ->
+                val cacheSizes = resource.data?.cacheSizes
+                if (null == cacheSizes || cacheSizes.size < 2) {
+                    preference.isEnabled = false
+                }
+                else {
                     preference.isEnabled = true
-                    preference.entries = profile.cacheSizes?.map { it.toString() }?.toTypedArray()
+                    preference.entries = cacheSizes.map { it.toString() }.toTypedArray()
                     preference.entryValues = preference.entries
                     preference.onPreferenceChangeListener = Preference
                         .OnPreferenceChangeListener(this::onPreferenceChange)
-                }?: let {
-                    preference.isEnabled = false
                 }
             }
         }
     }
 
-    private fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
+    private fun onPreferenceChange(@Suppress("UNUSED_PARAMETER") preference: Preference,
+                                   newValue: Any): Boolean {
         viewModel.selectCacheSize((newValue as String).toLong())
         return true
     }

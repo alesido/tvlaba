@@ -28,11 +28,11 @@ data class ServiceSettingsEntity(
         @Convert(converter = FeaturesPropertyConverter::class, dbType = String::class)
         var features: EnumSet<StreamingServiceFeature>? = null,
 
-        var bitrate: Int? = null,
         var cacheSize: Long? = null,
 ) {
 
     lateinit var server: ToOne<ServerOptionEntity>
+    lateinit var bitrate: ToOne<StreamBitrateOptionEntity>
     lateinit var api: ToOne<ApiServerOptionEntity>
     lateinit var language: ToOne<LanguageOptionEntity>
     lateinit var device: ToOne<DeviceModelOptionEntity>

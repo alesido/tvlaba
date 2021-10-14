@@ -27,6 +27,12 @@ open class SettingsDataGateway(
             .andThen(local.setCacheSize(cacheSize))
             .doOnComplete { valuesSubject.onNext(local.values()) }
 
+    override fun selectStreamBitrate(bitrate: Int): Completable =
+        remote.selectBitrate(bitrate)
+            .andThen(local.setBitrate(bitrate))
+            .doOnComplete { valuesSubject.onNext(local.values()) }
+
+
     override fun selectLanguage(languageCode: String): Completable =
         remote.selectLanguage(languageCode)
         .andThen(local.setLanguage(languageCode))

@@ -28,6 +28,7 @@ class SettingsRemoteStoreMoidom @Inject constructor (
 
     fun getSourceSettings(source: LoginResponse, profile: StreamingServiceProfile): StreamingServiceSettings {
         val settings = source.settings
+
         return StreamingServiceSettings(
             features = source.services.let {
                 val set = EnumSet.noneOf(StreamingServiceFeature::class.java)
@@ -35,7 +36,8 @@ class SettingsRemoteStoreMoidom @Inject constructor (
                 set
             },
             server = settings.stream_server?.value?.let { profile.serverByTag[it]?.copy() },
-            bitrate = settings.bitrate?.value,
+            bitrate = settings.bitrate?.let { b -> StreamBitrateOption(b.value,
+                    (b.names.find { it.`val` == b.value })?.title ?: b.value.toString()) },
             cacheSize = settings.http_caching?.value?.toLong(),
             api = settings.api_hosts?.let { set ->
                 set.fallback.find { it.url != null || it.url == set.default_url }?.let {
@@ -63,7 +65,7 @@ class SettingsRemoteStoreMoidom @Inject constructor (
             servers = settings.stream_server?.list?.map {
                 StreamingServerOption(it.ip, it.ip, it.descr)
             }?: listOf(),
-            bitrates = settings.bitrate?.names?.map { StreamBitrateOption(it.value, it.title) },
+            bitrates = settings.bitrate?.names?.map { StreamBitrateOption(it.`val`, it.title) },
             cacheSizes = settings.http_caching?.list?.map { it.toLong() },
             api = settings.api_hosts?.let { set ->
                 set.fallback.filter { it.url != null && it.url != set.default_url }

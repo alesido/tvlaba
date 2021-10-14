@@ -9,6 +9,7 @@ interface SettingsRepository
 {
     fun selectServer(serverTag: String): Completable
     fun selectCacheSize(cacheSize: Long): Completable
+    fun selectStreamBitrate(bitrate: Int): Completable
     fun selectLanguage(languageCode: String): Completable
     fun selectDevice(modelId: String): Completable
 
