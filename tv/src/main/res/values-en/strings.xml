@@ -104,5 +104,7 @@
     <string name="service_title_telecola_tv">Telecola TV</string>
     <string name="service_title_vod_prime_hd">Prime HD</string>
 
+    <string name="message_setting_temporarily_not_available">This setting is N/A now. Pardon for inconvenience.</string>
+
 
 </resources>

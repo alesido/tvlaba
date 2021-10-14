@@ -2,6 +2,10 @@ package org.alsi.android.moidom.store.settings
 
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataRemote
+import org.alsi.android.domain.exception.model.ApiException
+import org.alsi.android.domain.exception.model.ExceptionMessages
+import org.alsi.android.domain.exception.model.ApiSuspended
+import org.alsi.android.domain.exception.model.RequestError
 import org.alsi.android.domain.streaming.model.options.*
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.streaming.model.service.StreamingServiceFeature
@@ -22,7 +26,8 @@ import javax.inject.Inject
 class SettingsRemoteStoreMoidom @Inject constructor (
     private val remoteService: RestServiceMoidom,
     private val remoteSession: RemoteSessionRepositoryMoidom,
-    private val defaults: StreamingServiceDefaults
+    private val defaults: StreamingServiceDefaults,
+    private val messages: ExceptionMessages
 
 ): SettingsDataRemote {
 
@@ -100,6 +105,11 @@ class SettingsRemoteStoreMoidom @Inject constructor (
     override fun selectLanguage(languageCode: String)
       = select(QUERY_PARAM_SETTING_NAME_LANGUAGE, languageCode)
 
-    override fun selectDevice(modelName: String)
-      = select(QUERY_PARAM_SETTING_DEVICE_NAME_MODEL, modelName)
+    override fun selectDevice(modelName: String): Completable
+      = select(QUERY_PARAM_SETTING_DEVICE_NAME_MODEL, modelName).doOnError { t ->
+        if (t is RequestError) {
+            // This API exception have to have a better wording
+            throw ApiSuspended(messages.settingTemporarilyNotAvailable(), t)
+        }
+    }
 }

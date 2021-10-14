@@ -99,5 +99,6 @@
     <string name="app_menu_item_settings">Настройки</string>
     <string name="service_title_telecola_tv">Телекола ТВ</string>
     <string name="service_title_vod_prime_hd">Prime HD</string>
+    <string name="message_setting_temporarily_not_available">Настройка временно недоступна. Находится в работе.</string>
 
 </resources>

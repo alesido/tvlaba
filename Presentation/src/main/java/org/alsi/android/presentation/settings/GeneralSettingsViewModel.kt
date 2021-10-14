@@ -18,6 +18,7 @@ class GeneralSettingsViewModel @Inject constructor(
     private val selectServerUseCase: SelectStreamingServerUseCase,
     private val selectCacheSizeUseCase: SelectCacheSizeUseCase,
     private val selectStreamBitrateUseCase: SelectStreamBitrateUseCase,
+    private val selectDeviceModelUseCase: SelectDeviceModelUseCase,
 
     ) : ViewModel() {
 
@@ -46,6 +47,12 @@ class GeneralSettingsViewModel @Inject constructor(
     fun selectStreamBitrate(newBitrate: Int) {
         selectStreamBitrateUseCase.execute(SelectSettingSubscriber(),
             SelectStreamBitrateUseCase.Params(newBitrate))
+    }
+
+
+    fun selectDeviceModel(newDeviceModelId: Long) {
+        selectDeviceModelUseCase.execute(SelectSettingSubscriber(),
+            SelectDeviceModelUseCase.Params(newDeviceModelId))
     }
 
     fun selectStreamingServiceLanguage(languageCode: String) {

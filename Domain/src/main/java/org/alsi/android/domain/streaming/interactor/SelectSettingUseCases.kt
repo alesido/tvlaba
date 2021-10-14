@@ -50,3 +50,18 @@ class SelectStreamBitrateUseCase @Inject constructor(
 
     class Params constructor (val bitrate: Int)
 }
+
+class SelectDeviceModelUseCase @Inject constructor(
+    private val presentationManager: PresentationManager,
+    postExecutionThread: PostExecutionThread)
+    : CompletableUseCase<SelectDeviceModelUseCase.Params>(postExecutionThread)
+{
+    override fun buildUseCaseCompletable(params: Params?): Completable {
+        params?: throw IllegalArgumentException("SelectDeviceModelUseCase: Params can't be null!")
+        val context = presentationManager.provideContext()?: throw IllegalArgumentException(
+            "SelectStreamingServerUseCase: Service context isn't initialized!")
+        return context.configuration.selectDevice(params.deviceModelId.toString())
+    }
+
+    class Params constructor (val deviceModelId: Long)
+}

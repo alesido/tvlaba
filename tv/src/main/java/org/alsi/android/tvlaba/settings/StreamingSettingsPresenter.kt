@@ -25,9 +25,13 @@ class StreamingSettingsPresenter(
         initListPreference(R.string.pref_key_streaming_bitrate) {
             StreamBitrateOptionsPresenter(it, owner, viewModel)
         }
+        // device model option
+        initListPreference(R.string.pref_key_remote_control_category_model) {
+            DeviceModelOptionsPresenter(it, owner, viewModel)
+        }
     }
 
     private fun initListPreference(@StringRes keyRes: Int, setup: (lp: ListPreference) -> Unit) {
-        root.findPreference<ListPreference>(owner.getString(keyRes))?.let { setup(it) }
+        owner.findPreference<ListPreference>(owner.getString(keyRes))?.let { setup(it) }
     }
 }
