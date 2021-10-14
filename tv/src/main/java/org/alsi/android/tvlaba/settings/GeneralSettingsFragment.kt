@@ -35,9 +35,18 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
             .get(GeneralSettingsViewModel::class.java)
 
+        setupPreferences()
+    }
+
+    private fun setupPreferences() {
+        // language
+
+        // streaming
         findPreference<PreferenceCategory>(getString(R.string.pref_key_streaming_category))?.let {
             streaming = StreamingSettingsPresenter(it, owner = this, viewModel)
         }
+
+        // parental control
     }
 
     override fun onCreatePreferences(arguments: Bundle?, s: String?) {

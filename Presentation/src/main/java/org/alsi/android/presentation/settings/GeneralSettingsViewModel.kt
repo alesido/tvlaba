@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import org.alsi.android.domain.context.model.ServicePresentationType
+import org.alsi.android.domain.streaming.interactor.SelectCacheSizeUseCase
 import org.alsi.android.domain.streaming.interactor.SelectStreamingServerUseCase
 import org.alsi.android.domain.streaming.interactor.StreamingProfileUseCase
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
@@ -18,15 +19,13 @@ class GeneralSettingsViewModel @Inject constructor(
 
     private val valuesUseCase: StreamingSettingsUseCase,
     private val profileUseCase: StreamingProfileUseCase,
-    private val selectServerUseCase: SelectStreamingServerUseCase
+    private val selectServerUseCase: SelectStreamingServerUseCase,
+    private val selectCacheSizeUseCase: SelectCacheSizeUseCase,
 
 ) : ViewModel() {
 
     private val liveSettingValues: MutableLiveData<Resource<StreamingServiceSettings>> = MutableLiveData()
     private val liveSettingsProfile: MutableLiveData<Resource<StreamingServiceProfile>> = MutableLiveData()
-
-    // TODO Define streaming service to which settings view model belongs (try base it on current context)
-    var servicePresentationType: ServicePresentationType = ServicePresentationType.TV_GUIDE
 
     fun getLiveSettingValues(): LiveData<Resource<StreamingServiceSettings>> = liveSettingValues
     fun getLiveSettingsProfile(): LiveData<Resource<StreamingServiceProfile>> = liveSettingsProfile
@@ -40,6 +39,11 @@ class GeneralSettingsViewModel @Inject constructor(
     fun selectStreamingServer(serverTag: String) {
         selectServerUseCase.execute(SelectSettingSubscriber(),
             SelectStreamingServerUseCase.Params(serverTag))
+    }
+
+    fun selectCacheSize(newCacheSize: Long) {
+        selectCacheSizeUseCase.execute(SelectSettingSubscriber(),
+            SelectCacheSizeUseCase.Params(newCacheSize))
     }
 
     fun selectStreamingServiceLanguage(languageCode: String) {

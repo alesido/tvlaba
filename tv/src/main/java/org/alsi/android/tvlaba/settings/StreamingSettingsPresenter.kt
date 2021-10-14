@@ -23,7 +23,7 @@ class StreamingSettingsPresenter(
         }
     }
 
-    private fun initListPreference(@StringRes keyRes: Int, create: (lp: ListPreference) -> Unit) {
-        root.findPreference<ListPreference>(owner.getString(keyRes))?.let { create(it) }
+    private fun initListPreference(@StringRes keyRes: Int, setup: (lp: ListPreference) -> Unit) {
+        root.findPreference<ListPreference>(owner.getString(keyRes))?.let { setup(it) }
     }
 }
