@@ -8,6 +8,7 @@ import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 interface SettingsRepository
 {
     fun selectServer(serverTag: String): Completable
+    fun selectCacheSize(cacheSize: Long): Completable
     fun selectLanguage(languageCode: String): Completable
     fun selectDevice(modelId: String): Completable
 

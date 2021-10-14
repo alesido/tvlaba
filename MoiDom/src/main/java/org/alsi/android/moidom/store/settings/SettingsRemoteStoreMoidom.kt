@@ -2,16 +2,21 @@ package org.alsi.android.moidom.store.settings
 
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataRemote
-import org.alsi.android.domain.streaming.model.options.DeviceModelOption
-import org.alsi.android.domain.streaming.model.options.LanguageOption
-import org.alsi.android.domain.streaming.model.options.StreamingServerOption
+import org.alsi.android.domain.streaming.model.options.*
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceFeature
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.moidom.mapper.RemoteControlMapper
 import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.repository.RemoteSessionRepositoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_DEVICE_NAME_MODEL
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_BITRATE
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_HTTP_CACHING
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_LANGUAGE
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_STREAM_SERVER
+import java.util.*
 import javax.inject.Inject
 
 class SettingsRemoteStoreMoidom @Inject constructor (
@@ -22,61 +27,77 @@ class SettingsRemoteStoreMoidom @Inject constructor (
 ): SettingsDataRemote {
 
     fun getSourceSettings(source: LoginResponse, profile: StreamingServiceProfile): StreamingServiceSettings {
-
         val settings = source.settings
-
-        val serverTag = profile.serverByTag[settings.stream_server?.value]
-        val serverSetting = serverTag?.let { StreamingServerOption(serverTag.tag, serverTag.title, serverTag.description )}
-
-        val languageCode = settings.language?.value
-        val languageName = languageCode?.let { profile.languageNameByCode[languageCode] }
-        val languageSetting = if (languageName != null) LanguageOption(languageCode, languageName)
-        else LanguageOption(defaults.getDefaultLanguageCode(), defaults.getDefaultLanguageName())
-
-        val deviceModelId = settings.device_model?.value?.toLong()
-        val deviceModelName = deviceModelId?.let { profile.deviceById[deviceModelId] }
-        val deviceModelSetting = deviceModelName?.let { DeviceModelOption(deviceModelId, deviceModelName) }
-
-        val rcMap = RemoteControlMapper().mapFromSource(source.settings.rc_codes)
-
-        return StreamingServiceSettings(serverSetting, languageSetting, settings.timeshift.value, deviceModelSetting, rcMap)
+        return StreamingServiceSettings(
+            features = source.services.let {
+                val set = EnumSet.noneOf(StreamingServiceFeature::class.java)
+                if (it.containsKey("megogo")) set.add(StreamingServiceFeature.EXTRA_VOD)
+                set
+            },
+            server = settings.stream_server?.value?.let { profile.serverByTag[it]?.copy() },
+            bitrate = settings.bitrate?.value,
+            cacheSize = settings.http_caching?.value?.toLong(),
+            api = settings.api_hosts?.let { set ->
+                set.fallback.find { it.url != null || it.url == set.default_url }?.let {
+                    ApiServerOption( it.name, it.url!!)
+                } ?: ApiServerOption(set.default_url, set.default_url)
+            },
+            language = settings.language?.let {
+                 val name = profile.languageNameByCode[it.value]
+                 if (name != null) LanguageOption(it.value, name)
+                 else LanguageOption(defaults.getDefaultLanguageCode(),
+                     defaults.getDefaultLanguageName())
+            },
+            device = settings.device_model?.value?.let { id ->
+                val name = profile.deviceById[id.toLong()]
+                name?.let { DeviceModelOption(id.toLong(), name) }
+            },
+            rc = RemoteControlMapper().mapFromSource(source.settings.rc_codes),
+            timeShiftSettingHours = settings.timeshift.value,
+        )
     }
 
     fun getSourceProfile(source: LoginResponse): StreamingServiceProfile {
-
-        val serverOptions: MutableList<StreamingServerOption> = mutableListOf()
-        source.settings.stream_server?.list?.forEach { serverOptions.add(StreamingServerOption(it.ip, it.ip, it.descr)) }
-
-        val languageOptions: MutableList<LanguageOption> = mutableListOf()
-        source.settings.language?.list?.forEach { languageOptions.add(LanguageOption(it.id, it.name)) }
-
-        val deviceModelOptions: MutableList<DeviceModelOption> = mutableListOf()
-        source.settings.device_model?.list?.forEach { deviceModelOptions.add(DeviceModelOption(it.id.toLong(), it.name)) }
-
-        return StreamingServiceProfile(serverOptions, languageOptions, deviceModelOptions)
+        val settings = source.settings
+        return StreamingServiceProfile(
+            servers = settings.stream_server?.list?.map {
+                StreamingServerOption(it.ip, it.ip, it.descr)
+            }?: listOf(),
+            bitrates = settings.bitrate?.names?.map { StreamBitrateOption(it.value, it.title) },
+            cacheSizes = settings.http_caching?.list?.map { it.toLong() },
+            api = settings.api_hosts?.let { set ->
+                set.fallback.filter { it.url != null && it.url != set.default_url }
+                    .distinctBy { it.url }
+                    .map { ApiServerOption(it.name, it.url!!) }
+            },
+            languages = settings.language?.list?.map { LanguageOption(it.id, it.name) }?: listOf(),
+            devices = settings.device_model?.list?.map {
+                DeviceModelOption(it.id.toLong(), it.name)
+            }?: listOf()
+        )
     }
 
-    override fun selectServer(serverTag: String): Completable {
-        return remoteSession.getSessionId().flatMapCompletable { sessionId ->
-            remoteService.setSetting(sessionId,
-                    RestServiceMoidom.QUERY_PARAM_SETTING_NAME_STREAM_SERVER,
-                    serverTag).ignoreElement()
-        }
+    private fun select(name: String, value: String)
+    = remoteSession.getSessionId().flatMapCompletable {
+        remoteService.setSetting(it, name, value).ignoreElement()
     }
 
-    override fun selectLanguage(languageCode: String): Completable {
-        return remoteSession.getSessionId().flatMapCompletable { sessionId ->
-            remoteService.setSetting(sessionId,
-                    RestServiceMoidom.QUERY_PARAM_SETTING_NAME_LANGUAGE,
-                    languageCode).ignoreElement()
-        }
+    override fun selectServer(serverTag: String)
+    = select(QUERY_PARAM_SETTING_NAME_STREAM_SERVER, serverTag)
+
+    override fun selectBitrate(bitrate: Int)
+      = select(QUERY_PARAM_SETTING_NAME_BITRATE, bitrate.toString())
+
+    override fun selectCacheSize(cacheSize: Long)
+      = select(QUERY_PARAM_SETTING_NAME_HTTP_CACHING, cacheSize.toString())
+
+    override fun switchApiServer(): Completable {
+        return Completable.complete() // TODO Switch to next API Server
     }
 
-    override fun selectDevice(modelName: String): Completable {
-        return remoteSession.getSessionId().flatMapCompletable { sessionId ->
-            remoteService.setSetting(sessionId,
-                    RestServiceMoidom.QUERY_PARAM_SETTING_DEVICE_NAME_MODEL,
-                    modelName).ignoreElement()
-        }
-    }
+    override fun selectLanguage(languageCode: String)
+      = select(QUERY_PARAM_SETTING_NAME_LANGUAGE, languageCode)
+
+    override fun selectDevice(modelName: String)
+      = select(QUERY_PARAM_SETTING_DEVICE_NAME_MODEL, modelName)
 }

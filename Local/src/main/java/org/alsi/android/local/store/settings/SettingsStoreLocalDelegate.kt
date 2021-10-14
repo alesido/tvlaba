@@ -29,6 +29,9 @@ class SettingsStoreLocalDelegate(
     private val settingsBox by lazy<Box<ServiceSettingsEntity>> { boxStore.boxFor() }
     private val accountBox by lazy<Box<UserAccountEntity>> { boxStore.boxFor() }
     private val serverBox by lazy<Box<ServerOptionEntity>> { boxStore.boxFor() }
+    private val bitrateBox by lazy<Box<StreamBitrateOptionEntity>> { boxStore.boxFor() }
+    private val cacheSizeBox by lazy<Box<HttpCacheSizeOptionEntity>> { boxStore.boxFor() }
+    private val apiBox by lazy<Box<ApiServerOptionEntity>> { boxStore.boxFor() }
     private val languageBox by lazy<Box<LanguageOptionEntity>> { boxStore.boxFor() }
     private val deviceBox by lazy<Box<DeviceModelOptionEntity>> { boxStore.boxFor() }
 
@@ -70,6 +73,22 @@ class SettingsStoreLocalDelegate(
         }
     }
 
+    override fun setBitrate(bitrate: Int): Completable {
+        return Completable.fromRunnable {
+            val settingsEntity = settingsEntity()
+            settingsEntity.bitrate = bitrate
+            settingsBox.put(settingsEntity)
+        }
+    }
+
+    override fun setCacheSize(cacheSize: Long): Completable {
+        return Completable.fromRunnable {
+            val settingsEntity = settingsEntity()
+            settingsEntity.cacheSize = cacheSize
+            settingsBox.put(settingsEntity)
+        }
+    }
+
     /**
      * store selected language option
      */
@@ -100,16 +119,22 @@ class SettingsStoreLocalDelegate(
     override fun values(): StreamingServiceSettings {
         val entity = settingsEntity()
         val server = entity.server.target
+        val api = entity.api.target
         val language  = entity.language.target
         val device = entity.device.target
         val rc = RemoteControlMap()
-        device.remoteControlKeys.forEach { rc.put( it.function.reference, it.keyCode)}
+        device.remoteControlKeys.forEach { rc.put( it.function.reference, it.keyCode) }
         return StreamingServiceSettings(
+                features = entity.features,
                 server = StreamingServerOption(server.reference, server.title, server.description),
+                bitrate = entity.bitrate,
+                cacheSize = entity.cacheSize,
+                api = api?.let { ApiServerOption(it.title, it.baseUrl) },
                 language = LanguageOption(language.code, language.name),
                 device = DeviceModelOption(device.id, device.modelId),
+                rc = rc,
                 timeShiftSettingHours = 0,
-                rc = rc)
+        )
     }
 
     /**
@@ -118,6 +143,9 @@ class SettingsStoreLocalDelegate(
     override fun profile(): StreamingServiceProfile {
         return StreamingServiceProfile(
                 servers = serverBox.all.map { StreamingServerOption(it.reference, it.title, it.description) },
+                bitrates = bitrateBox.all.map { StreamBitrateOption(it.value, it.title) },
+                cacheSizes = cacheSizeBox.all.map { it.value.toLong() },
+                api = apiBox.all.map { ApiServerOption(it.title, it.baseUrl) },
                 languages = languageBox.all.map { LanguageOption(it.code, it.name) },
                 devices = deviceBox.all.map { DeviceModelOption(it.id, it.modelId) }
         )
@@ -129,44 +157,77 @@ class SettingsStoreLocalDelegate(
      * NOTE Server, language and partially device settings are retrieved from profile records
      */
     override fun setValues(settings: StreamingServiceSettings) {
-        val settingsEntity = settingsEntity()
-        settings.server?.tag?.let {
-            settingsEntity.server.target = serverBox.query { equal(ServerOptionEntity_.reference, it) }.findFirst()
-        }
-        settings.language?.code?.let {
-            settingsEntity.language.target = languageBox.query {
-                equal(LanguageOptionEntity_.code, it) }.findUnique()
-                    ?: LanguageOptionEntity(0L, defaults.getDefaultLanguageCode(), defaults.getDefaultLanguageName())
-
-        }
-        settings.device?.name?.let {
-            val deviceEntity = deviceBox.query { equal(DeviceModelOptionEntity_.modelId, it) }.findUnique()
-                    ?: DeviceModelOptionEntity(0L, it)
-            val valueByReference = RcFunctionProperty.valueByReference
-            settings.rc?.remoteControlKeyCodeMap?.forEach { entry ->
-                deviceEntity.remoteControlKeys.add(RemoteControlKeyEntity(
-                        id = 0L,
-                        function = valueByReference[entry.value]?:RcFunctionProperty.UNKNOWN,
-                        keyCode = entry.key))
+        with(settingsEntity()) {
+            features = settings.features
+            settings.server?.tag?.let {
+                server.target =
+                    serverBox.query { equal(ServerOptionEntity_.reference, it) }.findFirst()
             }
-            deviceBox.put(deviceEntity)
-            settingsEntity.device.target = deviceEntity
+            bitrate = settings.bitrate
+            cacheSize = settings.cacheSize
+            settings.api?.let {
+                api.target = apiBox.query {
+                    equal(ApiServerOptionEntity_.title, it.title) }.findFirst()
+                    ?: let {
+                        val allApiServersStored = apiBox.all
+                        if (allApiServersStored.size > 0) allApiServersStored[0] else null
+                    }
+            }
+            settings.language?.code?.let {
+                language.target = languageBox.query {
+                    equal(LanguageOptionEntity_.code, it)
+                }.findUnique()
+                    ?: LanguageOptionEntity(
+                        0L,
+                        defaults.getDefaultLanguageCode(),
+                        defaults.getDefaultLanguageName()
+                    )
+
+            }
+            settings.device?.name?.let {
+                val deviceEntity =
+                    deviceBox.query { equal(DeviceModelOptionEntity_.modelId, it) }.findUnique()
+                        ?: DeviceModelOptionEntity(0L, it)
+                val valueByReference = RcFunctionProperty.valueByReference
+                settings.rc?.remoteControlKeyCodeMap?.forEach { entry ->
+                    deviceEntity.remoteControlKeys.add(
+                        RemoteControlKeyEntity(
+                            id = 0L,
+                            function = valueByReference[entry.value] ?: RcFunctionProperty.UNKNOWN,
+                            keyCode = entry.key
+                        )
+                    )
+                }
+                deviceBox.put(deviceEntity)
+                device.target = deviceEntity
+            }
+            settingsBox.put(this)
         }
-        settingsBox.put(settingsEntity)
     }
 
     /**
      * save all supported settings to store
      */
     override fun setProfile(profile: StreamingServiceProfile) {
-        val servers = profile.servers.map { ServerOptionEntity(0L, it.tag, it.title, it.description) }
-        serverBox.removeAll()
-        serverBox.put(servers)
-        val languages = profile.languages.map { LanguageOptionEntity(0L, it.code, it.name) }
-        languageBox.removeAll()
-        languageBox.put(languages)
-        val devices = profile.devices.map{ DeviceModelOptionEntity(0L, it.name) }
-        deviceBox.removeAll()
-        deviceBox.put(devices)
+        with(profile) {
+            serverBox.removeAll(); serverBox.put(servers.map {
+                ServerOptionEntity(0L, it.tag, it.title, it.description)
+            })
+            bitrateBox.removeAll(); bitrates?.let { bitrateBox.put( it.map { option ->
+                StreamBitrateOptionEntity(0L, option.value, option.title)
+            })}
+            cacheSizeBox.removeAll(); cacheSizes?.let { cacheSizeBox.put( it.map { option ->
+                HttpCacheSizeOptionEntity(0L, option.toInt())
+            })}
+            apiBox.removeAll(); api?.let { apiBox.put( it.map { option ->
+                ApiServerOptionEntity(0L, option.title, option.baseUrl)
+            })}
+            languageBox.removeAll(); languageBox.put(languages.map {
+                LanguageOptionEntity(0L, it.code, it.name)
+            })
+            deviceBox.removeAll(); deviceBox.put(devices.map {
+                DeviceModelOptionEntity(0L, it.name)
+            })
+        }
     }
 }

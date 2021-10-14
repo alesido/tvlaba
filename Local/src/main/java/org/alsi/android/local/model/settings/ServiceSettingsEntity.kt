@@ -1,8 +1,12 @@
 package org.alsi.android.local.model.settings
 
+import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.converter.PropertyConverter
 import io.objectbox.relation.ToOne
+import org.alsi.android.domain.streaming.model.service.StreamingServiceFeature
+import java.util.*
 
 /** Service settings of a user of a particular provider or service.
  *
@@ -14,21 +18,40 @@ import io.objectbox.relation.ToOne
 @Entity
 data class ServiceSettingsEntity(
 
-        @Id(assignable = true) var id: Long,
+        @Id(assignable = true) var id: Long? = 0L,
 
-        var scopeTypeOrdinal: Int, // see constants below
-        var scopeId: Long, // provider or service ID depending on the scope type
+        var scopeTypeOrdinal: Int? = 1, // see constants below
+        var scopeId: Long? = 0L, // provider or service ID depending on the scope type
 
-        var accountId: Long) {
+        var accountId: Long? = 0L,
+
+        @Convert(converter = FeaturesPropertyConverter::class, dbType = String::class)
+        var features: EnumSet<StreamingServiceFeature>? = null,
+
+        var bitrate: Int? = null,
+        var cacheSize: Long? = null,
+) {
 
     lateinit var server: ToOne<ServerOptionEntity>
+    lateinit var api: ToOne<ApiServerOptionEntity>
     lateinit var language: ToOne<LanguageOptionEntity>
     lateinit var device: ToOne<DeviceModelOptionEntity>
-
-    constructor() : this(0L, 1, 0L, 0L)
 
     companion object {
         const val SCOPE_PROVIDER = 1
         const val SCOPE_SERVICE = 2
     }
+}
+
+class FeaturesPropertyConverter: PropertyConverter<EnumSet<StreamingServiceFeature>, String> {
+    override fun convertToEntityProperty(databaseValue: String?): EnumSet<StreamingServiceFeature> {
+        val result = EnumSet.noneOf(StreamingServiceFeature::class.java)
+        databaseValue?.split(",")?.forEach {
+            try { result.add(StreamingServiceFeature.valueOf(it)) }
+            catch (ignore: IllegalArgumentException) {}
+        }
+        return result
+    }
+    override fun convertToDatabaseValue(entityProperty: EnumSet<StreamingServiceFeature>?): String
+        = entityProperty?.toArray()?.joinToString { it.toString() } ?: ""
 }

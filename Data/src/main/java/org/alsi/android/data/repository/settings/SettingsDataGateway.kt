@@ -22,6 +22,11 @@ open class SettingsDataGateway(
         .andThen(local.setServer(serverTag))
         .doOnComplete { valuesSubject.onNext(local.values()) }
 
+    override fun selectCacheSize(cacheSize: Long): Completable =
+        remote.selectCacheSize(cacheSize)
+            .andThen(local.setCacheSize(cacheSize))
+            .doOnComplete { valuesSubject.onNext(local.values()) }
+
     override fun selectLanguage(languageCode: String): Completable =
         remote.selectLanguage(languageCode)
         .andThen(local.setLanguage(languageCode))

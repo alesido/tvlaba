@@ -11,7 +11,6 @@ data class TvPlaybackEntity (
         @Id var id: Long = 0L,
 
         @Index
-        @Uid(1544790841200149238L)
         var channelId: Long = 0L,
 
         @Index

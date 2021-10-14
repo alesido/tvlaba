@@ -31,8 +31,9 @@ data class LoginResponse(
             val timezone: Timezone,
             val language: Language?,
             val stream_server: StreamServer?,
-            val http_caching: HttpCaching,
-            val bitrate: Bitrate,
+            val http_caching: HttpCaching?,
+            val bitrate: Bitrate?,
+            val api_hosts: ApiServers?,
             val device_model: DeviceModel?,
             val rc_codes: List<RcCode>
     ) {
@@ -56,6 +57,15 @@ data class LoginResponse(
             }
         }
 
+        data class ApiServers (
+            val default_url: String,
+            val fallback: List<ApiServerItem>
+        )
+
+        data class ApiServerItem (
+            val name: String,
+            val url: String?
+        )
 
         data class DeviceModel(
                 val name: String,
