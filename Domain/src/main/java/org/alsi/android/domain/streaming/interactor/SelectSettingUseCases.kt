@@ -65,3 +65,18 @@ class SelectDeviceModelUseCase @Inject constructor(
 
     class Params constructor (val deviceModelId: Long)
 }
+
+class ChangeParentalControlPinUseCase @Inject constructor(
+    private val presentationManager: PresentationManager,
+    postExecutionThread: PostExecutionThread)
+    : CompletableUseCase<ChangeParentalControlPinUseCase.Params>(postExecutionThread)
+{
+    override fun buildUseCaseCompletable(params: Params?): Completable {
+        params?: throw IllegalArgumentException("ChangeParentalControlPinUseCase: Params can't be null!")
+        val context = presentationManager.provideContext()?: throw IllegalArgumentException(
+            "ChangeParentalControlPinUseCase: Service context isn't initialized!")
+        return context.configuration.changeParentalControlPin(params.currentPin, params.newPin)
+    }
+
+    class Params constructor (val currentPin: String, val newPin: String)
+}

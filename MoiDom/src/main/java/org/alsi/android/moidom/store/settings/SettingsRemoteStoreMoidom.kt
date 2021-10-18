@@ -2,9 +2,8 @@ package org.alsi.android.moidom.store.settings
 
 import io.reactivex.Completable
 import org.alsi.android.data.repository.settings.SettingsDataRemote
-import org.alsi.android.domain.exception.model.ApiException
-import org.alsi.android.domain.exception.model.ExceptionMessages
 import org.alsi.android.domain.exception.model.ApiSuspended
+import org.alsi.android.domain.exception.model.ExceptionMessages
 import org.alsi.android.domain.exception.model.RequestError
 import org.alsi.android.domain.streaming.model.options.*
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
@@ -19,6 +18,7 @@ import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SET
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_BITRATE
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_HTTP_CACHING
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_LANGUAGE
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_PCODE
 import org.alsi.android.moidom.store.RestServiceMoidom.Companion.QUERY_PARAM_SETTING_NAME_STREAM_SERVER
 import java.util.*
 import javax.inject.Inject
@@ -111,5 +111,11 @@ class SettingsRemoteStoreMoidom @Inject constructor (
             // This API exception have to have a better wording
             throw ApiSuspended(messages.settingTemporarilyNotAvailable(), t)
         }
+    }
+
+    override fun changeParentalControlPin(currentPin: String, newPin: String): Completable
+    = remoteSession.getSessionId().flatMapCompletable {
+        remoteService.setProtectionCode(it, QUERY_PARAM_SETTING_NAME_PCODE, newPin, currentPin,
+            newPin, newPin).ignoreElement()
     }
 }

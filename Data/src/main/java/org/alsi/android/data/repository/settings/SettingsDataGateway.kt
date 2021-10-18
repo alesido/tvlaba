@@ -43,6 +43,9 @@ open class SettingsDataGateway(
         .andThen(local.setDevice(modelId))
         .doOnComplete { valuesSubject.onNext(local.values()) }
 
+    override fun changeParentalControlPin(currentPin: String, newPin: String): Completable =
+        remote.changeParentalControlPin(currentPin, newPin)
+
     override fun values() = valuesSubject
 
     override fun profile() = profileSubject

@@ -9,4 +9,5 @@ interface SettingsDataRemote {
     fun switchApiServer(): Completable
     fun selectLanguage(languageCode: String): Completable
     fun selectDevice(modelName: String): Completable
+    fun changeParentalControlPin(currentPin: String, newPin: String): Completable
 }
