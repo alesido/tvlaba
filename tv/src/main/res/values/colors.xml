@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="appColorPrimary">#150E41</color>
+    <color name="appColorPrimaryDark">#150E41</color>
+    <color name="appColorAccent">#9694B8</color>
+    <color name="appWindowBackground">#150E41</color>
+
     <color name="background_gradient_start">#000000</color>
     <color name="background_gradient_end">#DDDDDD</color>
 

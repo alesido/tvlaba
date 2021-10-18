@@ -8,6 +8,10 @@ import javax.inject.Inject
 
 class ExceptionMessageStrings @Inject constructor(private val context: Context): ExceptionMessages {
 
+    override fun changeContext(replacementContext: Any) {
+        TODO("Not yet implemented")
+    }
+
     override fun genericErrorMessage() = s(R.string.exception_message_generic_error)
 
     override fun noInternetConnection() = s(R.string.noInternetConnection)
@@ -60,6 +64,10 @@ class ExceptionMessageStrings @Inject constructor(private val context: Context):
 
     override fun errorSettingStreamCacheSize() =
         s(R.string.exception_message_generic_error)
+
+    override fun settingTemporarilyNotAvailable(): String {
+        TODO("Not yet implemented")
+    }
 
     override fun errorCheckingIfAppUpdateAvailable() =
         s(R.string.exception_message_generic_error)

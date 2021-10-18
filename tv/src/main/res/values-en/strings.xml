@@ -106,5 +106,22 @@
 
     <string name="message_setting_temporarily_not_available">This setting is N/A now. Pardon for inconvenience.</string>
 
+    <!--
+            Parental Code Dialog (Old, not used version)
+    -->
+    <string name="parental_code_dialog_title">Parental Control PIN Code</string>
+    <string name="parental_code_dialog_codes_not_match">Entered PIN codes do not match!</string>
+    <string name="parental_code_dialog_codes_empty">PIN codes should not be empty!</string>
+    <string name="parental_code_dialog_old_code">Old PIN Code</string>
+    <string name="parental_code_dialog_new_code">New PIN Code</string>
+    <string name="parental_code_dialog_new_code_confirm">NEConfirm</string>
+
+
+    <!--
+        Standard Dialog
+    -->
+    <string name="dialog_button_text_ok">OK</string>
+    <string name="dialog_button_text_cancel">Cancel</string>
+
 
 </resources>

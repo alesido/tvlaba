@@ -8,7 +8,7 @@
         android:title="@string/pref_title_user_category"
         android:key="@string/pref_key_user"
         >
-        <org.alsi.android.tvlaba.settings.LeanbackParentalCodePreference
+        <Preference
             android:key="@string/pref_key_parental_code"
             android:title="@string/pref_title_user_category_parental_code"
             />

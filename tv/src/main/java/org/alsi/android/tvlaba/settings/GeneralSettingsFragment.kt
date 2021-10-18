@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.presentation.settings.GeneralSettingsViewModel
@@ -14,6 +17,7 @@ import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
+import org.alsi.android.tvlaba.settings.parental.ParentalControlPinFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
 
@@ -49,6 +53,37 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         }
 
         // parental control
+    }
+
+    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+        if (preference?.key == getString(R.string.pref_key_parental_code)) {
+            // close dialog wrapping this leanback settings fragment
+            (parentFragment?.parentFragment as DialogFragment).dismiss()
+            // add guided guided step fragment view (for parental code editing dialog)
+            // to the views hierarchy
+            openParentalControlSetupGuide()
+        }
+        return super.onPreferenceTreeClick(preference)
+    }
+
+    /**
+     *  Simplified replacement for GuidedStepSupportFragment transactions to add and replace. Also,
+     *  the back stack support is off.
+     *
+     *  The reason is that it used here in single-activity and jetpack navigation context, not in a
+     *  separate activity environment for which it considered initially (and demoed in the leanback
+     *  sample application).
+     *
+     *  The other reason is that standard approach was incorrect managing the back stack -
+     *  step guide fragment was not actually removed while its view was destroyed.
+     */
+    private fun openParentalControlSetupGuide() {
+        val fragment = ParentalControlPinFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
+        transaction
+            .replace(android.R.id.content, fragment, fragment.javaClass.toString())
+            .commit()
     }
 
     override fun onCreatePreferences(arguments: Bundle?, s: String?) {
