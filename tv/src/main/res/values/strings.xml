@@ -1,121 +1,127 @@
 <resources>
     <string name="app_name">TvLabA</string>
-    <string name="app_section_tv">TvLabA ТВ</string>
-    <string name="app_section_vod">Видеотека TvLabA</string>
+    <string name="app_section_tv">TvLabA TV</string>
+    <string name="app_section_vod">TvLabA VOD</string>
 
-    <string name="label_menu">Меню</string>
+    <string name="label_menu">Menu</string>
 
-    <string name="content_description_tv_channel_card_poster">Изображение логотипа телеканала</string>
-    <string name="content_description_video_poster_card">Изображение постера видео</string>
+    <string name="content_description_tv_channel_card_poster">TV Channel Poster View</string>
+    <string name="content_description_video_poster_card">Video Poster Card View</string>
 
-    <string name="error_message_no_playback_available">Видео недоступно!</string>
-    <string name="tv_program_details_action_watch">Смотреть</string>
-    <string name="tv_program_details_action_schedule">Программа</string>
-    <string name="error_message_no_program_data_available">Нет данных о программе!</string>
-    <string name="error_message_no_vod_data_available">Нет данных о видео!</string>
-    <string name="statement_program_on_channel">На канале \"%1$s\"</string>
+    <string name="error_message_no_playback_available">No playback available!</string>
+    <string name="tv_program_details_action_watch">Watch</string>
+    <string name="tv_program_details_action_schedule">Schedule</string>
+    <string name="error_message_no_program_data_available">No program data available!</string>
+    <string name="error_message_no_vod_data_available">No data available on the video selected!</string>
+    <string name="statement_program_on_channel">On channel \"%1$s\"</string>
 
-    <string name="program_details_item_production">Производство: %1$s</string>
-    <string name="program_details_item_awards">Награды: %1$s</string>
-    <string name="header_footage">Кадры</string>
-    <string name="header_credits">В ролях</string>
-    <string name="header_day_schedule">Программа передач. %1$s</string>
-    <string name="label_aspect_ratio">Пропорции видео</string>
-    <string name="label_aspect_ratio_2">Пропорции видео</string>
-    <string name="label_language">Язык</string>
-    <string name="label_previous_channel">Предыдущий канал</string>
-    <string name="label_next_channel">Следующий канал</string>
-    <string name="label_rewind_slow">Назад</string>
-    <string name="label_forward_slow">Вперёд</string>
-    <string name="label_rewind_faster">Быстро назад</string>
-    <string name="label_forward_faster">Быстро вперёд</string>
-    <string name="label_previous_program">Предыдущая передача</string>
-    <string name="label_next_program">Следующая передача</string>
+    <string name="program_details_item_production">Production: %1$s</string>
+    <string name="program_details_item_awards">Awards: %1$s</string>
+    <string name="header_footage">Footage</string>
+    <string name="header_credits">Credits</string>
+    <string name="header_day_schedule">Program Schedule. %1$s</string>
+    <string name="label_aspect_ratio">Aspect Ratio</string>
+    <string name="label_aspect_ratio_2">Video Aspect Ratio</string>
+    <string name="label_language">Language</string>
+    <string name="label_previous_channel">Previous Channel</string>
+    <string name="label_next_channel">Next Channel</string>
+    <string name="label_rewind_slow">Rewind</string>
+    <string name="label_forward_slow">Forward</string>
+    <string name="label_rewind_faster">Rewind faster</string>
+    <string name="label_forward_faster">Forward faster</string>
+    <string name="label_previous_program">Previous program</string>
+    <string name="label_next_program">Next program</string>
+
 
     <!-- In order of TvProgramRole: ACTOR, WRITER, COMPOSER, PRODUCER, DIRECTOR -->
     <string-array name="program_digest_roles_movie">
-        <item>Роли:</item>
-        <item>Сценарии:</item>
-        <item>Музыка:</item>
-        <item>Продьюсеры:</item>
-        <item>Директоры:</item>
+        <item>Cast:</item>
+        <item>Writers:</item>
+        <item>Composers:</item>
+        <item>Producers:</item>
+        <item>Directors:</item>
     </string-array>
 
     <string-array name="program_digest_roles_program">
-        <item>Роли:</item>
-        <item>Сценарии:</item>
-        <item>Музыка:</item>
-        <item>Продьюсер:</item>
-        <item>Директор:</item>
+        <item>Roles:</item>
+        <item>Writers:</item>
+        <item>Composers:</item>
+        <item>Producers:</item>
+        <item>Directors:</item>
     </string-array>
 
     <string-array name="program_role_title">
-        <item>Актёр</item>
-        <item>Сценарист</item>
-        <item>Композитор</item>
-        <item>Продьюсер</item>
-        <item>Директор</item>
+        <item>Actor</item>
+        <item>Writer</item>
+        <item>Composer</item>
+        <item>Producer</item>
+        <item>Director</item>
     </string-array>
 
     <!-- In order of VodParticipantRole: UNKNOWN, ACTOR, ARTIST, WRITER, COMPOSER, OPERATOR, PRODUCER, DIRECTOR, -->
     <string-array name="vod_digest_participant_roles">
-        <item>Принимали участие:</item>
-        <item>Роли:</item>
-        <item>Декорации:</item>
-        <item>Сценарий:</item>
-        <item>Музыка:</item>
-        <item>Оператор:</item>
-        <item>Продьюсер:</item>
-        <item>Директор:</item>
+        <item>Participated:</item>
+        <item>Roles:</item>
+        <item>Art:</item>
+        <item>Scenario:</item>
+        <item>Music:</item>
+        <item>Operators:</item>
+        <item>Producers:</item>
+        <item>Directors:</item>
     </string-array>
 
-    <string name="video_aspect_fill_screen">Заполнение экрана</string>
-    <string name="video_aspect_fill_width">Заполнение по горизонтали</string>
-    <string name="video_aspect_fill_height">Заполнение по вертикали</string>
-    <string name="video_aspect_original">Оригинал</string>
+    <string name="video_aspect_fill_screen">Full Screen</string>
+    <string name="video_aspect_fill_width">Horizontal</string>
+    <string name="video_aspect_fill_height">Vertical</string>
+    <string name="video_aspect_original">Original</string>
     <string name="video_aspect_16_9">16:9</string>
     <string name="video_aspect_4_3">4:3</string>
-    <string name="video_aspect_adapt">Подоборка</string>
-    <string name="video_aspect_scale">Масштабирование</string>
-    <string name="label_video_options">Параметры</string>
-    <string name="video_playback_options_screen_title">Видео</string>
-    <string name="video_playback_option_aspect_ratio_title">Пропорции</string>
-    <string name="video_playback_option_language_section_title">Выбор языка</string>
-    <string name="video_playback_option_audio_title">Звуковая дорожка</string>
-    <string name="video_playback_option_subtitles_title">Субтитры</string>
-    <string name="preference_summary_not_available">Выбора нет</string>
-    <string name="preference_subtitles_is_off">Отключены</string>
-    <string name="tv_program_details_action_play_live">Эфир</string>
-    <string name="tv_program_details_action_play_record">Запись</string>
+    <string name="video_aspect_adapt">Choose</string>
+    <string name="video_aspect_scale">Aspect</string>
+    <string name="label_video_options">Options</string>
+    <string name="video_playback_options_screen_title">Video</string>
+    <string name="video_playback_option_aspect_ratio_title">Aspect Ratio</string>
+    <string name="video_playback_option_language_section_title">Language</string>
+    <string name="video_playback_option_audio_title">Audio Track</string>
+    <string name="video_playback_option_subtitles_title">Closed Captions</string>
+    <string name="preference_summary_not_available">N/A</string>
+    <string name="preference_subtitles_is_off">Off</string>
+    <string name="tv_program_details_action_play_live">Live</string>
+    <string name="tv_program_details_action_play_record">Record</string>
     <string name="content_description_vod_unit_card_poster">VOD Item Poster</string>
-    <string name="label_vod_sections_and_navigation">Разделы</string>
-    <string name="label_menu_generic_tv">Телевидение</string>
-    <string name="label_menu_generic_vod">Видеотека</string>
-    <string name="label_menu_settings">Настройки</string>
-    <string name="vod_digest_action_watch">Смотреть</string>
-    <string name="vod_digest_action_next">Далее</string>
-    <string name="vod_digest_action_listing">Список</string>
-    <string name="label_vod_more_in_unit">Другие видео в разделе</string>
-    <string name="app_menu_item_settings">Настройки</string>
-    <string name="service_title_telecola_tv">Телекола ТВ</string>
+
+    <string name="label_vod_sections_and_navigation">Sections</string>
+
+    <string name="label_menu_generic_tv">TV</string>
+    <string name="label_menu_generic_vod">VOD</string>
+    <string name="label_menu_settings">Settings</string>
+
+    <string name="vod_digest_action_watch">Watch</string>
+    <string name="vod_digest_action_next">Next</string>
+    <string name="vod_digest_action_listing">Listing</string>
+    <string name="label_vod_more_in_unit">Other section\'s videos</string>
+    <string name="app_menu_item_settings">Settings</string>
+    <string name="service_title_telecola_tv">Telecola TV</string>
     <string name="service_title_vod_prime_hd">Prime HD</string>
-    <string name="message_setting_temporarily_not_available">Настройка временно недоступна. Находится в работе.</string>
+
+    <string name="message_setting_temporarily_not_available">This setting is N/A now. Pardon for inconvenience.</string>
 
     <!--
             Parental Code Dialog (Old, not used version)
     -->
-    <string name="parental_code_dialog_title">Родительский контроль</string>
-    <string name="parental_code_dialog_codes_not_match">Старый и новый пароли не совпадают!</string>
-    <string name="parental_code_dialog_codes_empty">Нужно обязательно указать пароли!</string>
-    <string name="parental_code_dialog_old_code">Текущий пароль</string>
-    <string name="parental_code_dialog_new_code">Новый пароль</string>
-    <string name="parental_code_dialog_new_code_confirm">Подтвердить</string>
+    <string name="parental_code_dialog_title">Parental Control PIN Code</string>
+    <string name="parental_code_dialog_codes_not_match">Entered PIN codes do not match!</string>
+    <string name="parental_code_dialog_codes_empty">PIN codes should not be empty!</string>
+    <string name="parental_code_dialog_old_code">Old PIN Code</string>
+    <string name="parental_code_dialog_new_code">New PIN Code</string>
+    <string name="parental_code_dialog_new_code_confirm">NEConfirm</string>
+
 
     <!--
         Standard Dialog
     -->
     <string name="dialog_button_text_ok">OK</string>
-    <string name="dialog_button_text_cancel">Отмена</string>
+    <string name="dialog_button_text_cancel">Cancel</string>
 
 
 </resources>
