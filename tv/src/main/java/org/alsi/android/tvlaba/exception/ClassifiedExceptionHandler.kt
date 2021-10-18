@@ -3,6 +3,8 @@ package org.alsi.android.tvlaba.exception
 import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import io.reactivex.exceptions.CompositeException
@@ -64,7 +66,13 @@ class ClassifiedExceptionHandler @Inject constructor(
     }
 
     private fun toast(message: String) {
-        Toast.makeText(validateContext(context, appContext), message, Toast.LENGTH_LONG).show()
+        val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        with(toast) {
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.lite_red))
+            view.setPadding(24)
+        }
+        toast.show()
+
     }
 
     private fun dialog(activityContext: Context?, message: String, title: String? = null, iconResId: Int? = null,  ok: (() -> Unit)? = null) {
