@@ -6,6 +6,21 @@ import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
 import javax.inject.Inject
 
+class SelectLanguageUseCase @Inject constructor(
+    private val presentationManager: PresentationManager,
+    postExecutionThread: PostExecutionThread)
+    : CompletableUseCase<SelectLanguageUseCase.Params>(postExecutionThread)
+{
+    override fun buildUseCaseCompletable(params: Params?): Completable {
+        params?: throw IllegalArgumentException("SelectLanguageUseCase: Params can't be null!")
+        val context = presentationManager.provideContext()?: throw IllegalArgumentException(
+            "SelectStreamingServerUseCase: Service context isn't initialized!")
+        return context.configuration.selectLanguage(params.languageCode)
+    }
+
+    class Params constructor (val languageCode: String)
+}
+
 class SelectStreamingServerUseCase @Inject constructor(
         private val presentationManager: PresentationManager,
         postExecutionThread: PostExecutionThread)

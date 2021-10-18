@@ -13,8 +13,9 @@ import javax.inject.Inject
 
 class GeneralSettingsViewModel @Inject constructor(
 
-    private val valuesUseCase: StreamingSettingsUseCase,
-    private val profileUseCase: StreamingProfileUseCase,
+    valuesUseCase: StreamingSettingsUseCase,
+    profileUseCase: StreamingProfileUseCase,
+    private val selectLanguageUseCase: SelectLanguageUseCase,
     private val selectServerUseCase: SelectStreamingServerUseCase,
     private val selectCacheSizeUseCase: SelectCacheSizeUseCase,
     private val selectStreamBitrateUseCase: SelectStreamBitrateUseCase,
@@ -32,6 +33,11 @@ class GeneralSettingsViewModel @Inject constructor(
         liveSettingValues.postValue(Resource.loading())
         valuesUseCase.execute(ValuesSubscriber())
         profileUseCase.execute(ProfileSubscriber())
+    }
+
+    fun selectLanguage(languageCode: String) {
+        selectLanguageUseCase.execute(SelectSettingSubscriber(),
+            SelectLanguageUseCase.Params(languageCode))
     }
 
     fun selectStreamingServer(serverTag: String) {
@@ -55,14 +61,12 @@ class GeneralSettingsViewModel @Inject constructor(
             SelectDeviceModelUseCase.Params(newDeviceModelId))
     }
 
-    fun selectStreamingServiceLanguage(languageCode: String) {
-
-    }
-
     fun dispose() {
-        valuesUseCase.dispose()
-        profileUseCase.dispose()
-        selectServerUseCase.dispose()
+// FIXME Disposing here removes and not restores the behavior subjects subscriptions. Subscribing "onStart" does not help either.
+//
+//        valuesUseCase.dispose()
+//        profileUseCase.dispose()
+//        selectServerUseCase.dispose()
     }
 
     inner class ValuesSubscriber : DisposableObserver<StreamingServiceSettings>() {

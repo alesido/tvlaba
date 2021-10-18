@@ -1,9 +1,11 @@
 package org.alsi.android.tvlaba.tv
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
+import androidx.preference.PreferenceManager
 import dagger.android.AndroidInjection
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.framework.LanguageContextWrapper
@@ -29,6 +31,16 @@ class AppActivity : FragmentActivity() {
     }
 
     override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(LanguageContextWrapper.wrap(newBase!!, "ru"))
+        if (null == newBase) {
+            super.attachBaseContext(newBase)
+            return
+        }
+        val languageCode = PreferenceManager.getDefaultSharedPreferences(newBase)
+            .getString("pref_key_app_language", DEFAULT_LANGUAGE_CODE)?: DEFAULT_LANGUAGE_CODE
+        super.attachBaseContext(LanguageContextWrapper.wrap(newBase, languageCode))
+    }
+
+    companion object {
+        const val DEFAULT_LANGUAGE_CODE = "ru"
     }
 }

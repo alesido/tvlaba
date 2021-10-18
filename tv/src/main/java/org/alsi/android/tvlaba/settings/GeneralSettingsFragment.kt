@@ -9,6 +9,8 @@ import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.app.ProgressBarManager
 import androidx.leanback.preference.LeanbackPreferenceFragmentCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import dagger.android.support.AndroidSupportInjection
@@ -29,6 +31,7 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
     private lateinit var viewModel: GeneralSettingsViewModel
 
     private lateinit var streaming: StreamingSettingsPresenter
+    private lateinit var language: LanguageOptionsPresenter
 
     private val progressBarManager = ProgressBarManager()
 
@@ -46,6 +49,9 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
 
     private fun setupPreferences() {
         // language
+        findPreference<ListPreference>(getString(R.string.pref_key_app_language))?.let {
+            language = LanguageOptionsPresenter(it, owner = this, viewModel)
+        }
 
         // streaming
         findPreference<PreferenceCategory>(getString(R.string.pref_key_streaming_category))?.let {
@@ -53,17 +59,27 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         }
 
         // parental control
+        findPreference<Preference>(getString(R.string.pref_key_parental_code))
+            ?.setOnPreferenceClickListener { onParentalCodeClicked(); true }
+
+        // exit
+        findPreference<Preference>(getString(R.string.pref_key_exit))
+            ?.setOnPreferenceClickListener {
+                findNavController(this).navigate(R.id.actionGlobalLogOut); true
+            }
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        if (preference?.key == getString(R.string.pref_key_parental_code)) {
-            // close dialog wrapping this leanback settings fragment
-            (parentFragment?.parentFragment as DialogFragment).dismiss()
-            // add guided guided step fragment view (for parental code editing dialog)
-            // to the views hierarchy
-            openParentalControlSetupGuide()
-        }
-        return super.onPreferenceTreeClick(preference)
+    private fun onParentalCodeClicked() {
+        // close dialog wrapping this leanback settings fragment
+        (parentFragment?.parentFragment as DialogFragment).dismiss()
+
+        // add guided guided step fragment view (for parental code editing dialog)
+        // to the views hierarchy
+        openParentalControlSetupGuide()
+    }
+
+    private fun onExitClicked() {
+        findNavController(this).navigate(R.id.actionGlobalLogOut)
     }
 
     /**

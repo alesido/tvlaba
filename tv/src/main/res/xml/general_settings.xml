@@ -19,8 +19,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_title_streaming_category"
         android:key="@string/pref_key_streaming_category"
+        android:title="@string/pref_title_streaming_category"
         >
         <ListPreference
             android:key="@string/pref_key_streaming_server"
