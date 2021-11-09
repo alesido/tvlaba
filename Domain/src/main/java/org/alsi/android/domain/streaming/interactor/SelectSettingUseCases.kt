@@ -4,6 +4,9 @@ import io.reactivex.Completable
 import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
+import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
+import org.alsi.android.domain.vod.repository.VodRepository
 import javax.inject.Inject
 
 class SelectLanguageUseCase @Inject constructor(
@@ -14,8 +17,15 @@ class SelectLanguageUseCase @Inject constructor(
     override fun buildUseCaseCompletable(params: Params?): Completable {
         params?: throw IllegalArgumentException("SelectLanguageUseCase: Params can't be null!")
         val context = presentationManager.provideContext()?: throw IllegalArgumentException(
-            "SelectStreamingServerUseCase: Service context isn't initialized!")
-        return context.configuration.selectLanguage(params.languageCode)
+            "SelectLanguageUseCase: Service context isn't initialized!")
+
+        with (context.directory) {
+            if (this !is TvDirectoryRepository)
+                throw IllegalStateException("SelectLanguageUseCase: illegal directory repository!")
+
+            return context.configuration.selectLanguage(params.languageCode)
+                .andThen ( channels.onLanguageChange() )
+        }
     }
 
     class Params constructor (val languageCode: String)

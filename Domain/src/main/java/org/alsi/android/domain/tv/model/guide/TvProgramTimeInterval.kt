@@ -55,6 +55,9 @@ class TvProgramTimeInterval(val startUnixTimeMillis: Long, val endUnixTimeMillis
         }
     }
 
+    fun shift(hours: Int): TvProgramTimeInterval = TvProgramTimeInterval(
+        startDateTime.plusHours(hours).millis, endDateTime.plusHours(hours).millis)
+
     val progress: Int get() {
         val currentTimeMillis = System.currentTimeMillis()
         if (currentTimeMillis <= startUnixTimeMillis) return 0

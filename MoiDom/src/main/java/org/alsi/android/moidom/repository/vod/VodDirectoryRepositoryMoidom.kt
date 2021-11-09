@@ -12,4 +12,13 @@ class VodDirectoryRepositoryMoidom @Inject constructor(
     @Named("${Moidom.TAG}.${StreamingService.VOD}") serviceId: Long,
     @Named("${Moidom.TAG}.${StreamingService.VOD}") remoteStore: VodDirectoryRemoteStore,
     @Named("${Moidom.TAG}.${StreamingService.VOD}") localStore: VodDirectoryLocalStore
-): VodDataRepository(serviceId, remoteStore, localStore)
+): VodDataRepository(serviceId, remoteStore, localStore) {
+
+    override fun onLanguageChange(): Completable {
+        TODO("Not yet implemented")
+    }
+
+    override fun onTimeShiftChange(): Completable {
+        TODO("Not yet implemented")
+    }
+}

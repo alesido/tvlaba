@@ -8,6 +8,8 @@ import io.reactivex.observers.DisposableObserver
 import org.alsi.android.domain.streaming.interactor.*
 import org.alsi.android.domain.streaming.model.service.StreamingServiceProfile
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
+import org.alsi.android.presentation.settings.GeneralSettingsEventKind.LANGUAGE_CHANGED
+import org.alsi.android.presentation.state.Event
 import org.alsi.android.presentation.state.Resource
 import javax.inject.Inject
 
@@ -25,9 +27,11 @@ class GeneralSettingsViewModel @Inject constructor(
 
     private val liveSettingValues: MutableLiveData<Resource<StreamingServiceSettings>> = MutableLiveData()
     private val liveSettingsProfile: MutableLiveData<Resource<StreamingServiceProfile>> = MutableLiveData()
+    private val eventChannel: MutableLiveData<Event<GeneralSettingsEventKind>> = MutableLiveData()
 
     fun getLiveSettingValues(): LiveData<Resource<StreamingServiceSettings>> = liveSettingValues
     fun getLiveSettingsProfile(): LiveData<Resource<StreamingServiceProfile>> = liveSettingsProfile
+    fun getEventChannel(): LiveData<Event<GeneralSettingsEventKind>> = eventChannel
 
     init {
         liveSettingValues.postValue(Resource.loading())
@@ -87,7 +91,9 @@ class GeneralSettingsViewModel @Inject constructor(
     }
 
     inner class SelectSettingSubscriber : DisposableCompletableObserver() {
-        override fun onComplete() { /** correspondent observer will be called */ }
+        override fun onComplete() {
+            eventChannel.postValue(Event(LANGUAGE_CHANGED))
+        }
         override fun onError(e: Throwable) = liveSettingValues.postValue(Resource.error(e))
     }
 }

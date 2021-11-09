@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
@@ -48,6 +49,17 @@ interface TvChannelRepository
     fun removeChannelFromFavorites(channelId: Long): Completable
     fun toggleChannelToBeFavorite(channelId: Long): Completable
     fun isChannelFavorite(channelId: Long): Single<Boolean>
+
+    // endregion
+    // region Configuration
+
+    /** Reload language dependent parts of the directory to local store if supported
+     */
+    fun onLanguageChange(): Completable
+
+    /** Update time shift dependent parts of the directory to local store if supported
+     */
+    fun onTimeShiftChange(): Completable
 
     // endregion
 }

@@ -71,8 +71,6 @@ class LanguageOptionsPresenter(
         configuration.setLocale(newLocale)
         owner.requireContext().createConfigurationContext(owner.resources.configuration)
 
-        // FIXME Dismiss the fragment more safely
-        (owner.parentFragment?.parentFragment as DialogFragment).dismiss()
-        owner.requireActivity().recreate()
+        // NOTE Activity recreated later, on the successful server request
     }
 }

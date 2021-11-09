@@ -14,6 +14,8 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.presentation.settings.GeneralSettingsEventKind
+import org.alsi.android.presentation.settings.GeneralSettingsEventKind.LANGUAGE_CHANGED
 import org.alsi.android.presentation.settings.GeneralSettingsViewModel
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
@@ -73,7 +75,7 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         // close dialog wrapping this leanback settings fragment
         (parentFragment?.parentFragment as DialogFragment).dismiss()
 
-        // add guided guided step fragment view (for parental code editing dialog)
+        // add guided step fragment view (for parental code editing dialog)
         // to the views hierarchy
         openParentalControlSetupGuide()
     }
@@ -108,9 +110,10 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getLiveSettingValues().observe(this, {
-            if (it != null) handleLiveData(it)
-        })
+        viewModel.getLiveSettingValues().observe(this) { if (it != null) handleLiveData(it) }
+        viewModel.getEventChannel().observe(this) { event ->
+            event?.contentIfNotHandled?.let { handleEvent(it) }
+        }
     }
 
     override fun onCreateView(
@@ -139,6 +142,13 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
                 progressBarManager.hide()
                 errorHandler.run(this, resource.throwable)
             }
+        }
+    }
+
+    private fun handleEvent(eventKind: GeneralSettingsEventKind) {
+        if (eventKind == LANGUAGE_CHANGED) {
+            (parentFragment?.parentFragment as DialogFragment).dismiss()
+            requireActivity().recreate()
         }
     }
 

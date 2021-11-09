@@ -1,5 +1,6 @@
 package org.alsi.android.domain.vod.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.domain.streaming.model.VideoStream
 import org.alsi.android.domain.streaming.repository.DirectoryRepository
@@ -60,4 +61,12 @@ abstract class VodRepository (streamingServiceId: Long) : DirectoryRepository(st
      * @param seriesId ID of a series.
      */
     abstract fun getSeriesVideoStream(seriesId: Long): Single<VideoStream>
+
+    /** Reload language dependent parts of the directory to local store if supported
+     */
+    abstract fun onLanguageChange(): Completable
+
+    /** Update time shift dependent parts of the directory to local store if supported
+     */
+    abstract fun onTimeShiftChange(): Completable
 }

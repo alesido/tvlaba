@@ -8,6 +8,9 @@ import io.objectbox.DebugFlags
 import io.reactivex.Single
 import net.lachlanmckee.timberjunit.TimberTestRule
 import org.alsi.android.data.framework.test.readJsonResourceFile
+import org.alsi.android.domain.streaming.model.options.LanguageOption
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.framework.Now
@@ -38,10 +41,12 @@ import kotlin.test.assertEquals
  * @see "https://antonioleiva.com/mockito-2-kotlin/" about mocking final classes
  */
 class TvChannelsUpdateTest {
+    @Rule @JvmField var mockitoRule: MockitoRule = MockitoJUnit.rule()
 
     private lateinit var repository: TvChannelDataRepositoryMoidom
 
-    @Rule @JvmField var mockitoRule: MockitoRule = MockitoJUnit.rule()
+    @Mock lateinit var settingsRepository: SettingsRepositoryMoidom
+    private val settingsDefaults = StreamingServiceDefaults()
 
     private lateinit var moidomServiceTestBoxStore: BoxStore
 
@@ -61,12 +66,15 @@ class TvChannelsUpdateTest {
 
     @Before
     fun setUp() {
-        repository = TvChannelDataRepositoryMoidom()
+        mockSettingsRepository()
+
+        repository = TvChannelDataRepositoryMoidom(settingsRepository, settingsDefaults)
 
         moidomServiceTestBoxStore = moidomServiceTestBoxStore()
 
         val accountSubject = UserAccountSubject.create<UserAccount>()
-        repository.local = TvChannelLocalStoreDelegate(moidomServiceTestBoxStore, accountSubject)
+        repository.local = TvChannelLocalStoreDelegate(1L,
+            moidomServiceTestBoxStore, accountSubject, settingsRepository, settingsDefaults)
         accountSubject.onNext(testAccount())
 
         stubRemoteService()
@@ -81,6 +89,15 @@ class TvChannelsUpdateTest {
             DateTime(1532294745000L + DateTime.now().millis - testStartMillis)
         }
         repository.now = mockOfNow
+    }
+
+    private fun mockSettingsRepository() {
+        whenever(settingsRepository.lastValues()).thenReturn(
+            StreamingServiceSettings(
+                language = LanguageOption("en", "English"),
+                timeShiftSettingHours = 0
+            )
+        )
     }
 
     @Test
