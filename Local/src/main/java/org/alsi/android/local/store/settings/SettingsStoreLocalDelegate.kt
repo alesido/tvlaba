@@ -40,13 +40,8 @@ class SettingsStoreLocalDelegate(
     private var settingsQuery = settingsQuery()
 
     fun attach(account: UserAccount) {
-        accountId = accountBox.query{ equal(UserAccountEntity_.loginName, account.loginName) }.findFirst()?.id?: 0L
-        if (accountId == 0L) {
-            // the account haven't been stored yet
-            val accountMapper = AccountEntityMapper()
-            val entity = accountMapper.mapToEntity(account)
-            accountId = accountBox.put(entity)
-        }
+        accountId = accountBox.query{ equal(UserAccountEntity_.loginName, account.loginName) }
+            .findFirst()?.id?: throw Throwable("Account not stored yet!")
         this.settingsQuery = settingsQuery()
     }
 

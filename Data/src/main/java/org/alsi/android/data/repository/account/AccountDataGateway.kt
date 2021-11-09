@@ -17,7 +17,11 @@ open class AccountDataGateway(
     : AccountDataService {
 
     override fun login(loginName: String, loginPassword: String): Single<UserAccount>
-            = remote.login(loginName, loginPassword).map { local.addAttachAccount(it); it }
+    = remote.login(loginName, loginPassword).map {
+        local.addAttachAccount(it)
+        remote.notifyOnLogin()
+        it
+    }
 
     /** Resuming previous session
      */

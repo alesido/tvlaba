@@ -6,15 +6,17 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.alsi.android.data.repository.account.AccountDataRemote
+import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.streaming.model.service.StreamingServiceRegistry
 import org.alsi.android.domain.user.model.UserAccount
-import org.alsi.android.moidom.BuildConfig
-import org.alsi.android.moidom.mapper.AccountSourceDataMapper
+import org.alsi.android.moidom.Moidom
+import org.alsi.android.moidom.mapper.AccountSourceDataMapperMoiDom
 import org.alsi.android.moidom.model.LoginEvent
 import org.alsi.android.moidom.store.RestServiceMoidom
 import java.net.NetworkInterface
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -23,12 +25,18 @@ import javax.inject.Singleton
 @Singleton
 class AccountServiceRemoteMoidom @Inject constructor(
 
-        private val remoteService: RestServiceMoidom,
-        private val loginSubject: PublishSubject<LoginEvent>,
-        private val serviceRegistry: StreamingServiceRegistry
+    @Named("${Moidom.TAG}.${StreamingService.TV}")
+    private val defaultTvServiceId: Long,
+    @Named("${Moidom.TAG}.${StreamingService.VOD}")
+    private val defaultVodServiceId: Long,
+
+    private val remoteService: RestServiceMoidom,
+    private val loginSubject: PublishSubject<LoginEvent>,
+    private val serviceRegistry: StreamingServiceRegistry
 )
     : AccountDataRemote
 {
+    var lastLoginEvent: LoginEvent? = null
 
     override fun login(loginName: String, loginPassword: String): Single<UserAccount> {
         return remoteService.login(
@@ -43,10 +51,21 @@ class AccountServiceRemoteMoidom @Inject constructor(
                 deviceModel = "model",// TODO getDeviceModelName(),
                 manufacturer = Build.MANUFACTURER)
                 .map { loginResponse ->
-                    val account = AccountSourceDataMapper(loginName, loginPassword, serviceRegistry).mapFromSource(loginResponse)
-                    loginSubject.onNext(LoginEvent(account, loginResponse))
+                    val account = AccountSourceDataMapperMoiDom(
+                        defaultTvServiceId, defaultVodServiceId,
+                        loginName, loginPassword,
+                        serviceRegistry
+                    ).mapFromSource(loginResponse)
+                    //loginSubject.onNext(LoginEvent(account, loginResponse))
+                    lastLoginEvent = LoginEvent(account, loginResponse)
                     account
                 }
+    }
+
+    override fun notifyOnLogin() {
+        lastLoginEvent?: return
+        loginSubject.onNext(lastLoginEvent!!)
+        lastLoginEvent = null
     }
 
     override fun onLoginResume(account: UserAccount): Single<UserAccount> {
@@ -67,12 +86,13 @@ class AccountServiceRemoteMoidom @Inject constructor(
     }
 
     private fun getDeviceSerialNumber(): String {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Build.getSerial() else Build.USER
-        }
-        catch (x: SecurityException) {
-            Build.USER
-        }
+        return Build.USER
+//        return try {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Build.getSerial() else Build.USER
+//        }
+//        catch (x: SecurityException) {
+//            Build.USER
+//        }
     }
 
     private fun getMacAddressToIdentifyDevice(defaultMacAddress: String): String {

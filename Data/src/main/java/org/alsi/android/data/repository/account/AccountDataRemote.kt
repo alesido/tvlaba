@@ -14,4 +14,5 @@ interface AccountDataRemote
     fun changeParentCode(currentCode: String, newCode: String): Completable
     fun setLanguage(languageCode: String): Completable
     fun setTimeShiftSettingHours(timeShiftHours: Int): Completable
+    fun notifyOnLogin()
 }
