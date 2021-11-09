@@ -1,5 +1,6 @@
 package org.alsi.android.moidom.repository.vod
 
+import io.reactivex.Completable
 import org.alsi.android.datavod.repository.VodDataRepository
 import org.alsi.android.datavod.store.VodDirectoryLocalStore
 import org.alsi.android.datavod.store.VodDirectoryRemoteStore

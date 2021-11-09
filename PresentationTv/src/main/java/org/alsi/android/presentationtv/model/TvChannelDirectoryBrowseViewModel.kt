@@ -22,7 +22,7 @@ import javax.inject.Inject
  *
  */
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
-        private val directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
+        directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
         private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,

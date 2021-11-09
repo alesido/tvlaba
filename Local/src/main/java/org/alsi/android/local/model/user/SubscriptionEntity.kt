@@ -39,8 +39,8 @@ enum class StatusProperty(val id: Long, val reference: SubscriptionStatus) {
     ACTIVE(2L, SubscriptionStatus.ACTIVE),
     EXPIRED(3L, SubscriptionStatus.EXPIRED);
     companion object {
-        val valueById = StatusProperty.values().map { it.id to it }.toMap()
-        val valueByReference = StatusProperty.values().map { it.reference to it }.toMap()
+        val valueById = values().map { it.id to it }.toMap()
+        val valueByReference = values().map { it.reference to it }.toMap()
     }
 }
 
