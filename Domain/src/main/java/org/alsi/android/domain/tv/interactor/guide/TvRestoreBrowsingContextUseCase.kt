@@ -13,6 +13,13 @@ import org.alsi.android.domain.tv.repository.session.TvSessionRepository
 import org.joda.time.LocalDate
 import javax.inject.Inject
 
+/** Browse cursor stored as a reference to category, channel, schedule and program issue,
+ *  i.e. full browsing context. This US is to restore the data from a reference.
+ *
+ *  At the same time browse cursor may not reference any category, channel, schedule
+ *  and program issue because it was a menu item selected last time.
+ *
+ */
 class TvRestoreBrowsingContextUseCase @Inject constructor(
     private val presentationManager: PresentationManager,
     postExecutionThread: PostExecutionThread
@@ -28,6 +35,10 @@ class TvRestoreBrowsingContextUseCase @Inject constructor(
 
         if (directory !is TvDirectoryRepository || session !is TvSessionRepository)
             throw IllegalArgumentException("TvRestoreBrowsingContext: directory or session is N/A!")
+
+        if (ref.isMenuItemReference()) {
+            return Completable.complete()
+        }
 
         return directory.channels.getDirectory().flatMap { dir ->
 

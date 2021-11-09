@@ -92,17 +92,14 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         }
 
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
-            if (item is TvChannel) {
+            if (item != null) {
                 // record current browsing position to restore on the next start
                 val rowPosition = this@TvChannelDirectoryFragment.selectedPosition
                 val itemPosition = (rowViewHolder as ListRowPresenter.ViewHolder)
-                        .gridView.selectedPosition
-                browseViewModel.onChannelSelected(
-                    if (rowPosition > 0) rowPosition - 1 else 0, itemPosition, item)
+                    .gridView.selectedPosition
+                browseViewModel.onListingItemSelected(rowPosition, itemPosition, item)
                 // schedule next channel lives update
-                browseViewModel.onItemsVisibilityChange(
-                        visibleChannelDirectoryItemIds()
-                )
+                browseViewModel.onItemsVisibilityChange(visibleChannelDirectoryItemIds())
             }
         }
     }
@@ -252,7 +249,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 val header = HeaderItem((idx + 1).toLong(), category.title)
                 val listRowAdapter = TvCategoryChannelsListRowAdapter(
                         TvDirectoryChannelCardPresenter()).apply {
-                    setItems(directory.index[category.id], null)
+                    setItems(directory.index[category.id]?: listOf<TvChannel>(), null)
                 }
                 ListRow(header, listRowAdapter)
             }
@@ -288,8 +285,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         data?.directory?: return
         for (i in 1 until adapter.size() - 1) {
             data.directory.index[data.directory.categories[i - 1].id]?.let {
-                ((adapter[i] as ListRow).adapter as ArrayObjectAdapter)
-                    .setItems(it, tvCategoryChannelsDiff)
+                with (adapter[i] as ListRow) {
+                    headerItem = HeaderItem(i.toLong(), data.directory.categories[i - 1].title)
+                    (adapter as ArrayObjectAdapter).setItems(it, tvCategoryChannelsDiff)
+                }
             }
         }
     }

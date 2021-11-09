@@ -19,6 +19,8 @@ data class TvBrowseCursorReference (
 ) {
     fun isEmpty() = categoryId == -1L
 
+    fun isMenuItemReference(): Boolean = (categoryId == 0L && channelId == 0L)
+
     companion object {
         fun empty() = TvBrowseCursorReference(-1L, -1L, null,
             -1L, TvBrowsePage.UNKNOWN, -1L)

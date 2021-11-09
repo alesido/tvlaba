@@ -53,18 +53,29 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 
     // region Interface
 
+    /**
+     * @param listingIndex Index of channel or menu items listing
+     * @param itemPosition Position of a channel or menu item in a listing
+     * @param item TV channel
+     */
     @Suppress("UNUSED_PARAMETER")
-    fun onChannelSelected(categoryPosition: Int, channelPosition: Int, channel: TvChannel) {
+    fun onListingItemSelected(listingIndex: Int, itemPosition: Int, item: Any) {
         directory?: return
-        if (categoryPosition < 0 || categoryPosition >= directory!!.categories.size)
-            return // category position could be wrong due to extra, non category row added
-        val category = directory!!.categories[categoryPosition]
-        browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
+        if (item is TvChannel && listingIndex > 0
+            && listingIndex < directory!!.categories.size - 1) {
+            val category = directory!!.categories[listingIndex]
+            browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
                 TvBrowseCursorMoveUseCase.Params(
-                        category = category,
-                        channel = if (channelPosition >= 0) channel else
-                            directory!!.index[category.id]?.first(),
-                        page = TvBrowsePage.CHANNELS))
+                    category = category,
+                    channel = item,
+                    page = TvBrowsePage.CHANNELS))
+        }
+        else {
+            browseCursorMoveUseCase.execute(
+                BrowseCursorMoveSubscriber(),
+                TvBrowseCursorMoveUseCase.Params(page = TvBrowsePage.CHANNELS, reuse = false)
+            )
+        }
     }
 
     fun onChannelAction(channel: TvChannel, navigate: () -> Unit) {
@@ -99,11 +110,11 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     // region Dispose
 
     fun dispose() {
-        directoryObservationUseCase.dispose()
-        directoryViewUpdateUseCase.dispose()
-        newPlaybackUseCase.dispose()
-        browseCursorGetUseCase.dispose()
-        browseCursorMoveUseCase.dispose()
+//        directoryObservationUseCase.dispose()
+//        directoryViewUpdateUseCase.dispose()
+//        newPlaybackUseCase.dispose()
+//        browseCursorGetUseCase.dispose()
+//        browseCursorMoveUseCase.dispose()
     }
 
     fun onItemsVisibilityChange(visibleChannelDirectoryItems: TvChannelListWindow) {
