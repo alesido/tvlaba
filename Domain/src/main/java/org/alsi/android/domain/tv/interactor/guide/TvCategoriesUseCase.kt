@@ -15,12 +15,12 @@ open class TvCategoriesUseCase @Inject constructor(
     : ObservableUseCase<List<TvChannelCategory>, Nothing?>(postExecutionThread)
 {
     override fun buildUseCaseObservable(params: Nothing?): Observable<List<TvChannelCategory>> {
-        val directory = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.directory
-        return if (directory is TvDirectoryRepository) {
-            directory.channels.getCategories()
-        }
-        else {
-            Observable.error(Throwable("TV Service Repository is N/A!"))
-        }
+        val service =  presentationManager.provideContext(ServicePresentationType.TV_GUIDE)
+        val directory = service?.directory
+
+        if (directory !is TvDirectoryRepository)
+            throw IllegalArgumentException("TvChannelDirectoryObservationUseCase: directory or session is N/A!")
+
+        return directory.channels.getCategories()
     }
 }

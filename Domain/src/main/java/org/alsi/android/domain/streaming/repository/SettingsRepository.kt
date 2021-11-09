@@ -16,4 +16,6 @@ interface SettingsRepository
 
     fun values(): Observable<StreamingServiceSettings>
     fun profile(): Observable<StreamingServiceProfile>
+    fun lastValues(): StreamingServiceSettings
+    fun lastProfile(): StreamingServiceProfile
 }

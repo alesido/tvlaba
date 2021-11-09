@@ -1,19 +1,25 @@
 package org.alsi.android.moidom.repository.tv
 
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import org.alsi.android.datatv.repository.TvChannelDataRepository
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.framework.Now
 import org.alsi.android.framework.RxUtils
+import org.alsi.android.moidom.repository.SettingsRepositoryMoidom
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataRepository() {
+class TvChannelDataRepositoryMoidom @Inject constructor(
+    private val settingsRepository: SettingsRepositoryMoidom,
+    private val defaults: StreamingServiceDefaults
+): TvChannelDataRepository() {
 
 // Saved for example
 //
@@ -58,38 +64,61 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
      * This method provides cache with expiration functionality.
      */
     override fun observeDirectory(): Observable<TvChannelDirectory> {
-        val s = local.getDirectory().flatMap { directory ->
-            if (expiration.directoryExpired(directory)) {
-                expiration.checkInDirectory()
-                remote.getDirectory().flatMap {
-                    local.putDirectory(it).toSingle {it}
-                }
-            }
-            else {
-                Single.just(directory)
-            }
-        }.subscribe( { directory ->
+        val s = getDirectory().subscribe( { directory ->
             directorySubject.onNext(directory)
-        }, {
-            Timber.e(it, it.toString())
-        })
+        }, { Timber.e(it, it.toString()) })
         disposables.add(s)
         return directorySubject
     }
 
     override fun getDirectory(): Single<TvChannelDirectory> {
-        return local.getDirectory().flatMap { directory ->
-            if (expiration.directoryExpired(directory)) {
-                expiration.checkInDirectory()
-                remote.getDirectory().flatMap {
-                    local.putDirectory(it).toSingle {it}
+        return local.getDirectory().flatMap { localDir ->
+            if (expiration.directoryExpired(localDir)) {
+                remote.getDirectory().flatMap { remoteDir ->
+                    local.putDirectory(remoteDir).toSingle {
+                        expiration.checkInDirectory()
+                        remoteDir
+                    }
                 }
             }
             else {
-                Single.just(directory)
+                // check if language and time shift settings changed since last local
+                // directory copy update
+                val settings = settingsRepository.lastValues()
+                val languageDifferent = settings.language?.code != null
+                        && settings.language?.code != localDir.language
+                val timeShiftDifferent = settings.timeShiftSettingHours != null
+                        && settings.timeShiftSettingHours != localDir.timeShift
+
+                @Suppress("CascadeIf")
+                if (languageDifferent) {
+                    remote.getCategories().map { categoriesUpdate ->
+                        if (timeShiftDifferent) {
+                            val diff = localDir.timeShift - settings.timeShiftSettingHours!!
+                            localDir.channels.forEach { it.live.time = it.live.time?.shift(diff) }
+                        }
+                        localDir.copy(
+                            categories = categoriesUpdate,
+                            language = settings.language!!.code,
+                            timeShift = settings.timeShiftSettingHours?: 0
+                        )
+                    }.flatMap { updatedDir ->
+                        local.putDirectory(updatedDir).toSingle { updatedDir }
+                    }
+                }
+                else if (timeShiftDifferent) {
+                    val diff = localDir.timeShift - settings.timeShiftSettingHours!!
+                    localDir.channels.forEach { it.live.time = it.live.time?.shift(diff) }
+                    val updatedDir = localDir.copy(timeShift = settings.timeShiftSettingHours!!)
+                    local.putDirectory(updatedDir).toSingle { updatedDir }
+                }
+                else {
+                    Single.just(localDir)
+                }
             }
         }
     }
+
 
     /** Read directory from local store and share with subscribers if there are any (avoiding overhead
      * of reading local store for nobody)
@@ -138,6 +167,33 @@ class TvChannelDataRepositoryMoidom @Inject constructor(): TvChannelDataReposito
         }.subscribe { channels -> channelsSubject.onNext(channels.filter { it.categoryId == categoryId })}
         disposables.add(s)
         return channelsSubject
+    }
+
+    override fun onLanguageChange(): Completable {
+        return Single.zip(local.getDirectory(), remote.getCategories())
+        { localDir, categoriesUpdate ->
+            localDir.copy(
+                categoriesUpdate,
+                language = settingsRepository.lastValues().language?.code
+                ?: defaults.getDefaultLanguageCode()
+            )
+        }.flatMap { updatedDir ->
+            local.putDirectory(updatedDir).doOnComplete {
+                directorySubject.onNext(updatedDir)
+            }.toSingle { updatedDir }
+        }.ignoreElement()
+    }
+
+    override fun onTimeShiftChange(): Completable {
+        val targetShift = settingsRepository.lastValues().timeShiftSettingHours
+            ?: return Completable.complete()
+        return local.getDirectory().map { localDir ->
+            val diff = localDir.timeShift - targetShift
+            localDir.channels.forEach { it.live.time = it.live.time?.shift(diff) }
+            val updatedDir = localDir.copy(timeShift = targetShift)
+            local.putDirectory(updatedDir)
+            directorySubject.onNext(updatedDir)
+        }.ignoreElement()
     }
 
     // endregion

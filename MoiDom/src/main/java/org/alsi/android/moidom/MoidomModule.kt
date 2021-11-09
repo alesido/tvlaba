@@ -13,6 +13,7 @@ import org.alsi.android.datavod.store.VodDirectoryRemoteStore
 import org.alsi.android.datavod.store.VodPlayCursorLocalStore
 import org.alsi.android.domain.streaming.model.ServiceProvider
 import org.alsi.android.domain.streaming.model.service.StreamingService
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
 import org.alsi.android.local.Local
 import org.alsi.android.local.model.user.UserAccountSubject
@@ -103,15 +104,25 @@ class MoidomModule {
     /**     TV Channel Remote Store
      */
     @Singleton @Provides fun provideTvChannelRemoteStoreMoidom(
-            remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom)
-    : TvChannelRemoteStore = TvChannelRemoteStoreMoidom(remoteService, remoteSession)
+        @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long,
+        @Named("${Moidom.TAG}.${StreamingService.TV}") accountSubject: UserAccountSubject,
+        remoteService: RestServiceMoidom,
+            remoteSession: RemoteSessionRepositoryMoidom,
+            settingsRepository: SettingsRepositoryMoidom,
+            defaults: StreamingServiceDefaults)
+    : TvChannelRemoteStore = TvChannelRemoteStoreMoidom(
+        serviceId, accountSubject, remoteService, remoteSession, settingsRepository, defaults)
 
     /**     TV Channel Local Store
      */
     @Singleton @Provides fun provideTvChannelLocalStoreMoidomDelegate(
+            @Named("${Moidom.TAG}.${StreamingService.TV}") serviceId: Long,
             @Named("${Moidom.TAG}.${StreamingService.TV}") localBoxStore: BoxStore,
-            @Named("${Moidom.TAG}.${StreamingService.TV}") accountSubject: UserAccountSubject)
-    : TvChannelLocalStore = TvChannelLocalStoreDelegate(localBoxStore, accountSubject)
+            @Named("${Moidom.TAG}.${StreamingService.TV}") accountSubject: UserAccountSubject,
+            settingsRepository: SettingsRepositoryMoidom,
+            defaults: StreamingServiceDefaults)
+    : TvChannelLocalStore = TvChannelLocalStoreDelegate(
+        serviceId, localBoxStore, accountSubject, settingsRepository, defaults)
 
     /**     TV Program Remote Store
      */

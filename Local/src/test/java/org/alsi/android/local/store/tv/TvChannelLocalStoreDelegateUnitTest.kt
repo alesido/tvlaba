@@ -1,18 +1,32 @@
 package org.alsi.android.local.store.tv
 
+import com.nhaarman.mockitokotlin2.whenever
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
 import io.reactivex.observers.TestObserver
-import org.alsi.android.domain.tv.model.guide.TvChannel
+import org.alsi.android.domain.streaming.model.options.LanguageOption
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
+import org.alsi.android.domain.streaming.repository.SettingsRepository
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
+import org.alsi.android.domain.tv.model.guide.TvChannels
+import org.alsi.android.domain.user.model.ServiceSubscription
+import org.alsi.android.domain.user.model.SubscriptionPackage
+import org.alsi.android.domain.user.model.SubscriptionStatus
+import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.model.MyObjectBox
 import org.alsi.android.local.model.user.UserAccountSubject
+import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
 import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
@@ -21,19 +35,83 @@ import kotlin.test.fail
 @RunWith(JUnit4::class)
 class TvChannelLocalStoreDelegateUnitTest {
 
+    @Rule
+    @JvmField var mockitoRule: MockitoRule = MockitoJUnit.rule()
+
     private lateinit var boxStore: BoxStore
+
+    @Mock lateinit var settingsRepository: SettingsRepository
+    private lateinit var accountSubject: UserAccountSubject
 
     private lateinit var storeDelegate: TvChannelLocalStoreDelegate
 
     @Before
     fun setUp() {
         BoxStore.deleteAllFiles(TEST_DATA_DIRECTORY)
+
         boxStore = MyObjectBox.builder().directory(TEST_DATA_DIRECTORY)
                 .debugFlags(DebugFlags.LOG_QUERIES or DebugFlags.LOG_QUERY_PARAMETERS)
                 .build()
-        storeDelegate = TvChannelLocalStoreDelegate(boxStore, UserAccountSubject.create())
+
+        mockSettingsRepository()
+
+        accountSubject = UserAccountSubject.create()
+
+        storeDelegate = TvChannelLocalStoreDelegate(
+            serviceId  = 1L,
+            serviceBoxStore = boxStore,
+            accountSubject = accountSubject,
+            settingsRepository = settingsRepository,
+            defaults = StreamingServiceDefaults()
+        )
+
+        initUserAccount()
     }
 
+    private fun mockSettingsRepository() {
+        whenever(settingsRepository.lastValues()).thenReturn(StreamingServiceSettings(
+           language = LanguageOption("en", "English"),
+            timeShiftSettingHours = 0
+        ))
+    }
+
+    private fun initUserAccount() {
+        accountSubject.onNext(UserAccount(
+            loginName = "LocalStoreTestUser",
+            loginPassword = "123",
+            subscriptions = listOf(ServiceSubscription(
+                serviceId = 1L,
+                subscriptionPackage = createTestSubscriptionPackage(),
+                expirationDate = LocalDate.parse("2023-12-31"),
+                status = SubscriptionStatus.ACTIVE
+            )),
+        ))
+    }
+
+    private fun createTestSubscriptionPackage() = SubscriptionPackage(
+        id = 321L, title = "Test Subscription", termMonths = 3,
+        packets = listOf("News", "Sports"),
+    )
+
+    private fun initUserAccount2() {
+        accountSubject.onNext(UserAccount(
+            loginName = "LocalStoreTestUser Two",
+            loginPassword = "234",
+            subscriptions = listOf(ServiceSubscription(
+                serviceId = 1L,
+                subscriptionPackage = createTestSubscriptionPackage2(),
+                expirationDate = LocalDate.parse("2024-12-31"),
+                status = SubscriptionStatus.ACTIVE
+            )),
+        ))
+    }
+
+    private fun createTestSubscriptionPackage2() = SubscriptionPackage(
+        id = 432L, title = "Test Subscription 2", termMonths = 4,
+        packets = listOf("News", "Sports", "Science"),
+    )
+
+    /*
     @Test
     fun shouldStoreCategories() {
         val testObserver = TestObserver<List<TvChannelCategory>>()
@@ -53,36 +131,107 @@ class TvChannelLocalStoreDelegateUnitTest {
             assertEquals(testCategories[i].logo?.reference, readCategories[i].logo?.reference)
         }
     }
+*/
 
     @Test
     fun shouldStoreDirectory() {
         val testObserver = TestObserver<TvChannelDirectory>()
 
-        val testCategories = TvChannelTestDataFactory.categories()
-        val testChannels = TvChannelTestDataFactory.channels()
+        val testCategories = TvChannelTestDataFactory.categories(1, 10)
+        val testChannels = TvChannelTestDataFactory.channels(1, 10)
+        val testIndex = TvChannelTestDataFactory.categoryChannelIndex(testChannels)
 
-        storeDelegate.putDirectory(TvChannelDirectory(testCategories, testChannels, mapOf())).subscribe {
+        storeDelegate.putDirectory(TvChannelDirectory(
+            testCategories, testChannels, testChannels.groupBy { it.categoryId },
+            createTestSubscriptionPackage(), "en", 0
+        )).subscribe {
             storeDelegate.getDirectory().subscribe(testObserver)
         }
-        onTestObserverTermination(testObserver, "shouldStoreCategories")
+        onTestObserverTermination(testObserver, "shouldStoreDirectory")
 
         val readDirectory = testObserver.values()[0]
-        assertEquals(testCategories.size, readDirectory.categories.size)
-        for (i in testCategories.indices) {
-            assertEquals(testCategories[i].id, readDirectory.categories[i].id)
-            assertEquals(testCategories[i].title, readDirectory.categories[i].title)
-            assertEquals(testCategories[i].logo?.kind, readDirectory.categories[i].logo?.kind)
-            assertEquals(testCategories[i].logo?.reference, readDirectory.categories[i].logo?.reference)
-        }
-        for (i in testChannels.indices) {
-            assertEquals(testChannels[i].id, readDirectory.channels[i].id)
-            assertEquals(testChannels[i].categoryId, readDirectory.channels[i].categoryId)
-            assertEquals(testChannels[i].logoUri, readDirectory.channels[i].logoUri)
-            assertEquals(testChannels[i].number, readDirectory.channels[i].number)
-            assertEquals(testChannels[i].title, readDirectory.channels[i].title)
+        assertCategoriesEqual(testCategories, readDirectory.categories)
+        assertChannelsEqual(testChannels, readDirectory.channels)
+        assertIndexesEqual(testIndex, readDirectory.index)
+    }
+
+    private fun assertCategoriesEqual(test: List<TvChannelCategory>, read: List<TvChannelCategory>) {
+        assertEquals(test.size, read.size)
+        for (i in test.indices) {
+            assertEquals(test[i].id, read[i].id)
+            assertEquals(test[i].title, read[i].title)
+            assertEquals(test[i].logo?.kind, read[i].logo?.kind)
+            assertEquals(test[i].logo?.reference, read[i].logo?.reference)
         }
     }
 
+    private fun assertChannelsEqual(test: TvChannels, read: TvChannels) {
+        assertEquals(test.size, read.size)
+        for (i in test.indices) {
+            assertEquals(test[i].id, read[i].id)
+            assertEquals(test[i].categoryId, read[i].categoryId)
+            assertEquals(test[i].logoUri, read[i].logoUri)
+            assertEquals(test[i].number, read[i].number)
+            assertEquals(test[i].title, read[i].title)
+        }
+    }
+
+    private fun assertIndexesEqual(test: Map<Long, TvChannels>, read: Map<Long, TvChannels>) {
+        for (k in test.keys) {
+            assertEquals(test[k]?.size, read[k]!!.size)
+            val testCategoryChannels = test[k]!!
+            val readCategoryChannels = read[k]!!
+            for (i in testCategoryChannels.indices) {
+                assertEquals(testCategoryChannels[i].id, readCategoryChannels[i].id)
+            }
+        }
+    }
+
+    @Test
+    fun shouldStoreTwoDirectories() {
+        val testObserver = TestObserver<TvChannelDirectory>()
+
+        val testCategories = TvChannelTestDataFactory.categories(1, 10)
+        val testChannels = TvChannelTestDataFactory.channels(1,10)
+        val testIndex = TvChannelTestDataFactory.categoryChannelIndex(testChannels)
+
+        storeDelegate.putDirectory(TvChannelDirectory(
+            testCategories, testChannels, testChannels.groupBy { it.categoryId },
+            createTestSubscriptionPackage(), "en", 0
+        )).subscribe {
+            storeDelegate.getDirectory().subscribe(testObserver)
+        }
+        onTestObserverTermination(testObserver, "shouldStoreTwoDirectories 1")
+
+        val readDirectory = testObserver.values()[0]
+        assertCategoriesEqual(testCategories, readDirectory.categories)
+        assertChannelsEqual(testChannels, readDirectory.channels)
+        assertIndexesEqual(testIndex, readDirectory.index)
+
+        // 2nd directory
+        initUserAccount2()
+
+        val testObserver2 = TestObserver<TvChannelDirectory>()
+
+        val testCategories2 = TvChannelTestDataFactory.categories(1, 9)
+        val testChannels2 = TvChannelTestDataFactory.channels(1,12)
+        val testIndex2 = TvChannelTestDataFactory.categoryChannelIndex(testChannels2)
+
+        storeDelegate.putDirectory(TvChannelDirectory(
+            testCategories2, testChannels2, testChannels2.groupBy { it.categoryId },
+            createTestSubscriptionPackage2(), "en", 0
+        )).subscribe {
+            storeDelegate.getDirectory().subscribe(testObserver2)
+        }
+        onTestObserverTermination(testObserver2, "shouldStoreDirectory 2")
+
+        val readDirectory2 = testObserver2.values()[0]
+        assertCategoriesEqual(testCategories2, readDirectory2.categories)
+        assertChannelsEqual(testChannels2, readDirectory2.channels)
+        assertIndexesEqual(testIndex2, readDirectory2.index)
+    }
+
+/*
     @Test
     fun shouldStoreChannels() {
         val testObserver = TestObserver<List<TvChannel>>()
@@ -264,7 +413,7 @@ class TvChannelLocalStoreDelegateUnitTest {
         assertEquals(favoriteChannels002.size, 1)
         assertEquals(favoriteChannels002[0].id, 20L)
     }
-
+*/
     @After
     fun tearDown() {
         boxStore.close()

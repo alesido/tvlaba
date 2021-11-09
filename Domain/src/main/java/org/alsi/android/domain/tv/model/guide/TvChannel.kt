@@ -7,12 +7,18 @@ class TvChannel (
         val id: Long,
         val categoryId: Long,
         val number: Int,
-        var title: String?,
-        var logoUri: URI?,
+        var title: String? = null,
+        var logoUri: URI? = null,
         var live: TvProgramLive,
         var features: TvChannelFeatures
+) {
+    fun isEmpty() = id == -1L
 
-)
+    companion object {
+        fun empty() = TvChannel(-1L, -1L, -1,
+            live = TvProgramLive(), features = TvChannelFeatures())
+    }
+}
 
 typealias TvChannels = List<TvChannel>
 

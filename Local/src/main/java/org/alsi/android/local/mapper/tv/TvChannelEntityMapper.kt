@@ -12,7 +12,7 @@ class TvChannelEntityMapper: EntityMapper<TvChannelEntity, TvChannel> {
 
     override fun mapFromEntity(entity: TvChannelEntity): TvChannel {
         return with(entity) {
-            val channel = TvChannel(id, categoryId,number?: (id + 1).toInt(), title, logoUri,
+            val channel = TvChannel(externalId, categoryId,number?: (id + 1).toInt(), title, logoUri,
                     liveMapper.mapFromEntity(live.target),
                     featuresMapper.mapFromEntity(features.target))
             channel
@@ -21,7 +21,7 @@ class TvChannelEntityMapper: EntityMapper<TvChannelEntity, TvChannel> {
 
     override fun mapToEntity(domain: TvChannel): TvChannelEntity {
         return with(domain) {
-            val entity = TvChannelEntity(id, categoryId, logoUri, number, title)
+            val entity = TvChannelEntity(0L, id, categoryId, logoUri, number, title)
             entity.live.target = liveMapper.mapToEntity(live)
             entity.features.target = featuresMapper.mapToEntity(domain.features)
             entity

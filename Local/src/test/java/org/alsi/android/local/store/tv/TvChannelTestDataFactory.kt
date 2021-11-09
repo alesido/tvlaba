@@ -8,9 +8,10 @@ import java.net.URI
 
 object TvChannelTestDataFactory {
 
-    fun categories(): List<TvChannelCategory> {
+    fun categories(start: Int, size: Int): List<TvChannelCategory> {
         val categories: MutableList<TvChannelCategory> = mutableListOf()
-        for (i in 1..10) {
+        val end = start + size - 1
+        for (i in start..end) {
             categories.add( TvChannelCategory(
                     i.toLong(),
                     i,
@@ -21,21 +22,18 @@ object TvChannelTestDataFactory {
         return categories
     }
 
-    fun channels(): List<TvChannel> {
+    fun channels(start:Int, size: Int): List<TvChannel> {
         val channels: MutableList<TvChannel> = mutableListOf()
         val nowMillis = System.currentTimeMillis()
-        var channelId = 0L
+        var channelId = start.toLong()
         var channelNumber = 1
-        for (i in 1..10) {
-            for (j in 1..10) {
-
-                val categoryId = i.toLong()
-                channelId++
-
+        val end = start + size - 1
+        for (i in start..end) {
+            for (j in start..end) {
                 channels.add( TvChannel(
 
-                        id = channelId,
-                        categoryId = categoryId,
+                        id = channelId++,
+                        categoryId = i.toLong(),
                         number = channelNumber++,
                         title = "Channel #$j @$i",
                         logoUri = URI.create("http://test.example.com/chalog$i.png"),
@@ -52,4 +50,6 @@ object TvChannelTestDataFactory {
         }
         return channels
     }
+
+    fun categoryChannelIndex(channels: List<TvChannel>) = channels.groupBy { it.categoryId }
 }

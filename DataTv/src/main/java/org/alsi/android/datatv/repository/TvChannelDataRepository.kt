@@ -77,6 +77,11 @@ abstract class TvChannelDataRepository: TvChannelRepository {
     override fun isChannelFavorite(channelId: Long): Single<Boolean> = local.isChannelFavorite(channelId)
 
     // endregion
+    // region
+
+    abstract override fun onLanguageChange(): Completable
+
+    abstract override fun onTimeShiftChange(): Completable
 
     fun dispose() {
         if (!disposables.isDisposed) disposables.dispose()

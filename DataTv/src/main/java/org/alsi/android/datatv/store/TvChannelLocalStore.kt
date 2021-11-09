@@ -6,32 +6,33 @@ import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelCategory
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.domain.tv.model.guide.TvChannelsChange
+import org.alsi.android.domain.user.model.UserAccount
 
 /**
  * Created on 7/12/18.
  */
 interface TvChannelLocalStore {
 
-    fun switchUser(userLoginName: String)
+    fun switchUser(userAccount: UserAccount)
 
-    fun putDirectory(directory: TvChannelDirectory): Completable
+    fun putDirectory(source: TvChannelDirectory): Completable
     fun getDirectory(): Single<TvChannelDirectory>
-
+    fun setLanguage(languageCode: String): Completable
+    fun setTimeShift(hours: Int): Completable
 
     // region Categories
 
     /** ... replace all categories if exist
      */
-    fun putCategories(categories: List<TvChannelCategory>): Completable
+    fun updateCategories(categories: List<TvChannelCategory>): Completable
     fun getCategories(): Single<List<TvChannelCategory>>
     fun findCategoryById(categoryId: Long): Single<TvChannelCategory?>
 
     // endregion
     // region Channels
 
-    fun putChannels(channels: List<TvChannel>): Completable
+    fun updateChannels(channels: List<TvChannel>): Completable
     fun updateChannels(change: TvChannelsChange)
-    fun removeChannels(channels: List<TvChannel>): Completable
     fun getChannels(): Single<List<TvChannel>>
     fun getChannels(categoryId: Long): Single<List<TvChannel>>
 

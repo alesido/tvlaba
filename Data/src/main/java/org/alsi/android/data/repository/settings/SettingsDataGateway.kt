@@ -49,4 +49,8 @@ open class SettingsDataGateway(
     override fun values() = valuesSubject
 
     override fun profile() = profileSubject
+
+    override fun lastValues() = local.values()
+
+    override fun lastProfile() = local.profile()
 }

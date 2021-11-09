@@ -11,7 +11,7 @@ class StreamingServiceSettings (
 
         /** Subset of features supported by given streaming service.
          */
-        val features: EnumSet<StreamingServiceFeature>?,
+        val features: EnumSet<StreamingServiceFeature>? = null,
 
 
 
@@ -19,27 +19,27 @@ class StreamingServiceSettings (
 
         /** Streaming server setting = selected server option.
          */
-        val server: StreamingServerOption?,
+        val server: StreamingServerOption? = null,
 
         /** Selected stream bitrate.
          */
-        val bitrate: StreamBitrateOption?,
+        val bitrate: StreamBitrateOption? = null,
 
         /** Size of http cache for streaming. Used to adjust player buffering parameters.
          */
-        val cacheSize: Long?,
+        val cacheSize: Long? = null,
 
 
 
         /** API Server selected by index in a list of default and fallback servers.
          */
-        val api: ApiServerOption?,
+        val api: ApiServerOption? = null,
 
 
 
         /** App language setting = selected language option
          */
-        val language: LanguageOption?,
+        val language: LanguageOption? = null,
 
 
 
@@ -47,15 +47,15 @@ class StreamingServiceSettings (
 
         /** Device model setting = selected device model option
          */
-        val device: DeviceModelOption?,
+        val device: DeviceModelOption? = null,
 
         /** Remote control key assignments specific to the selected device model.
          */
-        val rc: RemoteControlMap?,
+        val rc: RemoteControlMap? = null,
 
 
 
         /** Time shift to watch "current" programs
          */
-        val timeShiftSettingHours: Int?,
+        val timeShiftSettingHours: Int? = null,
 )

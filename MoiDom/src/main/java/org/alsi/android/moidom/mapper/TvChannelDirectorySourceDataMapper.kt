@@ -2,14 +2,20 @@ package org.alsi.android.moidom.mapper
 
 import android.text.format.DateUtils
 import okhttp3.internal.toImmutableMap
+import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
+import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.model.guide.*
+import org.alsi.android.domain.user.model.SubscriptionPackage
 import org.alsi.android.moidom.model.tv.ChannelListResponse
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.remote.mapper.SourceDataMapper
 
 class TvChannelDirectorySourceDataMapper: SourceDataMapper<ChannelListResponse, TvChannelDirectory> {
 
-    override fun mapFromSource(source: ChannelListResponse): TvChannelDirectory {
+    fun mapFromSource(source: ChannelListResponse,
+                      subscriptionPackage: SubscriptionPackage,
+                      settings: StreamingServiceSettings,
+                      defaults: StreamingServiceDefaults): TvChannelDirectory {
 
         // list of categories
         val dstCategories: MutableList<TvChannelCategory> = mutableListOf()
@@ -76,6 +82,15 @@ class TvChannelDirectorySourceDataMapper: SourceDataMapper<ChannelListResponse, 
         return TvChannelDirectory(
                 categories = dstCategories,
                 channels = dstChannels.values.toList(),
-                index = dstCategoryChannels.toImmutableMap())
+                index = dstCategoryChannels.toImmutableMap(),
+                subscriptionPackage = subscriptionPackage,
+                language = settings.language?.code?: defaults.getDefaultLanguageCode(),
+                timeShift = settings.timeShiftSettingHours?: 0
+        )
+    }
+
+    override fun mapFromSource(source: ChannelListResponse): TvChannelDirectory {
+         // method is replaced with the extra parameters version
+        return TvChannelDirectory.empty()
     }
 }

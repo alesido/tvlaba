@@ -11,7 +11,7 @@ class TvCategoryEntityMapper: EntityMapper<TvChannelCategoryEntity, TvChannelCat
 
     override fun mapFromEntity(entity: TvChannelCategoryEntity): TvChannelCategory {
         return with(entity) {
-            TvChannelCategory(id, ordinal,title?:(id + 1).toString(),
+            TvChannelCategory(externalId, ordinal,title?:(externalId + 1).toString(),
                     logo = TypedIconReference(logoIconType?.value?:IconType.UNKNOWN,
                             logoReference?:""))
         }
@@ -20,7 +20,7 @@ class TvCategoryEntityMapper: EntityMapper<TvChannelCategoryEntity, TvChannelCat
     override fun mapToEntity(domain: TvChannelCategory): TvChannelCategoryEntity {
         return with(domain) {
             TvChannelCategoryEntity(
-                id, title, ordinal,
+                0L, id, title, ordinal,
                 IconTypeProperty.valueByType[logo?.kind]?: IconTypeProperty.UNKNOWN,
                 logo?.reference)
         }
