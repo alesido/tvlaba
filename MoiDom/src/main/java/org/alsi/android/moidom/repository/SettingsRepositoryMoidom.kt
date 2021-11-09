@@ -34,7 +34,7 @@ class SettingsRepositoryMoidom @Inject constructor(
     private var subscription: Disposable = loginSubject.subscribe( {
 
         val localMoidom = local as SettingsStoreLocalDelegate
-        val remoteMoidom = remote as SettingsRemoteStoreMoidom
+        val remoteMoidom = remote
 
         localMoidom.attach(it.account)
 

@@ -1,7 +1,6 @@
 package org.alsi.android.framework
 
 import io.reactivex.Flowable
-import io.reactivex.rxkotlin.zipWith
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 

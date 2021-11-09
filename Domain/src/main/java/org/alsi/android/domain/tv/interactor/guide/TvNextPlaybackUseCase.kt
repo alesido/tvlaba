@@ -24,15 +24,19 @@ class TvNextPlaybackUseCase @Inject constructor(
         if (null == params) return Single.error(TvRepositoryError(
                 TvRepositoryErrorKind.ERROR_WRONG_USE_CASE_PARAMETERS))
 
-        val directory = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.directory
-        val session = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)?.session
-        if (directory !is TvDirectoryRepository || session !is TvSessionRepository)
-            return Single.error(TvRepositoryError(TvRepositoryErrorKind.ERROR_WRONG_USE_CASE_PARAMETERS))
+        val service = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)
+            ?: return Single.error(TvRepositoryError(
+                    TvRepositoryErrorKind.ERROR_CANNOT_ACCESS_TV_REPOSITORY))
 
-        return if (params.target in listOf(NEXT_CHANNEL, PREVIOUS_CHANNEL))
-            navigateChannel(directory, session, params.target)
-        else
-            navigateProgram(directory, session, params.target)
+        with(service) {
+            if (directory !is TvDirectoryRepository || session !is TvSessionRepository)
+                return Single.error(TvRepositoryError(TvRepositoryErrorKind.ERROR_WRONG_USE_CASE_PARAMETERS))
+
+            return if (params.target in listOf(NEXT_CHANNEL, PREVIOUS_CHANNEL))
+                navigateChannel(directory, session, params.target)
+            else
+                navigateProgram(directory, session, params.target)
+        }
     }
 
     /**

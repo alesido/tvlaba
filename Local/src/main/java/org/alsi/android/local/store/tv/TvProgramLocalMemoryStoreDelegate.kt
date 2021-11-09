@@ -18,9 +18,7 @@ class TvProgramLocalMemoryStoreDelegate (
     private val disposables = CompositeDisposable()
 
     init {
-        val s = accountSubject.subscribe {
-            switchUser(it.loginName)
-        }
+        val s =  accountSubject.subscribe ({ switchUser(it.loginName) }, { /** ignore error */} )
         s?.let { disposables.add(it) }
     }
 

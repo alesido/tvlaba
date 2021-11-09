@@ -63,7 +63,7 @@ class LoginApiTest {
             assert(data.services["archive"] == 1)
             assert(data.settings.language?.value == "en")
             assert(data.settings.stream_server?.value == "5.254.76.34")
-            assert(data.settings.bitrate.value == 1500)
+            assert(data.settings.bitrate?.value == 1500)
         }?: fail()
     }
 
