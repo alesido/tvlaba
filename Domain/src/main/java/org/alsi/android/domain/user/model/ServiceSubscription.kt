@@ -11,7 +11,7 @@ enum class SubscriptionStatus {
  */
 class ServiceSubscription(
         val serviceId: Long,
+        val subscriptionPackage: SubscriptionPackage,
         val status: SubscriptionStatus,
         val expirationDate: LocalDate?
 )
-// TODO Add optional login name and password

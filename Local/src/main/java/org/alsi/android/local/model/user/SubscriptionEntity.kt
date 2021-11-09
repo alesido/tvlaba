@@ -5,23 +5,32 @@ import io.objectbox.annotation.Id
 import io.objectbox.annotation.Convert
 import io.objectbox.converter.PropertyConverter
 import io.objectbox.relation.ToOne
+import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.SubscriptionStatus
 import org.alsi.android.local.framework.objectbox.LocalDateConverter
 import org.joda.time.LocalDate
 
-@Entity data class SubscriptionEntity (
+@Entity
+data class SubscriptionEntity (
 
-        @Id var id: Long,
+        @Id var id: Long? = 0,
 
-        var serviceId : Long,
+        var serviceId : Long? = 0,
 
         @Convert(converter = StatusPropertyConverter::class, dbType = Long::class)
-        var status: StatusProperty,
+        var status: StatusProperty? = null,
 
         @Convert(converter = LocalDateConverter::class, dbType = Long::class)
-        var expirationDate: LocalDate?
+        var expirationDate: LocalDate? = null
 ) {
+    fun updateWith(source: ServiceSubscription) {
+        serviceId = source.serviceId
+        status = StatusProperty.valueByReference[source.status]?: StatusProperty.UNKNOWN
+        expirationDate = source.expirationDate
+    }
+
     lateinit var userAccount : ToOne<UserAccountEntity>
+    lateinit var subscriptionPackage: ToOne<SubscriptionPackageEntity>
 }
 
 enum class StatusProperty(val id: Long, val reference: SubscriptionStatus) {

@@ -17,5 +17,5 @@ interface AccountDataLocal
     fun getPassword(loginName: String): Single<String>
 
     fun getSubscriptions(): Single<List<ServiceSubscription>>
-    fun setSubscriptions(subscriptions: List<ServiceSubscription>): Completable
+    fun putSubscriptions(subscriptions: List<ServiceSubscription>): Completable
 }

@@ -11,9 +11,7 @@ import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.local.mapper.AccountEntityMapper
 import org.alsi.android.local.mapper.SubscriptionEntityMapper
-import org.alsi.android.local.model.user.UserAccountEntity
-import org.alsi.android.local.model.user.UserAccountEntity_
-import org.alsi.android.local.model.user.UserAccountSubject
+import org.alsi.android.local.model.user.*
 
 /**
  *  Assumption. It's supposed that account IDs are unique across the services
@@ -26,16 +24,22 @@ class AccountStoreLocalDelegate (
     private var accountId: Long? = null
 
     private val box: Box<UserAccountEntity> = boxStore.boxFor()
+    private val subscriptionBox: Box<SubscriptionEntity> = boxStore.boxFor()
+    private val subscriptionPackageBox: Box<SubscriptionPackageEntity> = boxStore.boxFor()
 
     private val accountMapper = AccountEntityMapper()
     private val subscriptionMapper = SubscriptionEntityMapper()
 
 
     override fun addAttachAccount(account: UserAccount) {
-        val entity = accountMapper.mapToEntity(account)
-        val record = box.query {equal(UserAccountEntity_.loginName, account.loginName)}.findFirst()
-        record?.let{ entity.id = it.id }
-        accountId = box.put(entity)
+        box.query {equal(UserAccountEntity_.loginName, account.loginName)}.findFirst()?.let {
+            accountId = it.id
+            it.loginName = account.loginName
+            it.loginPassword = account.loginPassword
+            updateSubscriptions(it, account.subscriptions)
+        }?: run {
+            accountId = insertSubscriptions(account)
+        }
         accountSubject.onNext(account)
     }
 
@@ -67,15 +71,87 @@ class AccountStoreLocalDelegate (
                 .subscriptions.toList().map { subscriptionMapper.mapFromEntity(it) })
     }
 
-    override fun setSubscriptions(subscriptions: List<ServiceSubscription>): Completable {
+    override fun putSubscriptions(subscriptions: List<ServiceSubscription>): Completable {
         return Completable.fromRunnable {
             accountId?.let {  id -> box.get(id)?.let { account ->
-                account.subscriptions.clear()
-                subscriptions.forEach { account.subscriptions.add( subscriptionMapper.mapToEntity(it)) }
-                box.put(account)
+                updateSubscriptions(account, subscriptions)
             } ?: noAccount()
             } ?: idUnknown2()
         }
+    }
+
+    private fun insertSubscriptions(source: UserAccount): Long {
+        val entity = accountMapper.mapToEntity(source)
+        box.attach(entity)
+        source.subscriptions.map { insertSubscription(it) }
+        return box.put(entity)
+    }
+
+    private fun insertSubscription(source: ServiceSubscription) = with(source) {
+        // create subscription entity
+        val subscriptionEntity = SubscriptionEntity(
+            0L, serviceId,
+            StatusProperty.valueByReference[status] ?: StatusProperty.UNKNOWN,
+            expirationDate
+        )
+        subscriptionBox.attach(subscriptionEntity)
+        // create package entity
+        val packageEntity =  with(subscriptionPackage) {
+            SubscriptionPackageEntity(id, title, termMonths, packets)
+        }
+        subscriptionPackageBox.put(packageEntity)
+        // put subscription entity
+        subscriptionEntity.subscriptionPackage.target = packageEntity
+        subscriptionBox.put(subscriptionEntity)
+        // result
+        subscriptionEntity
+    }
+
+    private fun updateSubscriptions(entity: UserAccountEntity,
+                                    sourceSubscriptions: List<ServiceSubscription>): Long {
+        // working maps
+        // NOTE Assumption: there is only one subscription per service
+        val sourceMap = sourceSubscriptions.associateBy { it.serviceId }
+        val targetMap = entity.subscriptions.associateBy { it.serviceId }
+
+        // update existing subscription records
+        entity.subscriptions.filter { sourceMap[it.serviceId] != null }.map {
+            subscriptionBox.attach(it)
+            val sourceItem = sourceMap[it.serviceId]
+            if (it.subscriptionPackage.targetId != sourceItem!!.subscriptionPackage.id) {
+                // the package replaced with a new one
+                val packageEntity = with(sourceItem.subscriptionPackage) {
+                    SubscriptionPackageEntity(id, title, termMonths, packets)
+                }
+                subscriptionPackageBox.put(packageEntity)
+                it.subscriptionPackage.target = packageEntity
+            }
+            else {
+                // the package probably updated
+                // NOTE This based on assumption that serves maintains package IDs correctly
+                it.subscriptionPackage.target.updateWith(sourceItem.subscriptionPackage)
+                subscriptionPackageBox.put(it.subscriptionPackage.target)
+            }
+            it.apply { updateWith(sourceItem)}
+        }.let {
+            subscriptionBox.put(it)
+        }
+
+        // remove absent subscriptions
+        targetMap.filter { null == sourceMap[it.key] }.map { it.value }.let {
+            entity.subscriptions.removeAll(it)
+            // NOTE Subscription package entities are not removed here cause they might be linked
+            // to other subscriptions while package:subscriptions (1:n) is not maintained (extra
+            // complication). And also, there are too small number of packages to make sense
+            // to optimize their storage
+        }
+
+        // add new subscriptions
+        sourceSubscriptions.filter { null == targetMap[it.serviceId] }
+            .map { insertSubscription(it) }
+            .let { subscriptionBox.put(it)}
+
+        return box.put(entity)
     }
 
     private fun <T> idUnknown(): Single<T> = Single.error(Throwable(MESSAGE_ACCOUNT_ID_UNKNOWN))
