@@ -6,8 +6,8 @@ import org.alsi.android.tvlaba.auth.login.ui.LoginFragment
 import org.alsi.android.tvlaba.auth.login.ui.LoginFragmentModule
 import org.alsi.android.tvlaba.settings.GeneralSettingsFragment
 import org.alsi.android.tvlaba.settings.GeneralSettingsFragmentModule
-import org.alsi.android.tvlaba.settings.parental.ParentalControlPinFragment
-import org.alsi.android.tvlaba.settings.parental.ParentalControlPinFragmentModule
+import org.alsi.android.tvlaba.settings.parental.ParentalControlSettingFragment
+import org.alsi.android.tvlaba.settings.parental.ParentalControlSettingFragmentModule
 import org.alsi.android.tvlaba.tv.AppStartFragment
 import org.alsi.android.tvlaba.tv.AppStartFragmentModule
 import org.alsi.android.tvlaba.tv.tv.TvGuideStartFragment
@@ -41,8 +41,8 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [GeneralSettingsFragmentModule::class])
     abstract fun bindSettingsFragment(): GeneralSettingsFragment
 
-    @ContributesAndroidInjector(modules = [ParentalControlPinFragmentModule::class])
-    abstract fun bindParentalControlPinFragment(): ParentalControlPinFragment
+    @ContributesAndroidInjector(modules = [ParentalControlSettingFragmentModule::class])
+    abstract fun bindParentalControlSettingFragment(): ParentalControlSettingFragment
 
     // TV --
 

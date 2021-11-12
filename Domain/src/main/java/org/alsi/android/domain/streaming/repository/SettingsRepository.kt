@@ -12,7 +12,7 @@ interface SettingsRepository
     fun selectStreamBitrate(bitrate: Int): Completable
     fun selectLanguage(languageCode: String): Completable
     fun selectDevice(modelId: String): Completable
-    fun changeParentalControlPin(currentPin: String, newPin: String): Completable
+    fun changeParentalControlPassword(currentPass: String, newPass: String): Completable
 
     fun values(): Observable<StreamingServiceSettings>
     fun profile(): Observable<StreamingServiceProfile>

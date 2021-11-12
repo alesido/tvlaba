@@ -4,9 +4,7 @@ import io.reactivex.Completable
 import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
-import org.alsi.android.domain.tv.model.guide.TvChannelDirectory
 import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
-import org.alsi.android.domain.vod.repository.VodRepository
 import javax.inject.Inject
 
 class SelectLanguageUseCase @Inject constructor(
@@ -91,17 +89,18 @@ class SelectDeviceModelUseCase @Inject constructor(
     class Params constructor (val deviceModelId: Long)
 }
 
-class ChangeParentalControlPinUseCase @Inject constructor(
+class ChangeParentalControlPasswordUseCase @Inject constructor(
     private val presentationManager: PresentationManager,
     postExecutionThread: PostExecutionThread)
-    : CompletableUseCase<ChangeParentalControlPinUseCase.Params>(postExecutionThread)
+    : CompletableUseCase<ChangeParentalControlPasswordUseCase.Params>(postExecutionThread)
 {
     override fun buildUseCaseCompletable(params: Params?): Completable {
         params?: throw IllegalArgumentException("ChangeParentalControlPinUseCase: Params can't be null!")
         val context = presentationManager.provideContext()?: throw IllegalArgumentException(
             "ChangeParentalControlPinUseCase: Service context isn't initialized!")
-        return context.configuration.changeParentalControlPin(params.currentPin, params.newPin)
+        return context.configuration.changeParentalControlPassword(params.currentPass, params.newPass)
     }
 
-    class Params constructor (val currentPin: String, val newPin: String)
+    class Params constructor (val currentPass: String, val newPass: String)
 }
+

@@ -113,7 +113,7 @@ class SettingsRemoteStoreMoidom @Inject constructor (
         }
     }
 
-    override fun changeParentalControlPin(currentPin: String, newPin: String): Completable
+    override fun changeParentalControlPass(currentPin: String, newPin: String): Completable
     = remoteSession.getSessionId().flatMapCompletable {
         remoteService.setProtectionCode(it, QUERY_PARAM_SETTING_NAME_PCODE, newPin, currentPin,
             newPin, newPin).ignoreElement()

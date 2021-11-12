@@ -2,11 +2,9 @@ package org.alsi.android.tvlaba.settings.parental
 
 import android.os.Bundle
 import android.text.InputType.*
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -20,6 +18,9 @@ import androidx.leanback.widget.GuidedAction
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.presentation.settings.ParentalControlViewModel
+import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalServiceEventKind.ERROR
+import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalServiceEventKind.REQUEST_SUCCESS
+import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalServiceEventKind.LOADING
 import org.alsi.android.presentation.state.ResourceState.*
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
@@ -28,7 +29,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class ParentalControlPinFragment : GuidedStepSupportFragment() {
+class ParentalControlSettingFragment : GuidedStepSupportFragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
     @Inject lateinit var errorHandler: ClassifiedExceptionHandler
@@ -36,6 +37,16 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
     private lateinit var viewModel: ParentalControlViewModel
 
     private val progressBarManager = ProgressBarManager()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+            .get(ParentalControlViewModel::class.java)
+
+        errorHandler.changeContext(requireActivity())
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -48,23 +59,6 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
         // progress bar
         setupProgressBar(view, inflater)
         return view
-    }
-
-    private fun setupProgressBar(view: ViewGroup, inflater: LayoutInflater) {
-        val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
-        view.addView(progressView)
-        progressBarManager.enableProgressBar()
-        progressBarManager.setProgressBarView(progressView)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
-        super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(ParentalControlViewModel::class.java)
-
-        errorHandler.changeContext(requireActivity())
     }
 
     override fun onCreateGuidance(savedInstanceState: Bundle?) = GuidanceStylist.Guidance(
@@ -127,8 +121,15 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
                     getString(R.string.message_parent_pin_verification_failed))
                 return
             }
-            viewModel.changeParentalControlPin(currentPinInput!!, newPinInput!!)
+            viewModel.changePassword(currentPinInput!!, newPinInput!!)
         }
+    }
+
+    private fun setupProgressBar(view: ViewGroup, inflater: LayoutInflater) {
+        val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
+        view.addView(progressView)
+        progressBarManager.enableProgressBar()
+        progressBarManager.setProgressBarView(progressView)
     }
 
     private fun description(id: Long) = findActionById(id)?.description?.toString()
@@ -164,7 +165,7 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
 
     private fun dismiss() {
         requireActivity().supportFragmentManager.beginTransaction()
-            .remove(this@ParentalControlPinFragment)
+            .remove(this@ParentalControlSettingFragment)
             .commit()
     }
 

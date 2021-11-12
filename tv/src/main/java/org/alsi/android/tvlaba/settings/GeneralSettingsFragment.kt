@@ -21,7 +21,7 @@ import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
-import org.alsi.android.tvlaba.settings.parental.ParentalControlPinFragment
+import org.alsi.android.tvlaba.settings.parental.ParentalControlSettingFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import javax.inject.Inject
 
@@ -96,7 +96,7 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
      *  step guide fragment was not actually removed while its view was destroyed.
      */
     private fun openParentalControlSetupGuide() {
-        val fragment = ParentalControlPinFragment()
+        val fragment = ParentalControlSettingFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
         transaction
