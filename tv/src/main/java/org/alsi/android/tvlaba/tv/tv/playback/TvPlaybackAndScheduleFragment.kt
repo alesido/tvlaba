@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
@@ -31,6 +32,7 @@ import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.domain.tv.model.guide.TvWeekDay
+import org.alsi.android.presentation.settings.ParentalControlViewModel
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
@@ -40,6 +42,7 @@ import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragment
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
 import timber.log.Timber
@@ -53,6 +56,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
     private lateinit var playbackViewModel: TvPlaybackViewModel
     private lateinit var preferencesViewModel: TvPlaybackPreferencesViewModel
     private lateinit var footerViewModel : TvPlaybackFooterViewModel
+    private lateinit var parentalViewModel: ParentalControlViewModel
 
     private lateinit var dataSourceFactory : DefaultDataSourceFactory
 
@@ -84,6 +88,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
         footerViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvPlaybackFooterViewModel::class.java)
+
+        parentalViewModel = ViewModelProvider(
+            requireActivity(), // shared view model
+            viewModelFactory
+        ).get(ParentalControlViewModel::class.java)
 
         errorMessaging = TvErrorMessaging(requireContext())
 
@@ -146,6 +155,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         })
         footerViewModel.getLiveData().observe(this, {
             if (it != null) handleFooterDataChange(it)
+        })
+        parentalViewModel.getEventChannel().observe(this, {
+            it?.contentIfNotHandled?.let { kind -> handleParentalControlEvent(kind, it.payload) }
         })
     }
 
@@ -288,9 +300,21 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         }
     }
 
+    private fun handleParentalControlEvent(kind: ParentalControlViewModel.ParentalEventKind, payload: Any?) {
+        if (kind == ParentalControlViewModel.ParentalEventKind.ACCESS_GRANTED && payload is TvPlayback) {
+            startPlayback(payload)
+        }
+    }
+
     private fun startPlayback(playback: TvPlayback?) {
         playback?.stream?.uri?: return
         context?.let {
+
+            if (! parentalViewModel.isAccessAllowed(playback)) {
+                openParentalCheckIn()
+                return
+            }
+
             Timber.d("@startPlayback %s @ %d", playback.title, playback.position)
             if (glue.bindPlaybackItem(playback)) {
 
@@ -321,6 +345,15 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun openParentalCheckIn() {
+        val fragment = ParentalControlCheckInFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
+        transaction
+            .replace(android.R.id.content, fragment, fragment.javaClass.toString())
+            .commit()
     }
 
     private fun handlePreferenceChangeEvent(resource: Resource<TvPlaybackPreferenceChangeEvent>) {

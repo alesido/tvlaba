@@ -32,7 +32,7 @@ class TvNewPlaybackUseCase @Inject constructor(
         with(params) {
             if (null == channel && null == program?.programId)
                 return Single.error(Throwable("Wrong new playback parameters!"))
-            return directory.streams.getVideoStream(channel, program, null).map { stream ->
+            return directory.streams.getVideoStream(channel, program, session.parentalControlPassword).map { stream ->
                 if (channel != null && program?.programId != null)
                     mapper.from(channel, program, stream)
                 else

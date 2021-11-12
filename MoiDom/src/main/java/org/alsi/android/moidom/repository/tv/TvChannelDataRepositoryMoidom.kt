@@ -196,6 +196,20 @@ class TvChannelDataRepositoryMoidom @Inject constructor(
         }.ignoreElement()
     }
 
+    override fun authorizeContentAccess(password: String, channelId: Long?): Completable {
+        return if (channelId != null) {
+            local.findChannelById(channelId).flatMap {
+                if (it.features.isPasswordProtected) settingsRepository
+                    .changeParentalControlPassword(password, password).toSingle { true }
+                else Single.just(true)
+            }.ignoreElement()
+        }
+        else {
+            // NOTE This API hasn't a method to authorize content access, a temporary hack used
+            settingsRepository.changeParentalControlPassword(password, password)
+        }
+    }
+
     // endregion
     // region Update Scheduling
 

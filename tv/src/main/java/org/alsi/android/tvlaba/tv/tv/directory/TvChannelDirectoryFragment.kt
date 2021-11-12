@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +26,8 @@ import org.alsi.android.domain.streaming.model.service.StreamingServicePresentat
 import org.alsi.android.domain.tv.model.guide.TvChannel
 import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
+import org.alsi.android.presentation.settings.ParentalControlViewModel
+import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalEventKind
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseLiveData
@@ -34,6 +37,7 @@ import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.settings.GeneralSettingsDialogFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.model.CardMenuItem
+import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragment
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -48,6 +52,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
+    private lateinit var parentalViewModel: ParentalControlViewModel
 
     private var liveTimeIndicatorTaskSubscription: Disposable? = null
 
@@ -61,16 +66,34 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
         browseViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvChannelDirectoryBrowseViewModel::class.java)
+        parentalViewModel = ViewModelProvider(
+            requireActivity(), // shared view model
+            viewModelFactory
+        ).get(ParentalControlViewModel::class.java)
 
         adapter = ArrayObjectAdapter( ListRowPresenter())
 
         setOnItemViewClickedListener { _, item, _, _ ->
             if (item is TvChannel) {
-                // navigate to program details fragment
-                browseViewModel.onChannelAction(item) {
-                    NavHostFragment.findNavController(this)
-                            .navigate(TvChannelDirectoryFragmentDirections
-                                    .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment())
+                if (parentalViewModel.isAccessAllowed(item)) {
+                    // navigate to program details fragment
+                    browseViewModel.onChannelAction(item) {
+                        NavHostFragment.findNavController(this)
+                            .navigate(
+                                TvChannelDirectoryFragmentDirections
+                                    .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
+                            )
+                    }
+                }
+                else {
+                    // open parental code check in form
+                    val fragment = ParentalControlCheckInFragment()
+                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                    fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
+                    transaction
+                        .replace(android.R.id.content, fragment, fragment.javaClass.toString())
+                        .commit()
+
                 }
             }
             else if (item is CardMenuItem) {
@@ -118,7 +141,6 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             getString(R.string.navigation_argument_key_service_id) to serviceId))
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
@@ -150,6 +172,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         super.onStart()
         browseViewModel.getLiveDirectory().observe(this, {
             if (it != null) handleCategoriesListDataState(it)
+        })
+        parentalViewModel.getEventChannel().observe(this, {
+           it?.contentIfNotHandled?.let { kind -> handleParentalControlEvent(kind, it.payload) }
         })
     }
 
@@ -236,6 +261,18 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 errorHandler.run(this, resource.throwable)
             }
             else -> {
+            }
+        }
+    }
+
+    private fun handleParentalControlEvent(kind: ParentalEventKind, payload: Any?) {
+        if (kind == ParentalEventKind.ACCESS_GRANTED && payload is TvChannel) {
+            browseViewModel.onChannelAction(payload) {
+                NavHostFragment.findNavController(this)
+                    .navigate(
+                        TvChannelDirectoryFragmentDirections
+                            .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
+                    )
             }
         }
     }

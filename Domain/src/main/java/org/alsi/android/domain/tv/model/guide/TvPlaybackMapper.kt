@@ -14,6 +14,7 @@ class TvPlaybackMapper {
                     time = time,
                     title = title,
                     description = description,
+                    isUnderParentControl = channel.features.isPasswordProtected,
 
                     channelNumber = channel.number,
                     channelTitle = channel.title,
@@ -31,6 +32,7 @@ class TvPlaybackMapper {
                     time = time,
                     title = title,
                     description = description,
+                    isUnderParentControl = channel.features.isPasswordProtected,
 
                     mainPosterUri = mainPosterUri,
                     allPosterUris = allPosterUris,

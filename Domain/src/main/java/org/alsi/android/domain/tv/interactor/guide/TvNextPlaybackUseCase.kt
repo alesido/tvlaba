@@ -27,7 +27,6 @@ class TvNextPlaybackUseCase @Inject constructor(
         val service = presentationManager.provideContext(ServicePresentationType.TV_GUIDE)
             ?: return Single.error(TvRepositoryError(
                     TvRepositoryErrorKind.ERROR_CANNOT_ACCESS_TV_REPOSITORY))
-
         with(service) {
             if (directory !is TvDirectoryRepository || session !is TvSessionRepository)
                 return Single.error(TvRepositoryError(TvRepositoryErrorKind.ERROR_WRONG_USE_CASE_PARAMETERS))
@@ -68,8 +67,9 @@ class TvNextPlaybackUseCase @Inject constructor(
             // retrieve target playback & set cursor to it
             val targetChannel = categoryChannels[
                     if (target == NEXT_CHANNEL) channelPosition + 1 else channelPosition - 1]
-            directory.streams.getVideoStream(targetChannel, null, null).map {
-                stream -> mapper.from(targetChannel, stream)
+            directory.streams.getVideoStream(targetChannel, null,
+                session.parentalControlPassword).map {
+                    stream -> mapper.from(targetChannel, stream)
             }.flatMap { targetPlayback ->
                 session.play.setCursorTo(cursor.categoryId, targetPlayback)
             }
@@ -145,9 +145,10 @@ class TvNextPlaybackUseCase @Inject constructor(
 
             // get URI of the stream and compose playback data
             }.flatMap { targetProgram ->
-                directory.streams.getVideoStream(channel, targetProgram, null).map {
-                    videoStream -> mapper.from(channel, targetProgram, videoStream)
-                }
+                directory.streams.getVideoStream(channel, targetProgram,
+                    session.parentalControlPassword).map {
+                        videoStream -> mapper.from(channel, targetProgram, videoStream)
+                    }
 
             // set cursor to the playback
             }.flatMap { targetPlayback ->

@@ -33,6 +33,10 @@ class TvPlayback (
          */
         val description: String? = null,
 
+        /** Tels whether this like 18+ playback
+         */
+        val isUnderParentControl: Boolean? = false,
+
         // -- posters
 
         /** Posters. Main

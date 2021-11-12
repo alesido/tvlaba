@@ -41,7 +41,7 @@ class TvSwitchToArchivePlaybackUseCase @Inject constructor(
                     params.playback.time.startDateTime.toLocalDateTime())
         }.flatMap {
             program = it
-            directory.streams.getVideoStream(channel, program, null)
+            directory.streams.getVideoStream(channel, program, session.parentalControlPassword)
         }.map { stream ->
             mapper.from(channel, stream)
         }.flatMap {

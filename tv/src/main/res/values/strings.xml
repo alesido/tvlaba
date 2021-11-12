@@ -107,7 +107,7 @@
     <string name="message_setting_temporarily_not_available">This setting is N/A now. Pardon for inconvenience.</string>
 
     <!--
-            Parental Code Dialog (Old, not used version)
+            Parental PIN
     -->
     <string name="title_parent_pin">Parental Control PIN Code</string>
     <string name="description_why_to_change_parent_pin">Change the PIN to secure your parent control</string>

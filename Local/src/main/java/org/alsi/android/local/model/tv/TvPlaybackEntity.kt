@@ -24,6 +24,8 @@ data class TvPlaybackEntity (
 
         var description: String? = null,
 
+        var isUnderParentControl: Boolean? = false,
+
         @Convert(converter = UriConverter::class, dbType = String::class)
         var streamUri: URI? = null,
 

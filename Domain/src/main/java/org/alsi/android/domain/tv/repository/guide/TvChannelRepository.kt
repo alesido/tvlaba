@@ -62,4 +62,12 @@ interface TvChannelRepository
     fun onTimeShiftChange(): Completable
 
     // endregion
+    // region Authorization
+
+    /** Authorize access to all channels protected by parental password or to a particular
+     *  channel given by the 2nd optional parameter.
+     */
+    fun authorizeContentAccess(password: String, channelId: Long? = null): Completable
+
+    // endregion
 }

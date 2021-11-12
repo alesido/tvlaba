@@ -17,7 +17,8 @@ class TvPlaybackEntityMapper: EntityMapper<TvPlaybackEntity, TvPlayback> {
                     stream = VideoStream(streamUri, streamKind, subtitlesUri),
                     time = TvProgramTimeInterval(start, end),
                     title = title,
-                    description = description
+                    description = description,
+                    isUnderParentControl = isUnderParentControl
             )
         }
     }
@@ -33,7 +34,8 @@ class TvPlaybackEntityMapper: EntityMapper<TvPlaybackEntity, TvPlayback> {
                     start = time?.startUnixTimeMillis?: 0L,
                     end = time?.endUnixTimeMillis?: 0L,
                     title = title,
-                    description = description
+                    description = description,
+                    isUnderParentControl = isUnderParentControl
             )
         }
     }

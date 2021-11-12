@@ -15,6 +15,8 @@ import org.alsi.android.tvlaba.tv.tv.TvGuideStartFragmentModule
 import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragment
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragment
 import org.alsi.android.tvlaba.tv.tv.directory.TvChannelDirectoryFragmentModule
+import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragment
+import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragmentModule
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragmentModule
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesFragment
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesFragmentModule
@@ -60,6 +62,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [TvProgramDetailsFragmentModule::class])
     abstract fun bindTvProgramDetailsFragment(): TvProgramDetailsFragment
+
+    @ContributesAndroidInjector(modules = [ParentalControlCheckInFragmentModule::class])
+    abstract fun bindParentalControlCheckInFragment(): ParentalControlCheckInFragment
 
     // VOD --
 

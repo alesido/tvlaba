@@ -83,6 +83,16 @@ abstract class TvChannelDataRepository: TvChannelRepository {
 
     abstract override fun onTimeShiftChange(): Completable
 
+    // endregion
+    // region Authorization
+
+    /** Authorize access to all channels protected by parental password or to a particular
+     *  channel given by the 2nd optional parameter.
+     */
+    abstract override fun authorizeContentAccess(password: String, channelId: Long?): Completable
+
+    // endregion
+
     fun dispose() {
         if (!disposables.isDisposed) disposables.dispose()
     }
