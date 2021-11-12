@@ -24,6 +24,7 @@ import org.alsi.android.presentation.state.ResourceState.*
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import java.util.*
 import javax.inject.Inject
 
 
@@ -67,8 +68,8 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
     }
 
     override fun onCreateGuidance(savedInstanceState: Bundle?) = GuidanceStylist.Guidance(
-        "Parent PIN",
-    "Change the PIN to secure your parent control",
+        getString(R.string.title_parent_pin),
+        getString(R.string.description_why_to_change_parent_pin),
         "",
         ContextCompat.getDrawable(requireContext(), R.drawable.settings_icon_metal)
     )
@@ -76,34 +77,35 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
         super.onCreateActions(actions, savedInstanceState)
         actions.add(GuidedAction.Builder(requireContext())
-            .id(ID_CURRENT_PIN).title("Current PIN").descriptionEditable(true)
+            .id(ID_CURRENT_PIN).title(getString(R.string.label_current_parent_pin))
+            .descriptionEditable(true)
             .descriptionInputType(TYPE_TEXT_VARIATION_PASSWORD or TYPE_CLASS_TEXT)
             .build())
         actions.add(GuidedAction.Builder(requireContext())
-            .id(ID_NEW_PIN_1).title("New PIN").descriptionEditable(true)
+            .id(ID_NEW_PIN_1).title(getString(R.string.label_new_parent_pin))
+            .descriptionEditable(true)
             .descriptionInputType(TYPE_TEXT_VARIATION_PASSWORD or TYPE_CLASS_TEXT)
             .build())
         actions.add(GuidedAction.Builder(requireContext())
-            .id(ID_NEW_PIN_2).title("Repeat PIN to validate your input").descriptionEditable(true)
+            .id(ID_NEW_PIN_2).title(getString(R.string.label_new_parent_pin_verification))
+            .descriptionEditable(true)
             .descriptionInputType(TYPE_TEXT_VARIATION_PASSWORD or TYPE_CLASS_TEXT)
             .build())
         actions.add(GuidedAction.Builder(requireContext())
-            .id(ID_BUTTON_SUBMIT).title("SUBMIT")
+            .id(ID_BUTTON_SUBMIT).title(getString(R.string.button_label_submit)
+                .toUpperCase(Locale.getDefault()))
             .build())
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.getLiveData().observe(this) { resource ->
-            when(resource.status) {
-                LOADING -> progressBarManager.show()
-                SUCCESS -> {
-                    progressBarManager.hide()
-                    dismiss()
-                }
-                ERROR -> {
-                    progressBarManager.hide()
-                    errorHandler.run(this, resource.throwable)
+        viewModel.getServiceEventChannel().observe(this) { event ->
+            event?.contentIfNotHandled?.let { eventCode ->
+                when(eventCode) {
+                    LOADING -> progressBarManager.show()
+                    REQUEST_SUCCESS -> { progressBarManager.hide(); dismiss() }
+                    ERROR -> { progressBarManager.hide(); errorHandler.run(this, event.error) }
+                    else -> {}
                 }
             }
         }
@@ -112,14 +114,17 @@ class ParentalControlPinFragment : GuidedStepSupportFragment() {
     override fun onGuidedActionClicked(action: GuidedAction?) {
         if (action?.id == ID_BUTTON_SUBMIT) {
             val currentPinInput = description(ID_CURRENT_PIN)
-            if (isInputEmpty(currentPinInput, "Please provide your current PIN.")) return
+            if (isInputEmpty(currentPinInput,
+                    getString(R.string.message_all_parent_pins_should_be_filled))) return
             val newPinInput = description(ID_NEW_PIN_1)
-            if (isInputEmpty(newPinInput, "Please provide your current PIN.")) return
+            if (isInputEmpty(newPinInput,
+                    getString(R.string.message_all_parent_pins_should_be_filled))) return
             val newPinConfirmation = description(ID_NEW_PIN_2)
             if (isInputEmpty(newPinConfirmation,
-                    "Please repeat new PIN input to verify it's correct.")) return
+                    getString(R.string.message_all_parent_pins_should_be_filled))) return
             if  (newPinInput != newPinConfirmation) {
-                showValidationMessage("New PIN input and New PIN Confirmation input do not match!")
+                showValidationMessage(
+                    getString(R.string.message_parent_pin_verification_failed))
                 return
             }
             viewModel.changeParentalControlPin(currentPinInput!!, newPinInput!!)

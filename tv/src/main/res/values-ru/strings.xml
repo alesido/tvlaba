@@ -104,18 +104,23 @@
     <!--
             Parental Code Dialog (Old, not used version)
     -->
-    <string name="parental_code_dialog_title">Родительский контроль</string>
-    <string name="parental_code_dialog_codes_not_match">Старый и новый пароли не совпадают!</string>
-    <string name="parental_code_dialog_codes_empty">Нужно обязательно указать пароли!</string>
-    <string name="parental_code_dialog_old_code">Текущий пароль</string>
-    <string name="parental_code_dialog_new_code">Новый пароль</string>
-    <string name="parental_code_dialog_new_code_confirm">Подтвердить</string>
+    <string name="title_parent_pin">Родительский ПИН</string>
+    <string name="description_why_to_change_parent_pin">Смените ПИН для защиты от просмотра определённых теле-каналов без разрешения</string>
+    <string name="label_current_parent_pin">ПИН</string>
+    <string name="label_new_parent_pin">Новый ПИН</string>
+    <string name="label_new_parent_pin_verification">Повторите новый ПИН для проверки</string>
+    <string name="message_parent_pin_verification_failed">Старый и новый ПИН не совпадают!</string>
+    <string name="message_all_parent_pins_should_be_filled">Нужно заполнить все поля!</string>
+
+    <string name="title_enter_parent_pin">Введите ПИН</string>
+    <string name="description_why_to_enter_parent_pin">или нажмите кнопку "Назад" для выхода</string>
+    <string name="label_parent_pin">ПИН</string>
 
     <!--
-        Standard Dialog
+        Buttons
     -->
-    <string name="dialog_button_text_ok">OK</string>
-    <string name="dialog_button_text_cancel">Отмена</string>
-
+    <string name="button_label_ok">OK</string>
+    <string name="button_label_cancel">Отмена</string>
+    <string name="button_label_submit">Готово</string>
 
 </resources>

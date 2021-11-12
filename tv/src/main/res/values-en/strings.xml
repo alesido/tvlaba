@@ -107,21 +107,26 @@
     <string name="message_setting_temporarily_not_available">This setting is N/A now. Pardon for inconvenience.</string>
 
     <!--
-            Parental Code Dialog (Old, not used version)
+            Parental Control
     -->
-    <string name="parental_code_dialog_title">Parental Control PIN Code</string>
-    <string name="parental_code_dialog_codes_not_match">Entered PIN codes do not match!</string>
-    <string name="parental_code_dialog_codes_empty">PIN codes should not be empty!</string>
-    <string name="parental_code_dialog_old_code">Old PIN Code</string>
-    <string name="parental_code_dialog_new_code">New PIN Code</string>
-    <string name="parental_code_dialog_new_code_confirm">NEConfirm</string>
+    <string name="title_parent_pin">Parent PIN</string>
+    <string name="description_why_to_change_parent_pin">Change the PIN to secure your parent control</string>
+    <string name="label_current_parent_pin">Current PIN</string>
+    <string name="label_new_parent_pin">New PIN</string>
+    <string name="label_new_parent_pin_verification">Repeat PIN to validate your input</string>
+    <string name="message_parent_pin_verification_failed">Entered PIN codes do not match!</string>
+    <string name="message_all_parent_pins_should_be_filled">All PIN codes should not be empty!</string>
 
+    <string name="title_enter_parent_pin">Enter PIN code</string>
+    <string name="description_why_to_enter_parent_pin">Access to this channel is denied. Enter PIN or press Back to exit</string>
+    <string name="label_parent_pin">PIN</string>
 
     <!--
-        Standard Dialog
+        Buttons
     -->
-    <string name="dialog_button_text_ok">OK</string>
-    <string name="dialog_button_text_cancel">Cancel</string>
+    <string name="button_label_ok">OK</string>
+    <string name="button_label_cancel">Cancel</string>
+    <string name="button_label_submit">Submit</string>
 
 
 </resources>
