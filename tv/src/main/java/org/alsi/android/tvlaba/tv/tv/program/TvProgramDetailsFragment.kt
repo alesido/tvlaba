@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
@@ -290,8 +289,6 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         val program = data?.cursor?.program
 
         if (null == program || null == data.cursor?.channel) {
-            Toast.makeText(context, R.string.error_message_no_program_data_available,
-                    Toast.LENGTH_LONG).show()
             navigateBack()
             return
         }
