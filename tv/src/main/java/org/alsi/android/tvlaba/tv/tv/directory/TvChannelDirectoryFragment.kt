@@ -12,6 +12,7 @@ import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.*
 import androidx.leanback.widget.ListRowPresenter.SelectItemViewHolderTask
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.OrientationHelper
@@ -28,6 +29,7 @@ import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
 import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
 import org.alsi.android.presentation.settings.ParentalControlViewModel
 import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalEventKind
+import org.alsi.android.presentation.state.Event
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvChannelDirectoryBrowseLiveData
@@ -53,6 +55,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private lateinit var browseViewModel : TvChannelDirectoryBrowseViewModel
     private lateinit var parentalViewModel: ParentalControlViewModel
+    private val parentalEventObserver = ParentalEventObserver()
 
     private var liveTimeIndicatorTaskSubscription: Disposable? = null
 
@@ -73,27 +76,19 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
         adapter = ArrayObjectAdapter( ListRowPresenter())
 
+        setupClickListener()
+        setupSelectListener()
+    }
+
+    private fun setupClickListener() {
         setOnItemViewClickedListener { _, item, _, _ ->
             if (item is TvChannel) {
                 if (parentalViewModel.isAccessAllowed(item)) {
-                    // navigate to program details fragment
-                    browseViewModel.onChannelAction(item) {
-                        NavHostFragment.findNavController(this)
-                            .navigate(
-                                TvChannelDirectoryFragmentDirections
-                                    .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
-                            )
-                    }
+                    // navigate to program details or playback fragment
+                    browseViewModel.onChannelAction(item) { navigateOnChannelAction(item) }
                 }
                 else {
-                    // open parental code check in form
-                    val fragment = ParentalControlCheckInFragment()
-                    val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                    fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
-                    transaction
-                        .replace(android.R.id.content, fragment, fragment.javaClass.toString())
-                        .commit()
-
+                    openParentalAuthorization()
                 }
             }
             else if (item is CardMenuItem) {
@@ -113,7 +108,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 }
             }
         }
+    }
 
+    private fun setupSelectListener() {
         setOnItemViewSelectedListener { _, item, rowViewHolder, _ ->
             if (item != null) {
                 // record current browsing position to restore on the next start
@@ -125,6 +122,31 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 browseViewModel.onItemsVisibilityChange(visibleChannelDirectoryItemIds())
             }
         }
+    }
+
+    private fun openParentalAuthorization() {
+        parentalViewModel.getEventChannel().observe(this, parentalEventObserver)
+        val fragment = ParentalControlCheckInFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
+        transaction
+            .replace(android.R.id.content, fragment, fragment.javaClass.toString())
+            .commit()
+    }
+
+    private inner class ParentalEventObserver: Observer<Event<ParentalEventKind>> {
+        override fun onChanged(t: Event<ParentalEventKind>?) {
+            t?.contentIfNotHandled?.let { kind -> handleParentalControlEvent(kind, t.payload) }
+        }
+    }
+
+    private fun navigateOnChannelAction(channel: TvChannel) {
+        NavHostFragment.findNavController(this).navigate(
+            if (channel.features.hasSchedule) TvChannelDirectoryFragmentDirections
+                .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
+            else TvChannelDirectoryFragmentDirections
+                .actionTvChannelDirectoryFragmentToTvPlaybackAndScheduleFragment()
+        )
     }
 
     private fun navigateToTv(serviceId: Long) {
@@ -172,9 +194,6 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         super.onStart()
         browseViewModel.getLiveDirectory().observe(this, {
             if (it != null) handleCategoriesListDataState(it)
-        })
-        parentalViewModel.getEventChannel().observe(this, {
-           it?.contentIfNotHandled?.let { kind -> handleParentalControlEvent(kind, it.payload) }
         })
     }
 
@@ -267,13 +286,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
     private fun handleParentalControlEvent(kind: ParentalEventKind, payload: Any?) {
         if (kind == ParentalEventKind.ACCESS_GRANTED && payload is TvChannel) {
-            browseViewModel.onChannelAction(payload) {
-                NavHostFragment.findNavController(this)
-                    .navigate(
-                        TvChannelDirectoryFragmentDirections
-                            .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
-                    )
-            }
+            browseViewModel.onChannelAction(payload) { navigateOnChannelAction(payload) }
+            parentalViewModel.getEventChannel().removeObserver(parentalEventObserver)
         }
     }
 
