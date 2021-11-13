@@ -838,7 +838,7 @@
     },
     {
       "id": "22:668890954166797802",
-      "lastPropertyId": "10:1662814039439180804",
+      "lastPropertyId": "11:896044203683486106",
       "name": "TvPlaybackEntity",
       "properties": [
         {
@@ -898,6 +898,12 @@
           "id": "10:1662814039439180804",
           "name": "subtitlesUri",
           "type": 9
+        },
+        {
+          "id": "11:896044203683486106",
+          "name": "isUnderParentControl",
+          "type": 1,
+          "flags": 2
         }
       ],
       "relations": []

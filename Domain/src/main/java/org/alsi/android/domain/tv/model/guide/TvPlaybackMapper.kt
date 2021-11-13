@@ -1,7 +1,6 @@
 package org.alsi.android.domain.tv.model.guide
 
 import org.alsi.android.domain.streaming.model.VideoStream
-import java.net.URI
 
 class TvPlaybackMapper {
 
@@ -9,11 +8,13 @@ class TvPlaybackMapper {
         with (channel.live) {
             return TvPlayback(
                     channelId = channel.id,
-                    programId = time?.startUnixTimeMillis?:0L,
+                    programId = time?.startUnixTimeMillis,
                     stream = stream,
                     time = time,
                     title = title,
                     description = description,
+
+                    isLive = true,
                     isUnderParentControl = channel.features.isPasswordProtected,
 
                     channelNumber = channel.number,
@@ -32,6 +33,8 @@ class TvPlaybackMapper {
                     time = time,
                     title = title,
                     description = description,
+
+                    isLive = false,
                     isUnderParentControl = channel.features.isPasswordProtected,
 
                     mainPosterUri = mainPosterUri,

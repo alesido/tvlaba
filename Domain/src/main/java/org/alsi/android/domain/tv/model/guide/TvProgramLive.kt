@@ -19,4 +19,10 @@ class TvProgramLive(
          * Description of the program. Optional and may be N/A for channels w/o EPG.
          */
         var description: String? = null
-)
+) {
+        fun isEmpty() = null == time && null == title
+
+        companion object {
+                fun empty() = TvProgramLive()
+        }
+}

@@ -10,18 +10,19 @@ class TvPlayback (
          */
         val channelId: Long,
 
-        /** ID of an archive program or "null" for a live, which identified by a channel
+        /** ID of an archive program or "null" for a channel w/o EPG
          */
         val programId: Long? = null,
 
-        /** Live or archive stream
+        /** Stream for live or archive video. May be not set initially because an
+         *  additional request required.
          */
-        var stream: VideoStream?,
+        var stream: VideoStream? = null,
 
         /** Program time interval, start and end time. N/A for channels w/o EPG.
          *
-         * NOTE Seems this are duplicated data, but it should simplify things
-         * 'cause we have similar but different data sets on live and archive program.
+         * NOTE Looks like this is a duplicate, but it should simplify things because there are
+         *  while similar still different data sets on live and archive program.
          */
         val time: TvProgramTimeInterval? = null,
 
@@ -33,9 +34,16 @@ class TvPlayback (
          */
         val description: String? = null,
 
+        /** ... initially it was added to repeat stream request after parental control authorization
+         * (to reveal actual stream URL)
+         *
+         * This parameter is made required just to not forget to assign it when the object created
+         */
+        var isLive: Boolean = true,
+
         /** Tels whether this like 18+ playback
          */
-        val isUnderParentControl: Boolean? = false,
+        val isUnderParentControl: Boolean = false,
 
         // -- posters
 
@@ -93,7 +101,7 @@ class TvPlayback (
    fun isEmpty() = channelId == -1L && stream == null
 
     companion object {
-            fun empty() = TvPlayback(channelId = -1L, stream = null)
+            fun empty() = TvPlayback(channelId = -1L)
     }
 }
 

@@ -12,13 +12,15 @@ class TvPlaybackEntityMapper: EntityMapper<TvPlaybackEntity, TvPlayback> {
     override fun mapFromEntity(entity: TvPlaybackEntity): TvPlayback {
         return with(entity) {
             TvPlayback(
-                    channelId = channelId,
-                    programId = programId,
-                    stream = VideoStream(streamUri, streamKind, subtitlesUri),
-                    time = TvProgramTimeInterval(start, end),
-                    title = title,
-                    description = description,
-                    isUnderParentControl = isUnderParentControl
+                channelId = channelId,
+                programId = programId,
+                stream = streamUri?.let { VideoStream(streamUri, streamKind, subtitlesUri) },
+                time = if (start != null && end != null)
+                    TvProgramTimeInterval(start!!, end!!) else null,
+                title = title,
+                description = description,
+                isLive = isLive,
+                isUnderParentControl = isUnderParentControl
             )
         }
     }
@@ -27,14 +29,15 @@ class TvPlaybackEntityMapper: EntityMapper<TvPlaybackEntity, TvPlayback> {
         return with(domain) {
             TvPlaybackEntity(
                     channelId = channelId,
-                    programId = programId?: 0L,
+                    programId = programId,
                     streamUri = stream?.uri,
                     streamKind = stream?.kind?:VideoStreamKind.UNKNOWN,
                     subtitlesUri = stream?.subtitles,
-                    start = time?.startUnixTimeMillis?: 0L,
-                    end = time?.endUnixTimeMillis?: 0L,
+                    start = time?.startUnixTimeMillis,
+                    end = time?.endUnixTimeMillis,
                     title = title,
                     description = description,
+                    isLive = isLive,
                     isUnderParentControl = isUnderParentControl
             )
         }

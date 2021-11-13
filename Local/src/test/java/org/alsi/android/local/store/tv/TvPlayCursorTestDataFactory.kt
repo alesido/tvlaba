@@ -15,12 +15,13 @@ object TvPlayCursorTestDataFactory {
         playback = TvPlayback(
             channelId = 321L,
             programId = 4321L,
-            title = "Test Program Title",
-            description = "Test Program Description",
             stream = VideoStream(
                 uri = URI("http://stream.test.com"),
                 kind = VideoStreamKind.LIVE
-            )
+            ),
+            title = "Test Program Title",
+            description = "Test Program Description",
+            isLive = true
         )
     )
 
@@ -28,12 +29,14 @@ object TvPlayCursorTestDataFactory {
         val playback = TvPlayback(
             channelId = 321L,
             programId = 4321L,
-            title = "Test Program Title 2",
-            description = "Test Program Description 2",
             stream = VideoStream(
                 uri = URI("http://stream2.test.com"),
                 kind = VideoStreamKind.RECORD
-            ))
+            ),
+            title = "Test Program Title 2",
+            description = "Test Program Description 2",
+            isLive = true
+        )
         playback.position = 789L
         return TvPlayCursor(
             categoryId = 12L,

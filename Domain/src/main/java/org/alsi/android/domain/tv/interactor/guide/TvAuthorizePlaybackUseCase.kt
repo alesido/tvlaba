@@ -35,8 +35,7 @@ class TvAuthorizePlaybackUseCase @Inject constructor(
             return Single.error(Throwable("The TV Directory Repository is N/A!"))
 
         val streamSingle = with (params.playback) {
-            if (programId == -1000L) {
-                // live playback
+            if (isLive) {
                 directory.channels.findChannelById(channelId).flatMap { channel ->
                     targetChannel = channel
                     directory.streams

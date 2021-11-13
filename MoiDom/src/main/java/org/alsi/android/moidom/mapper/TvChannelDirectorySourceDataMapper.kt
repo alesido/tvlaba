@@ -55,11 +55,14 @@ class TvChannelDirectorySourceDataMapper: SourceDataMapper<ChannelListResponse, 
                             number = channelNumber++,
                             title = name,
 
-                            live = TvProgramLive(
+                            live = if (channelHasSchedule)
+                                TvProgramLive(
                                     time = TvProgramTimeInterval(
                                             epg_start * DateUtils.SECOND_IN_MILLIS,
                                             epg_end * DateUtils.SECOND_IN_MILLIS),
-                                    title = epg_progname),
+                                    title = epg_progname)
+                            else
+                                TvProgramLive.empty(),
 
                             features = TvChannelFeatures(
                                     hasSchedule = channelHasSchedule,

@@ -13,7 +13,7 @@ abstract class TvPlayCursorRepository {
      */
     protected var cursor: TvPlayCursor = TvPlayCursor(
             categoryId = 0L,
-            playback = TvPlayback(channelId = 0L, stream = null),
+            playback = TvPlayback.empty(),
             seekTime = 0L,
             timeStamp = System.currentTimeMillis()
     )

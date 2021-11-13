@@ -10,21 +10,40 @@ data class TvPlaybackEntity (
 
         @Id var id: Long = 0L,
 
+        /** ID of the playback's TV channel.
+         *
+         */
         @Index
         var channelId: Long = 0L,
 
+        /** ID of program in TV schedule. Null, if the channel has no schedule.
+         */
         @Index
-        var programId: Long = 0L,
+        var programId: Long? = null,
 
-        var start: Long = 0L,
+        /** Program's start time in millis since epoch. Null, if the channel has no schedule.
+         */
+        var start: Long? = null,
 
-        var end: Long = 0L,
+        /** Program's start time in millis since epoch. Null, if the channel has no schedule.
+         */
+        var end: Long? = null,
 
+        /** Title of played back program
+         */
         var title: String? = null,
 
+        /** Description of played back program
+         */
         var description: String? = null,
 
-        var isUnderParentControl: Boolean? = false,
+        /** Tells, whether this playback intended to play as live (true) or archive (false)
+         */
+        var isLive: Boolean = true,
+
+        /** Tells, whether access to this playback is protected with parental control password.
+         */
+        var isUnderParentControl: Boolean = false,
 
         @Convert(converter = UriConverter::class, dbType = String::class)
         var streamUri: URI? = null,
@@ -35,8 +54,3 @@ data class TvPlaybackEntity (
         @Convert(converter = UriConverter::class, dbType = String::class)
         var subtitlesUri: URI? = null
 )
-// @Backlink can only be used on a ToMany relation
-//{
-//        @Backlink
-//        lateinit var channel: ToOne<TvPlayCursorEntity>
-//}

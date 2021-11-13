@@ -106,13 +106,14 @@ class TvDaySchedule(
     }
 
     fun positionOf(programIssue: TvProgramIssue): Int? = positionMap[programIssue.programId]
-    fun positionOf(playback: TvPlayback): Int? = positionMap[playback.programId]
+    fun positionOf(playback: TvPlayback): Int? = playback.programId?.let { positionMap[it] }
 
     fun contains(programIssue: TvProgramIssue) = positionMap[programIssue.programId] != null
-    fun contains(playback: TvPlayback) = positionMap[playback.programId] != null
+    fun contains(playback: TvPlayback) = playback.programId != null
+            && positionMap[playback.programId] != null
 
     fun programForPlayback(playback: TvPlayback): TvProgramIssue? {
-        val position = positionMap[playback.programId]
+        val position = playback.programId?.let { positionMap[it] }
         return position?.let { items[position] }
     }
 
