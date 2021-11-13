@@ -45,8 +45,12 @@ class TvAuthorizePlaybackUseCase @Inject constructor(
             }
             else {
                 // archive playback
-                directory.programs.getArchiveProgram(channelId,
-                    time!!.startDateTime.toLocalDateTime()).flatMap { program ->
+                directory.channels.findChannelById(channelId).map {
+                    targetChannel = it
+                }.flatMap {
+                    directory.programs.getArchiveProgram(channelId,
+                        time!!.startDateTime.toLocalDateTime())
+                }.flatMap { program ->
                     targetProgram = program
                     directory.streams
                         .getVideoStream(null, program, session.parentalControlPassword)
@@ -55,7 +59,11 @@ class TvAuthorizePlaybackUseCase @Inject constructor(
         }
 
         return streamSingle.map { stream ->
-            mapper.from(targetChannel!!, stream)
+            targetProgram?.let {
+                mapper.from(targetChannel!!, targetProgram!!, stream)
+            }?: let {
+                mapper.from(targetChannel!!, stream)
+            }
         }.flatMap { playback ->
             session.play.setCursorTo(targetChannel!!.categoryId, playback)
         }

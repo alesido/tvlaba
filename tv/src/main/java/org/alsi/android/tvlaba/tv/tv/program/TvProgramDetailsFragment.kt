@@ -12,7 +12,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.DetailsSupportFragment
 import androidx.leanback.app.DetailsSupportFragmentBackgroundController
+import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.*
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.bumptech.glide.Glide
@@ -21,6 +23,8 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import dagger.android.support.AndroidSupportInjection
 import org.alsi.android.domain.tv.model.guide.*
+import org.alsi.android.presentation.settings.ParentalControlViewModel
+import org.alsi.android.presentation.state.Event
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvProgramDetailsLiveData
@@ -28,6 +32,7 @@ import org.alsi.android.presentationtv.model.TvProgramDetailsViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragment
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
 import javax.inject.Inject
@@ -39,6 +44,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
 
     private lateinit var detailsViewModel: TvProgramDetailsViewModel
+    private lateinit var parentalViewModel: ParentalControlViewModel
 
     private val bgController = DetailsSupportFragmentBackgroundController(this)
 
@@ -53,7 +59,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setupViewModel()
+        setupViewModels()
         setupAdapter()
     }
 
@@ -118,9 +124,13 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     // endregion
     // region View Model setup
 
-    private fun setupViewModel() {
+    private fun setupViewModels() {
         detailsViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvProgramDetailsViewModel::class.java)
+        parentalViewModel = ViewModelProvider(
+            requireActivity(), // shared view model
+            viewModelFactory
+        ).get(ParentalControlViewModel::class.java)
     }
 
     private fun launchViewModel() {
@@ -279,10 +289,15 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
         val program = data?.cursor?.program
 
-        if (null == program) {
+        if (null == program || null == data.cursor?.channel) {
             Toast.makeText(context, R.string.error_message_no_program_data_available,
                     Toast.LENGTH_LONG).show()
             navigateBack()
+            return
+        }
+
+        if (! parentalViewModel.isAccessAllowed(data.cursor!!.channel!!, data)) {
+            openParentalAuthorization()
             return
         }
 
@@ -322,6 +337,30 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         if (initialRow == RowKind.SCHEDULE) {
             setSelectedPosition(scheduleRowPosition)
             initialRow = RowKind.DETAILS
+        }
+    }
+
+    private fun openParentalAuthorization() {
+        parentalViewModel.getEventChannel().observe(this, parentalEventObserver)
+        val fragment = ParentalControlCheckInFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
+        transaction
+            .replace(android.R.id.content, fragment, fragment.javaClass.toString())
+            .commit()
+    }
+
+    private val parentalEventObserver = ParentalEventObserver()
+    private inner class ParentalEventObserver:
+        Observer<Event<ParentalControlViewModel.ParentalEventKind>> {
+        override fun onChanged(t: Event<ParentalControlViewModel.ParentalEventKind>?) {
+            t?.contentIfNotHandled?.let { kind ->
+                if (kind == ParentalControlViewModel.ParentalEventKind.ACCESS_GRANTED
+                    && t.payload is TvProgramDetailsLiveData) {
+                    parentalViewModel.getEventChannel().removeObserver(parentalEventObserver)
+                    bindProgramData(t.payload as TvProgramDetailsLiveData)
+                }
+            }
         }
     }
 
