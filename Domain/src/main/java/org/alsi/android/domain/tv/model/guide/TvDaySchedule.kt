@@ -149,4 +149,10 @@ class TvDaySchedule(
             var ending: TvProgramIssue? = null,
             var starting: TvProgramIssue? = null
     )
+
+    fun isEmpty() = items.isEmpty()
+
+    companion object {
+        fun empty() = TvDaySchedule(-1L, LocalDate.now(), items = listOf())
+    }
 }

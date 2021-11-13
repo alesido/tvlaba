@@ -6,6 +6,8 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.CompletableUseCase
+import org.alsi.android.domain.tv.model.guide.TvChannel
+import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.session.TvBrowseCursorReference
 import org.alsi.android.domain.tv.model.session.TvBrowsePage
 import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
@@ -24,6 +26,8 @@ class TvRestoreBrowsingContextUseCase @Inject constructor(
     private val presentationManager: PresentationManager,
     postExecutionThread: PostExecutionThread
 ) : CompletableUseCase<TvRestoreBrowsingContextUseCase.Params?>(postExecutionThread) {
+
+    var channel: TvChannel? = null
 
     override fun buildUseCaseCompletable(params: Params?): Completable {
         params?: throw IllegalArgumentException("TvRestoreBrowsingContext: Params can't be null!")
@@ -45,30 +49,36 @@ class TvRestoreBrowsingContextUseCase @Inject constructor(
             if (dir.channels.isEmpty() || dir.categories.isEmpty())
                 return@flatMap Single.error(Throwable("Cannot restore browsing context on empty channels directory"))
 
-            val channel = if (!ref.isEmpty()) dir.channelById[ref.channelId]
+            channel = if (!ref.isEmpty()) dir.channelById[ref.channelId]
                 else dir.channels[0]
 
-            if (null == channel?.categoryId || null == dir.categoryById[channel.categoryId])
+            if (null == channel?.categoryId || null == dir.categoryById[channel!!.categoryId])
                 return@flatMap Single.error(Throwable("Cannot restore browsing context on corrupted channels directory"))
 
             val category = if (!ref.isEmpty()) dir.categoryById[ref.categoryId]
-                else dir.categoryById[channel.categoryId]
+                else dir.categoryById[channel!!.categoryId]
 
+            // FIXME Not subscribed Single ?
             session.browse.moveCursorTo(
                 category = category,
                 channel = if (!ref.isEmpty()) channel else null, // to focus on category initially
                 page = if (!ref.isEmpty()) params.browseCursorReference.page else TvBrowsePage.CHANNELS)
+
             Single.just(dir)
 
         }.flatMap { dir ->
 
             val channelId = if (!ref.isEmpty()) ref.channelId else dir.channels[0].id
-            directory.programs.getDaySchedule(channelId, ref.scheduleDate?: LocalDate.now())
+
+            if (channel!!.features.hasSchedule)
+                directory.programs.getDaySchedule(channelId, ref.scheduleDate?: LocalDate.now())
+            else
+                Single.just(TvDaySchedule.empty())
 
         }.flatMap {
 
             session.browse.moveCursorTo(
-                schedule = it,
+                schedule = if (it.isEmpty()) null else it,
                 program = if (ref.programId != null) it.programById(ref.programId) else null,
                 reuse = true
             )

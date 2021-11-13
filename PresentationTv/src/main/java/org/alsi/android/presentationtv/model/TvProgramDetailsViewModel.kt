@@ -105,7 +105,11 @@ class TvProgramDetailsViewModel @Inject constructor (
 
     inner class TvBrowseCursorSubscriber: DisposableObserver<TvBrowseCursor>() {
         override fun onNext(cursor: TvBrowseCursor) {
-            if (null == cursor.category && null == cursor.channel) return
+            if (null == cursor.category && null == cursor.channel) {
+                // no data on program available due to a service error (?)
+                liveData.postValue(Resource.success())
+                return
+            }
             snapshot.cursor = cursor
             if (cursor.schedule != null && cursor.program != null) {
                 // another program selected from the current week day
@@ -117,7 +121,7 @@ class TvProgramDetailsViewModel @Inject constructor (
                         getWeekDayPosition(cursor.schedule!!.date)?: 0
                 }
             }
-            else if (cursor.schedule != null && null == cursor.program) {
+            else if (cursor.schedule?.isEmpty() == false && null == cursor.program) {
                 // another week day selected ...
                 with(cursor) {
                     browseCursorMoveUseCase.execute(TvBrowseCursorMoveSubscriber(),
@@ -130,12 +134,15 @@ class TvProgramDetailsViewModel @Inject constructor (
                             ))
                 }
             }
-            else if (cursor.channel != null) {
+            else if (null == cursor.schedule && cursor.channel!!.features.hasSchedule) {
                 // came from the channel directory - both current schedule and program is N/A
                 dayScheduleUseCase.execute(DayScheduleSubscriber(), TvDayScheduleUseCase.Params(
                         channelId = cursor.channel!!.id,
                         date = LocalDate.now()
                 ))
+            }
+            else {
+                liveData.postValue(Resource.success())
             }
         }
         override fun onError(e: Throwable) {
