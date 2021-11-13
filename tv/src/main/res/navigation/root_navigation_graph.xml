@@ -215,6 +215,10 @@
                 android:id="@+id/action_tvChannelDirectoryFragment_to_tvProgramDetailsFragment"
                 app:destination="@id/tvProgramDetailsFragment"
                 />
+            <action
+                android:id="@+id/action_tvChannelDirectoryFragment_to_tvPlaybackAndScheduleFragment"
+                app:destination="@id/tvPlaybackAndScheduleFragment"
+                />
         </fragment>
         <fragment
             android:id="@+id/tvProgramDetailsFragment"

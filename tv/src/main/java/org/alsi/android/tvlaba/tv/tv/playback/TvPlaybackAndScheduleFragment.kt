@@ -11,6 +11,7 @@ import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
@@ -33,6 +34,8 @@ import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.domain.tv.model.guide.TvWeekDay
 import org.alsi.android.presentation.settings.ParentalControlViewModel
+import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalEventKind
+import org.alsi.android.presentation.state.Event
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.framework.VideoLayoutCalculator
@@ -155,9 +158,6 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         })
         footerViewModel.getLiveData().observe(this, {
             if (it != null) handleFooterDataChange(it)
-        })
-        parentalViewModel.getEventChannel().observe(this, {
-            it?.contentIfNotHandled?.let { kind -> handleParentalControlEvent(kind, it.payload) }
         })
     }
 
@@ -300,18 +300,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         }
     }
 
-    private fun handleParentalControlEvent(kind: ParentalControlViewModel.ParentalEventKind, payload: Any?) {
-        if (kind == ParentalControlViewModel.ParentalEventKind.ACCESS_GRANTED && payload is TvPlayback) {
-            startPlayback(payload)
-        }
-    }
-
     private fun startPlayback(playback: TvPlayback?) {
         playback?.stream?.uri?: return
         context?.let {
 
             if (! parentalViewModel.isAccessAllowed(playback)) {
-                openParentalCheckIn()
+                openParentalAuthorization()
                 return
             }
 
@@ -347,7 +341,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         }
     }
 
-    private fun openParentalCheckIn() {
+    private fun openParentalAuthorization() {
+        parentalViewModel.getEventChannel().observe(this, parentalEventObserver)
         val fragment = ParentalControlCheckInFragment()
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         fragment.uiStyle = GuidedStepSupportFragment.UI_STYLE_ENTRANCE
@@ -355,6 +350,19 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             .replace(android.R.id.content, fragment, fragment.javaClass.toString())
             .commit()
     }
+
+    private val parentalEventObserver = ParentalEventObserver()
+    private inner class ParentalEventObserver: Observer<Event<ParentalEventKind>> {
+        override fun onChanged(t: Event<ParentalEventKind>?) {
+            t?.contentIfNotHandled?.let { kind ->
+                if (kind == ParentalEventKind.ACCESS_GRANTED && t.payload is TvPlayback) {
+                    playbackViewModel.authorizePlayback(t.payload as TvPlayback)
+                    parentalViewModel.getEventChannel().removeObserver(parentalEventObserver)
+                }
+            }
+        }
+    }
+
 
     private fun handlePreferenceChangeEvent(resource: Resource<TvPlaybackPreferenceChangeEvent>) {
         when (resource.status) {

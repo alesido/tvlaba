@@ -27,8 +27,7 @@ class ParentalControlViewModel @Inject constructor (
 
     private var currentPass: String? = null
 
-    private var channelVerified: TvChannel? = null
-    private var playbackVerified: TvPlayback? = null
+    private var authorizationSubject: Any? = null
 
     init {
         getSessionPasswordUseCase.execute(object: DisposableSingleObserver<String>() {
@@ -73,7 +72,7 @@ class ParentalControlViewModel @Inject constructor (
             invalidatePassword()
             return true
         }
-        playbackVerified = playback
+        authorizationSubject = playback
         return currentPass != null
 
     }
@@ -84,7 +83,7 @@ class ParentalControlViewModel @Inject constructor (
             invalidatePassword()
             return true
         }
-        channelVerified = channel
+        authorizationSubject = channel
         return currentPass != null
     }
 
@@ -92,8 +91,8 @@ class ParentalControlViewModel @Inject constructor (
         override fun onComplete() {
             currentPass = pass
             serviceChannel.postValue(Event(ParentalServiceEventKind.REQUEST_SUCCESS))
-            eventChannel.postValue(Event(ACCESS_GRANTED, payload = channelVerified))
-            channelVerified = null
+            eventChannel.postValue(Event(ACCESS_GRANTED, payload = authorizationSubject))
+            authorizationSubject = null
         }
         override fun onError(e: Throwable) = serviceChannel.postValue(
             Event(ParentalServiceEventKind.ERROR, error = e))

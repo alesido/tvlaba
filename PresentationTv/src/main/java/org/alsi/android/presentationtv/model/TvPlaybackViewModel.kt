@@ -17,6 +17,7 @@ import javax.inject.Inject
 class TvPlaybackViewModel @Inject constructor(
 
         private val currentPlaybackUseCase: TvCurrentPlaybackUseCase,
+        private val authorizePlaybackUseCase: TvAuthorizePlaybackUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val nextPlaybackUseCase: TvNextPlaybackUseCase,
         private val switchToLivePlaybackUseCase: TvSwitchToLivePlaybackUseCase,
@@ -99,6 +100,17 @@ class TvPlaybackViewModel @Inject constructor(
                 TvUpdatePlaybackCursorUseCase.Params(currentPlayback)
             )
         }
+    }
+
+    fun authorizePlayback(subject: TvPlayback) {
+        liveData.postValue(Resource.loading())
+        authorizePlaybackUseCase.execute(object : DisposableSingleObserver<TvPlayback>() {
+            override fun onSuccess(t: TvPlayback) {
+                // current playback subscriber will get result too,
+                // so avoid duplicate notification here
+            }
+            override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
+        }, TvAuthorizePlaybackUseCase.Params(subject))
     }
 
     fun dispose() {

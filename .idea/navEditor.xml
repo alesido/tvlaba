@@ -108,11 +108,6 @@
                       <LayoutPositions />
                     </value>
                   </entry>
-                  <entry key="actionGlobalNavigateSettingsSection">
-                    <value>
-                      <LayoutPositions />
-                    </value>
-                  </entry>
                   <entry key="actionGlobalNavigateTvSection">
                     <value>
                       <LayoutPositions />
@@ -150,11 +145,6 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_appRouterFragment_to_loginFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_appRouterFragment_to_settingsFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -217,18 +207,6 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="settingsFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="607" />
-                            <option name="y" value="-950" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="tvGuideNavigation">
                     <value>
                       <LayoutPositions>
@@ -243,6 +221,12 @@
                             <entry key="tvChannelDirectoryFragment">
                               <value>
                                 <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="698" />
+                                      <option name="y" value="-630" />
+                                    </Point>
+                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvChannelDirectoryFragment_to_tvProgramDetailsFragment">
@@ -258,6 +242,12 @@
                             <entry key="tvGuideStartFragment">
                               <value>
                                 <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="12" />
+                                      <option name="y" value="48" />
+                                    </Point>
+                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvGuideStartFragment_to_tvChannelDirectoryFragment">
@@ -283,6 +273,12 @@
                             <entry key="tvPlaybackAndScheduleFragment">
                               <value>
                                 <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="1156" />
+                                      <option name="y" value="73" />
+                                    </Point>
+                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvPlaybackAndScheduleFragment_to_tvProgramDetailsFragment">
@@ -298,6 +294,12 @@
                             <entry key="tvProgramDetailsFragment">
                               <value>
                                 <LayoutPositions>
+                                  <option name="myPosition">
+                                    <Point>
+                                      <option name="x" value="713" />
+                                      <option name="y" value="-163" />
+                                    </Point>
+                                  </option>
                                   <option name="myPositions">
                                     <map>
                                       <entry key="action_tvProgramDetailsFragment_to_tvChannelDirectoryFragment">
