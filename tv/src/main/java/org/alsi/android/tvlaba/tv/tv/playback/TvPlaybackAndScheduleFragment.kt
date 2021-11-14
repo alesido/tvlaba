@@ -338,6 +338,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             else {
                 Toast.makeText(context, R.string.error_message_no_playback_available, Toast.LENGTH_LONG).show()
             }
+
+            setSelectedPosition(0)
         }
     }
 

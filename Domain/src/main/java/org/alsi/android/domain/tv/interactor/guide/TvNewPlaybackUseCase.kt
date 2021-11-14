@@ -20,6 +20,8 @@ class TvNewPlaybackUseCase @Inject constructor(
 {
     private val mapper = TvPlaybackMapper()
 
+    private lateinit var foundChannel: TvChannel
+
     override fun buildUseCaseObservable(params: Params?): Single<TvPlayback> {
 
         if (null == params) return Single.error(Throwable("No parameters to get playback data!"))
@@ -30,15 +32,32 @@ class TvNewPlaybackUseCase @Inject constructor(
             return Single.error(Throwable("The TV Directory Repository is N/A!"))
 
         with(params) {
-            if (null == channel && null == program?.programId)
-                return Single.error(Throwable("Wrong new playback parameters!"))
-            return directory.streams.getVideoStream(channel, program, session.parentalControlPassword).map { stream ->
-                if (channel != null && program?.programId != null)
-                    mapper.from(channel, program, stream)
-                else
-                    mapper.from(channel!!, stream)
-            }.flatMap { playback ->
-                session.play.setCursorTo(categoryId, playback) // set playback cursor to the new playback item asynchronously
+
+            // live stream case
+            program ?: let {
+                channel ?: return Single.error(
+                    Throwable("Wrong parameters for LIVE stream playback!"))
+
+                return directory.streams.getVideoStream(channel, session.parentalControlPassword)
+                    .map { stream -> mapper.from(channel, stream) }
+                    .flatMap { playback -> session.play.setCursorTo(categoryId, playback) }
+            }
+
+
+            // archive stream case
+            return if (null == channel) {
+                directory.channels.findChannelById(program.channelId).flatMap {
+                    foundChannel = it
+                    directory.streams.getVideoStream(foundChannel, program,
+                        session.parentalControlPassword)
+                }
+                    .map { stream -> mapper.from(foundChannel, program, stream) }
+                    .flatMap { playback -> session.play.setCursorTo(categoryId, playback) }
+
+            } else {
+                directory.streams.getVideoStream(channel, program, session.parentalControlPassword)
+                    .map { stream -> mapper.from(channel, program, stream) }
+                    .flatMap { playback -> session.play.setCursorTo(categoryId, playback) }
             }
         }
     }
