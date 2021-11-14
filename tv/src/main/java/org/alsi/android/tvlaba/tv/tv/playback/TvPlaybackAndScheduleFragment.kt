@@ -75,6 +75,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
     private var videoLayoutCalculator: VideoLayoutCalculator? = null
 
+    private var anotherWeekdaySelected = false
+
     // region Android Life Cycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -465,6 +467,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
         // ensure initial schedule & week day selection
         setOnItemCardSelectedListener()
+
+        if (anotherWeekdaySelected) {
+            setSelectedPosition(adapter.size() - 2)
+            anotherWeekdaySelected = false
+        }
     }
 
     // endregion
@@ -480,6 +487,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 if (footerViewModel.currentScheduleItemPosition
                         != footerViewModel.scheduleItemPositionOf(item))
                     gridView.selectedPosition = footerViewModel.currentScheduleItemPosition
+                setSelectedPosition(adapter.size() - 2)
                 isInitialProgramSelection = false
 
             }
@@ -501,6 +509,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 }
                 is TvWeekDay -> {
                     this@TvPlaybackAndScheduleFragment.footerViewModel.onTvWeekDayAction(item)
+                    anotherWeekdaySelected = true
                 }
             }
         }
