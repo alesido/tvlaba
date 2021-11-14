@@ -39,7 +39,6 @@ class TvPlaybackFooterViewModel @Inject constructor (
 
     init {
         liveData.postValue(Resource(ResourceState.LOADING, null, null))
-        weekDayRangeUseCase.execute(TvWeekDayRangeSubscriber())
         currentPlaybackUseCase.execute(CurrentPlaybackSubscriber())
     }
 
@@ -69,6 +68,10 @@ class TvPlaybackFooterViewModel @Inject constructor (
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {
         override fun onNext(playback: TvPlayback) {
             currentPlayback = playback
+            if (! playback.hasScheduleLinked()) {
+                liveData.postValue(Resource(ResourceState.SUCCESS, snapshot, null))
+                return
+            }
             snapshot.schedule?.let {
                 if (it.contains(playback)) {
                     moveToProgram(it, playback)
@@ -79,6 +82,7 @@ class TvPlaybackFooterViewModel @Inject constructor (
                     channelId = playback.channelId,
                     date = playback.time?.startDateTime?.toLocalDate()
             ))
+            weekDayRangeUseCase.execute(TvWeekDayRangeSubscriber())
         }
         override fun onError(e: Throwable) {
             // handled in the playback view model

@@ -97,8 +97,9 @@ class TvPlayback (
      */
     var position: Long = 0L
 
+    fun hasScheduleLinked() = programId != null
 
-   fun isEmpty() = channelId == -1L && stream == null
+    fun isEmpty() = channelId == -1L && stream == null
 
     companion object {
             fun empty() = TvPlayback(channelId = -1L)
