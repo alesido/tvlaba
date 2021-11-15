@@ -38,6 +38,11 @@ class TvPlaybackLeanbackGlue(
      */
     var playback: TvPlayback? = null
 
+    private lateinit var _primaryActionsAdapter: ArrayObjectAdapter
+    private lateinit var _secondaryActionsAdapter: ArrayObjectAdapter
+
+    private var showPlaybackProgress = true
+
     private var initialDisposition: TvProgramDisposition? = null
 
     private var overriddenDuration: Long? = null
@@ -48,23 +53,31 @@ class TvPlaybackLeanbackGlue(
 
     private lateinit var onVideoOptionsControlClicked: () -> Unit
 
-    override fun onCreateRowPresenter(): PlaybackRowPresenter {
+    private val playbackRowPresenter: PlaybackTransportRowPresenter = object : PlaybackTransportRowPresenter() {
 
-        val rowPresenter: PlaybackTransportRowPresenter = object : PlaybackTransportRowPresenter() {
-            override fun onBindRowViewHolder(vh: RowPresenter.ViewHolder, item: Any) {
-                super.onBindRowViewHolder(vh, item)
-                vh.onKeyListener = this@TvPlaybackLeanbackGlue
+        override fun onBindRowViewHolder(vh: RowPresenter.ViewHolder, item: Any) {
+            super.onBindRowViewHolder(vh, item)
+            vh.onKeyListener = this@TvPlaybackLeanbackGlue
+            setPlaybackProgressVisibility(vh,
+                if (showPlaybackProgress) View.VISIBLE else View.INVISIBLE)
         }
 
         override fun onUnbindRowViewHolder(vh: RowPresenter.ViewHolder) {
-                super.onUnbindRowViewHolder(vh)
-                vh.onKeyListener = null
-            }
+            super.onUnbindRowViewHolder(vh)
+            vh.onKeyListener = null
         }
 
-        rowPresenter.setDescriptionPresenter(TvProgramPlaybackDetailsPresenter(context))
-        return rowPresenter
+        fun setPlaybackProgressVisibility(vh: RowPresenter.ViewHolder, visibility: Int) {
+            listOf(R.id.playback_progress, R.id.current_time, R.id.separate_time, R.id.total_time)
+                .forEach { vh.view.findViewById<View>(it).visibility = visibility }
+        }
     }
+
+    override fun onCreateRowPresenter(): PlaybackRowPresenter {
+        playbackRowPresenter.setDescriptionPresenter(TvProgramPlaybackDetailsPresenter(context))
+        return playbackRowPresenter
+    }
+
 
     // region Playback Setup
 
@@ -84,16 +97,42 @@ class TvPlaybackLeanbackGlue(
             isSeekEnabled = false
             overrideDuration(TimeUnit.DAYS.toMillis(1))
             maintainLivePosition = true
+            setupRowsForNoScheduleLive()
+            showPlaybackProgress = false
         }
         else {
             isSeekEnabled = false // enable when "live record" is ready
             with(playback.time!!) {
                 overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
                 maintainLivePosition = true
+                setupRows()
             }
+            showPlaybackProgress = true
         }
         initialDisposition = TvProgramDisposition.LIVE
         setSeekController(SeekController())
+    }
+
+    private fun setupRows() {
+        // clear out custom primary actions
+        for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
+            _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
+        // NOTE Do not try to clear and recreate actions: it interferes with change notification scheme
+        actions.setupPrimaryRow(_primaryActionsAdapter)
+        _secondaryActionsAdapter.clear()
+        super.onCreateSecondaryActions(_secondaryActionsAdapter)
+        actions.setupSecondaryRow(_secondaryActionsAdapter)
+    }
+
+    private fun setupRowsForNoScheduleLive() {
+        // clear out custom primary actions
+        for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
+            _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
+        // NOTE Do not try to clear and recreate actions: it interferes with change notification scheme
+        actions.setupPrimaryRowForNoScheduleLive(_primaryActionsAdapter)
+        _secondaryActionsAdapter.clear()
+        super.onCreateSecondaryActions(_secondaryActionsAdapter)
+        actions.setupSecondaryRowForNoScheduleLive(_secondaryActionsAdapter)
     }
 
     private fun configureArchivePlayback(playback: TvPlayback) {
@@ -105,6 +144,7 @@ class TvPlaybackLeanbackGlue(
         }
         initialDisposition = TvProgramDisposition.RECORD
         setSeekController(SeekController())
+        showPlaybackProgress = true
     }
 
     override fun getCurrentPosition() =
@@ -203,11 +243,13 @@ class TvPlaybackLeanbackGlue(
     override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter) {
         super.onCreatePrimaryActions(primaryActionsAdapter)
         actions.setupPrimaryRow(primaryActionsAdapter)
+        _primaryActionsAdapter = primaryActionsAdapter
     }
 
     override fun onCreateSecondaryActions(secondaryActionsAdapter: ArrayObjectAdapter) {
         super.onCreateSecondaryActions(secondaryActionsAdapter)
         actions.setupSecondaryRow(secondaryActionsAdapter)
+        _secondaryActionsAdapter = secondaryActionsAdapter
     }
 
     override fun onActionClicked(action: Action) {
@@ -348,6 +390,18 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
         adapter.add(fasterForward)
         adapter.add(prevChannel)
         adapter.add(nextChannel)
+    }
+
+    fun setupPrimaryRowForNoScheduleLive(adapter: ArrayObjectAdapter) {
+        // play/pause added with super call
+        adapter.add(videoOptions)
+        adapter.add(prevChannel)
+        adapter.add(nextChannel)
+    }
+
+    fun setupSecondaryRowForNoScheduleLive(
+        @Suppress("UNUSED_PARAMETER") adapter: ArrayObjectAdapter) {
+        // there are not enough actions to use secondary row
     }
 
     fun isPlayPauseAction(action: Action) =
