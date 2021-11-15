@@ -36,13 +36,22 @@ class TvProgramPlaybackDetailsPresenter(val context: Context) : Presenter() {
             item.playback?.let {
 
                 // title
-                ib.tvProgramPlaybackDetailsPrimaryTitle.text = it.title
+                val primaryTitle = it.title
 
                 // subtitle: time & channel's title
                 val programTime = playbackTimeString(it)
                 val channelReferences = if (it.channelTitle != null) context.getString(
                     R.string.statement_program_on_channel, it.channelTitle) else ""
-                ib.tvProgramPlaybackDetailsSecondaryTitle.text = String.format("%s %s", programTime, channelReferences)
+                val secondaryTitle = String.format("%s %s", programTime, channelReferences)
+
+                if (primaryTitle?.isNotEmpty() == true) {
+                    ib.tvProgramPlaybackDetailsPrimaryTitle.text = primaryTitle
+                    ib.tvProgramPlaybackDetailsSecondaryTitle.text = secondaryTitle
+                }
+                else {
+                    ib.tvProgramPlaybackDetailsPrimaryTitle.text = secondaryTitle
+                    ib.tvProgramPlaybackDetailsSecondaryTitle.text = ""
+                }
 
                 // body
                 ib.tvProgramPlaybackDetailsDescriptionText.text = buildCompactDigestExtract(it)
