@@ -13,7 +13,9 @@ class TvPlaybackEntityMapper: EntityMapper<TvPlaybackEntity, TvPlayback> {
         return with(entity) {
             TvPlayback(
                 channelId = channelId,
-                programId = programId,
+                // program ID isn't set for live playback of a channels w/o EPG, however it
+                // is stored as 0 so it can be found with a search request
+                programId = if (programId != 0L) programId else  null,
                 stream = streamUri?.let { VideoStream(streamUri, streamKind, subtitlesUri) },
                 time = if (start != null && end != null)
                     TvProgramTimeInterval(start!!, end!!) else null,
@@ -29,7 +31,9 @@ class TvPlaybackEntityMapper: EntityMapper<TvPlaybackEntity, TvPlayback> {
         return with(domain) {
             TvPlaybackEntity(
                     channelId = channelId,
-                    programId = programId,
+                    // program ID isn't set for live playback of a channels w/o EPG, however it
+                    // is intentionally stored as 0 so it can be found with a search request
+                    programId = programId?: 0L,
                     streamUri = stream?.uri,
                     streamKind = stream?.kind?:VideoStreamKind.UNKNOWN,
                     subtitlesUri = stream?.subtitles,

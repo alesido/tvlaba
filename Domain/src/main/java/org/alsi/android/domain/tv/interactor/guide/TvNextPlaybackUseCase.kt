@@ -57,6 +57,9 @@ class TvNextPlaybackUseCase @Inject constructor(
             val channelPosition = categoryChannels.indexOfFirst{ channel ->
                 cursor.playback.channelId == channel.id
             }
+            if (channelPosition == -1)
+                return@flatMap Single.error<TvPlayback>(TvRepositoryError(
+                    TvRepositoryErrorKind.RESPONSE_NO_PREVIOUS_CHANNEL))
             // decline navigation outside category
             if (target == NEXT_CHANNEL && channelPosition == categoryChannels.lastIndex)
                 return@flatMap Single.error<TvPlayback>(TvRepositoryError(
