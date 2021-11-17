@@ -101,6 +101,10 @@
     <string name="service_title_vod_prime_hd">Prime HD</string>
     <string name="message_setting_temporarily_not_available">Настройка временно недоступна. Находится в работе.</string>
 
+    <string name="description_for_login">Для входа в приложение введите номер лицевого счёта и пароль</string>
+    <string name="label_login_input_pin">Номер лицевого счёта</string>
+    <string name="label_login_input_pass">Пароль</string>
+
     <!--
             Parental Code Dialog (Old, not used version)
     -->
