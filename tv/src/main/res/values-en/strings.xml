@@ -109,6 +109,11 @@
     <string name="description_for_login">Type in your PIN code and password to login</string>
     <string name="label_login_input_pin">PIN code</string>
     <string name="label_login_input_pass">Password</string>
+    <string name="label_login_remember_me">Remember me</string>
+    <string name="label_language_russian">Русский</string>
+    <string name="label_language_english">English</string>
+    <string name="label_wifi">WiFi</string>
+    <string name="message_pin_and_pass_should_be_filled">Please provide your PIN code and password.</string>
 
     <!--
             Parental Control

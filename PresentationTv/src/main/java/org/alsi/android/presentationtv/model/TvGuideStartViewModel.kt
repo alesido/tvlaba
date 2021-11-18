@@ -45,7 +45,7 @@ open class TvGuideStartViewModel @Inject constructor (
     inner class GetStartContextSubscriber: DisposableSingleObserver<TvStartContext>() {
         override fun onSuccess(t: TvStartContext) {
             startContext = t
-            if (startContext.browse.isEmpty())
+            if (startContext.browse.isEmpty() || startContext.browse.isMenuItemReference())
                 liveData.postValue(Resource.success(startContext))
             else
                 restoreBrowsingContext()

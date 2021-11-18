@@ -45,7 +45,7 @@ class TvGuideStartFragment : Fragment(R.layout.tv_guide_start_fragment) {
             .get(TvGuideStartViewModel::class.java)
 
         viewModel.initWithService(
-            arguments?.getLong(getString(R.string.navigation_argument_key_service_id)))
+            arguments?.getLong("navigation_argument_service_id"))//getString(R.string.navigation_argument_key_service_id)))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

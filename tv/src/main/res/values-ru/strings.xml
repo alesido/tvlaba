@@ -102,8 +102,13 @@
     <string name="message_setting_temporarily_not_available">Настройка временно недоступна. Находится в работе.</string>
 
     <string name="description_for_login">Для входа в приложение введите номер лицевого счёта и пароль</string>
-    <string name="label_login_input_pin">Номер лицевого счёта</string>
+    <string name="label_login_input_pin">Лицевой счёт</string>
     <string name="label_login_input_pass">Пароль</string>
+    <string name="label_login_remember_me">Запомнить</string>
+    <string name="label_language_russian">Русский</string>
+    <string name="label_language_english">English</string>
+    <string name="label_wifi">WiFi</string>
+    <string name="message_pin_and_pass_should_be_filled">Пожалуйста, введите номер лицевого счёта и пароль.</string>
 
     <!--
             Parental Code Dialog (Old, not used version)
