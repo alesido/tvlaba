@@ -67,7 +67,10 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         // exit
         findPreference<Preference>(getString(R.string.pref_key_exit))
             ?.setOnPreferenceClickListener {
-                findNavController(this).navigate(R.id.actionGlobalLogOut); true
+                val nc = findNavController(this)
+                nc.popBackStack()
+                nc.navigate(R.id.actionGlobalLogOut)
+                true
             }
     }
 
@@ -78,10 +81,6 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
         // add guided step fragment view (for parental code editing dialog)
         // to the views hierarchy
         openParentalControlSetupGuide()
-    }
-
-    private fun onExitClicked() {
-        findNavController(this).navigate(R.id.actionGlobalLogOut)
     }
 
     /**
