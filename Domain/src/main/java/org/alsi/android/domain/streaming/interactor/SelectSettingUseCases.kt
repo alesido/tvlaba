@@ -16,14 +16,8 @@ class SelectLanguageUseCase @Inject constructor(
         params?: throw IllegalArgumentException("SelectLanguageUseCase: Params can't be null!")
         val context = presentationManager.provideContext()?: throw IllegalArgumentException(
             "SelectLanguageUseCase: Service context isn't initialized!")
-
-        with (context.directory) {
-            if (this !is TvDirectoryRepository)
-                throw IllegalStateException("SelectLanguageUseCase: illegal directory repository!")
-
-            return context.configuration.selectLanguage(params.languageCode)
-                .andThen ( channels.onLanguageChange() )
-        }
+        return context.configuration.selectLanguage(params.languageCode)
+            .andThen ( context.directory.onLanguageChange() )
     }
 
     class Params constructor (val languageCode: String)

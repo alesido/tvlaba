@@ -16,10 +16,7 @@ class VodDirectoryRepositoryMoidom @Inject constructor(
 ): VodDataRepository(serviceId, remoteStore, localStore) {
 
     override fun onLanguageChange(): Completable {
-        TODO("Not yet implemented")
-    }
-
-    override fun onTimeShiftChange(): Completable {
-        TODO("Not yet implemented")
+        // not applicable to this provider (?)
+        return Completable.complete()
     }
 }

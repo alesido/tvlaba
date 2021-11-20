@@ -64,9 +64,5 @@ abstract class VodRepository (streamingServiceId: Long) : DirectoryRepository(st
 
     /** Reload language dependent parts of the directory to local store if supported
      */
-    abstract fun onLanguageChange(): Completable
-
-    /** Update time shift dependent parts of the directory to local store if supported
-     */
-    abstract fun onTimeShiftChange(): Completable
+    abstract override fun onLanguageChange(): Completable
 }
