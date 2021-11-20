@@ -104,14 +104,14 @@ class LoginFragment : GuidedStepSupportFragment() {
     private fun inputPin() = GuidedAction.Builder(requireContext())
         .id(ID_PIN).title(getString(R.string.label_login_input_pin))
         .descriptionEditable(true)
-        .descriptionInputType(InputType.TYPE_CLASS_NUMBER)
+        .descriptionInputType(InputType.TYPE_CLASS_TEXT)
         .build()
 
     private fun inputPass() = GuidedAction.Builder(requireContext())
         .id(ID_PASS).title(getString(R.string.label_login_input_pass))
         .descriptionEditable(true)
         .descriptionInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD
-                or InputType.TYPE_CLASS_NUMBER)
+                or InputType.TYPE_CLASS_TEXT)
         .build()
 
     private fun checkBoxRememberMe() = GuidedAction.Builder(requireContext())
