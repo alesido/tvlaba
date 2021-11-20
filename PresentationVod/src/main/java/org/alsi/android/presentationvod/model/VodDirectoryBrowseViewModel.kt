@@ -47,6 +47,8 @@ class VodDirectoryBrowseViewModel @Inject constructor (
     val vodPresentations: List<StreamingServicePresentation> get()
     = presentationManager.providePresentations(StreamingServiceKind.VOD, skipCurrent = true)
 
+    private val listingRequestsRegistry: MutableSet<Int> = mutableSetOf()
+
     init {
         browseCursorObserveUseCase.execute(BrowseCursorSubscriber())
 
@@ -186,16 +188,14 @@ class VodDirectoryBrowseViewModel @Inject constructor (
         if (unit.window != null) {
             if (unit.window!!.items.size - itemPosition < 10) {
                 // load next page
-                listingPageUseCase.execute(ListingPageSubscriber(),
-                    VodListingPageUseCase.Params(section.id, unit.id, unit.window!!.items.size,
-                        DEFAULT_LISTING_PAGE_SIZE))
+                if (requestListingPage(section.id, unit.id, unit.window!!.items.size))
+                    executedUseCasesCounter++
             }
         }
         else {
             // load first page
-            listingPageUseCase.execute(ListingPageSubscriber(),
-                VodListingPageUseCase.Params(section.id, unit.id, itemPosition,
-                    DEFAULT_LISTING_PAGE_SIZE))
+            if (requestListingPage(section.id, unit.id, itemPosition))
+                executedUseCasesCounter++
         }
 
         // get initial pages of some not loaded yet NEXT units
@@ -204,10 +204,8 @@ class VodDirectoryBrowseViewModel @Inject constructor (
                 unitIndex + 1, section.units.size - 1)
             for (i in unitIndex + 1 .. afterRangeEnd) {
                 val iterationUnit = section.units[i]
-                iterationUnit.window?: executedUseCasesCounter++
-                iterationUnit.window?: listingPageUseCase.execute(ListingPageSubscriber(),
-                    VodListingPageUseCase.Params(section.id, iterationUnit.id, 0,
-                        DEFAULT_LISTING_PAGE_SIZE))
+                iterationUnit.window?: if (requestListingPage(section.id,
+                        iterationUnit.id, 0)) executedUseCasesCounter++
             }
         }
 
@@ -217,10 +215,8 @@ class VodDirectoryBrowseViewModel @Inject constructor (
                 0, unitIndex - 1)
             for (i in unitIndex - 1 downTo beforeRangeStart) {
                 val iterationUnit = section.units[i]
-                iterationUnit.window?: executedUseCasesCounter++
-                iterationUnit.window?: listingPageUseCase.execute(ListingPageSubscriber(),
-                    VodListingPageUseCase.Params(section.id, iterationUnit.id, 0,
-                        DEFAULT_LISTING_PAGE_SIZE))
+                iterationUnit.window?: if (requestListingPage(section.id,
+                        iterationUnit.id, 0)) executedUseCasesCounter++
             }
         }
 
@@ -228,6 +224,24 @@ class VodDirectoryBrowseViewModel @Inject constructor (
             liveDirectory.postValue(Resource.success(VodDirectoryBrowseLiveData(
                 directory!!, position!!, VodDirectoryUpdateScope.empty()))) // to remove not needed progress indication
     }
+
+    private fun requestListingPage(sectionId: Long, unitId: Long, start: Int): Boolean {
+        // check if the request is already done and skip it if it is
+        val requestKey = listingPageRequestKey(sectionId, unitId, start)
+        if (listingRequestsRegistry.contains(listingPageRequestKey(sectionId, unitId, start)))
+            return false
+        // register request to avoid repetition, which is possible due to item selection
+        // events are faster then the requests execution
+        listingRequestsRegistry.add(requestKey)
+        // execute request
+        listingPageUseCase.execute(ListingPageSubscriber(),
+            VodListingPageUseCase.Params(sectionId, unitId, 0, DEFAULT_LISTING_PAGE_SIZE))
+        return true
+    }
+
+    private fun listingPageRequestKey(sectionId: Long, unitId: Long, start: Int)
+    = listOf(sectionId, unitId, start).hashCode()
+
 
     inner class BrowseCursorMoveSubscriber : DisposableSingleObserver<VodBrowseCursor>() {
         override fun onSuccess(t: VodBrowseCursor) {} // silently accept it, actual job done by BrowseCursorSubscriber
