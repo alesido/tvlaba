@@ -14,7 +14,7 @@ class StreamingSettingsUseCase @Inject constructor(
 {
     override fun buildUseCaseObservable(params:Nothing?): Observable<StreamingServiceSettings> {
         val context = presentationManager.provideContext()?: throw IllegalArgumentException(
-            "StreamingProfileUseCase: Service context isn't initialized!")
+            "StreamingSettingsUseCase: Service context isn't initialized!")
         return context.configuration.values()
     }
 }
