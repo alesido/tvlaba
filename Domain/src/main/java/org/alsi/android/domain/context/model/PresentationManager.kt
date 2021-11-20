@@ -36,7 +36,7 @@ class PresentationManager @Inject constructor(private val registry: StreamingSer
      */
     private var contexts: MutableMap<StreamingServiceKind, StreamingService> = mutableMapOf()
 
-    private var currentContextServiceId: Long? = null
+    private var currentContextServiceId: Long = registry[0].id
 
     private val presentationForServiceKind = hashMapOf(
                     StreamingServiceKind.TV to ServicePresentationType.TV_GUIDE,
@@ -79,7 +79,7 @@ class PresentationManager @Inject constructor(private val registry: StreamingSer
      * should use this method to get service context.
      */
     fun provideContext(): StreamingService? {
-        return currentContextServiceId?.let { registry.serviceById[currentContextServiceId] }
+        return currentContextServiceId.let { registry.serviceById[currentContextServiceId] }
     }
 
     /**
