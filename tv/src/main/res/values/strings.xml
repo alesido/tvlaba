@@ -118,6 +118,10 @@
     <string name="label_wifi">WiFi</string>
     <string name="message_pin_and_pass_should_be_filled">Please provide your PIN code and password.</string>
 
+    <!--
+            TV Channels Directory
+    -->
+    <string name="message_tv_categories_set_changed">There are changes in the categories set.</string>
 
     <!--
             Parental PIN

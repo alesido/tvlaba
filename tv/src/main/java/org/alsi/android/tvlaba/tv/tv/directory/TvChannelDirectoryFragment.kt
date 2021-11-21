@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.setPadding
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.*
@@ -24,9 +27,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
 import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvChannelDirectoryPosition
-import org.alsi.android.domain.tv.model.guide.TvChannelListWindow
+import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.presentation.settings.ParentalControlViewModel
 import org.alsi.android.presentation.settings.ParentalControlViewModel.ParentalEventKind
 import org.alsi.android.presentation.state.Event
@@ -273,7 +274,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 if (adapter.size() == 0)
                     loadDirectoryView(resource.data)
                 else
-                    updateDirectoryView(resource.data)
+                    updateDirectoryView2(resource.data)
             }
             ResourceState.ERROR -> {
                 progressBarManager.hide()
@@ -295,51 +296,123 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         data?.directory?.let { directory ->
             browseViewModel.currentPresentation?.title?.let { title = it }
 
-            // recreate category channels rows
-            val categoryRows = directory.categories.mapIndexed { idx, category ->
-                val header = HeaderItem((idx + 1).toLong(), category.title)
-                val listRowAdapter = TvCategoryChannelsListRowAdapter(
-                        TvDirectoryChannelCardPresenter()).apply {
-                    setItems(directory.index[category.id]?: listOf<TvChannel>(), null)
-                }
-                ListRow(header, listRowAdapter)
+            // category channel rows
+            val categoryChannelsRows = categoryChannelRows(directory)
+
+            // top and bottom menu
+            val topMenuHeader = HeaderItem(-1L, getString(R.string.label_menu))
+            val bottomMenuHeader = HeaderItem(-2L, getString(R.string.label_menu))
+            val menuRowAdapter = menuRowAdapter()
+
+            // combine menu and category channel rows
+            val mixedRows = mutableListOf<ListRow>().apply {
+                add(ListRow(topMenuHeader, menuRowAdapter))
+                addAll(categoryChannelsRows)
+                add(ListRow(bottomMenuHeader, menuRowAdapter))
             }
 
-            // add top and bottom menu
-            val topMenuHeader = HeaderItem(0L, getString(R.string.label_menu))
-            val bottomMenuHeader = HeaderItem((categoryRows.size + 1).toLong(), getString(R.string.label_menu))
-            val mixedRows: MutableList<ListRow> = mutableListOf()
-            val menuRowAdapter = TvMenuRowAdapter(TvMenuCardPresenter()).apply {
-                val items: MutableList<CardMenuItem> = mutableListOf()
-                items.addAll(browseViewModel.vodPresentations.mapIndexed { idx, item ->
-                    CardMenuItem(MENU_ITEM_VOD_BASE_ID + idx.toLong(),
-                        item.title, payload = item) })
-                items.addAll(browseViewModel.tvPresentations.mapIndexed { idx, item ->
-                    CardMenuItem(MENU_ITEM_TV_BASE_ID + idx.toLong(),
-                        item.title, payload = item) })
-                items.add(CardMenuItem(MENU_ITEM_SETTINGS_ID,
-                    getString(R.string.label_menu_settings), R.drawable.settings_icon_metal))
-                setItems(items, null)
-            }
-            mixedRows.add(ListRow(topMenuHeader, menuRowAdapter))
-            mixedRows.addAll(categoryRows)
-            mixedRows.add(ListRow(bottomMenuHeader, menuRowAdapter))
-
-            // set fresh new rows to the adapter
+            // set rows to the adapter
             (adapter as ArrayObjectAdapter).setItems(mixedRows, null)
+
             // ensure correct initial position & schedule update
             onRowsLayoutReady(data.position)
         }
     }
 
+    private fun categoryChannelRows(directory: TvChannelDirectory) = directory.categories.filter {
+        directory.index[it.id]?.isNotEmpty() == true // skip category with empty list of channels
+    }.map { category -> categoryChannelRow(directory, category) }
+
+    private fun categoryChannelRow(directory: TvChannelDirectory, category: TvChannelCategory)
+    = ListRow(
+        HeaderItem(category.id, category.title),
+        TvCategoryChannelsListRowAdapter(TvDirectoryChannelCardPresenter()).apply {
+            setItems(directory.index[category.id], null)
+        })
+
+
+    private fun menuRowAdapter() = TvMenuRowAdapter(TvMenuCardPresenter()).apply {
+        val items: MutableList<CardMenuItem> = mutableListOf()
+
+        items.addAll(browseViewModel.vodPresentations.mapIndexed { idx, item ->
+            CardMenuItem(MENU_ITEM_VOD_BASE_ID + idx.toLong(),
+                item.title, payload = item) })
+
+        items.addAll(browseViewModel.tvPresentations.mapIndexed { idx, item ->
+            CardMenuItem(MENU_ITEM_TV_BASE_ID + idx.toLong(),
+                item.title, payload = item) })
+
+        items.add(CardMenuItem(MENU_ITEM_SETTINGS_ID,
+            getString(R.string.label_menu_settings), R.drawable.settings_icon_metal))
+
+        setItems(items, null)
+    }
+
+    /**
+     * This method just updates already listed categories. Cannot add or remove category items.
+     * The method is saved in debugging diagnostics purposes.
+     */
     private fun updateDirectoryView(data: TvChannelDirectoryBrowseLiveData?) {
-        data?.directory?: return
+        data?.directory?:
+            return
+        if (data.directory.categories.isEmpty())
+            return
+        val totalCategories = data.directory.categories.size
         for (i in 1 until adapter.size() - 1) {
-            data.directory.index[data.directory.categories[i - 1].id]?.let {
-                with (adapter[i] as ListRow) {
-                    headerItem = HeaderItem(i.toLong(), data.directory.categories[i - 1].title)
-                    (adapter as ArrayObjectAdapter).setItems(it, tvCategoryChannelsDiff)
-                }
+            if (i >= totalCategories)
+                continue
+            val channels = data.directory.index[data.directory.categories[i - 1].id]
+            if (channels?.isNotEmpty() != true)
+                continue
+            with (adapter[i] as ListRow) {
+                val category = data.directory.categories[i - 1]
+                headerItem = HeaderItem(category.id, category.title)
+                (adapter as ArrayObjectAdapter).setItems(channels, tvCategoryChannelsDiff)
+            }
+        }
+    }
+
+    /**
+     *  Adding or removing categories have to be evident. This way, in case some categories
+     *  added or removed it will be appropriate to show user a message.
+     *
+     *  Only language of categories and live programs data may be changed silently.
+     */
+    private fun updateDirectoryView2(data: TvChannelDirectoryBrowseLiveData?) {
+        if (null == data?.directory || data.directory.categories.isEmpty())
+            return
+        // prepare data to check if there are new and/or removed category items
+        val indexByCategoryId: LinkedHashMap<Long, ListRow> = LinkedHashMap()
+        for (i in 1 until adapter.size() - 1) {
+            val row = adapter[i] as ListRow
+            indexByCategoryId[row.headerItem.id] = row
+        }
+        // collect category items to remove and to add
+        val toRemove = indexByCategoryId.filterKeys { null == data.directory.categoryById[it] }
+        val toAdd = data.directory.categoryById.filterKeys { null == indexByCategoryId[it] }
+        // add/remove categories
+        if (toRemove.isNotEmpty() || toAdd.isNotEmpty()) {
+            // notify user unobtrusively on categories set change
+            showMessage(R.string.message_tv_categories_set_changed)
+            // remove collected to remove
+            toRemove.forEach { (adapter as ArrayObjectAdapter).remove(it.value) }
+            // add collected to add
+            data.directory.categories.forEachIndexed { position, category ->
+                if (toAdd.containsKey(category.id))
+                    (adapter as ArrayObjectAdapter).add(position + 1,
+                        categoryChannelRow(data.directory, category))
+            }
+        }
+        // update categories
+        for (i in 1 until adapter.size() - 1) {
+            val category = data.directory.categories[i - 1]
+            if (toAdd.isNotEmpty() && toAdd.containsKey(category.id))
+                continue // no sense to update fresh new category content
+            with (adapter[i] as ListRow) {
+                headerItem = HeaderItem(category.id, category.title)
+                (adapter as ArrayObjectAdapter).setItems(
+                    data.directory.index[category.id],
+                    tvCategoryChannelsDiff)
             }
         }
     }
@@ -400,6 +473,15 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         liveTimeIndicatorTaskSubscription?.let {
             if (! it.isDisposed) it.dispose()
         }
+    }
+
+    private fun showMessage(messageRes: Int) {
+        val toast = Toast.makeText(requireContext(), getString(messageRes), Toast.LENGTH_SHORT)
+        with(toast) {
+            view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.grey))
+            view.setPadding(24)
+        }
+        toast.show()
     }
 
     companion object {

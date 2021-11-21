@@ -40,6 +40,8 @@ class TvChannelRemoteStoreMoidom (
 
     private val disposables = CompositeDisposable()
 
+    private var dbgExtended: Int = 1
+
     init {
         val s = accountSubject.subscribe { userAccount ->
             this.subscriptionPackage = userAccount.subscriptions
@@ -62,8 +64,9 @@ class TvChannelRemoteStoreMoidom (
     }
 
     override fun getChannels(): Single<List<TvChannel>> {
+        //dbgExtended = if (dbgExtended == 0) 1 else 0
         return remoteSession.getSessionId()
-                .flatMap { sid -> remoteService.getAllChannels(sid, timeZoneQueryParameter) }
+                .flatMap { sid -> remoteService.getAllChannels(sid, timeZoneQueryParameter, dbgExtended) }
                 .map { response -> channelsSourceMapper.mapFromSource(response, subscriptionPackage,
                     settingsRepository.lastValues(), defaults).channels }
     }
