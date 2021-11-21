@@ -59,7 +59,8 @@ interface RestServiceMoidom {
     @GET("channel_list")
     fun getAllChannels(
             @Query("PATKER_SSID") sid: String,
-            @Query("tz") timeZone: String
+            @Query("tz") timeZone: String,
+            @Query("extended") isExtended: Int? = 1
     ): Single<ChannelListResponse>
 
     /**
