@@ -376,7 +376,8 @@ class TvChannelLocalStoreDelegate(
     override fun getChannelWindowUpdateSchedule(channelIds: List<Long>): List<Long> {
         val set = channelIds.toSet()
         return attachedDirectory()?.channels?.filter { entity -> set.contains(entity.externalId) }
-            ?.map { entity -> entity.live.target.endMillis!! }?.distinct()?.sorted()?: listOf()
+            ?.map { entity -> entity.live.target?.endMillis?: 0L }?.filter{ it == 0L }
+            ?.distinct()?.sorted()?: listOf()
     }
 
     // endregion
