@@ -67,6 +67,13 @@
             app:launchSingleTop="true"
             />
         <action
+            android:id="@+id/action_appRouterFragment_to_SecondaryLoginFragment"
+            app:destination="@id/secondaryLoginFragment"
+            app:popUpTo="@id/appRouterFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"
+            />
+        <action
             android:id="@+id/action_appRouterFragment_to_tvGuideNavigation"
             app:destination="@id/tvGuideNavigation"
             app:popUpTo="@id/appRouterFragment"
@@ -173,6 +180,11 @@
         android:id="@+id/loginFragment"
         android:name="org.alsi.android.tvlaba.auth.login.ui.LoginFragment"
         android:label="LoginFragment"
+        />
+    <fragment
+        android:id="@+id/secondaryLoginFragment"
+        android:name="org.alsi.android.tvlaba.auth.login.ui.SecondaryLoginFragment"
+        android:label="SecondaryLoginFragment"
         />
     <!--
             TV Section

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TvLabA</string>
+    <string name="app_version">App version %1$s</string>
     <string name="app_section_tv">TvLabA TV</string>
     <string name="app_section_vod">TvLabA VOD</string>
 
@@ -145,6 +146,10 @@
     <string name="button_label_ok">OK</string>
     <string name="button_label_cancel">Cancel</string>
     <string name="button_label_submit">Submit</string>
+
+    <string name="description_for_secondary_login">Login with other credentials or clear your data here</string>
+    <string name="button_label_clear">Clear</string>
+    <string name="button_label_unlock_edit">Edit</string>
 
 
 </resources>

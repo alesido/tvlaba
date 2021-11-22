@@ -4,6 +4,8 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import org.alsi.android.tvlaba.auth.login.ui.LoginFragment
 import org.alsi.android.tvlaba.auth.login.ui.LoginFragmentModule
+import org.alsi.android.tvlaba.auth.login.ui.SecondaryLoginFragment
+import org.alsi.android.tvlaba.auth.login.ui.SecondaryLoginFragmentModule
 import org.alsi.android.tvlaba.settings.GeneralSettingsFragment
 import org.alsi.android.tvlaba.settings.GeneralSettingsFragmentModule
 import org.alsi.android.tvlaba.settings.parental.ParentalControlSettingFragment
@@ -39,6 +41,9 @@ abstract class ActivityModule {
 
     @ContributesAndroidInjector(modules = [LoginFragmentModule::class])
     abstract fun bindLoginFragment(): LoginFragment
+
+    @ContributesAndroidInjector(modules = [SecondaryLoginFragmentModule::class])
+    abstract fun bindSecondaryLoginFragment(): SecondaryLoginFragment
 
     @ContributesAndroidInjector(modules = [GeneralSettingsFragmentModule::class])
     abstract fun bindSettingsFragment(): GeneralSettingsFragment

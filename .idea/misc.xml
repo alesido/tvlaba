@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.43425925925925923" />
+        <entry key="leanback/src/main/res/layout/lb_guidedactions_item.xml" value="0.1437389770723104" />
         <entry key="leanback/src/main/res/layout/lb_guidedstep_fragment.xml" value="0.16225749559082892" />
         <entry key="tv/src/main/res/drawable/background_button.xml" value="0.18489583333333334" />
         <entry key="tv/src/main/res/drawable/background_button_focused.xml" value="0.18489583333333334" />

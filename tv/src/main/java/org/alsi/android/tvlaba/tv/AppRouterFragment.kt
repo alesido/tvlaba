@@ -49,7 +49,7 @@ class AppRouterFragment : Fragment(R.layout.app_start_fragment) {
                 LogOut -> {
                     // fulfil log out and navigate to login screen
                     findNavController(this).navigate(
-                        AppRouterFragmentDirections.actionAppRouterFragmentToLoginFragment()
+                        AppRouterFragmentDirections.actionAppRouterFragmentToSecondaryLoginFragment()
                     )
                 }
             }

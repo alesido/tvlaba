@@ -144,6 +144,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_appRouterFragment_to_SecondaryLoginFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_appRouterFragment_to_loginFragment">
                               <value>
                                 <LayoutPositions />
@@ -207,6 +212,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="secondaryLoginFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="tvGuideNavigation">
                     <value>
                       <LayoutPositions>
@@ -229,6 +246,11 @@
                                   </option>
                                   <option name="myPositions">
                                     <map>
+                                      <entry key="action_tvChannelDirectoryFragment_to_tvPlaybackAndScheduleFragment">
+                                        <value>
+                                          <LayoutPositions />
+                                        </value>
+                                      </entry>
                                       <entry key="action_tvChannelDirectoryFragment_to_tvProgramDetailsFragment">
                                         <value>
                                           <LayoutPositions />
