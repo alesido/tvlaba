@@ -12,6 +12,7 @@ interface AccountDataLocal
     fun addAttachAccount(account: UserAccount)
     fun attachAccountFor(loginName: String): UserAccount
 
+    fun getAccount(): Single<UserAccount>
     fun getLoginName(): Single<String>
     fun getPassword(): Single<String>
     fun getPassword(loginName: String): Single<String>

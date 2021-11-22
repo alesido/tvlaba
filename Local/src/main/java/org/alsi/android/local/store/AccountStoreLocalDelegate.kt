@@ -53,6 +53,9 @@ class AccountStoreLocalDelegate (
         } ?: UserAccount.guest()
     }
 
+    override fun getAccount(): Single<UserAccount> = Single.fromCallable {  accountId?.let { id ->
+        box.get(id)?.let { accountMapper.mapFromEntity(it) }}?:  UserAccount.guest() }
+
     override fun getLoginName(): Single<String> {
         return Single.just(box.get(accountId?: return idUnknown()).loginName)
     }

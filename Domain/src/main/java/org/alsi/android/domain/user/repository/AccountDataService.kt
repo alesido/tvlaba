@@ -9,6 +9,7 @@ interface AccountDataService
     fun login(loginName: String, loginPassword: String): Single<UserAccount>
     fun resume(loginName: String, skipRemoteLogin: Boolean = false): Single<UserAccount>
 
+    fun getAccount(): Single<UserAccount>
     fun getLoginName(): Single<String>
     fun getPassword(): Single<String>
 

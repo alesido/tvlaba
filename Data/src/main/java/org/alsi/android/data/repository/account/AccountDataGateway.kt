@@ -33,6 +33,8 @@ open class AccountDataGateway(
                 .map { local.addAttachAccount(it); it }
     }
 
+    override fun getAccount(): Single<UserAccount> = local.getAccount()
+
     override fun getLoginName() = local.getLoginName()
     override fun getPassword() = local.getPassword()
 
