@@ -25,6 +25,7 @@ import org.alsi.android.presentation.auth.login.model.LoginViewModel
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState.*
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import java.util.*
 import javax.inject.Inject
@@ -32,6 +33,8 @@ import javax.inject.Inject
 class LoginFragment : GuidedStepSupportFragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
+
     private lateinit var loginViewModel : LoginViewModel
 
     private val progressBarManager = ProgressBarManager()
@@ -67,8 +70,8 @@ class LoginFragment : GuidedStepSupportFragment() {
     override fun onCreateGuidance(savedInstanceState: Bundle?) = GuidanceStylist.Guidance(
         getString(R.string.app_name),
         getString(R.string.description_for_login),
-        requireActivity().packageManager.getPackageInfo(
-            requireActivity().packageName, 0).versionName,
+        getString(R.string.app_version, requireActivity().packageManager.getPackageInfo(
+            requireActivity().packageName, 0).versionName),
         ContextCompat.getDrawable(requireContext(), R.drawable.settings_icon_metal)
     )
 
@@ -151,13 +154,17 @@ class LoginFragment : GuidedStepSupportFragment() {
     private fun handleLoginResult(resource: Resource<Unit>) {
 
         when(resource.status) {
-            LOADING -> {}
+            LOADING -> progressBarManager.show()
             SUCCESS -> {
+                progressBarManager.hide()
                 val nc = findNavController(this)
                 nc.popBackStack()
                 nc.navigate(R.id.actionGlobalOnLogIn)
             }
-            ERROR -> showErrorMessage(resource.message)
+            ERROR -> {
+                progressBarManager.hide()
+                errorHandler.run(this, resource.throwable)
+            }
         }
     }
 
@@ -232,6 +239,9 @@ class LoginFragment : GuidedStepSupportFragment() {
     // endregion
 
     companion object {
+
+        // action IDs
+
         const val ID_PIN = 1L
         const val ID_PASS = 2L
         const val ID_REMEMBER_ME = 3L
@@ -242,5 +252,4 @@ class LoginFragment : GuidedStepSupportFragment() {
 
         const val ID_BUTTON_SUBMIT = 21L
     }
-
 }
