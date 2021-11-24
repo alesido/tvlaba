@@ -861,6 +861,8 @@ public class GuidedActionsStylist implements FragmentAnimationProvider {
                     descriptionView.setVisibility(View.VISIBLE);
                     descriptionView.setInputType(action.getDescriptionEditInputType());
                     descriptionView.requestFocusFromTouch();
+                    if (!TextUtils.isEmpty(action.getDescription()))
+                        ((EditText) descriptionView).setSelection(action.getDescription().length());
                 }
                 vh.mEditingMode = EDITING_DESCRIPTION;
             } else if (action.isEditable()){
