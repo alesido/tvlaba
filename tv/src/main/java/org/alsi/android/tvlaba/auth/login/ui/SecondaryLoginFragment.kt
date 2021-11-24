@@ -85,8 +85,8 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
             checkBoxRememberMe(savedInstanceState),
             buttonSubmit()
         ))
-        // restore shadowed password
-        savedPassword = savedInstanceState?.getString(STATE_KEY_SHADOWED)
+        // restore password
+        savedPassword = savedInstanceState?.getString(STATE_KEY_PASS)
     }
 
     override fun onCreateButtonActions(actions: MutableList<GuidedAction>,
@@ -117,7 +117,7 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(STATE_KEY_EDIT_ENABLED, findActionById(ID_PIN).isEnabled)
-        outState.putString(STATE_KEY_SHADOWED, findActionById(ID_PASS).description?.toString())
+        outState.putString(STATE_KEY_PASS, findActionById(ID_PASS).description?.toString())
     }
 
     // endregion
@@ -131,7 +131,8 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
     private fun inputPin(savedInstanceState: Bundle?) = GuidedAction.Builder(requireContext())
         .id(ID_PIN).title(getString(R.string.label_login_input_pin))
         .descriptionEditable(true)
-        .descriptionInputType(InputType.TYPE_CLASS_TEXT)
+        .descriptionInputType(InputType.TYPE_CLASS_NUMBER
+                or InputType.TYPE_NUMBER_VARIATION_NORMAL)
         .enabled(savedInstanceState?.getBoolean(
             STATE_KEY_EDIT_ENABLED, false)?: false)
         .build()
@@ -139,8 +140,8 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
     private fun inputPass(savedInstanceState: Bundle?) = GuidedAction.Builder(requireContext())
         .id(ID_PASS).title(getString(R.string.label_login_input_pass))
         .descriptionEditable(true)
-        .descriptionInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD
-                or InputType.TYPE_CLASS_TEXT)
+        .descriptionInputType(InputType.TYPE_CLASS_NUMBER
+                or InputType.TYPE_NUMBER_VARIATION_PASSWORD)
         .enabled(savedInstanceState?.getBoolean(
             STATE_KEY_EDIT_ENABLED, false)?: false)
         .build()
@@ -275,7 +276,7 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
     private fun onPassActionEntered() {
         savedPassword?: return
         findActionById(ID_PASS).run {
-            if (description?.isEmpty() != false) {
+            if (description?.isEmpty() != false && isEnabled) {
                 description = savedPassword
                 view?.post { // to avoid crash as the RecyclerView rather rebuilding layout at the moment
                     notifyActionChanged(findActionPositionById(ID_PASS))
@@ -362,6 +363,6 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
         // state keys
 
         const val STATE_KEY_EDIT_ENABLED = "STATE_KEY_EDIT_ENABLED"
-        const val STATE_KEY_SHADOWED = "STATE_KEY_SHADOWED"
+        const val STATE_KEY_PASS = "STATE_KEY_PASS"
     }
 }

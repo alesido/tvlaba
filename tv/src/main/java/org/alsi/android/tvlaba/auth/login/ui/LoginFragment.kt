@@ -36,8 +36,9 @@ class LoginFragment : GuidedStepSupportFragment() {
     @Inject lateinit var errorHandler: ClassifiedExceptionHandler
 
     private lateinit var loginViewModel : LoginViewModel
-
     private val progressBarManager = ProgressBarManager()
+
+    private var savedPassword: String? = null
 
     // region Android
 
@@ -84,6 +85,8 @@ class LoginFragment : GuidedStepSupportFragment() {
             checkBoxRememberMe(),
             buttonSubmit()
         ))
+        // restore password
+        savedPassword = savedInstanceState?.getString(SecondaryLoginFragment.STATE_KEY_PASS)
     }
 
     override fun onCreateButtonActions(actions: MutableList<GuidedAction>,
@@ -99,6 +102,15 @@ class LoginFragment : GuidedStepSupportFragment() {
     override fun onStart() {
         super.onStart()
         loginViewModel.liveData.observe(this, this::handleLoginResult)
+
+        // hide password in case it's restored by the standard scheme
+        // to which "onCreateActions" wrapped around
+        findActionById(SecondaryLoginFragment.ID_PASS).description = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_KEY_PASS, findActionById(ID_PASS).description?.toString())
     }
 
     // endregion
@@ -107,14 +119,15 @@ class LoginFragment : GuidedStepSupportFragment() {
     private fun inputPin() = GuidedAction.Builder(requireContext())
         .id(ID_PIN).title(getString(R.string.label_login_input_pin))
         .descriptionEditable(true)
-        .descriptionInputType(InputType.TYPE_CLASS_TEXT)
+        .descriptionInputType(InputType.TYPE_CLASS_NUMBER
+                or InputType.TYPE_NUMBER_VARIATION_NORMAL)
         .build()
 
     private fun inputPass() = GuidedAction.Builder(requireContext())
         .id(ID_PASS).title(getString(R.string.label_login_input_pass))
         .descriptionEditable(true)
-        .descriptionInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD
-                or InputType.TYPE_CLASS_TEXT)
+        .descriptionInputType(InputType.TYPE_CLASS_NUMBER
+                or InputType.TYPE_NUMBER_VARIATION_PASSWORD)
         .build()
 
     private fun checkBoxRememberMe() = GuidedAction.Builder(requireContext())
@@ -170,6 +183,7 @@ class LoginFragment : GuidedStepSupportFragment() {
 
     override fun onGuidedActionClicked(action: GuidedAction?) {
         when (action?.id) {
+            ID_PIN -> onPassActionEntered() // exited PIN field with ENTER, and entered PASS field
             ID_LANG_EN -> changeLanguageTo("en")
             ID_LANG_RU -> changeLanguageTo("ru")
             ID_WIFI -> {
@@ -192,6 +206,26 @@ class LoginFragment : GuidedStepSupportFragment() {
             }
         }
     }
+
+    override fun onGuidedActionFocused(currentFocused: GuidedAction?) {
+        super.onGuidedActionFocused(currentFocused)
+        if (currentFocused?.id == SecondaryLoginFragment.ID_PASS) { // focus received
+            onPassActionEntered()
+        }
+    }
+
+    private fun onPassActionEntered() {
+        savedPassword?: return
+        findActionById(SecondaryLoginFragment.ID_PASS).run {
+            if (description?.isEmpty() != false) {
+                description = savedPassword
+                view?.post { // to avoid crash as the RecyclerView rather rebuilding layout at the moment
+                    notifyActionChanged(findActionPositionById(SecondaryLoginFragment.ID_PASS))
+                }
+            }
+        }
+    }
+
 
     // endregion
     // region Helpers
@@ -251,5 +285,9 @@ class LoginFragment : GuidedStepSupportFragment() {
         const val ID_WIFI = 13L
 
         const val ID_BUTTON_SUBMIT = 21L
+
+        // state keys
+
+        const val STATE_KEY_PASS = "STATE_KEY_PASS"
     }
 }

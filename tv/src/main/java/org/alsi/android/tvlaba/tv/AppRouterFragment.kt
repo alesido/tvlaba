@@ -43,7 +43,7 @@ class AppRouterFragment : Fragment(R.layout.app_start_fragment) {
 
                 OnSessionInvalid, OnContractInvalid -> {
                     findNavController(this).navigate(
-                        AppRouterFragmentDirections.actionAppRouterFragmentToLoginFragment()
+                        AppRouterFragmentDirections.actionAppRouterFragmentToSecondaryLoginFragment()
                     )
                 }
                 LogOut -> {
