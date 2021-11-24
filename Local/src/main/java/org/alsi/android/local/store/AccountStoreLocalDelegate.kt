@@ -24,6 +24,7 @@ class AccountStoreLocalDelegate (
     private var accountId: Long? = null
 
     private val box: Box<UserAccountEntity> = boxStore.boxFor()
+    private val preferencesBox: Box<UserPreferencesEntity> = boxStore.boxFor()
     private val subscriptionBox: Box<SubscriptionEntity> = boxStore.boxFor()
     private val subscriptionPackageBox: Box<SubscriptionPackageEntity> = boxStore.boxFor()
 
@@ -81,6 +82,17 @@ class AccountStoreLocalDelegate (
             } ?: noAccount()
             } ?: idUnknown2()
         }
+    }
+
+    override fun setRememberMeAtLogin(value: Boolean) = Completable.fromRunnable {
+        accountId?.let {  id -> box.get(id)?.let { entity ->
+            box.attach(entity)
+            val preferencesEntity = entity.preferences.target.copy(loginRememberMe = value)
+            preferencesBox.put(preferencesEntity)
+            entity.preferences.target = preferencesEntity
+            box.put(entity)
+        } ?: noAccount()
+        } ?: idUnknown2()
     }
 
     private fun insertSubscriptions(source: UserAccount): Long {

@@ -297,14 +297,14 @@
     },
     {
       "id": "10:2719136856054139016",
-      "lastPropertyId": "3:5402810455219028783",
+      "lastPropertyId": "4:7763559562444433397",
       "name": "UserAccountEntity",
       "properties": [
         {
           "id": "1:7937701785825143485",
           "name": "id",
           "type": 6,
-          "flags": 129
+          "flags": 131
         },
         {
           "id": "2:5758900667692477077",
@@ -317,6 +317,14 @@
           "id": "3:5402810455219028783",
           "name": "loginPassword",
           "type": 9
+        },
+        {
+          "id": "4:7763559562444433397",
+          "name": "preferencesId",
+          "indexId": "56:6891526309374780911",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "UserPreferencesEntity"
         }
       ],
       "relations": []
@@ -1760,10 +1768,36 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "43:4656564597382655522",
+      "lastPropertyId": "3:182015459540511567",
+      "name": "UserPreferencesEntity",
+      "properties": [
+        {
+          "id": "1:2386333442159877745",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1219170944256482997",
+          "name": "loginRememberMe",
+          "type": 1,
+          "flags": 2
+        },
+        {
+          "id": "3:182015459540511567",
+          "name": "fontSize",
+          "type": 5,
+          "flags": 2
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "42:4124619414349678014",
-  "lastIndexId": "55:3250835887669528422",
+  "lastEntityId": "43:4656564597382655522",
+  "lastIndexId": "56:6891526309374780911",
   "lastRelationId": "1:7924831471598219743",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

@@ -19,4 +19,5 @@ interface AccountDataLocal
 
     fun getSubscriptions(): Single<List<ServiceSubscription>>
     fun putSubscriptions(subscriptions: List<ServiceSubscription>): Completable
+    fun setRememberMeAtLogin(value: Boolean): Completable
 }

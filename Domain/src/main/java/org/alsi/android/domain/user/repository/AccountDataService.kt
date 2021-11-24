@@ -1,5 +1,6 @@
 package org.alsi.android.domain.user.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.domain.user.model.ServiceSubscription
 import org.alsi.android.domain.user.model.UserAccount
@@ -14,4 +15,6 @@ interface AccountDataService
     fun getPassword(): Single<String>
 
     fun getSubscriptions(): Single<List<ServiceSubscription>>
+
+    fun setRememberMeAtLogin(value: Boolean): Completable
 }

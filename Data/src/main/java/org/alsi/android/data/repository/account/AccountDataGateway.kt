@@ -1,5 +1,6 @@
 package org.alsi.android.data.repository.account
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.domain.user.repository.AccountDataService
@@ -39,4 +40,8 @@ open class AccountDataGateway(
     override fun getPassword() = local.getPassword()
 
     override fun getSubscriptions() = local.getSubscriptions()
+
+    override fun setRememberMeAtLogin(value: Boolean): Completable
+    = local.setRememberMeAtLogin(value)
+
 }

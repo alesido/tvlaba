@@ -10,6 +10,7 @@ import org.alsi.android.domain.context.interactor.StartSessionUseCase
 import org.alsi.android.domain.streaming.interactor.GetStreamingSettingsUseCase
 import org.alsi.android.domain.streaming.interactor.SelectLanguageUseCase
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
+import org.alsi.android.domain.user.SetRememberMeAtLoginUseCase
 import org.alsi.android.domain.user.model.UserAccount
 import org.alsi.android.presentation.state.Resource
 import java.util.*
@@ -19,6 +20,7 @@ class LoginViewModel @Inject constructor(
     private val startSessionUseCase: StartSessionUseCase,
     private val lastSessionAccountUseCase: LastSessionAccountUseCase,
     private val settingsUseCase: GetStreamingSettingsUseCase,
+    private val setRememberMeUseCase: SetRememberMeAtLoginUseCase,
     private val selectLanguageUseCase: SelectLanguageUseCase,
 ) : ViewModel() {
 
@@ -36,11 +38,14 @@ class LoginViewModel @Inject constructor(
                     val userSelectedLanguage = Locale.getDefault().language
                     if (userSelectedLanguage != settings.language?.code) {
                         selectLanguageUseCase.execute(SelectLanguageSubscriber {
-                            _liveData.postValue(Resource.success())
+                            setRememberMeUseCase.execute(SetRememberMeSubscriber(),
+                                SetRememberMeAtLoginUseCase.Params(rememberMe))
                         }, SelectLanguageUseCase.Params(userSelectedLanguage))
                     }
                     else {
-                        _liveData.postValue(Resource.success())
+                        setRememberMeUseCase.execute(SetRememberMeSubscriber(),
+                            SetRememberMeAtLoginUseCase.Params(rememberMe))
+
                     }
                 })
             }
@@ -60,13 +65,20 @@ class LoginViewModel @Inject constructor(
     inner class SettingsSubscriber(
         val callBack: (settingValues: StreamingServiceSettings) -> Unit
     ) : DisposableSingleObserver<StreamingServiceSettings>() {
-        override fun onSuccess(settingValues: StreamingServiceSettings) = callBack(settingValues)
+        override fun onSuccess(settingValues: StreamingServiceSettings) =
+            callBack(settingValues)
         override fun onError(e: Throwable) = _liveData.postValue(Resource.error(e))
     }
 
     inner class SelectLanguageSubscriber(val callBack: () -> Unit) : DisposableCompletableObserver() {
-        override fun onComplete() = callBack()
+        override fun onComplete() =
+            callBack()
         override fun onError(e: Throwable) = _liveData.postValue(Resource.error(e))
     }
 
+    inner class SetRememberMeSubscriber() : DisposableCompletableObserver() {
+        override fun onComplete() =
+            _liveData.postValue(Resource.success())
+        override fun onError(e: Throwable) = _liveData.postValue(Resource.error(e))
+    }
 }
