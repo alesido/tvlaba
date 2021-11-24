@@ -150,6 +150,8 @@
     <string name="description_for_secondary_login">Login with other credentials or clear your data here</string>
     <string name="button_label_clear">Clear</string>
     <string name="button_label_unlock_edit">Edit</string>
+    <string name="message_login_pin_should_be_should_be_not_empty">Please provide your PIN.</string>
+    <string name="message_login_pass_field_should_be_not_empty">Please provide your password.</string>
 
 
 </resources>

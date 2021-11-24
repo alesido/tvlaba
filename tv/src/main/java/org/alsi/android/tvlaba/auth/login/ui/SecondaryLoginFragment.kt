@@ -37,7 +37,7 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
     private lateinit var loginViewModel : LoginViewModel
     private val progressBarManager = ProgressBarManager()
 
-    private var shadowedPassword: String? = null
+    private var savedPassword: String? = null
 
     // region Android
 
@@ -86,7 +86,7 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
             buttonSubmit()
         ))
         // restore shadowed password
-        shadowedPassword = savedInstanceState?.getString(STATE_KEY_SHADOWED)
+        savedPassword = savedInstanceState?.getString(STATE_KEY_SHADOWED)
     }
 
     override fun onCreateButtonActions(actions: MutableList<GuidedAction>,
@@ -109,27 +109,9 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
         // hide password in case it's restored by the standard scheme
         // to which "onCreateActions" wrapped around
         findActionById(ID_PASS).description = null
-        // looks like have to refresh inputs as their enable status changed
-        listOf(ID_PIN, ID_PASS).forEach {
-            notifyActionChanged(findActionPositionById(it))
-        }
-    }
 
-    override fun onGuidedActionFocused(action: GuidedAction?) {
-        super.onGuidedActionFocused(action)
-        action?.let {
-            val passAction = findActionById(ID_PASS)
-            if (action == passAction && passAction.isEnabled) {
-                passAction.description = shadowedPassword
-                notifyActionChanged(findActionPositionById(ID_PASS))
-
-            }
-            else if (passAction.description?.isNotEmpty() == true) {
-                shadowedPassword = passAction.description.toString()
-                passAction.description = null
-                notifyActionChanged(findActionPositionById(ID_PASS))
-            }
-        }
+        // looks like we have to refresh inputs as their enable status changed
+        notifyInputsChanged()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -159,9 +141,6 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
         .descriptionEditable(true)
         .descriptionInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD
                 or InputType.TYPE_CLASS_TEXT)
-// Unfortunately this mode starts working upon start editing, no when the field focused!
-//        .descriptionEditInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD
-//                or InputType.TYPE_CLASS_TEXT)
         .enabled(savedInstanceState?.getBoolean(
             STATE_KEY_EDIT_ENABLED, false)?: false)
         .build()
@@ -208,15 +187,28 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
             SUCCESS -> {
                 progressBarManager.hide()
                 resource.data?.run {
-                    // don not overwrite pin field in case it has nonempty value
-                    findActionById(ID_PIN).run {
-                        if (description?.isEmpty() != false) {
-                            description = loginName
-                            notifyActionChanged(findActionPositionById(ID_PIN))
+                    if (preferences?.loginRememberMe == true) {
+                        // do not overwrite pin field in case it has nonempty value
+                        // (already set and then edited)
+                        findActionById(ID_PIN).run {
+                            if (description?.isEmpty() != false) {
+                                description = loginName
+                                notifyActionChanged(findActionPositionById(ID_PIN))
+                            }
                         }
+                        // just remember password, do not show it to reveal unintentionally
+                        if (savedPassword?.isEmpty() != false) {
+                            savedPassword = loginPassword
+                        }
+                        // set "remember me"
+                        findActionById(ID_REMEMBER_ME).isChecked = true
+                        notifyActionChanged(findActionPositionById(ID_REMEMBER_ME))
                     }
-                    // just remember remember password, do not show it
-                    shadowedPassword = loginPassword
+                    else {
+                        unlockEditing()
+                        findActionById(ID_BUTTON_UNLOCK_EDIT).isEnabled = false
+                        notifyActionChanged(findActionPositionById(ID_BUTTON_UNLOCK_EDIT))
+                    }
                 }
             }
             ERROR -> {
@@ -244,8 +236,9 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
 
     override fun onGuidedActionClicked(action: GuidedAction?) {
         when (action?.id) {
+            ID_PIN -> onPassActionEntered() // exited PIN field with ENTER, and entered PASS field
             ID_BUTTON_CLEAR -> {
-                shadowedPassword = null
+                savedPassword = null
                 listOf(ID_PIN, ID_PASS).forEach {
                     findActionById(it)?.apply { description = ""; isEnabled = true }
                     notifyActionChanged(findActionPositionById(it))
@@ -254,32 +247,55 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
                 notifyActionChanged(findActionPositionById(ID_REMEMBER_ME))
 
             }
-            ID_BUTTON_UNLOCK_EDIT -> {
-                listOf(ID_PIN, ID_PASS, ID_REMEMBER_ME).forEach {
-                    findActionById(it)?.apply { isEnabled = true }
-                    notifyActionChanged(findActionPositionById(it))
-                }
-            }
+            ID_BUTTON_UNLOCK_EDIT -> unlockEditing()
             ID_BUTTON_SUBMIT -> {
                 val pinInput = inputValue(ID_PIN)
-                if (isInputEmpty(pinInput, R.string.message_all_parent_pins_should_be_filled))
+                if (isInputEmpty(pinInput, R.string.message_login_pin_should_be_should_be_not_empty))
                     return
-                if (isInputEmpty(shadowedPassword, R.string.message_all_parent_pins_should_be_filled))
+                if (isInputEmpty(savedPassword, R.string.message_login_pass_field_should_be_not_empty))
                     return
                 loginViewModel.login(
                     pinInput!!,
-                    shadowedPassword!!,
+                    savedPassword!!,
                     findActionById(ID_REMEMBER_ME).isChecked
                 )
             }
-            ID_LANG_EN -> {
-                changeLanguageTo("en")
-                for (p in 1..3) notifyActionChanged(p)
+            ID_LANG_EN -> changeLanguageTo("en")
+            ID_LANG_RU -> changeLanguageTo("ru")
+        }
+    }
+
+    override fun onGuidedActionFocused(currentFocused: GuidedAction?) {
+        super.onGuidedActionFocused(currentFocused)
+        if (currentFocused?.id == ID_PASS) { // focus received
+            onPassActionEntered()
+        }
+    }
+
+    private fun onPassActionEntered() {
+        savedPassword?: return
+        findActionById(ID_PASS).run {
+            if (description?.isEmpty() != false) {
+                description = savedPassword
+                view?.post { // to avoid crash as the RecyclerView rather rebuilding layout at the moment
+                    notifyActionChanged(findActionPositionById(ID_PASS))
+                }
             }
-            ID_LANG_RU -> {
-                changeLanguageTo("ru")
-                for (p in 1..3) notifyActionChanged(p)
-            }
+        }
+    }
+
+    private fun unlockEditing() {
+        listOf(ID_PIN, ID_PASS, ID_REMEMBER_ME).forEach {
+            findActionById(it)?.apply { isEnabled = true }
+            notifyActionChanged(findActionPositionById(it))
+        }
+        findActionById(ID_BUTTON_UNLOCK_EDIT).isEnabled = false
+        notifyActionChanged(findActionPositionById(ID_BUTTON_UNLOCK_EDIT))
+    }
+
+    private fun notifyInputsChanged() {
+        listOf(ID_PIN, ID_PASS, ID_REMEMBER_ME).forEach {
+            notifyActionChanged(findActionPositionById(it))
         }
     }
 

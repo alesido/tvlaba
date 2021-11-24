@@ -142,5 +142,7 @@
     <string name="description_for_secondary_login">Здесь Вы можете войти с другим лицевым счётом или сбросить ваши данные.</string>
     <string name="button_label_clear">Очистить</string>
     <string name="button_label_unlock_edit">Изменить</string>
+    <string name="message_login_pin_should_be_should_be_not_empty">Укажите номер Вашего лицевого счёта.</string>
+    <string name="message_login_pass_field_should_be_not_empty">Пожалуйста, введите ваш пароль.</string>
 
 </resources>
