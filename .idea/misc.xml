@@ -15,6 +15,8 @@
         <entry key="tv/src/main/res/drawable/background_input_normal.xml" value="0.18489583333333334" />
         <entry key="tv/src/main/res/drawable/default_background.xml" value="0.4515625" />
         <entry key="tv/src/main/res/drawable/ic_music_note.xml" value="0.17657657657657658" />
+        <entry key="tv/src/main/res/drawable/shape_circle_gradient_future.xml" value="0.22760416666666666" />
+        <entry key="tv/src/main/res/drawable/shape_circle_gradient_record.xml" value="0.22760416666666666" />
         <entry key="tv/src/main/res/layout/app_start_fragment.xml" value="0.42857142857142855" />
         <entry key="tv/src/main/res/layout/general_settings_dialog_fragment.xml" value="0.44047619047619047" />
         <entry key="tv/src/main/res/layout/parental_code_dialog.xml" value="0.21957671957671956" />

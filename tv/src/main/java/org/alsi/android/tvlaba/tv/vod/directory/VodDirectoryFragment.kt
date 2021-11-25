@@ -228,7 +228,7 @@ class VodDirectoryFragment : BrowseSupportFragment() {
             val unitRows = directory.sections[browseData.position.sectionIndex].units.mapIndexed { index, unit ->
                 val header = HeaderItem((index + 1).toLong(), unit.title)
                 val listRowAdapter = VodUnitListRowAdapter(VodItemCardPresenter()).apply {
-                    setItems(unit.window?.items?: listOf<VodListingItem>(), null)
+                    setItems(unit.window?.items?: listOf(VodListingItem.empty()), null)
                 }
                 ListRow(header, listRowAdapter)
             }
