@@ -391,7 +391,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         val toRemove = indexByCategoryId.filterKeys { null == data.directory.categoryById[it] }
         val toAdd = data.directory.categoryById.filterKeys { null == indexByCategoryId[it] }
         // add/remove categories
-        if (toRemove.isNotEmpty() || toAdd.isNotEmpty()) {
+        val isDirectoryAlreadyLoaded = adapter.size() > 2
+        if (isDirectoryAlreadyLoaded && (toRemove.isNotEmpty() || toAdd.isNotEmpty())) {
             // notify user unobtrusively on categories set change
             showMessage(R.string.message_tv_categories_set_changed)
             // remove collected to remove
