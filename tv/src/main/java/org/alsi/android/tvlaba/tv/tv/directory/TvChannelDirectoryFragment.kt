@@ -389,7 +389,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         }
         // collect category items to remove and to add
         val toRemove = indexByCategoryId.filterKeys { null == data.directory.categoryById[it] }
-        val toAdd = data.directory.categoryById.filterKeys { null == indexByCategoryId[it] }
+        val toAdd = data.directory.categoryById.filterKeys { null == indexByCategoryId[it] }.filter {
+            data.directory.index[it.value.id]?.isNotEmpty() == true // add only categories with non-empty list of channels
+        }
         // add/remove categories
         val isDirectoryAlreadyLoaded = adapter.size() > 2
         if (isDirectoryAlreadyLoaded && (toRemove.isNotEmpty() || toAdd.isNotEmpty())) {
