@@ -145,4 +145,7 @@
     <string name="message_login_pin_should_be_should_be_not_empty">Укажите номер Вашего лицевого счёта.</string>
     <string name="message_login_pass_field_should_be_not_empty">Пожалуйста, введите ваш пароль.</string>
 
+    <string name="title_vod_unit_last">Последние</string>
+    <string name="title_vod_unit_best">Популярные</string>
+
 </resources>

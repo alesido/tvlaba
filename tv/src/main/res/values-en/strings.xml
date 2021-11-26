@@ -149,5 +149,7 @@
     <string name="message_login_pin_should_be_should_be_not_empty">Please provide your PIN.</string>
     <string name="message_login_pass_field_should_be_not_empty">Please provide your password.</string>
 
+    <string name="title_vod_unit_last">Last</string>
+    <string name="title_vod_unit_best">Best</string>
 
 </resources>

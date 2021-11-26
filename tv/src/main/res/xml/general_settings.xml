@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/app_menu_item_settings"
     >
 
@@ -29,10 +29,12 @@
         <ListPreference
             android:key="@string/pref_key_http_cache_size"
             android:title="@string/pref_title_server_stream_cache_size"
+            app:isPreferenceVisible="false"
             />
         <ListPreference
             android:key="@string/pref_key_streaming_bitrate"
             android:title="@string/pref_title_streaming_category_bitrate"
+            app:isPreferenceVisible="false"
             />
     </PreferenceCategory>
 
@@ -47,6 +49,7 @@
         <CheckBoxPreference
             android:key="@string/pref_key_remote_control_no_pause_button"
             android:title="@string/pref_title_remote_control_category_no_pause_button"
+            app:isPreferenceVisible="false"
             />
     </PreferenceCategory>
 
@@ -63,6 +66,7 @@
     <PreferenceCategory
         android:title="@string/pref_title_common_category"
         android:key="@string/pref_key_common_category"
+        app:isPreferenceVisible="false"
         >
         <ListPreference
             android:key="@string/pref_key_font_size"

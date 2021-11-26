@@ -6,10 +6,12 @@ import dagger.Provides
 import org.alsi.android.domain.exception.model.ExceptionMessages
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
+import org.alsi.android.domain.vod.model.guide.directory.VodUnitTitles
 import org.alsi.android.moidom.Moidom
 import org.alsi.android.tvlaba.exception.ExceptionMessageStrings
 import org.alsi.android.tvlaba.tv.tv.TvServiceTelecolaPresentation
 import org.alsi.android.tvlaba.tv.vod.VodServicePrimeHdPresentation
+import org.alsi.android.tvlaba.tv.vod.directory.VodUnitTitleStrings
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -19,6 +21,10 @@ class AssetsModule {
     @Singleton @Provides
     fun provideExceptionMessages(context: Context): ExceptionMessages
     = ExceptionMessageStrings(context)
+
+    @Singleton @Provides
+    fun provideVodUnitTitles(context: Context): VodUnitTitles
+    = VodUnitTitleStrings(context)
 
     @Singleton @Provides @Named("${Moidom.TAG}.${StreamingService.TV}")
     fun provideTvServiceMoiDomPresentation(

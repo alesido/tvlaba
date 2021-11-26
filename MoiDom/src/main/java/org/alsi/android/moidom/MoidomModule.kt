@@ -15,6 +15,7 @@ import org.alsi.android.domain.streaming.model.ServiceProvider
 import org.alsi.android.domain.streaming.model.service.StreamingService
 import org.alsi.android.domain.streaming.model.service.StreamingServiceDefaults
 import org.alsi.android.domain.tv.repository.guide.TvVideoStreamRepository
+import org.alsi.android.domain.vod.model.guide.directory.VodUnitTitles
 import org.alsi.android.local.Local
 import org.alsi.android.local.model.user.UserAccountSubject
 import org.alsi.android.local.store.AccountStoreLocalDelegate
@@ -186,8 +187,9 @@ class MoidomModule {
      */
     @Named("${Moidom.TAG}.${StreamingService.VOD}")
     @Singleton @Provides fun provideVodServiceRemoteStore(
-        remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom
-    ): VodDirectoryRemoteStore = VodDirectoryRemoteStoreMoiDom(remoteService, remoteSession)
+        remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom,
+        vodUnitTitles: VodUnitTitles
+    ): VodDirectoryRemoteStore = VodDirectoryRemoteStoreMoiDom(remoteService, remoteSession, vodUnitTitles)
 
     /**     VOD Play Cursor, Local Store
      */

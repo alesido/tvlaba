@@ -3,11 +3,15 @@ package org.alsi.android.moidom.mapper
 import org.alsi.android.domain.vod.model.guide.directory.VodDirectory
 import org.alsi.android.domain.vod.model.guide.directory.VodSection
 import org.alsi.android.domain.vod.model.guide.directory.VodUnit
+import org.alsi.android.domain.vod.model.guide.directory.VodUnitTitles
 import org.alsi.android.moidom.model.vod.VodGenresResponse
 import org.alsi.android.moidom.store.RestServiceMoidom
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.EXTRA_GENRE_BEST_ID
+import org.alsi.android.moidom.store.RestServiceMoidom.Companion.EXTRA_GENRE_LAST_ID
 import org.alsi.android.remote.mapper.SourceDataMapper
 
-class VodDirectorySourceDataMapper: SourceDataMapper<VodGenresResponse, VodDirectory> {
+class VodDirectorySourceDataMapper(private val titles: VodUnitTitles)
+    : SourceDataMapper<VodGenresResponse, VodDirectory> {
 
     override fun mapFromSource(source: VodGenresResponse): VodDirectory {
 
@@ -17,9 +21,9 @@ class VodDirectorySourceDataMapper: SourceDataMapper<VodGenresResponse, VodDirec
             total = rec.count
         )}.toMutableList()
 
-        // TODO Domain level asset for special genre titles, the same scheme as for ExceptionMessages
-        dstUnits.add(0, VodUnit(id = RestServiceMoidom.EXTRA_GENRE_BEST_ID, title = "BEST"))
-        dstUnits.add(1, VodUnit(id = RestServiceMoidom.EXTRA_GENRE_LAST_ID, title = "LAST"))
+        // TODO Replace hardcoded with commented when there'll be english translation too.
+        dstUnits.add(0, VodUnit(EXTRA_GENRE_BEST_ID, title = "Последние"))//titles.last()))
+        dstUnits.add(1, VodUnit(EXTRA_GENRE_LAST_ID, title = "Популярные"))//titles.best()))
 
         return VodDirectory(listOf(
             VodSection(

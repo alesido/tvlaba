@@ -8,6 +8,7 @@ import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.vod.model.guide.directory.VodDirectory
 import org.alsi.android.domain.vod.model.guide.directory.VodSection
 import org.alsi.android.domain.vod.model.guide.directory.VodUnit
+import org.alsi.android.domain.vod.model.guide.directory.VodUnitTitles
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.domain.vod.model.guide.listing.VodListingPage
 import org.alsi.android.moidom.mapper.VodDirectorySourceDataMapper
@@ -27,11 +28,12 @@ import javax.inject.Inject
 class VodDirectoryRemoteStoreMoiDom @Inject constructor(
 
     private val remoteService: RestServiceMoidom,
-    private val remoteSession: RemoteSessionRepositoryMoidom
+    private val remoteSession: RemoteSessionRepositoryMoidom,
+    private val standardUnitTitles: VodUnitTitles
 
 ): VodDirectoryRemoteStore {
 
-    private val directorySourceMapper = VodDirectorySourceDataMapper()
+    private val directorySourceMapper = VodDirectorySourceDataMapper(standardUnitTitles)
     private val pageSourceMapper = VodListingPageMapper()
     private val itemSourceMapper = VodItemSourceMapper()
 

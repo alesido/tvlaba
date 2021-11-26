@@ -17,6 +17,7 @@ import org.alsi.android.domain.streaming.model.service.StreamingServicePresentat
 import org.alsi.android.domain.vod.model.guide.directory.VodDirectoryPosition
 import org.alsi.android.domain.vod.model.guide.directory.VodSection
 import org.alsi.android.domain.vod.model.guide.directory.VodUnit
+import org.alsi.android.domain.vod.model.guide.directory.VodUnitTitles
 import org.alsi.android.domain.vod.model.guide.listing.VodListingItem
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
@@ -31,16 +32,18 @@ import javax.inject.Inject
 
 class VodDirectoryFragment : BrowseSupportFragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    @Inject
-    lateinit var errorHandler: ClassifiedExceptionHandler
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var errorHandler: ClassifiedExceptionHandler
+    @Inject lateinit var standardUnitTitles: VodUnitTitles
 
     private lateinit var browseViewModel : VodDirectoryBrowseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        errorHandler.changeContext(requireActivity())
+        standardUnitTitles.changeContext(requireActivity())
 
         // UI
         title = getString(R.string.app_section_vod)
