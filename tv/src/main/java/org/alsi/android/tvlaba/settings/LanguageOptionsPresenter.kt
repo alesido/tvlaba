@@ -1,6 +1,5 @@
 package org.alsi.android.tvlaba.settings
 
-import androidx.fragment.app.DialogFragment
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
