@@ -34,6 +34,7 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
 
     private lateinit var streaming: StreamingSettingsPresenter
     private lateinit var language: LanguageOptionsPresenter
+    private lateinit var fontSize: FontSizeOptionsPresenter
 
     private val progressBarManager = ProgressBarManager()
 
@@ -50,15 +51,6 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
     }
 
     private fun setupPreferences() {
-        // language
-        findPreference<ListPreference>(getString(R.string.pref_key_app_language))?.let {
-            language = LanguageOptionsPresenter(it, owner = this, viewModel)
-        }
-
-        // streaming
-        findPreference<PreferenceCategory>(getString(R.string.pref_key_streaming_category))?.let {
-            streaming = StreamingSettingsPresenter(it, owner = this, viewModel)
-        }
 
         // parental control
         findPreference<Preference>(getString(R.string.pref_key_parental_code))
@@ -72,6 +64,20 @@ class GeneralSettingsFragment : LeanbackPreferenceFragmentCompat() {
                 nc.navigate(R.id.actionGlobalLogOut)
                 true
             }
+
+        // streaming
+        findPreference<PreferenceCategory>(getString(R.string.pref_key_streaming_category))?.let {
+            streaming = StreamingSettingsPresenter(it, owner = this, viewModel)
+        }
+
+        // language
+        findPreference<ListPreference>(getString(R.string.pref_key_app_language))?.let {
+            language = LanguageOptionsPresenter(it, owner = this, viewModel)
+        }
+
+        findPreference<ListPreference>(getString(R.string.pref_key_font_size))?.let {
+            fontSize = FontSizeOptionsPresenter(it, this)
+        }
     }
 
     private fun onParentalCodeClicked() {

@@ -54,20 +54,13 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_title_app_category"
-        android:key="@string/pref_key_app_category"
+        android:title="@string/pref_title_common_category"
+        android:key="@string/pref_key_common_category"
         >
         <ListPreference
             android:key="@string/pref_key_app_language"
             android:title="@string/pref_title_app_category_language"
             />
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/pref_title_common_category"
-        android:key="@string/pref_key_common_category"
-        app:isPreferenceVisible="false"
-        >
         <ListPreference
             android:key="@string/pref_key_font_size"
             android:title="@string/pref_title_common_category_font_size"
@@ -77,14 +70,17 @@
         <ListPreference
             android:key="@string/pref_key_time_shift"
             android:title="@string/pref_title_common_category_time_shift"
+            app:isPreferenceVisible="false"
             />
         <CheckBoxPreference
             android:key="@string/pref_key_select_favorites_upon_start"
             android:title="@string/pref_title_common_category_show_favourites"
+            app:isPreferenceVisible="false"
             />
         <CheckBoxPreference
             android:key="@string/pref_key_show_health_monitor"
             android:title="@string/pref_title_common_category_show_health_monitor"
+            app:isPreferenceVisible="false"
             />
     </PreferenceCategory>
 

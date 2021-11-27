@@ -75,7 +75,9 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             viewModelFactory
         ).get(ParentalControlViewModel::class.java)
 
-        adapter = ArrayObjectAdapter( ListRowPresenter())
+        val listRowPresenter = ListRowPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, true)
+        listRowPresenter.headerPresenter = TvChannelRowHeaderPresenter() // rows headers
+        adapter = ArrayObjectAdapter(listRowPresenter)
 
         setupClickListener()
         setupSelectListener()
@@ -168,6 +170,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                               savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
 
+        headersSupportFragment.presenterSelector = headersListPresenterSelector()
+
         addBackPressedCallback()
 
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
@@ -178,6 +182,15 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
 
         return view
     }
+
+    /** ... just to control categories list text size
+     */
+    private fun headersListPresenterSelector(): PresenterSelector = ClassPresenterSelector()
+        .addClassPresenter(DividerRow::class.java, DividerPresenter())
+        .addClassPresenter(SectionRow::class.java,
+            RowHeaderPresenter(R.layout.lb_section_header, false))
+        .addClassPresenter(Row::class.java,
+            RowHeaderPresenter(R.layout.tv_category_list_item_header))
 
     private fun addBackPressedCallback() {
         requireActivity().onBackPressedDispatcher.addCallback(

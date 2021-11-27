@@ -19,20 +19,15 @@
 
     <!-- Themes for text size modes. -->
 
-    <style name="Theme.Tiny" parent="AppTheme">
-        <item name="text_tiny">10sp</item>
-        <item name="text_small">12sp</item>
-        <item name="text_medium">16sp</item>
-        <item name="text_large">18sp</item>
-        <item name="text_huge">28sp</item>
-    </style>
-
     <style name="Theme.Small" parent="AppTheme">
         <item name="text_tiny">12sp</item>
         <item name="text_small">15sp</item>
-        <item name="text_medium">18sp</item>
+        <item name="text_medium">14sp</item>
         <item name="text_large">22sp</item>
         <item name="text_huge">32sp</item>
+        <item name="card_width">200dp</item>
+        <item name="card_height">288dp</item>
+        <item name="footer_height">74dp</item>
     </style>
 
     <style name="Theme.Medium" parent="AppTheme">
@@ -41,6 +36,9 @@
         <item name="text_medium">23sp</item>
         <item name="text_large">27sp</item>
         <item name="text_huge">38sp</item>
+        <item name="card_width">280dp</item>
+        <item name="card_height">400dp</item>
+        <item name="footer_height">102dp</item>
     </style>
 
     <style name="Theme.Large" parent="AppTheme">
@@ -49,6 +47,9 @@
         <item name="text_medium">28sp</item>
         <item name="text_large">32sp</item>
         <item name="text_huge">44sp</item>
+        <item name="card_width">336dp</item>
+        <item name="card_height">480dp</item>
+        <item name="footer_height">122dp</item>
     </style>
 
     <style name="TvProgramDetailsBannerText">

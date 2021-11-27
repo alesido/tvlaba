@@ -91,7 +91,7 @@
     <string name="tv_program_details_action_play_record">Record</string>
     <string name="content_description_vod_unit_card_poster">VOD Item Poster</string>
 
-    <string name="label_vod_sections_and_navigation">Sections</string>
+    <string name="label_vod_sections_and_navigation">Menu</string>
 
     <string name="label_menu_generic_tv">TV</string>
     <string name="label_menu_generic_vod">VOD</string>

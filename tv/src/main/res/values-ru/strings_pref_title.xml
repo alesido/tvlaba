@@ -2,7 +2,7 @@
 <resources>
     <string name="pref_title_app_category">Приложение</string>
     <string name="pref_title_app_category_language">Язык</string>
-    <string name="pref_title_common_category">Общие настройки</string>
+    <string name="pref_title_common_category">Разное</string>
     <string name="pref_title_common_category_font_size">Размер шрифта</string>
     <string name="pref_title_common_category_remember_last_playing_channel">Запоминать последний просмотренный канал</string>
     <string name="pref_title_common_category_show_category">Показывать последнюю категорию</string>
@@ -45,9 +45,9 @@
     <string name="pref_title_warnings_category_remove_favourites_description">спрашивать подтверждение при удалении из списка любимых каналов</string>
     <string name="pref_title_streaming_category_bitrate">Качество видео</string>
     <string-array name="pref_title_common_category_font_size_titles">
-        <item>стандартный</item>
-        <item>средний</item>
-        <item>большой</item>
+        <item>Малый</item>
+        <item>Средний</item>
+        <item>Большой</item>
     </string-array>
     <string-array name="pref_title_common_category_font_size_values">
         <item>small</item>

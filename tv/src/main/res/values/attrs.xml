@@ -6,5 +6,8 @@
     <attr name="text_medium" format="dimension" />
     <attr name="text_large" format="dimension"/>
     <attr name="text_huge" format="dimension"/>
+    <attr name="card_width" format="dimension"/>
+    <attr name="card_height" format="dimension"/>
+    <attr name="footer_height" format="dimension"/>
 
 </resources>

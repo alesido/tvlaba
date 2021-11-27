@@ -6,6 +6,9 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.43425925925925923" />
         <entry key="leanback/src/main/res/layout/lb_guidedactions_item.xml" value="0.1437389770723104" />
         <entry key="leanback/src/main/res/layout/lb_guidedstep_fragment.xml" value="0.16225749559082892" />
+        <entry key="leanback/src/main/res/layout/lb_header.xml" value="0.1644620811287478" />
+        <entry key="leanback/src/main/res/layout/lb_row_header.xml" value="0.37864583333333335" />
+        <entry key="leanback/src/main/res/layout/lb_section_header.xml" value="0.1644620811287478" />
         <entry key="tv/src/main/res/drawable/background_button.xml" value="0.18489583333333334" />
         <entry key="tv/src/main/res/drawable/background_button_focused.xml" value="0.18489583333333334" />
         <entry key="tv/src/main/res/drawable/background_button_normal.xml" value="0.18489583333333334" />
@@ -23,8 +26,11 @@
         <entry key="tv/src/main/res/layout/progress_view_common.xml" value="0.31614583333333335" />
         <entry key="tv/src/main/res/layout/progress_view_start_screen.xml" value="0.18386243386243387" />
         <entry key="tv/src/main/res/layout/spin_kit_progress_view.xml" value="0.16843033509700175" />
-        <entry key="tv/src/main/res/layout/tv_channel_card_view.xml" value="0.22135416666666666" />
-        <entry key="tv/src/main/res/layout/tv_menu_card_view.xml" value="0.3" />
+        <entry key="tv/src/main/res/layout/tv_category_list_item_header.xml" value="0.1644620811287478" />
+        <entry key="tv/src/main/res/layout/tv_channel_card_view.xml" value="0.33" />
+        <entry key="tv/src/main/res/layout/tv_channel_row_header.xml" value="0.20899470899470898" />
+        <entry key="tv/src/main/res/layout/tv_channel_row_header2.xml" value="0.20899470899470898" />
+        <entry key="tv/src/main/res/layout/tv_menu_card_view.xml" value="0.1" />
         <entry key="tv/src/main/res/layout/tv_program_card_view.xml" value="0.3880208333333333" />
         <entry key="tv/src/main/res/layout/tv_program_details_description_extended.xml" value="0.3880208333333333" />
         <entry key="tv/src/main/res/layout/tv_program_playback_details.xml" value="0.30833333333333335" />

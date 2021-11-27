@@ -2,7 +2,7 @@
 <resources>
     <string name="pref_title_app_category">Application</string>
     <string name="pref_title_app_category_language">Language</string>
-    <string name="pref_title_common_category">General Setting</string>
+    <string name="pref_title_common_category">General Settings</string>
     <string name="pref_title_common_category_font_size">Font Size</string>
     <string name="pref_title_common_category_remember_last_playing_channel">Remember last viewed channel</string>
     <string name="pref_title_common_category_show_category">show last categories</string>

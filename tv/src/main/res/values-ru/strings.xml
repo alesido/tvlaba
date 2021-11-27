@@ -89,7 +89,7 @@
     <string name="tv_program_details_action_play_live">Эфир</string>
     <string name="tv_program_details_action_play_record">Запись</string>
     <string name="content_description_vod_unit_card_poster">VOD Item Poster</string>
-    <string name="label_vod_sections_and_navigation">Разделы</string>
+    <string name="label_vod_sections_and_navigation">Меню</string>
     <string name="label_menu_generic_tv">Телевидение</string>
     <string name="label_menu_generic_vod">Видеотека</string>
     <string name="label_menu_settings">Настройки</string>
