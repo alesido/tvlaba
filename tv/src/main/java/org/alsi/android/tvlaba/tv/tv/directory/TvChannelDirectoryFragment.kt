@@ -449,7 +449,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             val setItemPositionTask = if (it.channelIndex > 0) SelectItemViewHolderTask(it.channelIndex) else null
             // ^^^ convention: show categories when a 1st channel in the list to be selected
             setItemPositionTask?.isSmoothScroll = false
-            setSelectedPosition(it.categoryIndex, false, setItemPositionTask)
+            setSelectedPosition(it.categoryIndex + 1, false, setItemPositionTask)
         }
     }
 
