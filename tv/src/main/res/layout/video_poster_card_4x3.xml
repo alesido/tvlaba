@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/video_poster_4x3_width"
-    android:layout_height="@dimen/video_poster_4x3_height"
+    android:layout_width="?attr/footage_card_width"
+    android:layout_height="?attr/footage_card_height"
     >
     <ImageView
         android:id="@+id/videoPosterCardView4x3"

@@ -15,6 +15,9 @@
     <attr name="credits_card_height" format="dimension"/>
     <attr name="credits_card_footer_height" format="dimension"/>
 
+    <attr name="footage_card_width" format="dimension"/>
+    <attr name="footage_card_height" format="dimension"/>
+
     <attr name="control_button_diameter" format="dimension"/>
     <attr name="control_button_height" format="dimension"/>
     <attr name="control_icon_width" format="dimension"/>

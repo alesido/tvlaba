@@ -12,7 +12,8 @@ class VideoPoster4x3CardView @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ): ConstraintLayout(context, attrs, defStyleAttr) {
 
-    val vb = VideoPosterCard4x3Binding.inflate(LayoutInflater.from(context))
+    val vb = VideoPosterCard4x3Binding.inflate(LayoutInflater.from(context),
+        this, true)
 
     init {
         isFocusable = true

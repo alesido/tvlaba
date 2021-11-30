@@ -16,37 +16,13 @@ class VideoPosterCardPresenter: Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup) = ViewHolder(
             VideoPoster4x3CardView(parent.context).apply {
-                setBackgroundColor(Color.RED)
+                setBackgroundColor(Color.DKGRAY)
             })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {
         val posterUri = item as Uri
         val cardView = viewHolder.view as VideoPoster4x3CardView
-        Glide.with(cardView.context).load(posterUri.toString())
-            .placeholder(R.drawable.settings_icon_metal)
-
-            .listener (object: RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    return false
-                }
-            })
-
-            .into(cardView.vb.videoPosterCardView4x3)
+        Glide.with(cardView.context).load(posterUri).into(cardView.vb.videoPosterCardView4x3)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) = Unit

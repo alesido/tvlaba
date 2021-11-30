@@ -34,6 +34,9 @@
         <item name="credits_card_height">256dp</item>
         <item name="credits_card_footer_height">48dp</item>
 
+        <item name="footage_card_width">272dp</item>
+        <item name="footage_card_height">204dp</item>
+
         <item name="control_button_diameter">52dp</item>
         <item name="control_button_height">64dp</item>
         <item name="control_icon_width">32dp</item>
@@ -56,6 +59,9 @@
         <item name="credits_card_height">358dp</item>
         <item name="credits_card_footer_height">68dp</item>
 
+        <item name="footage_card_width">380dp</item>
+        <item name="footage_card_height">286dp</item>
+
         <item name="control_button_diameter">72dp</item>
         <item name="control_button_height">90dp</item>
         <item name="control_icon_width">44dp</item>
@@ -77,6 +83,9 @@
         <item name="credits_card_width">456dp</item>
         <item name="credits_card_height">465dp</item>
         <item name="credits_card_footer_height">82dp</item>
+
+        <item name="footage_card_width">456dp</item>
+        <item name="footage_card_height">344dp</item>
 
         <item name="control_button_diameter">96dp</item>
         <item name="control_button_height">108dp</item>
