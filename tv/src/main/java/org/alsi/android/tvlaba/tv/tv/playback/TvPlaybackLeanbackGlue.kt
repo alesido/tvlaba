@@ -2,11 +2,16 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.TypedValue
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.*
+import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
 import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
@@ -56,7 +61,25 @@ class TvPlaybackLeanbackGlue(
 
     private lateinit var onVideoOptionsControlClicked: () -> Unit
 
+
     private val playbackRowPresenter: PlaybackTransportRowPresenter = object : PlaybackTransportRowPresenter() {
+
+        private var playerTimeFontSize =  preferredFontSize()
+
+//        init {
+//            val typedValue = TypedValue()
+//            if (context.theme.resolveAttribute(R.attr.text_large, typedValue, true)) {
+//                playerTimeFontSize = typedValue.data.toFloat() // returns ~5940 for medium, ~6190 for large
+//            }
+//        }
+
+        override fun createRowViewHolder(parent: ViewGroup): RowPresenter.ViewHolder {
+            val vh = super.createRowViewHolder(parent)
+            listOf(R.id.current_time, R.id.separate_time, R.id.total_time).forEach {
+                (vh.view.findViewById<View>(it) as TextView).textSize = playerTimeFontSize
+            }
+            return vh
+        }
 
         override fun onBindRowViewHolder(vh: RowPresenter.ViewHolder, item: Any) {
             super.onBindRowViewHolder(vh, item)
@@ -74,6 +97,15 @@ class TvPlaybackLeanbackGlue(
             listOf(R.id.playback_progress, R.id.current_time, R.id.separate_time, R.id.total_time)
                 .forEach { vh.view.findViewById<View>(it).visibility = visibility }
         }
+
+        private fun preferredFontSize(): Float =
+            when (PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(context.getString(R.string.pref_key_font_size), "medium")) {
+                "small" -> 24f
+                "medium" -> 32f
+                "large" -> 48f
+                else -> 32f
+            }
     }
 
     override fun onCreateRowPresenter(): PlaybackRowPresenter {
