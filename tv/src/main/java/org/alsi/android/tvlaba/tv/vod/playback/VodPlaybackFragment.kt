@@ -37,6 +37,7 @@ import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.directory.TvChannelRowHeaderPresenter
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackAndScheduleFragmentDirections
 import org.alsi.android.tvlaba.tv.tv.playback.TvPlaybackPreferencesDialogFragment
 import org.alsi.android.tvlaba.tv.vod.directory.VodItemCardPresenter
@@ -72,6 +73,8 @@ class VodPlaybackFragment  : VideoSupportFragment(), Player.Listener, TextOutput
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        errorHandler.changeContext(requireActivity())
 
         playbackViewModel = ViewModelProvider(this, viewModelFactory)
             .get(VodPlaybackViewModel::class.java)
@@ -285,7 +288,7 @@ class VodPlaybackFragment  : VideoSupportFragment(), Player.Listener, TextOutput
                 progressBarManager.hide()
                 when (resource.data) {
                     is VodPlaybackAspectRatioChanged -> setAspectRatio(
-                        (resource.data as TvPlaybackAspectRatioChanged).newAspectRatio)
+                        (resource.data as VodPlaybackAspectRatioChanged).newAspectRatio)
                     is VodPlaybackAudioTrackLanguageChanged -> {}
                     is VodPlaybackSubtitlesLanguageChanged -> {}
                 }
@@ -337,10 +340,10 @@ class VodPlaybackFragment  : VideoSupportFragment(), Player.Listener, TextOutput
     }
 
     private fun bindPlaybackFooterData(data: VodPlaybackFooterLiveData?) {
-        val listRowPresenter = ListRowPresenter()
         val presenterSelector = ClassPresenterSelector()
             .addClassPresenter(glue.controlsRow::class.java, glue.playbackRowPresenter)
-            .addClassPresenter(ListRow::class.java, listRowPresenter)
+            .addClassPresenter(ListRow::class.java, ListRowPresenter(FocusHighlight.ZOOM_FACTOR_LARGE,true)
+                .apply { headerPresenter = TvChannelRowHeaderPresenter() })
         val rowsAdapter = ArrayObjectAdapter(presenterSelector)
         rowsAdapter.add(glue.controlsRow)
         data?.cursor?.unit?.window?.items?.let { items ->

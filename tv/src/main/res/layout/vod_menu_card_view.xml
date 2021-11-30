@@ -32,7 +32,7 @@
         android:gravity="center"
         android:maxLines="2"
         android:layout_margin="8dp"
-        android:textSize="20sp"
+        android:textSize="?attr/text_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/vodMenuCardFooter"
         app:layout_constraintBottom_toBottomOf="@+id/vodMenuCardFooter"

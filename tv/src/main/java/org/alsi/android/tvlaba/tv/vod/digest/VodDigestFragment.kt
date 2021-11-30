@@ -29,6 +29,8 @@ import org.alsi.android.presentationvod.model.VodDigestViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.directory.TvChannelRowHeaderPresenter
+import org.alsi.android.tvlaba.tv.tv.program.TvProgramActionPresenterSelector
 import org.alsi.android.tvlaba.tv.tv.program.TvProgramDetailsFragment
 import org.alsi.android.tvlaba.tv.vod.directory.VodItemCardPresenter
 import javax.inject.Inject
@@ -44,9 +46,6 @@ class VodDigestFragment : DetailsSupportFragment() {
 
     private val listingRowPosition get() = adapter.size() - 1
 
-    private var initialRow = RowKind.DETAILS
-
-
     private var isNavigatedBack = false
 
     // region Life Cycle
@@ -59,7 +58,7 @@ class VodDigestFragment : DetailsSupportFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
         view.addView(progressView)
@@ -159,7 +158,7 @@ class VodDigestFragment : DetailsSupportFragment() {
         // presenter selector
         val rowPresenterSelector = ClassPresenterSelector()
         rowPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
-        rowPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
+        rowPresenterSelector.addClassPresenter(ListRow::class.java, customListRowPresenter())
 
         // adapter
         adapter = ArrayObjectAdapter(rowPresenterSelector)
@@ -186,6 +185,10 @@ class VodDigestFragment : DetailsSupportFragment() {
 
         return detailsPresenter
     }
+
+    private fun customListRowPresenter() = ListRowPresenter(
+        FocusHighlight.ZOOM_FACTOR_LARGE, true)
+        .apply { headerPresenter = TvChannelRowHeaderPresenter() }
 
 
     private fun setOnItemCardSelectedActions() {
@@ -315,6 +318,8 @@ class VodDigestFragment : DetailsSupportFragment() {
         actionsAdapter[ACTION_PLAY] = VodDigestAction(ACTION_PLAY.toLong(), getString(R.string.vod_digest_action_watch), item)
         actionsAdapter[ACTION_NEXT] = VodDigestAction(ACTION_NEXT.toLong(), getString(R.string.vod_digest_action_next), item)
         actionsAdapter[ACTION_NEXT] = VodDigestAction(ACTION_LISTING.toLong(), getString(R.string.vod_digest_action_listing), item)
+
+        actionsAdapter.presenterSelector = TvProgramActionPresenterSelector()
 
         detailsOverviewRow.actionsAdapter = actionsAdapter
     }

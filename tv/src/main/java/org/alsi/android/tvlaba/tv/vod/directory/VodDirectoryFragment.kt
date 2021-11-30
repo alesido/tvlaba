@@ -28,6 +28,7 @@ import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.settings.GeneralSettingsDialogFragment
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
 import org.alsi.android.tvlaba.tv.model.CardMenuItem
+import org.alsi.android.tvlaba.tv.tv.directory.TvChannelRowHeaderPresenter
 import javax.inject.Inject
 
 class VodDirectoryFragment : BrowseSupportFragment() {
@@ -54,7 +55,10 @@ class VodDirectoryFragment : BrowseSupportFragment() {
         browseViewModel = ViewModelProvider(this, viewModelFactory)
             .get(VodDirectoryBrowseViewModel::class.java)
 
-        adapter = ArrayObjectAdapter( ListRowPresenter())
+        adapter = ArrayObjectAdapter( ListRowPresenter(
+            FocusHighlight.ZOOM_FACTOR_LARGE, true).apply {
+            headerPresenter = TvChannelRowHeaderPresenter()
+        })
 
         setSelectedListener()
         setClickedListener()
@@ -64,6 +68,9 @@ class VodDirectoryFragment : BrowseSupportFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+
+        headersSupportFragment.presenterSelector = headersListPresenterSelector()
+
         addBackPressedCallback()
 
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
@@ -74,6 +81,15 @@ class VodDirectoryFragment : BrowseSupportFragment() {
 
         return view
     }
+
+    /** ... just to control categories list text size
+     */
+    private fun headersListPresenterSelector(): PresenterSelector = ClassPresenterSelector()
+        .addClassPresenter(DividerRow::class.java, DividerPresenter())
+        .addClassPresenter(SectionRow::class.java,
+            RowHeaderPresenter(R.layout.lb_section_header, false))
+        .addClassPresenter(Row::class.java,
+            RowHeaderPresenter(R.layout.tv_category_list_item_header))
 
     private fun addBackPressedCallback() {
         requireActivity().onBackPressedDispatcher.addCallback(

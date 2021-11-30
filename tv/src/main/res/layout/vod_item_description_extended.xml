@@ -21,7 +21,8 @@
         app:layout_constraintTop_toBottomOf="@+id/vodItemBannerImdbRate"
         android:layout_margin="16dp"
         android:maxLines="4"
-        android:textSize="24sp"
+        android:textSize="?attr/text_large"
+        android:textStyle="bold"
         tools:text="Title Text"
         />
 
@@ -35,6 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/vodItemTitle"
         android:layout_margin="16dp"
         android:fontFamily="sans-serif-regular"
+        android:textSize="?attr/text_medium"
         tools:text="Filmmaker Guillermo del Toro teas up with Legendary Pictures to bring audiences a unique take on the monster film with this sci/fi production."
         />
 
@@ -53,6 +55,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
         android:padding="6dp"
+        android:textSize="?attr/text_medium"
         tools:text="FullHD"
         android:visibility="gone"
         tools:visibility="visible"
@@ -62,7 +65,6 @@
     -->
     <TextView
         android:id="@+id/vodItemBannerAgeLimitation"
-        android:textSize="?attr/text_medium"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:background="@drawable/background_round_corners_frame_bold"
@@ -74,6 +76,7 @@
         android:layout_marginEnd="8dp"
         android:paddingTop="4dp"
         android:paddingBottom="6dp"
+        android:textSize="?attr/text_medium"
         android:textStyle="bold"
         tools:text="18+"
         android:textColor="@android:color/white"
@@ -100,7 +103,6 @@
     -->
     <TextView
         android:id="@+id/vodItemBannerKinopoiskRate"
-        android:textSize="?attr/text_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/vodItemBannerImdbRate"
@@ -117,6 +119,7 @@
         android:shadowRadius="3"
         android:textColor="@android:color/white"
         android:textStyle="bold"
+        android:textSize="?attr/text_medium"
         tools:text="6.2"
         />
 

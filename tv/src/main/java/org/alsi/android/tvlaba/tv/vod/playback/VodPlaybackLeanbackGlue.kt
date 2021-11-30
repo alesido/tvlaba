@@ -12,6 +12,7 @@ import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
 import org.alsi.android.domain.vod.model.guide.playback.VodPlayback
 import org.alsi.android.presentationvod.model.VodPlaybackViewModel
 import org.alsi.android.tvlaba.R
+import org.alsi.android.tvlaba.tv.tv.playback.TvControlButtonPresenterSelector
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -26,6 +27,9 @@ class VodPlaybackLeanbackGlue(
     /** Set of actions bound to player controls
      */
     private val actions = VodPlaybackActions(context, model)
+
+    private val controlButtonPresenterSelector: ControlButtonPresenterSelector
+            = TvControlButtonPresenterSelector()
 
     /** Currently bound playback item
      */
@@ -67,11 +71,13 @@ class VodPlaybackLeanbackGlue(
     override fun onCreatePrimaryActions(primaryActionsAdapter: ArrayObjectAdapter) {
         super.onCreatePrimaryActions(primaryActionsAdapter)
         actions.setupPrimaryRow(primaryActionsAdapter)
+        primaryActionsAdapter.presenterSelector = controlButtonPresenterSelector
     }
 
     override fun onCreateSecondaryActions(secondaryActionsAdapter: ArrayObjectAdapter) {
         super.onCreateSecondaryActions(secondaryActionsAdapter)
         actions.setupSecondaryRow(secondaryActionsAdapter)
+        secondaryActionsAdapter.presenterSelector = controlButtonPresenterSelector
     }
 
     override fun onActionClicked(action: Action) {

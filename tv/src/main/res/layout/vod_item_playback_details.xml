@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp"
         android:maxLines="4"
-        android:textSize="24sp"
+        android:textSize="?attr/text_huge"
         tools:text="Title Text"
         />
 
@@ -31,6 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/vodPlaybackDetailsPrimaryTitle"
         android:layout_margin="16dp"
         android:fontFamily="sans-serif-condensed"
+        android:textSize="?attr/text_large"
         tools:text="Сезон 12. Эпизод 34"
         />
 
@@ -44,6 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/vodPlaybackDetailsSecondaryTitle"
         android:layout_margin="16dp"
         android:fontFamily="sans-serif-regular"
+        android:textSize="?attr/text_large"
         tools:text="Filmmaker Guillermo del Toro teas up with Legendary Pictures to bring audiences a unique take on the monster film with this sci/fi production."
         />
 

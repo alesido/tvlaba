@@ -1,9 +1,14 @@
 package org.alsi.android.tvlaba.tv.tv.program
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import org.alsi.android.domain.tv.interactor.guide.TvProgramCreditPicture
 import org.alsi.android.tvlaba.R
 
@@ -27,7 +32,29 @@ class TvProgramCreditsCardPresenter: Presenter() {
             cardView.tvProgramCreditsCardText = titleText?: ""
         })
         Glide.with(context).load(creditPicture.uri.toString())
-                .into(cardView.vb.tvProgramCreditsCardPoster)
+
+            .listener (object: RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
+
+            .into(cardView.vb.tvProgramCreditsCardPoster)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) = Unit
