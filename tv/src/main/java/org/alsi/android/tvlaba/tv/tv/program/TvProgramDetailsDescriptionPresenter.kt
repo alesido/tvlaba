@@ -72,7 +72,7 @@ class TvProgramDetailsDescriptionPresenter(val context: Context): Presenter() {
         val bodyParts: MutableList<String?> = mutableListOf()
         listOf( program.description,
                 buildCompactDigestExtract(program),
-                buildCompactCreditList(program),
+                //buildCompactCreditList(program), // too long content, duplicates credits row
                 buildProductionAndAwardsShort(program)
         ).forEach {
             it?.let { text -> bodyParts.add(text) }
