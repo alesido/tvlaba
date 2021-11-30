@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="272dp"
-    android:layout_height="256dp"
+    android:layout_width="?attr/credits_card_width"
+    android:layout_height="?attr/credits_card_height"
     >
     <ImageView
         android:id="@+id/tvProgramCardPoster"
@@ -14,12 +14,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/tvProgramCardFooter"
-        android:contentDescription="@string/content_description_tv_channel_card_poster"
+        android:contentDescription="@string/content_description_tv_program_card_poster"
         />
     <View
         android:id="@+id/tvProgramCardFooter"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="?attr/credits_card_footer_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/tvProgramCardFooter"
         android:gravity="top"
-        android:textSize="16sp"
+        android:textSize="?attr/text_large"
         android:textStyle="bold"
         tools:text="21:00 - 22:30"
         android:maxLines="1"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvProgramCardTitle"
         app:layout_constraintEnd_toEndOf="parent"
         android:maxLines="2"
-        android:textSize="14sp"
+        android:textSize="?attr/text_medium"
         android:ellipsize="end"
         tools:text="12:00 - 15:00 Last news we have at the moment. Come and see!"
         />

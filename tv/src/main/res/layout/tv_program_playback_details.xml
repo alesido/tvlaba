@@ -19,7 +19,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginStart="36dp"
         android:maxLines="4"
-        android:textSize="24sp"
+        android:textSize="?attr/text_huge"
         tools:text="Title Text"
         />
 
@@ -32,6 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvProgramPlaybackDetailsPrimaryTitle"
         android:layout_margin="16dp"
         android:fontFamily="sans-serif-condensed"
+        android:textSize="?attr/text_large"
         tools:text="8:00 - 10:32 На канале ''Дом Кино ''"
         />
 
@@ -45,6 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvProgramPlaybackDetailsSecondaryTitle"
         android:layout_margin="16dp"
         android:fontFamily="sans-serif-regular"
+        android:textSize="?attr/text_large"
         tools:text="Filmmaker Guillermo del Toro teas up with Legendary Pictures to bring audiences a unique take on the monster film with this sci/fi production."
         />
 

@@ -4,9 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.43425925925925923" />
+        <entry key="leanback/src/main/res/drawable/lb_control_button_primary.xml" value="0.2713541666666667" />
+        <entry key="leanback/src/main/res/drawable/lb_control_button_secondary.xml" value="0.27239583333333334" />
+        <entry key="leanback/src/main/res/layout/lb_action_1_line.xml" value="0.44047619047619047" />
+        <entry key="leanback/src/main/res/layout/lb_action_2_lines.xml" value="0.44047619047619047" />
+        <entry key="leanback/src/main/res/layout/lb_control_button_primary.xml" value="0.1644620811287478" />
+        <entry key="leanback/src/main/res/layout/lb_control_button_secondary.xml" value="0.44047619047619047" />
+        <entry key="leanback/src/main/res/layout/lb_details_overview.xml" value="0.1" />
         <entry key="leanback/src/main/res/layout/lb_guidedactions_item.xml" value="0.1437389770723104" />
         <entry key="leanback/src/main/res/layout/lb_guidedstep_fragment.xml" value="0.16225749559082892" />
         <entry key="leanback/src/main/res/layout/lb_header.xml" value="0.1644620811287478" />
+        <entry key="leanback/src/main/res/layout/lb_playback_controls.xml" value="0.17945326278659612" />
         <entry key="leanback/src/main/res/layout/lb_row_header.xml" value="0.37864583333333335" />
         <entry key="leanback/src/main/res/layout/lb_section_header.xml" value="0.1644620811287478" />
         <entry key="tv/src/main/res/drawable/background_button.xml" value="0.18489583333333334" />
@@ -20,23 +28,29 @@
         <entry key="tv/src/main/res/drawable/ic_music_note.xml" value="0.17657657657657658" />
         <entry key="tv/src/main/res/drawable/shape_circle_gradient_future.xml" value="0.22760416666666666" />
         <entry key="tv/src/main/res/drawable/shape_circle_gradient_record.xml" value="0.22760416666666666" />
+        <entry key="tv/src/main/res/drawable/tv_control_button_primary.xml" value="0.2713541666666667" />
+        <entry key="tv/src/main/res/drawable/tv_control_button_secondary.xml" value="0.19583333333333333" />
         <entry key="tv/src/main/res/layout/app_start_fragment.xml" value="0.42857142857142855" />
         <entry key="tv/src/main/res/layout/general_settings_dialog_fragment.xml" value="0.44047619047619047" />
         <entry key="tv/src/main/res/layout/parental_code_dialog.xml" value="0.21957671957671956" />
         <entry key="tv/src/main/res/layout/progress_view_common.xml" value="0.31614583333333335" />
         <entry key="tv/src/main/res/layout/progress_view_start_screen.xml" value="0.18386243386243387" />
         <entry key="tv/src/main/res/layout/spin_kit_progress_view.xml" value="0.16843033509700175" />
+        <entry key="tv/src/main/res/layout/tv_action_1_line.xml" value="0.44047619047619047" />
         <entry key="tv/src/main/res/layout/tv_category_list_item_header.xml" value="0.1644620811287478" />
         <entry key="tv/src/main/res/layout/tv_channel_card_view.xml" value="0.33" />
         <entry key="tv/src/main/res/layout/tv_channel_row_header.xml" value="0.20899470899470898" />
         <entry key="tv/src/main/res/layout/tv_channel_row_header2.xml" value="0.20899470899470898" />
+        <entry key="tv/src/main/res/layout/tv_control_button_primary.xml" value="0.18209876543209877" />
+        <entry key="tv/src/main/res/layout/tv_control_button_secondary.xml" value="0.3875" />
         <entry key="tv/src/main/res/layout/tv_menu_card_view.xml" value="0.1" />
-        <entry key="tv/src/main/res/layout/tv_program_card_view.xml" value="0.3880208333333333" />
+        <entry key="tv/src/main/res/layout/tv_program_card_view.xml" value="0.1" />
         <entry key="tv/src/main/res/layout/tv_program_details_description_extended.xml" value="0.3880208333333333" />
-        <entry key="tv/src/main/res/layout/tv_program_playback_details.xml" value="0.30833333333333335" />
+        <entry key="tv/src/main/res/layout/tv_program_playback_details.xml" value="0.1" />
         <entry key="tv/src/main/res/layout/vod_guide_start_fragment.xml" value="0.2570546737213404" />
         <entry key="tv/src/main/res/layout/vod_item_card_view.xml" value="0.18562610229276896" />
-        <entry key="tv/src/main/res/layout/vod_item_description_extended.xml" value="0.5" />
+        <entry key="tv/src/main/res/layout/vod_item_description_extended.xml" value="0.1" />
+        <entry key="tv/src/main/res/layout/vod_item_playback_details.xml" value="0.44047619047619047" />
         <entry key="tv/src/main/res/layout/vod_menu_card_view.xml" value="0.19427083333333334" />
         <entry key="tv/src/main/res/layout/vod_program_playback_details.xml" value="0.43645833333333334" />
         <entry key="tv/src/main/res/layout/vod_unit_card_view.xml" value="0.44047619047619047" />

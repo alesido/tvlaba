@@ -147,5 +147,7 @@
 
     <string name="title_vod_unit_last">Последние</string>
     <string name="title_vod_unit_best">Популярные</string>
+    <string name="content_description_credits_card_poster">Credits card poster</string>
+    <string name="content_description_tv_program_card_poster">TV Program Card View</string>
 
 </resources>

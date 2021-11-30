@@ -6,8 +6,19 @@
     <attr name="text_medium" format="dimension" />
     <attr name="text_large" format="dimension"/>
     <attr name="text_huge" format="dimension"/>
+
     <attr name="card_width" format="dimension"/>
     <attr name="card_height" format="dimension"/>
     <attr name="footer_height" format="dimension"/>
+
+    <attr name="credits_card_width" format="dimension"/>
+    <attr name="credits_card_height" format="dimension"/>
+    <attr name="credits_card_footer_height" format="dimension"/>
+
+    <attr name="control_button_diameter" format="dimension"/>
+    <attr name="control_button_height" format="dimension"/>
+    <attr name="control_icon_width" format="dimension"/>
+    <attr name="control_icon_height" format="dimension"/>
+
 
 </resources>

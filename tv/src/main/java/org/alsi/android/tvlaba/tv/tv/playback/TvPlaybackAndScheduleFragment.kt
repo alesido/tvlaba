@@ -11,6 +11,7 @@ import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.PlaybackGlue
 import androidx.leanback.widget.*
+import androidx.leanback.widget.FocusHighlight.ZOOM_FACTOR_LARGE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -45,6 +46,7 @@ import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.framework.ExoplayerTrackLanguageSelection
 import org.alsi.android.tvlaba.framework.TvErrorMessaging
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.directory.TvChannelRowHeaderPresenter
 import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragment
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
@@ -82,6 +84,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        errorHandler.changeContext(requireActivity())
 
         playbackViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(TvPlaybackViewModel::class.java)
@@ -445,10 +449,10 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
      * @see "tv-samples/Leanback sample"
      */
     private fun bindPlaybackFooterData(data: TvPlaybackFooterLiveData?) {
-        val listRowPresenter = ListRowPresenter()
         val presenterSelector = ClassPresenterSelector()
                 .addClassPresenter(glue.controlsRow::class.java, glue.playbackRowPresenter)
-                .addClassPresenter(ListRow::class.java, listRowPresenter)
+                .addClassPresenter(ListRow::class.java, ListRowPresenter(ZOOM_FACTOR_LARGE,true)
+                    .apply { headerPresenter = TvChannelRowHeaderPresenter() })
         val rowsAdapter = ArrayObjectAdapter(presenterSelector)
         rowsAdapter.add(glue.controlsRow)
         data?.schedule?.let {

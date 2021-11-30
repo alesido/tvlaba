@@ -41,6 +41,9 @@ class TvPlaybackLeanbackGlue(
     private lateinit var _primaryActionsAdapter: ArrayObjectAdapter
     private lateinit var _secondaryActionsAdapter: ArrayObjectAdapter
 
+    private val controlButtonPresenterSelector: ControlButtonPresenterSelector
+    = TvControlButtonPresenterSelector()
+
     private var showPlaybackProgress = true
 
     private var initialDisposition: TvProgramDisposition? = null
@@ -244,12 +247,14 @@ class TvPlaybackLeanbackGlue(
         super.onCreatePrimaryActions(primaryActionsAdapter)
         actions.setupPrimaryRow(primaryActionsAdapter)
         _primaryActionsAdapter = primaryActionsAdapter
+        _primaryActionsAdapter.presenterSelector = controlButtonPresenterSelector
     }
 
     override fun onCreateSecondaryActions(secondaryActionsAdapter: ArrayObjectAdapter) {
         super.onCreateSecondaryActions(secondaryActionsAdapter)
         actions.setupSecondaryRow(secondaryActionsAdapter)
         _secondaryActionsAdapter = secondaryActionsAdapter
+        _secondaryActionsAdapter.presenterSelector = controlButtonPresenterSelector
     }
 
     override fun onActionClicked(action: Action) {

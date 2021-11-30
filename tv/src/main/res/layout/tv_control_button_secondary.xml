@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/button"
+        style="?attr/playbackControlsButtonStyle"
+        android:layout_width="?attr/control_button_diameter"
+        android:layout_height="?attr/control_button_height"
+        android:scaleType="center"
+        android:src="@drawable/tv_control_button_secondary" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="?attr/control_icon_width"
+        android:layout_height="?attr/control_icon_height"
+        android:layout_gravity="center" />
+
+</FrameLayout>

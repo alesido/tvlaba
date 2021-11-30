@@ -31,6 +31,7 @@ import org.alsi.android.presentationtv.model.TvProgramDetailsViewModel
 import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.exception.ClassifiedExceptionHandler
 import org.alsi.android.tvlaba.tv.injection.ViewModelFactory
+import org.alsi.android.tvlaba.tv.tv.directory.TvChannelRowHeaderPresenter
 import org.alsi.android.tvlaba.tv.tv.parental.ParentalControlCheckInFragment
 import org.alsi.android.tvlaba.tv.tv.schedule.TvScheduleProgramCardPresenter
 import org.alsi.android.tvlaba.tv.tv.weekdays.TvWeekDayCardPresenter
@@ -65,10 +66,12 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState) as ViewGroup
+
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
         view.addView(progressView)
         progressBarManager.enableProgressBar()
         progressBarManager.setProgressBarView(progressView)
+
         return view
     }
 
@@ -166,7 +169,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         // presenter selector
         val rowPresenterSelector = ClassPresenterSelector()
         rowPresenterSelector.addClassPresenter(DetailsOverviewRow::class.java, detailsPresenter)
-        rowPresenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
+        rowPresenterSelector.addClassPresenter(ListRow::class.java, customListRowPresenter())
 
         // adapter
         adapter = ArrayObjectAdapter(rowPresenterSelector)
@@ -194,6 +197,11 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
         return detailsPresenter
     }
 
+    private fun customListRowPresenter() = ListRowPresenter(
+        FocusHighlight.ZOOM_FACTOR_LARGE, true)
+            .apply { headerPresenter = TvChannelRowHeaderPresenter() }
+
+
     private fun setupActions(program: TvProgramIssue, detailsOverviewRow: DetailsOverviewRow) {
         val actionsAdapter = SparseArrayObjectAdapter()
 
@@ -210,6 +218,8 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
 
         actionsAdapter[ACTION_SHOW_SCHEDULE] = Action(ACTION_SHOW_SCHEDULE.toLong(),
                 resources.getString(R.string.tv_program_details_action_schedule))
+
+        actionsAdapter.presenterSelector = TvProgramActionPresenterSelector()
 
         detailsOverviewRow.actionsAdapter = actionsAdapter
     }

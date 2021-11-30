@@ -64,6 +64,8 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
+        errorHandler.changeContext(requireActivity())
+
         title = getString(R.string.app_name)
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
@@ -75,9 +77,10 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             viewModelFactory
         ).get(ParentalControlViewModel::class.java)
 
-        val listRowPresenter = ListRowPresenter(FocusHighlight.ZOOM_FACTOR_LARGE, true)
-        listRowPresenter.headerPresenter = TvChannelRowHeaderPresenter() // rows headers
-        adapter = ArrayObjectAdapter(listRowPresenter)
+        adapter = ArrayObjectAdapter( ListRowPresenter(
+            FocusHighlight.ZOOM_FACTOR_LARGE, true).apply {
+            headerPresenter = TvChannelRowHeaderPresenter()
+        })
 
         setupClickListener()
         setupSelectListener()
