@@ -52,9 +52,13 @@ class TvChannelRemoteStoreMoidom (
 
     override fun getDirectory(): Single<TvChannelDirectory> {
         return remoteSession.getSessionId()
-                .flatMap { sid -> remoteService.getAllChannels(sid, timeZoneQueryParameter) }
-                .map { response -> channelsSourceMapper.mapFromSource(response, subscriptionPackage,
-                    settingsRepository.lastValues(), defaults) }
+                .flatMap { sid ->
+                    remoteService.getAllChannels(sid, timeZoneQueryParameter)
+                }
+                .map { response ->
+                    channelsSourceMapper.mapFromSource(response, subscriptionPackage,
+                        settingsRepository.lastValues(), defaults)
+                }
     }
 
     override fun getCategories(): Single<List<TvChannelCategory>> {

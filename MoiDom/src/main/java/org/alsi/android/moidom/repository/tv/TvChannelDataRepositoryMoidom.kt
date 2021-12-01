@@ -60,14 +60,8 @@ class TvChannelDataRepositoryMoidom @Inject constructor(
      *
      * TV channel directory is made observable to allow subsequent presentation updates due to
      * requested (required) update of current (live) channel programs.
-     *
-     * This method provides cache with expiration functionality.
      */
     override fun observeDirectory(): Observable<TvChannelDirectory> {
-        val s = getDirectory().subscribe( { directory ->
-            directorySubject.onNext(directory)
-        }, { Timber.e(it, it.toString()) })
-        disposables.add(s)
         return directorySubject
     }
 

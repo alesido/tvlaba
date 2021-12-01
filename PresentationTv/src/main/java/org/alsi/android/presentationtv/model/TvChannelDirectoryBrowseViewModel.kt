@@ -22,12 +22,13 @@ import javax.inject.Inject
  *
  */
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
-        directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
-        private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
-        private val newPlaybackUseCase: TvNewPlaybackUseCase,
-        private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,
-        private val browseCursorMoveUseCase: TvBrowseCursorMoveUseCase,
-        private val presentationManager: PresentationManager
+    directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
+    getDirectoryUseCase: TvGetChannelDirectoryUseCase,
+    private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
+    private val newPlaybackUseCase: TvNewPlaybackUseCase,
+    private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,
+    private val browseCursorMoveUseCase: TvBrowseCursorMoveUseCase,
+    private val presentationManager: PresentationManager
 
 ) : ViewModel() {
 
@@ -46,7 +47,8 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 
     init {
         liveDirectory.postValue(Resource.loading())
-        directoryObservationUseCase.execute(ChannelDirectorySubscriber())
+        directoryObservationUseCase.execute(ChannelDirectoryUpdatesSubscriber())
+        getDirectoryUseCase.execute(ChannelDirectorySubscriber())
     }
 
     fun getLiveDirectory(): LiveData<Resource<TvChannelDirectoryBrowseLiveData>> = liveDirectory
@@ -126,7 +128,18 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     // endregion
     // region Subscribers
 
-    private inner class ChannelDirectorySubscriber: DisposableObserver<TvChannelDirectory>() {
+
+    private inner class ChannelDirectorySubscriber: DisposableSingleObserver<TvChannelDirectory>() {
+        override fun onSuccess(directory: TvChannelDirectory) {
+            this@TvChannelDirectoryBrowseViewModel.directory = directory
+            browseCursorGetUseCase.execute(BrowseCursorSubscriber())
+        }
+        override fun onError(e: Throwable) {
+            liveDirectory.postValue(Resource.error(e))
+        }
+    }
+
+    private inner class ChannelDirectoryUpdatesSubscriber: DisposableObserver<TvChannelDirectory>() {
         override fun onNext(directory: TvChannelDirectory) {
             this@TvChannelDirectoryBrowseViewModel.directory = directory
             browseCursorGetUseCase.execute(BrowseCursorSubscriber())
