@@ -119,7 +119,7 @@ class SettingsStoreLocalDelegate(
         val language  = entity.language.target
         val device = entity.device.target
         val rc = RemoteControlMap()
-        device.remoteControlKeys.forEach { rc.put( it.function.reference, it.keyCode) }
+        device?.remoteControlKeys?.forEach { rc.put( it.function.reference, it.keyCode) }
         return StreamingServiceSettings(
                 features = entity.features,
                 server = StreamingServerOption(server.reference, server.title, server.description),
