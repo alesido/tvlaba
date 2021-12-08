@@ -7,6 +7,7 @@ import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import org.alsi.android.domain.streaming.interactor.StreamingSettingsUseCase
+import org.alsi.android.domain.streaming.model.VideoStream
 import org.alsi.android.domain.streaming.model.service.StreamingServiceSettings
 import org.alsi.android.domain.tv.interactor.guide.*
 import org.alsi.android.domain.tv.model.guide.TvPlayback
@@ -20,8 +21,7 @@ class TvPlaybackViewModel @Inject constructor(
         private val authorizePlaybackUseCase: TvAuthorizePlaybackUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val nextPlaybackUseCase: TvNextPlaybackUseCase,
-        private val switchToLivePlaybackUseCase: TvSwitchToLivePlaybackUseCase,
-        private val switchToArchivePlaybackUseCase: TvSwitchToArchivePlaybackUseCase,
+        private val liveRecordStreamUseCase: TvLiveRecordStreamUseCase,
         private val updatePlaybackCursorUseCase: TvUpdatePlaybackCursorUseCase,
         private val getSettingsUseCase: StreamingSettingsUseCase
 
@@ -29,12 +29,19 @@ class TvPlaybackViewModel @Inject constructor(
 
     private val liveData: MutableLiveData<Resource<TvPlayback>> = MutableLiveData()
 
+    /** To obtain record/archive stream for live in a separate work flow.
+     */
+    private val liveRecordStreamLiveData: MutableLiveData<Resource<VideoStream>> = MutableLiveData()
+    private val liveStreamLiveData: MutableLiveData<Resource<VideoStream>> = MutableLiveData()
+
     init {
         liveData.postValue(Resource.loading())
         currentPlaybackUseCase.execute(CurrentPlaybackSubscriber())
     }
 
     fun getLiveData(): LiveData<Resource<TvPlayback>> = liveData
+    fun getLiveRecordStreamLiveData(): LiveData<Resource<VideoStream>> = liveRecordStreamLiveData
+    fun getLiveStreamLiveData(): LiveData<Resource<VideoStream>> = liveStreamLiveData
 
     fun getSettings(receiver: (settings: StreamingServiceSettings) -> Unit) {
         getSettingsUseCase.execute(SettingsSubscriber(receiver))
@@ -71,16 +78,27 @@ class TvPlaybackViewModel @Inject constructor(
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
     }
 
-    fun switchToLivePlayback(playback: TvPlayback) {
-        liveData.postValue(Resource.loading())
-        switchToLivePlaybackUseCase.execute(NewPlaybackSubscriber(),
-                TvSwitchToLivePlaybackUseCase.Params(playback))
+    fun getLiveRecordStream(livePlayback: TvPlayback) {
+        livePlayback.record?.let {
+            liveRecordStreamLiveData.postValue(Resource.success(it))
+            return
+        }
+        liveRecordStreamUseCase.execute(object: DisposableSingleObserver<VideoStream>() {
+            override fun onSuccess(t: VideoStream) {
+                livePlayback.record = t
+                liveRecordStreamLiveData.postValue(Resource.success(t))
+            }
+            override fun onError(e: Throwable) = liveRecordStreamLiveData.postValue(Resource.error(e))
+        }, TvLiveRecordStreamUseCase.Params(livePlayback))
     }
 
-    fun switchToArchivePlayback(playback: TvPlayback) {
-        liveData.postValue(Resource.loading())
-        switchToArchivePlaybackUseCase.execute(NewPlaybackSubscriber(),
-                TvSwitchToArchivePlaybackUseCase.Params(playback))
+    /** This is to follow the workflow "glue-model-fragment-glue". It is to not violate current
+     *  responsibilities assignment.
+     *
+     *  TODO Add UC to refresh live stream URL
+     */
+    fun getLiveStream(playback: TvPlayback) {
+        liveStreamLiveData.postValue(Resource.success(playback.stream!!))
     }
 
     /** Update the playback cursor to current playback position and whether it paused
@@ -117,7 +135,7 @@ class TvPlaybackViewModel @Inject constructor(
         currentPlaybackUseCase.dispose()
         newPlaybackUseCase.dispose()
         nextPlaybackUseCase.dispose()
-        switchToLivePlaybackUseCase.dispose()
+        liveRecordStreamUseCase.dispose()
         updatePlaybackCursorUseCase.dispose()
         getSettingsUseCase.dispose()
     }

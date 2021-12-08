@@ -2,9 +2,7 @@ package org.alsi.android.tvlaba.tv.tv.playback
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.TypedValue
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,12 +11,15 @@ import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.*
 import androidx.preference.PreferenceManager
 import com.google.android.exoplayer2.ext.leanback.LeanbackPlayerAdapter
+import org.alsi.android.domain.streaming.model.VideoStream
 import org.alsi.android.domain.streaming.model.VideoStreamKind
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction
 import org.alsi.android.domain.streaming.model.options.rc.RemoteControlFunction.*
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramDisposition
 import org.alsi.android.framework.formatMillis
+import org.alsi.android.presentation.state.Resource
+import org.alsi.android.presentation.state.ResourceState
 import org.alsi.android.presentationtv.model.TvPlaybackViewModel
 import org.alsi.android.tvlaba.R
 import timber.log.Timber
@@ -31,7 +32,8 @@ class TvPlaybackLeanbackGlue(
 
         context: Context,
         adapter: LeanbackPlayerAdapter,
-        val model: TvPlaybackViewModel
+        val model: TvPlaybackViewModel,
+        val isControlsVisible: () -> Boolean
 
 ) : PlaybackTransportControlGlue<LeanbackPlayerAdapter>(context, adapter) {
 
@@ -59,6 +61,12 @@ class TvPlaybackLeanbackGlue(
     private var maintainLivePosition: Boolean = false
     private var pausePosition: Long = -1L
 
+    /**
+     *  ... to avoid seek when a long time processing takes place, e.g. switching from
+     *  live to archive, or to a next previous program
+     */
+    private var isInSeekTransition = false
+
     private lateinit var onVideoOptionsControlClicked: () -> Unit
 
 
@@ -69,7 +77,7 @@ class TvPlaybackLeanbackGlue(
 //        init {
 //            val typedValue = TypedValue()
 //            if (context.theme.resolveAttribute(R.attr.text_large, typedValue, true)) {
-//                playerTimeFontSize = typedValue.data.toFloat() // returns ~5940 for medium, ~6190 for large
+//                playerTimeFontSize = typedValue.data.toFloat() // returns ~5940 for medium, ~6190 for large font ?
 //            }
 //        }
 
@@ -101,10 +109,7 @@ class TvPlaybackLeanbackGlue(
         private fun preferredFontSize(): Float =
             when (PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.pref_key_font_size), "medium")) {
-                "small" -> 24f
-                "medium" -> 32f
-                "large" -> 48f
-                else -> 32f
+                "small" -> 24f; "medium" -> 32f; "large" -> 48f; else -> 32f
             }
     }
 
@@ -113,7 +118,7 @@ class TvPlaybackLeanbackGlue(
         return playbackRowPresenter
     }
 
-
+    // endregion
     // region Playback Setup
 
     fun bindPlaybackItem(playback: TvPlayback): Boolean {
@@ -123,12 +128,42 @@ class TvPlaybackLeanbackGlue(
             else -> return false
         }
         this.playback = playback
+        isInSeekTransition = false // in case this initiated. e.g. by live to record switch
         return true
     }
 
+    override fun getCurrentPosition() =
+        if (maintainLivePosition && playback?.time != null) {
+            if (playerAdapter.isPlaying)
+                System.currentTimeMillis() - playback!!.time!!.startUnixTimeMillis
+            else
+                pausePosition
+        }
+        else {
+            playerAdapter.currentPosition
+        }
+
+    private fun overrideDuration(overriddenDuration: Long) {
+        this.overriddenDuration = overriddenDuration
+    }
+
+    private fun seekIncrement() = (playbackRowPresenter.defaultSeekIncrement
+            * playback!!.time!!.durationMillis).toLong()
+
+    private fun seekIncrement(p: TvPlayback) = (playbackRowPresenter.defaultSeekIncrement
+            * p.time!!.durationMillis).toLong()
+
+    private fun isLive() = playback?.disposition == TvProgramDisposition.LIVE
+            && playback?.isLiveRecord != true
+
+    private fun isLiveRecord() = playback?.disposition == TvProgramDisposition.LIVE
+            && playback?.isLiveRecord == true
+
+    private fun isArchive() = playback?.disposition == TvProgramDisposition.RECORD
+
     private fun configureLivePlayback(playback: TvPlayback) {
         if (null == playback.time) {
-            // no program channel
+            // there is no program for this channel
             isSeekEnabled = false
             overrideDuration(TimeUnit.DAYS.toMillis(1))
             maintainLivePosition = true
@@ -136,7 +171,7 @@ class TvPlaybackLeanbackGlue(
             showPlaybackProgress = false
         }
         else {
-            isSeekEnabled = false // enable when "live record" is ready
+            isSeekEnabled = true // made enabled when the "live record" has got ready
             with(playback.time!!) {
                 overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
                 maintainLivePosition = true
@@ -145,29 +180,21 @@ class TvPlaybackLeanbackGlue(
             showPlaybackProgress = true
         }
         initialDisposition = TvProgramDisposition.LIVE
+        playback.isLiveRecord = playback.record?.let { false }
         setSeekController(SeekController())
     }
 
-    private fun setupRows() {
-        // clear out custom primary actions
-        for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
-            _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
-        // NOTE Do not try to clear and recreate actions: it interferes with change notification scheme
-        actions.setupPrimaryRow(_primaryActionsAdapter)
-        _secondaryActionsAdapter.clear()
-        super.onCreateSecondaryActions(_secondaryActionsAdapter)
-        actions.setupSecondaryRow(_secondaryActionsAdapter)
-    }
-
-    private fun setupRowsForNoScheduleLive() {
-        // clear out custom primary actions
-        for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
-            _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
-        // NOTE Do not try to clear and recreate actions: it interferes with change notification scheme
-        actions.setupPrimaryRowForNoScheduleLive(_primaryActionsAdapter)
-        _secondaryActionsAdapter.clear()
-        super.onCreateSecondaryActions(_secondaryActionsAdapter)
-        actions.setupSecondaryRowForNoScheduleLive(_secondaryActionsAdapter)
+    private fun configureLiveRecordPlayback(playback: TvPlayback) {
+        playback.time?: return
+        isSeekEnabled = true
+        with(playback.time!!) {
+            overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
+            maintainLivePosition = false
+        }
+        initialDisposition = TvProgramDisposition.RECORD
+        playback.isLiveRecord = true
+        setSeekController(SeekController())
+        showPlaybackProgress = true
     }
 
     private fun configureArchivePlayback(playback: TvPlayback) {
@@ -189,29 +216,104 @@ class TvPlaybackLeanbackGlue(
             else
                 pausePosition
         }
-        else {
-            playerAdapter.currentPosition
-        }
-
-    private fun overrideDuration(overriddenDuration: Long) {
-        this.overriddenDuration = overriddenDuration
     }
 
+    /** Switch from live to its record.
+     */
+    private fun switchToLivePlayback() {
+        model.getLiveStream(playback!!)
+        isInSeekTransition = true
+        model.getLiveStream(playback!!)
+    }
+
+    fun handleLiveStreamDataOnRestart(
+        resource: Resource<VideoStream>,
+        playLiveStream: ((VideoStream) -> Unit)? = null
+    ) {
+        when (resource.status) {
+            ResourceState.SUCCESS -> {
+                playback?.let {
+                    playLiveStream?.let { it(resource.data!!) }
+                    configureLivePlayback(playback!!)
+                    isInSeekTransition = false
+
+                }
+            }
+            else -> { isInSeekTransition = false }
+        }
+    }
+
+    // endregion
+    // region Playback events
 
     fun onEarlyCompletion() {
-        playback?.time?: return
-        if (playback?.disposition == TvProgramDisposition.LIVE &&
-                playback?.stream?.kind?:VideoStreamKind.UNKNOWN == VideoStreamKind.RECORD) {
-            // live record have reached current time boundary
-            Timber.d("@onEarlyCompletion switchToLivePlayback")
-            model.switchToLivePlayback(playback!!)
-        }
+//        playback?.time?: return
+//        if (playback?.disposition == TvProgramDisposition.LIVE &&
+//            playback?.stream?.kind?:VideoStreamKind.UNKNOWN == VideoStreamKind.RECORD) {
+//            // live record have reached current time boundary
+//            Timber.d("@onEarlyCompletion switchToLivePlayback")
+//            switchToLivePlayback()
+//        }
     }
 
+    // endregion
+    // region Seek Controller
+
+    /**
+     * This is to control seeks as user interacts with the playback's progress bar
+     */
+    inner class SeekController: PlaybackSeekUi.Controller {
+
+        override fun consumeSeekStart(): Boolean {
+            if (isLive() && playback?.record?.isEmpty() != true) {
+                switchToLiveRecordPlayback()
+            }
+            return false
+        }
+
+        override fun consumeSeekPositionChange(targetPosition: Long): Boolean {
+            if (isInSeekTransition)
+                return true
+
+            // handle forward seek beyond the live edge
+            if (isLiveRecord() && playback?.isSeekBeyondLiveEdge(targetPosition,
+                        THRESHOLD_LIVE_RECORD_COMPLETE_MILLIS) == true) {
+                switchToLivePlayback()
+                return false
+            }
+
+            // handle seeking beyond record start or end
+
+            val seekIncrement = seekIncrement()
+            val isForwardSeek = currentPosition < targetPosition
+                    || (currentPosition == targetPosition
+                        && duration - targetPosition < seekIncrement)
+
+            if (duration - currentPosition < seekIncrement && isForwardSeek) {
+                // seek is going beyond the end
+                next()
+                return false
+            }
+
+            if (currentPosition < seekIncrement && !isForwardSeek) {
+                // seek is going beyond the beginning
+                previous()
+                return false
+            }
+
+            return false
+        }
+
+        override fun consumeSeekFinished(cancelled: Boolean, targetPosition: Long): Boolean {
+            return false
+        }
+    }
 
     // endregion
     // region Actions Binding
 
+    /** This is to handle seek when user presses the action button in the player's control panel
+     */
     private fun skipForward(millis: Long = SEEK_STEP_MILLIS) {
         playback?.stream?: return
 
@@ -222,15 +324,16 @@ class TvPlaybackLeanbackGlue(
             // check if live record's end boundary reached
             if (playback?.stream?.kind == VideoStreamKind.RECORD) {
 
-                val endPosition = playerAdapter.duration
-                if (nextPosition > endPosition - 1_000L) {
+                if (playback?.isSeekBeyondLiveEdge(nextPosition,
+                        THRESHOLD_LIVE_RECORD_COMPLETE_MILLIS) == true) {
                     Timber.d("@skipForward: switch to LIVE")
-                    playback?.let { model.switchToLivePlayback(it) }
+                    playback?.let { switchToLivePlayback() }
                 }
                 else {
                     playback?.position = nextPosition
                     playerAdapter.seekTo(nextPosition)
-                    Timber.d("@skipForward: to %s/%s", formatMillis(nextPosition), formatMillis(endPosition))
+                    Timber.d("@skipForward: to %s/%s",
+                        formatMillis(nextPosition), formatMillis(playerAdapter.duration))
                 }
                 return
             }
@@ -247,10 +350,12 @@ class TvPlaybackLeanbackGlue(
         }
     }
 
+    /** This is to handle seek when user presses the action button in the player's control panel
+     */
     private fun skipBackward(millis: Long = SEEK_STEP_MILLIS) {
         if (playback?.disposition == TvProgramDisposition.LIVE) {
             if (playback?.stream?.kind == VideoStreamKind.LIVE) {
-                playback?.let { model.switchToArchivePlayback(it) }
+                playback?.let { switchToLiveRecordPlayback() }
             }
             beep(); return
         }
@@ -289,6 +394,28 @@ class TvPlaybackLeanbackGlue(
         _secondaryActionsAdapter.presenterSelector = controlButtonPresenterSelector
     }
 
+    private fun setupRows() {
+        // clear out custom primary actions
+        for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
+            _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
+        // NOTE Do not try to clear and recreate actions: it interferes with change notification scheme
+        actions.setupPrimaryRow(_primaryActionsAdapter)
+        _secondaryActionsAdapter.clear()
+        super.onCreateSecondaryActions(_secondaryActionsAdapter)
+        actions.setupSecondaryRow(_secondaryActionsAdapter)
+    }
+
+    private fun setupRowsForNoScheduleLive() {
+        // clear out custom primary actions
+        for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
+            _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
+        // NOTE Do not try to clear and recreate actions: it interferes with change notification scheme
+        actions.setupPrimaryRowForNoScheduleLive(_primaryActionsAdapter)
+        _secondaryActionsAdapter.clear()
+        super.onCreateSecondaryActions(_secondaryActionsAdapter)
+        actions.setupSecondaryRowForNoScheduleLive(_secondaryActionsAdapter)
+    }
+
     override fun onActionClicked(action: Action) {
           if (actions.isPlayPauseAction(action)) {
             pausePosition = if (playerAdapter.isPlaying) currentPosition else -1L
@@ -312,7 +439,11 @@ class TvPlaybackLeanbackGlue(
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
         // prevent redefinition of DPAD functions providing basic leanback navigation
         when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT,
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                // block seek forward for live stream, while allowing to open controls with DPAD Right key press
+                return isControlsVisible() && isLive()
+            }
+            KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_ESCAPE
             -> return false
         }
@@ -325,29 +456,11 @@ class TvPlaybackLeanbackGlue(
     }
 
     // endregion
-    // region Seek Controller
-
-    inner class SeekController: PlaybackSeekUi.Controller {
-
-        override fun consumeSeekStart(): Boolean {
-            return false
-        }
-
-        override fun consumeSeekPositionChange(pos: Long): Boolean {
-            return false
-        }
-
-        override fun consumeSeekFinished(cancelled: Boolean, pos: Long): Boolean {
-            return false
-        }
-    }
-
-    // endregion
     // region Control Panel Updating
 
     @SuppressLint("MissingSuperCall")
     override fun onUpdateProgress() {
-        if (controlsRow != null) {
+        if (controlsRow != null && !isInSeekTransition) {
             controlsRow.currentPosition = if (playerAdapter.isPrepared) currentPosition else -1
         }
     }
@@ -372,8 +485,11 @@ class TvPlaybackLeanbackGlue(
     companion object {
 
         /** Default time used when skipping playback in milliseconds */
-        private val SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(1)
-        private val FAST_SEEK_STEP_MILLIS: Long = TimeUnit.MINUTES.toMillis(5)
+        private val SEEK_STEP_MILLIS = TimeUnit.MINUTES.toMillis(1)
+        private val FAST_SEEK_STEP_MILLIS = TimeUnit.MINUTES.toMillis(5)
+
+        private val THRESHOLD_LIVE_RECORD_COMPLETE_MILLIS = TimeUnit.SECONDS.toMillis(3)
+        private const val THRESHOLD_PLAYBACK_EDGE_REACHED = 2
     }
 
     // endregion

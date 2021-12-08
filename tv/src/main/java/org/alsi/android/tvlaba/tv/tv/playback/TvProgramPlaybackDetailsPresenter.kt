@@ -60,8 +60,7 @@ class TvProgramPlaybackDetailsPresenter(val context: Context) : Presenter() {
                 ib.tvProgramPlaybackDetailsDispositionLive.visibility =
                     if (it.disposition == LIVE) VISIBLE else GONE
                 ib.tvProgramPlaybackDetailsDispositionRecord.visibility =
-                    if (it.disposition == RECORD
-                        || it.stream?.kind == VideoStreamKind.RECORD) VISIBLE else GONE
+                    if (it.isLiveRecord == true || it.disposition == RECORD) VISIBLE else GONE
                 ib.tvProgramPlaybackDetailsDispositionFuture.visibility =
                     if (it.disposition == FUTURE) VISIBLE else GONE
             }

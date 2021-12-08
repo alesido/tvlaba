@@ -30,6 +30,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.common.net.HttpHeaders.USER_AGENT
 import dagger.android.support.AndroidSupportInjection
+import org.alsi.android.domain.streaming.model.VideoStream
 import org.alsi.android.domain.streaming.model.options.VideoAspectRatio
 import org.alsi.android.domain.tv.model.guide.TvPlayback
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
@@ -159,6 +160,12 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         playbackViewModel.getLiveData().observe(this, {
             if (it != null) handlePlaybackRequestEvent(it)
         })
+        playbackViewModel.getLiveRecordStreamLiveData().observe(this, {
+            it?.let { handleLiveRecordStreamData(it) }
+        })
+        playbackViewModel.getLiveStreamLiveData().observe(this, {
+            it?.let { handleLiveStreamData(it) }
+        })
         preferencesViewModel.getPreferenceChangeLiveData().observe(requireActivity(), {
             if (it != null) handlePreferenceChangeEvent(it)
         })
@@ -194,7 +201,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
         player.addListener(this)
 
-        glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel).apply {
+        glue = TvPlaybackLeanbackGlue(requireContext(), playerAdapter, playbackViewModel) {
+            this@TvPlaybackAndScheduleFragment.isControlsOverlayVisible
+        }.apply {
 
             host = VideoSupportFragmentGlueHost(this@TvPlaybackAndScheduleFragment)
 
@@ -302,7 +311,39 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 progressBarManager.hide()
                 errorHandler.run(this, resource.throwable)
             }
-            else -> {}
+            else -> { /** Not applicable */ }
+        }
+    }
+
+    private fun handleLiveRecordStreamData(resource: Resource<VideoStream>) {
+        when (resource.status) {
+            ResourceState.LOADING -> progressBarManager.show()
+            ResourceState.SUCCESS -> {
+                progressBarManager.hide()
+                glue.handleLiveRecordStreamData(resource, this::prepareLiveRecordStream)
+            }
+            ResourceState.ERROR -> {
+                progressBarManager.hide()
+                glue.handleLiveRecordStreamData(resource)
+                errorHandler.run(this, resource.throwable)
+            }
+            else -> { /** Not applicable */ }
+        }
+    }
+
+    private fun handleLiveStreamData(resource: Resource<VideoStream>) {
+        when (resource.status) {
+            ResourceState.LOADING -> progressBarManager.show()
+            ResourceState.SUCCESS -> {
+                progressBarManager.hide()
+                glue.handleLiveStreamDataOnRestart(resource, this::restartLiveStream)
+            }
+            ResourceState.ERROR -> {
+                progressBarManager.hide()
+                glue.handleLiveRecordStreamData(resource)
+                errorHandler.run(this, resource.throwable)
+            }
+            else -> { /** Not applicable */ }
         }
     }
 
@@ -347,6 +388,46 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
             setSelectedPosition(0)
         }
+    }
+
+    private fun prepareLiveRecordStream(stream: VideoStream, position: Long) {
+        if (player.isPlaying) {
+            Timber.d("@startLiveRecordStream stop & reset")
+            player.stop()
+        }
+
+        // update program data display
+        adapter.notifyItemRangeChanged(0, 1)
+
+        // create media source
+        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(stream.uri.toString()))
+
+        // start preparation
+        player.setMediaSource(hlsMediaSource, true)
+
+        // request initial position (tested, works)
+        player.seekTo(position)
+
+        player.playWhenReady = false
+        player.prepare()
+    }
+
+    private fun restartLiveStream(stream: VideoStream) {
+        if (player.isPlaying) {
+            Timber.d("@restartLiveStream stop & reset")
+            player.stop()
+        }
+
+        // create media source
+        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(stream.uri.toString()))
+
+        // start preparation
+        player.setMediaSource(hlsMediaSource, true)
+
+        player.playWhenReady = true
+        player.prepare()
     }
 
     private fun openParentalAuthorization() {
