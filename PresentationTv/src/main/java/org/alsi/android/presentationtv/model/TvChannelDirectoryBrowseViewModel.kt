@@ -6,13 +6,16 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.subjects.BehaviorSubject
 import org.alsi.android.domain.context.model.PresentationManager
+import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.streaming.model.service.StreamingServiceKind
 import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
 import org.alsi.android.domain.tv.interactor.guide.*
 import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.domain.tv.model.session.TvBrowseCursor
 import org.alsi.android.domain.tv.model.session.TvBrowsePage
+import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
 import org.alsi.android.presentation.state.Resource
 import org.alsi.android.presentation.state.ResourceState
 import javax.inject.Inject
@@ -23,7 +26,7 @@ import javax.inject.Inject
  */
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
-    getDirectoryUseCase: TvGetChannelDirectoryUseCase,
+    private val getDirectoryUseCase: TvGetChannelDirectoryUseCase,
     private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
     private val newPlaybackUseCase: TvNewPlaybackUseCase,
     private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,
@@ -47,8 +50,18 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 
     init {
         liveDirectory.postValue(Resource.loading())
-        directoryObservationUseCase.execute(ChannelDirectoryUpdatesSubscriber())
-        getDirectoryUseCase.execute(ChannelDirectorySubscriber())
+
+        // do not get directory if it already available via the subject, request it otherwise
+        ((presentationManager.provideContext(
+            ServicePresentationType.TV_GUIDE)?.directory as TvDirectoryRepository)
+            .channels.observeDirectory() as BehaviorSubject<TvChannelDirectory>).value?.let {
+            // just subscribe the subject to get value as it already there
+            directoryObservationUseCase.execute(ChannelDirectoryUpdatesSubscriber())
+        } ?: run {
+            // subscribe the subject to get updated and get the directory immediately
+            directoryObservationUseCase.execute(ChannelDirectoryUpdatesSubscriber())
+            getDirectoryUseCase.execute(ChannelDirectorySubscriber())
+        }
     }
 
     fun getLiveDirectory(): LiveData<Resource<TvChannelDirectoryBrowseLiveData>> = liveDirectory
@@ -105,7 +118,8 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 //                page = TvBrowsePage.CHANNELS,
 //                reuse = true
 //            ))
-        browseCursorGetUseCase.execute(BrowseCursorSubscriber())
+        if (directory?.isEmpty() == false)
+            browseCursorGetUseCase.execute(BrowseCursorSubscriber())
     }
 
     // endregion
@@ -131,6 +145,11 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 
     private inner class ChannelDirectorySubscriber: DisposableSingleObserver<TvChannelDirectory>() {
         override fun onSuccess(directory: TvChannelDirectory) {
+            if (directory.isEmpty()) {
+                // sometimes directory comes empty: seems it have been fixed but make it safer anyway
+                getDirectoryUseCase.execute(ChannelDirectorySubscriber())
+                return
+            }
             this@TvChannelDirectoryBrowseViewModel.directory = directory
             browseCursorGetUseCase.execute(BrowseCursorSubscriber())
         }
@@ -141,6 +160,11 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
 
     private inner class ChannelDirectoryUpdatesSubscriber: DisposableObserver<TvChannelDirectory>() {
         override fun onNext(directory: TvChannelDirectory) {
+            if (directory.isEmpty()) {
+                // sometimes directory comes empty: seems it have been fixed but make it safer anyway
+                getDirectoryUseCase.execute(ChannelDirectorySubscriber())
+                return
+            }
             this@TvChannelDirectoryBrowseViewModel.directory = directory
             browseCursorGetUseCase.execute(BrowseCursorSubscriber())
         }
