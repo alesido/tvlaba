@@ -31,7 +31,8 @@ abstract class TvPlayCursorRepository {
     ) : Single<TvPlayback> {
 
         val previousCursor = cursor
-        cursor = TvPlayCursor(categoryId, playback, seekTime, System.currentTimeMillis())
+        cursor = TvPlayCursor(categoryId = categoryId, playback = playback,
+            seekTime = seekTime, timeStamp = System.currentTimeMillis())
         return finalizeCursorSetting(previousCursor)
     }
 
