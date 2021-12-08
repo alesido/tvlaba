@@ -69,6 +69,7 @@ class TvPlaybackLeanbackGlue(
 
     private lateinit var onVideoOptionsControlClicked: () -> Unit
 
+    private lateinit var playbackRowViewHolder: PlaybackTransportRowPresenter.ViewHolder
 
     private val playbackRowPresenter: PlaybackTransportRowPresenter = object : PlaybackTransportRowPresenter() {
 
@@ -91,6 +92,7 @@ class TvPlaybackLeanbackGlue(
 
         override fun onBindRowViewHolder(vh: RowPresenter.ViewHolder, item: Any) {
             super.onBindRowViewHolder(vh, item)
+            playbackRowViewHolder = vh as PlaybackTransportRowPresenter.ViewHolder
             vh.onKeyListener = this@TvPlaybackLeanbackGlue
             setPlaybackProgressVisibility(vh,
                 if (showPlaybackProgress) View.VISIBLE else View.INVISIBLE)
@@ -209,12 +211,58 @@ class TvPlaybackLeanbackGlue(
         showPlaybackProgress = true
     }
 
-    override fun getCurrentPosition() =
-        if (maintainLivePosition && playback?.time != null) {
-            if (playerAdapter.isPlaying)
-                System.currentTimeMillis() - playback!!.time!!.startUnixTimeMillis
-            else
-                pausePosition
+    /**
+     * @return True, if playback have to be paused at the start
+     */
+    fun handlePlaybackStart(resource: Resource<TvPlayback>): Boolean {
+        when (resource.status) {
+            ResourceState.SUCCESS -> {
+                resource.data?.let {
+                    // in case it started while rewinding from the next video:
+                    // offset position back to not reach the end immediately
+                    if (it.disposition == TvProgramDisposition.RECORD && it.time?.durationMillis != null) {
+                        val seekIncrement = seekIncrement(it)
+                        if (it.time!!.durationMillis - it.position <= seekIncrement)
+                            it.position -= seekIncrement
+                    }
+                    // reset position after crossing a boundary
+                    if (isInSeekTransition && it.time?.durationMillis != null)
+                        playbackRowViewHolder.forceProgressPosition(it.position,
+                            it.time!!.durationMillis)
+                    // request pause when prepared, because video boundary crossed while seeking
+                    val z = isInSeekTransition
+                    isInSeekTransition = false
+                    return z
+                }
+            }
+            else -> { isInSeekTransition = false }
+        }
+        return false // do not pause playback when prepared
+    }
+
+    /** Switch from record of live to live itself.
+     *  NOTE It's supposed that stream URL of the live record will be valid during the live playback.
+     */
+    private fun switchToLiveRecordPlayback() {
+        playback!!.position = currentPosition - seekIncrement()
+        isInSeekTransition = true
+        model.getLiveRecordStream(playback!!)
+    }
+
+    fun handleLiveRecordStreamData(
+        resource: Resource<VideoStream>,
+        playLiveRecordStream: ((VideoStream, Long) -> Unit)? = null
+    ) {
+        when (resource.status) {
+            ResourceState.SUCCESS -> {
+                playback?.let {
+                    playLiveRecordStream?.let { it(resource.data!!, playback!!.position) }
+                    configureLiveRecordPlayback(playback!!)
+                    isInSeekTransition = false
+                }
+            }
+            ResourceState.ERROR -> switchToLivePlayback()
+            else -> { isInSeekTransition = false }
         }
     }
 
@@ -364,10 +412,12 @@ class TvPlaybackLeanbackGlue(
     }
 
     override fun previous() {
+        isInSeekTransition = true
         model.onPreviousProgramAction()
     }
 
     override fun next() {
+        isInSeekTransition = true
         model.onNextProgramAction()
     }
 
@@ -531,16 +581,16 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 
     fun setupPrimaryRow(adapter: ArrayObjectAdapter) {
         // play/pause assumed is here by default
-        adapter.add(rewind)
-        adapter.add(forward)
+//        adapter.add(rewind)
+//        adapter.add(forward)
         adapter.add(prevProgram)
         adapter.add(nextProgram)
     }
 
     fun setupSecondaryRow(adapter: ArrayObjectAdapter) {
         adapter.add(videoOptions) // right below play/pause
-        adapter.add(fasterRewind)
-        adapter.add(fasterForward)
+//        adapter.add(fasterRewind)
+//        adapter.add(fasterForward)
         adapter.add(prevChannel)
         adapter.add(nextChannel)
     }

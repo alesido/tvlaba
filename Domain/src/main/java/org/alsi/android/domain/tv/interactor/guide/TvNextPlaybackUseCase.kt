@@ -93,7 +93,7 @@ class TvNextPlaybackUseCase @Inject constructor(
             directory: TvDirectoryRepository, session: TvSessionRepository, target: TvNextPlayback
     ): Single<TvPlayback> {
 
-        return Single.zip( session.play.last(), directory.channels.observeDirectory().firstOrError(), {
+        return Single.zip( session.play.last(), directory.channels.getDirectory(), {
                     cursor, channelDirectory -> Pair(cursor, channelDirectory)
                 }
         ).flatMap {
@@ -155,6 +155,8 @@ class TvNextPlaybackUseCase @Inject constructor(
 
             // set cursor to the playback
             }.flatMap { targetPlayback ->
+                targetPlayback.position = if (target == NEXT_PROGRAM) 0L
+                    else targetPlayback.time?.durationMillis?: 0L
                 session.play.setCursorTo(cursor.categoryId, targetPlayback)
             }
         }

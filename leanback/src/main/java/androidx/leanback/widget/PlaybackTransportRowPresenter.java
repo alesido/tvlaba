@@ -383,7 +383,8 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
             }
             mControlsVh.view.setVisibility(View.GONE);
             mSecondaryControlsVh.view.setVisibility(View.INVISIBLE);
-            mDescriptionViewHolder.view.setVisibility(View.INVISIBLE);
+// alsi: Do not hide description to support seeking to next/previous video and live/live record
+//            mDescriptionViewHolder.view.setVisibility(View.INVISIBLE);
             mThumbsBar.setVisibility(View.VISIBLE);
             return true;
         }
@@ -504,6 +505,25 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
                 }
                 mProgressBar.setProgress((int) progressRatio);
             }
+        }
+
+        /** alsi: It's to set correct seek position display when crossing
+         * video boundary while seeking.
+         *
+         * It's a 3d control flow: 1) leanback player adapter; 2) ordinary seek;
+         *  3) this one: cross-boundary seek
+         *
+         *  NOTE It is called before the playback started, before the adapter will
+         *  call "setCurrentPosition" next time
+         */
+        public void forceProgressPosition(long nextCurrentTimeMs, long nextTotalTimeMs) {
+            int progressRatio = 0;
+            if (nextTotalTimeMs > 0) {
+                // Use ratio to represent current progress
+                double ratio = (double) nextCurrentTimeMs / nextTotalTimeMs;     // Range: [0, 1]
+                progressRatio = (int) (ratio * Integer.MAX_VALUE);  // Could safely cast to int
+            }
+            mProgressBar.setProgress((int) progressRatio);
         }
 
         void setBufferedPosition(long progressMs) {

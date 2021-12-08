@@ -305,7 +305,8 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             ResourceState.LOADING -> progressBarManager.show()
             ResourceState.SUCCESS -> {
                 progressBarManager.hide()
-                startPlayback(resource.data)
+                val pauseWhenPrepared = glue.handlePlaybackStart(resource)
+                startPlayback(resource.data, pauseWhenPrepared)
             }
             ResourceState.ERROR -> {
                 progressBarManager.hide()
@@ -347,7 +348,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         }
     }
 
-    private fun startPlayback(playback: TvPlayback?) {
+    private fun startPlayback(playback: TvPlayback?, pauseWhenPrepared: Boolean = false) {
         playback?.stream?.uri?: return
         context?.let {
 
@@ -380,6 +381,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 // request initial position (tested, works)
                 player.seekTo(playback.position)
 
+                player.playWhenReady = !pauseWhenPrepared
                 player.prepare()
             }
             else {
@@ -495,8 +497,11 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
     }
 
 
+    /**
+     *  TODO Add playback error handling logic here. I.e., refresh stream URL on 403. Check current application.
+     */
     override fun onError(errorCode: Int, errorMessage: CharSequence?) {
-        super.onError(errorCode, errorMessage)
+        errorHandler.run(this, Throwable(errorMessage.toString()))
     }
 
     // endregion
