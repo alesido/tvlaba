@@ -101,7 +101,7 @@ class TvPlayback (
      */
     var state: TvPlaybackState = TvPlaybackState.INITIAL
 
-    /** Current video playback position.
+    /** Current video playback position in milliseconds, a value from range [0, <playback duration>]
      */
     var position: Long = 0L
 
