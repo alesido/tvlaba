@@ -4,6 +4,9 @@ import org.alsi.android.domain.streaming.model.VideoStream
 
 class TvPlaybackMapper {
 
+    /**
+     *  Map live stream playback for a TV channel.
+     */
     fun from(channel: TvChannel, stream: VideoStream) : TvPlayback {
         with (channel.live) {
             return TvPlayback(
@@ -15,6 +18,7 @@ class TvPlaybackMapper {
                     description = description,
 
                     isLive = true,
+                    isLiveRecord = false,
                     isUnderParentControl = channel.features.isPasswordProtected,
 
                     channelNumber = channel.number,
@@ -24,6 +28,9 @@ class TvPlaybackMapper {
         }
     }
 
+    /**
+     *  Map archive/record stream of a program or a live record of current program on a channel
+     */
     fun from(channel: TvChannel, program: TvProgramIssue, stream: VideoStream) : TvPlayback {
         with (program) {
             return TvPlayback (
@@ -35,6 +42,9 @@ class TvPlaybackMapper {
                     description = description,
 
                     isLive = false,
+                    isLiveRecord =
+                        evaluateTvProgramDisposition(program.time) == TvProgramDisposition.LIVE,
+
                     isUnderParentControl = channel.features.isPasswordProtected,
 
                     mainPosterUri = mainPosterUri,

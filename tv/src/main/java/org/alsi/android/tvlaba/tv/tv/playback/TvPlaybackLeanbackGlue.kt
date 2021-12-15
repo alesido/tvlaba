@@ -161,7 +161,7 @@ class TvPlaybackLeanbackGlue(
     private fun isLiveRecord() = playback?.disposition == TvProgramDisposition.LIVE
             && playback?.isLiveRecord == true
 
-    private fun isArchive() = playback?.disposition == TvProgramDisposition.RECORD
+    private fun isRecord() = playback?.disposition == TvProgramDisposition.RECORD
 
     private fun configureLivePlayback(playback: TvPlayback) {
         if (null == playback.time) {
@@ -194,7 +194,6 @@ class TvPlaybackLeanbackGlue(
             maintainLivePosition = false
         }
         initialDisposition = TvProgramDisposition.RECORD
-        playback.isLiveRecord = true
         setSeekController(SeekController())
         showPlaybackProgress = true
     }
@@ -269,9 +268,8 @@ class TvPlaybackLeanbackGlue(
     /** Switch from live to its record.
      */
     private fun switchToLivePlayback() {
-        model.getLiveStream(playback!!)
         isInSeekTransition = true
-        model.getLiveStream(playback!!)
+        model.regetLiveStream(playback!!)
     }
 
     fun handleLiveStreamDataOnRestart(
@@ -323,21 +321,22 @@ class TvPlaybackLeanbackGlue(
             if (isInSeekTransition)
                 return true
 
+            val seekIncrement = seekIncrement()
+
             // handle forward seek beyond the live edge
-            if (isLiveRecord() && playback?.isSeekBeyondLiveEdge(targetPosition,
-                        THRESHOLD_LIVE_RECORD_COMPLETE_MILLIS) == true) {
+            if (isLiveRecord()
+                && playback?.isSeekBeyondLiveEdge(targetPosition, seekIncrement) == true) {
                 switchToLivePlayback()
                 return false
             }
 
             // handle seeking beyond record start or end
 
-            val seekIncrement = seekIncrement()
             val isForwardSeek = currentPosition < targetPosition
                     || (currentPosition == targetPosition
                         && duration - targetPosition < seekIncrement)
 
-            if (duration - currentPosition < seekIncrement && isForwardSeek) {
+            if (duration - currentPosition < seekIncrement && isForwardSeek && !isLiveRecord()) {
                 // seek is going beyond the end
                 next()
                 return false

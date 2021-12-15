@@ -371,16 +371,13 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
                 adapter.notifyItemRangeChanged(0, 1)
 
                 // create media source
-                val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(MediaItem.fromUri(playback.stream!!.uri.toString()))
+                when {
+                    playback.isLive -> setLiveSource(playback)
+                    playback.isLiveRecord == true -> setLiveRecordSource(playback)
+                    else -> setArchiveSource(playback)
+                }
 
-                // start preparation
-                //player.prepare(hlsMediaSource, true, true) - deprecated
-                player.setMediaSource(hlsMediaSource, true)
-
-                // request initial position (tested, works)
-                player.seekTo(playback.position)
-
+                // prepare
                 player.playWhenReady = !pauseWhenPrepared
                 player.prepare()
             }
@@ -390,6 +387,27 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
 
             setSelectedPosition(0)
         }
+    }
+
+    private fun setLiveSource(playback: TvPlayback) {
+        val mediaItem = MediaItem.fromUri(playback.stream!!.uri.toString())
+        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+        player.setMediaSource(hlsMediaSource, true)
+    }
+
+    private fun setLiveRecordSource(playback: TvPlayback) {
+        val mediaItem = MediaItem.Builder()
+            .setUri(playback.stream!!.uri.toString())
+            .setLiveTargetOffsetMs(playback.time!!.durationMillis - playback.position)
+            .build()
+        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+        player.setMediaSource(hlsMediaSource, true)
+    }
+
+    private fun setArchiveSource(playback: TvPlayback) {
+        val mediaItem = MediaItem.fromUri(playback.stream!!.uri.toString())
+        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
+        player.setMediaSource(hlsMediaSource, playback.position)
     }
 
     private fun prepareLiveRecordStream(stream: VideoStream, position: Long) {
@@ -408,8 +426,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         // start preparation
         player.setMediaSource(hlsMediaSource, true)
 
-        // request initial position (tested, works)
-        player.seekTo(position)
+        // DO NOT try to set initial position of live record stream with  "player.seekTo(position)"!
+        // 1st, it goes by the live edge by default. 2nd, this initial seek will make subsequent
+        // seeking unacceptable slow.
 
         player.playWhenReady = false
         player.prepare()
@@ -421,6 +440,9 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             player.stop()
         }
 
+        // update program data display
+        adapter.notifyItemRangeChanged(0, 1)
+
         // create media source
         val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
             .createMediaSource(MediaItem.fromUri(stream.uri.toString()))
@@ -428,7 +450,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
         // start preparation
         player.setMediaSource(hlsMediaSource, true)
 
-        player.playWhenReady = true
+        player.playWhenReady = false
         player.prepare()
     }
 

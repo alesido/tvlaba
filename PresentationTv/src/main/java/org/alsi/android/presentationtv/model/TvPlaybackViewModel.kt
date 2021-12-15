@@ -22,6 +22,7 @@ class TvPlaybackViewModel @Inject constructor(
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val nextPlaybackUseCase: TvNextPlaybackUseCase,
         private val liveRecordStreamUseCase: TvLiveRecordStreamUseCase,
+        private val regetLiveStreamUseCase: TvRegetLiveStreamUseCase,
         private val updatePlaybackCursorUseCase: TvUpdatePlaybackCursorUseCase,
         private val getSettingsUseCase: StreamingSettingsUseCase
 
@@ -78,27 +79,29 @@ class TvPlaybackViewModel @Inject constructor(
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
     }
 
-    fun getLiveRecordStream(livePlayback: TvPlayback) {
-        livePlayback.record?.let {
-            liveRecordStreamLiveData.postValue(Resource.success(it))
-            return
-        }
+    fun getLiveRecordStream(playback: TvPlayback) {
         liveRecordStreamUseCase.execute(object: DisposableSingleObserver<VideoStream>() {
             override fun onSuccess(t: VideoStream) {
-                livePlayback.record = t
+                playback.record = t
+                playback.isLiveRecord = true
                 liveRecordStreamLiveData.postValue(Resource.success(t))
             }
             override fun onError(e: Throwable) = liveRecordStreamLiveData.postValue(Resource.error(e))
-        }, TvLiveRecordStreamUseCase.Params(livePlayback))
+        }, TvLiveRecordStreamUseCase.Params(playback))
     }
 
     /** This is to follow the workflow "glue-model-fragment-glue". It is to not violate current
      *  responsibilities assignment.
-     *
-     *  TODO Add UC to refresh live stream URL
      */
-    fun getLiveStream(playback: TvPlayback) {
-        liveStreamLiveData.postValue(Resource.success(playback.stream!!))
+    fun regetLiveStream(playback: TvPlayback) {
+        regetLiveStreamUseCase.execute(object: DisposableSingleObserver<VideoStream>() {
+            override fun onSuccess(t: VideoStream) {
+                playback.isLiveRecord = false
+                liveStreamLiveData.postValue(Resource.success(t))
+            }
+            override fun onError(e: Throwable) = liveRecordStreamLiveData.postValue(Resource.error(e))
+        }, TvRegetLiveStreamUseCase.Params(playback))
+
     }
 
     /** Update the playback cursor to current playback position and whether it paused
