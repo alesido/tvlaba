@@ -6,10 +6,7 @@ import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
 import org.alsi.android.domain.streaming.model.VideoStreamKind
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvPlayback
-import org.alsi.android.domain.tv.model.guide.TvPlaybackMapper
-import org.alsi.android.domain.tv.model.guide.TvProgramIssue
+import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.domain.tv.model.session.TvPlayCursor
 import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
 import org.alsi.android.domain.tv.repository.session.TvSessionRepository
@@ -50,7 +47,13 @@ class TvRestorePlaybackUseCase @Inject constructor(
         session: TvSessionRepository): Single<TvPlayback> {
 
         return directory.channels.findChannelById(storedPlayback.channelId).flatMap {
-            channel = it; directory.streams.getVideoStream(channel, null)
+            channel = it
+            // get actual live program data as stored channel data may expire at the moment of restart
+            directory.programs.getChannelLive(storedPlayback.channelId)
+        }.flatMap {
+            // set actual live program data to the channel object
+            channel.live = TvProgramLive(it.time, it.title, it.description)
+            directory.streams.getVideoStream(channel, null)
         }.map { stream ->
             mapper.from(channel, stream)
         }.flatMap {

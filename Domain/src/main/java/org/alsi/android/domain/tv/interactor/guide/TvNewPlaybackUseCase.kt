@@ -5,10 +5,7 @@ import org.alsi.android.domain.context.model.PresentationManager
 import org.alsi.android.domain.context.model.ServicePresentationType
 import org.alsi.android.domain.implementation.executor.PostExecutionThread
 import org.alsi.android.domain.implementation.interactor.SingleObservableUseCase
-import org.alsi.android.domain.tv.model.guide.TvChannel
-import org.alsi.android.domain.tv.model.guide.TvPlayback
-import org.alsi.android.domain.tv.model.guide.TvPlaybackMapper
-import org.alsi.android.domain.tv.model.guide.TvProgramIssue
+import org.alsi.android.domain.tv.model.guide.*
 import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
 import org.alsi.android.domain.tv.repository.session.TvSessionRepository
 import javax.inject.Inject
@@ -38,11 +35,16 @@ class TvNewPlaybackUseCase @Inject constructor(
                 channel ?: return Single.error(
                     Throwable("Wrong parameters for LIVE stream playback!"))
 
-                return directory.streams.getVideoStream(channel, session.parentalControlPassword)
-                    .map { stream -> mapper.from(channel, stream) }
-                    .flatMap { playback -> session.play.setCursorTo(categoryId, playback) }
+                // update channel live data first
+                return directory.programs.getChannelLive(channel.id).flatMap {
+                    channel.live = TvProgramLive(it.time, it.title, it.description)
+                    directory.streams.getVideoStream(channel, session.parentalControlPassword)
+                }.map {
+                    stream -> mapper.from(channel, stream)
+                }.flatMap {
+                    playback -> session.play.setCursorTo(categoryId, playback)
+                }
             }
-
 
             // archive stream case
             return if (null == channel) {
