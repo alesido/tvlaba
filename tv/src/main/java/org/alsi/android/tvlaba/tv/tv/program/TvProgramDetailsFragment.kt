@@ -205,7 +205,7 @@ class TvProgramDetailsFragment : DetailsSupportFragment() {
     private fun setupActions(program: TvProgramIssue, detailsOverviewRow: DetailsOverviewRow) {
         val actionsAdapter = SparseArrayObjectAdapter()
 
-        if (program.disposition == TvProgramDisposition.LIVE || program.disposition == TvProgramDisposition.LIVE_RECORD) {
+        if (program.disposition == TvProgramDisposition.LIVE) {
             actionsAdapter[ACTION_PLAY_LIVE] = Action(ACTION_PLAY_LIVE.toLong(),
                     resources.getString(R.string.tv_program_details_action_play_live))
             actionsAdapter[ACTION_PLAY_RECORD] = Action(ACTION_PLAY_RECORD.toLong(),

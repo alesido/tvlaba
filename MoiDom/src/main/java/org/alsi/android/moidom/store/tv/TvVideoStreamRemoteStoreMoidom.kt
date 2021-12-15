@@ -32,6 +32,7 @@ class TvVideoStreamRemoteStoreMoidom @Inject constructor(
             .flatMap { sid -> remoteService.getArchiveVideoStreamUrl(
                     sid,
                     channelId = program.channelId.toString(),
+                    streamMode = RestServiceMoidom.QUERY_PARAM_STREAM_MODE_HLS,
                     unixTimeStamp = TimeUnit.MILLISECONDS.toSeconds(program.time?.startUnixTimeMillis?:0L),
                     accessCode = accessCode)
             }.map { response ->
