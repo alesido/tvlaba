@@ -44,7 +44,7 @@ class TvNextPlaybackUseCase @Inject constructor(
     private fun navigateChannel(directory: TvDirectoryRepository, session: TvSessionRepository,
                         target: TvNextPlayback): Single<TvPlayback> {
 
-        return Single.zip( session.play.last(), directory.channels.observeDirectory().firstOrError(), {
+        return Single.zip( session.play.last(), directory.channels.getDirectory(), {
                     cursor, channelDirectory -> Pair(cursor, channelDirectory)
                 }
 
