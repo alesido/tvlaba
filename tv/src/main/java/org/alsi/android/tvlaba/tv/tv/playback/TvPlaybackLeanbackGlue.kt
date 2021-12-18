@@ -192,6 +192,7 @@ class TvPlaybackLeanbackGlue(
         with(playback.time!!) {
             overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
             maintainLivePosition = false
+            setupRows()
         }
         initialDisposition = TvProgramDisposition.RECORD
         setSeekController(SeekController())
@@ -204,6 +205,7 @@ class TvPlaybackLeanbackGlue(
         with(playback.time!!) {
             overrideDuration(endUnixTimeMillis - startUnixTimeMillis)
             maintainLivePosition = false
+            setupRows()
         }
         initialDisposition = TvProgramDisposition.RECORD
         setSeekController(SeekController())
@@ -443,7 +445,12 @@ class TvPlaybackLeanbackGlue(
         _secondaryActionsAdapter.presenterSelector = controlButtonPresenterSelector
     }
 
+    private var isLastRowsSetupForNoScheduleLive: Boolean? = null
+
     private fun setupRows() {
+        if (isLastRowsSetupForNoScheduleLive == false)
+            return
+        isLastRowsSetupForNoScheduleLive = false
         // clear out custom primary actions
         for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
             _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
@@ -455,6 +462,9 @@ class TvPlaybackLeanbackGlue(
     }
 
     private fun setupRowsForNoScheduleLive() {
+        if (isLastRowsSetupForNoScheduleLive == true)
+            return
+        isLastRowsSetupForNoScheduleLive = true
         // clear out custom primary actions
         for (i in (_primaryActionsAdapter.size() - 1) downTo 1)
             _primaryActionsAdapter.remove(_primaryActionsAdapter[i])
@@ -489,8 +499,10 @@ class TvPlaybackLeanbackGlue(
         // prevent redefinition of DPAD functions providing basic leanback navigation
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                // block seek forward for live stream, while allowing to open controls with DPAD Right key press
-                return isControlsVisible() && isLive()
+                // block seek forward for live stream, while allowing to open controls
+                // with DPAD Right key press
+                // FIXME Improve criteria to match seek forward on a live playback
+                return isControlsVisible() && isLive() && v?.findFocus() is SeekBar
             }
             KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_ESCAPE
@@ -580,6 +592,8 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 
     fun setupPrimaryRow(adapter: ArrayObjectAdapter) {
         // play/pause assumed is here by default
+// decided to remove rewind and forward buttons because they duplicate seeking with
+// the progress bar and complicates player controls using
 //        adapter.add(rewind)
 //        adapter.add(forward)
         adapter.add(prevProgram)
@@ -588,6 +602,8 @@ class TvPlaybackActions(val context: Context, val model: TvPlaybackViewModel) {
 
     fun setupSecondaryRow(adapter: ArrayObjectAdapter) {
         adapter.add(videoOptions) // right below play/pause
+// decided to remove fast rewind and fast forward buttons, increase/decrease seeking speed
+// with DPAD_UP/DOWN in seeking mode
 //        adapter.add(fasterRewind)
 //        adapter.add(fasterForward)
         adapter.add(prevChannel)

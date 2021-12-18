@@ -55,31 +55,37 @@ class TvPlaybackViewModel @Inject constructor(
     }
 
     fun onPreviousChannelAction() {
+        liveData.postValue(Resource.loading())
         nextPlaybackUseCase.execute(NewPlaybackSubscriber(),
                 TvNextPlaybackUseCase.Params(TvNextPlayback.PREVIOUS_CHANNEL))
     }
 
     fun onNextChannelAction() {
+        liveData.postValue(Resource.loading())
         nextPlaybackUseCase.execute(NewPlaybackSubscriber(),
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_CHANNEL))
     }
 
     fun onPreviousProgramAction() {
+        liveData.postValue(Resource.loading())
         nextPlaybackUseCase.execute(NewPlaybackSubscriber(),
                 TvNextPlaybackUseCase.Params(TvNextPlayback.PREVIOUS_PROGRAM))
     }
 
     fun onNextProgramAction() {
+        liveData.postValue(Resource.loading())
         nextPlaybackUseCase.execute(NewPlaybackSubscriber(),
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
     }
 
     fun onPlayCompleted(fallback: () -> Unit) {
+        liveData.postValue(Resource.loading())
         nextPlaybackUseCase.execute(ContinueToNextPlaybackSubscriber(fallback),
                 TvNextPlaybackUseCase.Params(TvNextPlayback.NEXT_PROGRAM))
     }
 
     fun getLiveRecordStream(playback: TvPlayback) {
+        liveRecordStreamLiveData.postValue(Resource.loading())
         liveRecordStreamUseCase.execute(object: DisposableSingleObserver<VideoStream>() {
             override fun onSuccess(t: VideoStream) {
                 playback.record = t
@@ -94,6 +100,7 @@ class TvPlaybackViewModel @Inject constructor(
      *  responsibilities assignment.
      */
     fun regetLiveStream(playback: TvPlayback) {
+        liveStreamLiveData.postValue(Resource.loading())
         regetLiveStreamUseCase.execute(object: DisposableSingleObserver<VideoStream>() {
             override fun onSuccess(t: VideoStream) {
                 playback.isLiveRecord = false
