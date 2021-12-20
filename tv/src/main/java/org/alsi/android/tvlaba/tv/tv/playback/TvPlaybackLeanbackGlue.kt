@@ -519,10 +519,36 @@ class TvPlaybackLeanbackGlue(
     // endregion
     // region Control Panel Updating
 
+    /**
+     * This is called back in a regular intervals given by {@link TvPlaybackAndScheduleFragment#PLAYER_UPDATE_INTERVAL_MILLIS}
+     *
+     * NOTE This intentionally replaces the super.
+     */
     @SuppressLint("MissingSuperCall")
     override fun onUpdateProgress() {
         if (controlsRow != null && !isInSeekTransition) {
             controlsRow.currentPosition = if (playerAdapter.isPrepared) currentPosition else -1
+            checkPositionChange (controlsRow.currentPosition)
+        }
+    }
+
+    private var lastSavedCurrentPosition = -1L
+
+    private fun checkPositionChange(currentPosition: Long) {
+        if (currentPosition < 0)
+            return
+        if (currentPosition > wrappedDuration - 1_000L) {
+            // end of stream reached, at position immediately before the overridden or actual
+            // duration (defined by the EPG or by stream's playlist itself)
+            // - change to the next stream playback
+            next()
+        }
+        else {
+            // save current position if changed
+            if (currentPosition != lastSavedCurrentPosition) {
+                model.recordPlaybackState(currentPosition)
+                lastSavedCurrentPosition = currentPosition
+            }
         }
     }
 

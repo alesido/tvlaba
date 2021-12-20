@@ -31,6 +31,7 @@ class TvVideoStreamLocalStoreDelegate(
             if (accessCode != null) equal(TvVideoStreamEntity_.accessCode, accessCode)
             less(TvVideoStreamEntity_.start, now + 1L)
             greater(TvVideoStreamEntity_.end, now - 1L)
+            greater(TvVideoStreamEntity_.timeStamp, System.currentTimeMillis() - EXPIRATION_LIVE_STREAM)
         }.findFirst()
         result?.let {
             VideoStream(it.streamUri, it.streamKind, it.subtitlesUri)
@@ -55,6 +56,9 @@ class TvVideoStreamLocalStoreDelegate(
             = Completable.fromRunnable { streamBox.put(mapper.from(program, stream, accessCode))}
 
     companion object {
+        // TODO Make stream expiration time as a field of the entity so as it may be defined
+        //  by a remote data source
+        const val EXPIRATION_LIVE_STREAM = DateUtils.MINUTE_IN_MILLIS
         const val EXPIRATION_ARCHIVE_STREAM = DateUtils.MINUTE_IN_MILLIS
     }
 }

@@ -310,6 +310,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             }
             ResourceState.ERROR -> {
                 progressBarManager.hide()
+                glue.handlePlaybackStart(resource)
                 errorHandler.run(this, resource.throwable)
             }
             else -> { /** Not applicable */ }
@@ -341,7 +342,7 @@ class TvPlaybackAndScheduleFragment : VideoSupportFragment(), Player.Listener, T
             }
             ResourceState.ERROR -> {
                 progressBarManager.hide()
-                glue.handleLiveRecordStreamData(resource)
+                glue.handleLiveStreamDataOnRestart(resource)
                 errorHandler.run(this, resource.throwable)
             }
             else -> { /** Not applicable */ }

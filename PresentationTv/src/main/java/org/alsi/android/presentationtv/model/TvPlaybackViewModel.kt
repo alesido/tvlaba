@@ -18,6 +18,7 @@ import javax.inject.Inject
 class TvPlaybackViewModel @Inject constructor(
 
         private val currentPlaybackUseCase: TvCurrentPlaybackUseCase,
+        private val updateStreamUseCase: TvUpdateStreamUseCase,
         private val authorizePlaybackUseCase: TvAuthorizePlaybackUseCase,
         private val newPlaybackUseCase: TvNewPlaybackUseCase,
         private val nextPlaybackUseCase: TvNextPlaybackUseCase,
@@ -151,8 +152,17 @@ class TvPlaybackViewModel @Inject constructor(
     }
 
     inner class CurrentPlaybackSubscriber: DisposableObserver<TvPlayback>() {
-        override fun onNext(t: TvPlayback) {
-            liveData.postValue(Resource.success(t))
+        override fun onNext(playback: TvPlayback) {
+            updateStreamUseCase.execute(object: DisposableSingleObserver<VideoStream>() {
+                override fun onSuccess(t: VideoStream) {
+                    if (playback.isLiveRecord == true)
+                        playback.record = t
+                    else
+                        playback.stream = t
+                    liveData.postValue(Resource.success(playback))
+                }
+                override fun onError(e: Throwable) = liveData.postValue(Resource.error(e))
+            }, TvUpdateStreamUseCase.Params(playback))
         }
         override fun onComplete() {
             // seems not applicable
@@ -162,8 +172,7 @@ class TvPlaybackViewModel @Inject constructor(
         }
     }
 
-    inner class NewPlaybackSubscriber ()
-        : DisposableSingleObserver<TvPlayback>() {
+    inner class NewPlaybackSubscriber: DisposableSingleObserver<TvPlayback>() {
         override fun onSuccess(t: TvPlayback) {
             // current playback subscriber will get result too,
             // so avoid duplicate notification here
