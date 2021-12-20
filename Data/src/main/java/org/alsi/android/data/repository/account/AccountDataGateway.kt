@@ -28,10 +28,17 @@ open class AccountDataGateway(
      */
     override fun resume(loginName: String, skipRemoteLogin: Boolean): Single<UserAccount> {
         return if (skipRemoteLogin)
-            remote.onLoginResume( local.attachAccountFor(loginName) )
+            remote.onLoginResume(
+                local.attachAccountFor(loginName)
+            )
         else
-            local.getPassword(loginName).flatMap { remote.login(loginName, it) }
-                .map { local.addAttachAccount(it); it }
+            local.getPassword(loginName).flatMap {
+                remote.login(loginName, it)
+            }.map {
+                local.addAttachAccount(it)
+                remote.notifyOnLogin()
+                it
+            }
     }
 
     override fun getAccount(): Single<UserAccount> = local.getAccount()
