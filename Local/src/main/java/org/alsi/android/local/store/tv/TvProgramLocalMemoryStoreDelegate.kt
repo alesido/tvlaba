@@ -36,21 +36,21 @@ class TvProgramLocalMemoryStoreDelegate (
 
     override fun getDaySchedule(channelId: Long, date: LocalDate) = Single.fromCallable {
         val dayKey: Long = date.toDateTimeAtStartOfDay().millis
-        store[dayKey]?: return@fromCallable null
+        store[dayKey]?: throw Throwable("Data is N/A")
         return@fromCallable store[dayKey]!![channelId]
     }
 
     override fun getChannelLive(channelId: Long) = Single.fromCallable {
         val dayKey: Long = LocalDate.now().toDateTimeAtStartOfDay().millis
-        store[dayKey]?: return@fromCallable null
-        store[dayKey]!![channelId]?: return@fromCallable null
+        store[dayKey]?: throw Throwable("Data is N/A")
+        store[dayKey]!![channelId]?: throw Throwable("Data is N/A")
         store[dayKey]!![channelId]?.live
     }
 
     override fun getArchiveProgram(channelId: Long, dateTime: LocalDateTime) = Single.fromCallable {
         val dayKey: Long = dateTime.toLocalDate().toDateTimeAtStartOfDay().millis
-        store[dayKey]?: return@fromCallable null
-        store[dayKey]!![channelId]?: return@fromCallable null
+        store[dayKey]?: throw Throwable("Data is N/A")
+        store[dayKey]!![channelId]?: throw Throwable("Data is N/A")
         store[dayKey]!![channelId]?.programAtTime(dateTime)
     }
 
