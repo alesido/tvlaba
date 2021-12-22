@@ -148,10 +148,23 @@ class TvNextPlaybackUseCase @Inject constructor(
 
             // get URI of the stream and compose playback data
             }.flatMap { targetProgram ->
-                directory.streams.getVideoStream(channel, targetProgram,
-                    session.parentalControlPassword).map {
-                        videoStream -> mapper.from(channel, targetProgram, videoStream)
+                if (cursor.playback.isLive) {
+                    channel.live = with(targetProgram) { TvProgramLive(time, title, description) }
+                    // moving from live playback is possible only while it reached the end playing,
+                    // not seeking (it is not possible to seek live stream forward)
+                    // - this way, the next of live is always live
+                    directory.streams.getVideoStream(channel, null,
+                        session.parentalControlPassword).map {
+                            videoStream -> mapper.from(channel, videoStream)
                     }
+                }
+                else {
+                    // get archive/recorded/vod stream
+                    directory.streams.getVideoStream(channel, targetProgram,
+                        session.parentalControlPassword).map {
+                            videoStream -> mapper.from(channel, targetProgram, videoStream)
+                    }
+                }
 
             // set cursor to the playback
             }.flatMap { targetPlayback ->

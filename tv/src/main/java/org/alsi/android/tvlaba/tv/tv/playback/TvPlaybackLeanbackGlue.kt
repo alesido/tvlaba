@@ -233,7 +233,7 @@ class TvPlaybackLeanbackGlue(
                     // request pause when prepared, because video boundary crossed while seeking
                     val z = isInSeekTransition
                     isInSeekTransition = false
-                    return z
+                    return playback?.isLive == false && z // live can be reached only while playing
                 }
             }
             else -> { isInSeekTransition = false }
