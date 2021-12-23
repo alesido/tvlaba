@@ -2,6 +2,7 @@ package org.alsi.android.moidom.repository.tv
 
 
 import org.alsi.android.datatv.repository.TvProgramDataRepository
+import org.alsi.android.datatv.repository.TvPromotionDataRepository
 import org.alsi.android.datatv.repository.TvVideoStreamDataRepository
 import org.alsi.android.domain.streaming.model.service.StreamingService.Companion.TV
 import org.alsi.android.domain.tv.repository.guide.TvDirectoryRepository
@@ -15,11 +16,13 @@ class TvDirectoryRepositoryMoidom @Inject constructor(
         @Named("${Moidom.TAG}.$TV") serviceId: Long,
         channelRepository: TvChannelDataRepositoryMoidom,
         programRepository: TvProgramDataRepository,
-        streamRepository: TvVideoStreamDataRepository
-
+        streamRepository: TvVideoStreamDataRepository,
+        promotionsRepository: TvPromotionDataRepository
     )
     : TvDirectoryRepository(
             streamingServiceId = serviceId,
             channels = channelRepository,
             programs = programRepository,
-            streams = streamRepository)
+            streams = streamRepository,
+            promotions = promotionsRepository
+    )

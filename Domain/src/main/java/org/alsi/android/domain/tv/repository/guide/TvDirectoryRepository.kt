@@ -11,8 +11,10 @@ open class TvDirectoryRepository @Inject constructor (
         streamingServiceId: Long,
         val channels : TvChannelRepository,
         val programs: TvProgramRepository,
-        val streams: TvVideoStreamRepository)
-    : DirectoryRepository(streamingServiceId) {
+        val streams: TvVideoStreamRepository,
+        val promotions: TvPromotionRepository
+
+        ) : DirectoryRepository(streamingServiceId) {
 
     override fun onLanguageChange(): Completable = channels.onLanguageChange()
 }

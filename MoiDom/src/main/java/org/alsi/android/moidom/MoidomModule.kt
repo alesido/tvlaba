@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import io.objectbox.BoxStore
 import io.reactivex.subjects.PublishSubject
+import org.alsi.android.datatv.repository.TvPromotionDataRepository
 import org.alsi.android.datatv.repository.TvVideoStreamDataRepository
 import org.alsi.android.datatv.store.*
 import org.alsi.android.datavod.store.VodBrowseCursorLocalStore
@@ -37,6 +38,7 @@ import org.alsi.android.moidom.store.DataServiceFactoryMoidom
 import org.alsi.android.moidom.store.RestServiceMoidom
 import org.alsi.android.moidom.store.tv.TvChannelRemoteStoreMoidom
 import org.alsi.android.moidom.store.tv.TvProgramRemoteStoreMoidom
+import org.alsi.android.moidom.store.tv.TvPromotionRemoteStoreMoiDom
 import org.alsi.android.moidom.store.tv.TvVideoStreamRemoteStoreMoidom
 import org.alsi.android.moidom.store.vod.VodDirectoryRemoteStoreMoiDom
 import org.alsi.android.remote.retrofit.error.RetrofitExceptionProducer
@@ -154,6 +156,12 @@ class MoidomModule {
     @Singleton @Provides fun provideTvVideoStreamRepositoryMoiDom(
             localStore: TvVideoStreamLocalStore, remoteStore: TvVideoStreamRemoteStore)
             : TvVideoStreamRepository = TvVideoStreamDataRepository(localStore, remoteStore)
+
+    /**     TV Promotion Remote Store
+     */
+    @Singleton @Provides fun provideTvPromotionRemoteStoreMoiDom(
+        remoteService: RestServiceMoidom, remoteSession: RemoteSessionRepositoryMoidom)
+            : TvPromotionRemoteStore = TvPromotionRemoteStoreMoiDom(remoteService, remoteSession)
 
     /**     TV Playback Cursor, Local Store
      */

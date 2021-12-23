@@ -4,10 +4,7 @@ import io.reactivex.Single
 import okhttp3.ResponseBody
 import org.alsi.android.moidom.model.LoginResponse
 import org.alsi.android.moidom.model.SettingsSetResponse
-import org.alsi.android.moidom.model.tv.ChannelListResponse
-import org.alsi.android.moidom.model.tv.EpgResponse
-import org.alsi.android.moidom.model.tv.GetTvGroupResponse
-import org.alsi.android.moidom.model.tv.GetUrlResponse
+import org.alsi.android.moidom.model.tv.*
 import org.alsi.android.moidom.model.vod.GetVodUrlResponse
 import org.alsi.android.moidom.model.vod.VodGenresResponse
 import org.alsi.android.moidom.model.vod.VodInfoResponse
@@ -100,6 +97,14 @@ interface RestServiceMoidom {
             @Query("protect_code") accessCode: String?
     ): Single<GetUrlResponse>
 
+
+    /**
+     *  Promotions
+     */
+    @GET("promotions")
+    fun getPromotionSet(
+        @Query("PATKER_SSID") sid: String
+    ): Single<GetPromotionsResponse>
 
     /** Get list of genres for MDVodVideo On Demand
      */
