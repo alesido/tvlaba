@@ -16,9 +16,6 @@ data class EpgResponse(
         val ts_sec: Int,
         val with_ts: Int,
 
-        override val error: RequestError?,
-        override val servertime: Int
-
 ): BaseResponse() {
 
     data class Epg(

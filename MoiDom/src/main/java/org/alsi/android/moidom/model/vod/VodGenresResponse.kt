@@ -6,9 +6,6 @@ import org.alsi.android.moidom.model.base.RequestError
 
 data class VodGenresResponse(
         val genres: List<Genre>,
-        override val error: RequestError?,
-        override val servertime: Int
-
 ): BaseResponse() {
 
     data class Genre(

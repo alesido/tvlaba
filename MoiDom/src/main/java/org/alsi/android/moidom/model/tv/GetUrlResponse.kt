@@ -8,7 +8,4 @@ data class GetUrlResponse(
         val url: String,
         val mode: String,
         val ip_addr: String,
-        override val error: RequestError?,
-        override val servertime: Int
-
 ): BaseResponse()

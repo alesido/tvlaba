@@ -9,8 +9,6 @@ data class GetTvGroupResponse(
         val template: String,
         val groups_icons: List<GroupsIcon>,
         val groups: List<Group>,
-        override val error: RequestError?,
-        override val servertime: Int
 
 ): BaseResponse() {
 

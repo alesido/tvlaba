@@ -19,8 +19,4 @@ data class VodInfoResponse(
 
         val actors: String?,
         val directors: String?,
-
-        override val error: RequestError?,
-        override val servertime: Int
-
 ): BaseResponse()

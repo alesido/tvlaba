@@ -7,8 +7,6 @@ import org.alsi.android.moidom.model.base.RequestError
 data class ChannelListResponse(
         val icons: List<Icon>,
         val groups: List<Group>,
-        override val error: RequestError?,
-        override val servertime: Int
 
 ): BaseResponse() {
 

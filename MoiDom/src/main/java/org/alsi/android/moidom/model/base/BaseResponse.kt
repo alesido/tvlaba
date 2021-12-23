@@ -7,8 +7,11 @@ import org.alsi.android.remote.retrofit.error.RetrofitExceptionSource
  */
 abstract class BaseResponse : RetrofitExceptionSource {
 
-    abstract val error: RequestError?
-    abstract val servertime: Int
+    val error: RequestError? = null
+    val servertime: Int? = null
+
+    val channelDirectoryHashCode: String? = null
+    val promotionSetHashCode: String? = null
 
     override fun isErrorResponse(): Boolean {
         return error != null

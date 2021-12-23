@@ -19,9 +19,6 @@ data class LoginResponse(
         val services: Services,
         val contacts: Contacts,
         val settings: Settings,
-        override val error: RequestError?,
-        override val servertime: Int
-
 ): BaseResponse() {
 
     class Services : IntEnablingMap()
