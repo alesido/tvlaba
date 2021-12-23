@@ -38,13 +38,14 @@
         <entry key="tv/src/main/res/layout/spin_kit_progress_view.xml" value="0.16843033509700175" />
         <entry key="tv/src/main/res/layout/tv_action_1_line.xml" value="0.44047619047619047" />
         <entry key="tv/src/main/res/layout/tv_category_list_item_header.xml" value="0.1644620811287478" />
-        <entry key="tv/src/main/res/layout/tv_channel_card_view.xml" value="0.33" />
+        <entry key="tv/src/main/res/layout/tv_channel_card_view.xml" value="0.5" />
         <entry key="tv/src/main/res/layout/tv_channel_row_header.xml" value="0.20899470899470898" />
         <entry key="tv/src/main/res/layout/tv_channel_row_header2.xml" value="0.20899470899470898" />
         <entry key="tv/src/main/res/layout/tv_control_button_primary.xml" value="0.18209876543209877" />
         <entry key="tv/src/main/res/layout/tv_control_button_secondary.xml" value="0.3875" />
         <entry key="tv/src/main/res/layout/tv_menu_card_view.xml" value="0.1" />
-        <entry key="tv/src/main/res/layout/tv_program_card_view.xml" value="0.1" />
+        <entry key="tv/src/main/res/layout/tv_program_card_view.xml" value="0.67" />
+        <entry key="tv/src/main/res/layout/tv_program_credits_card_view.xml" value="0.6833333333333333" />
         <entry key="tv/src/main/res/layout/tv_program_details_description_extended.xml" value="0.3880208333333333" />
         <entry key="tv/src/main/res/layout/tv_program_playback_details.xml" value="0.1" />
         <entry key="tv/src/main/res/layout/vod_guide_start_fragment.xml" value="0.2570546737213404" />

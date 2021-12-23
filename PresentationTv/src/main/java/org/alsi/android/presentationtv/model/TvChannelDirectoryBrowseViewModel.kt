@@ -27,6 +27,7 @@ import javax.inject.Inject
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
     private val getDirectoryUseCase: TvGetChannelDirectoryUseCase,
+    private val getPromotionsUseCase: TvGetPromotionSetUseCase,
     private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
     private val newPlaybackUseCase: TvNewPlaybackUseCase,
     private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,
@@ -38,6 +39,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     private val liveDirectory: MutableLiveData<Resource<TvChannelDirectoryBrowseLiveData>> = MutableLiveData()
 
     private var directory: TvChannelDirectory? = null
+    private var promotions: TvPromotionSet? = null
 
     val currentPresentation: StreamingServicePresentation? get()
     = presentationManager.provideContext()?.presentation
@@ -76,7 +78,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     @Suppress("UNUSED_PARAMETER")
     fun onListingItemSelected(listingIndex: Int, itemPosition: Int, item: Any) {
         directory?: return
-        if (item is TvChannel && listingIndex > 0
+        if (item is TvChannel && listingIndex >= 0
             && listingIndex < directory!!.categories.size - 1) {
             val category = directory!!.categories[listingIndex]
             browseCursorMoveUseCase.execute(BrowseCursorMoveSubscriber(),
@@ -151,11 +153,19 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                 return
             }
             this@TvChannelDirectoryBrowseViewModel.directory = directory
-            browseCursorGetUseCase.execute(BrowseCursorSubscriber())
+
+            getPromotionsUseCase.execute(object: DisposableSingleObserver<TvPromotionSet>() {
+                override fun onSuccess(t: TvPromotionSet) {
+                    promotions = t
+                    browseCursorGetUseCase.execute(BrowseCursorSubscriber())
+                }
+                override fun onError(e: Throwable) {
+                    // the promotions are optional
+                    browseCursorGetUseCase.execute(BrowseCursorSubscriber())
+                }
+            })
         }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
     private inner class ChannelDirectoryUpdatesSubscriber: DisposableObserver<TvChannelDirectory>() {
@@ -168,19 +178,13 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             this@TvChannelDirectoryBrowseViewModel.directory = directory
             browseCursorGetUseCase.execute(BrowseCursorSubscriber())
         }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
         override fun onComplete() { /* not applicable */ }
     }
 
     inner class DirectoryViewUpdateSubscriber: DisposableCompletableObserver() {
-        override fun onComplete() {
-            //
-        }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onComplete() {}
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
     inner class BrowseCursorSubscriber : DisposableSingleObserver<TvBrowseCursor>() {
@@ -188,7 +192,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             val dir = this@TvChannelDirectoryBrowseViewModel.directory?: return
             if (null == cursor.category || null == cursor.channel) {
                 liveDirectory.postValue(Resource(ResourceState.SUCCESS,
-                        TvChannelDirectoryBrowseLiveData(dir), null))
+                        TvChannelDirectoryBrowseLiveData(dir, promotions), null))
                 return
             }
             val position = TvChannelDirectoryPosition(
@@ -196,20 +200,16 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                     channelIndex = (dir.channelIndex(cursor.channel!!)?:-1)
             )
             liveDirectory.postValue(Resource(ResourceState.SUCCESS,
-                    TvChannelDirectoryBrowseLiveData(dir, position), null))
+                    TvChannelDirectoryBrowseLiveData(dir, promotions, position), null))
         }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
     inner class BrowseCursorMoveSubscriber : DisposableSingleObserver<TvBrowseCursor>() {
         override fun onSuccess(t: TvBrowseCursor) {
             // silently accept it's OK
         }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
     inner class BrowseCursorMoveOnActionSubscriber(private val navigate: () -> Unit)
@@ -219,9 +219,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
             newPlaybackUseCase.execute(NewPlaybackSubscriber(navigate),
                     TvNewPlaybackUseCase.Params(channel.categoryId, channel))
         }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
 
@@ -230,9 +228,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         override fun onSuccess(t: TvPlayback) {
             navigate()
         }
-        override fun onError(e: Throwable) {
-            liveDirectory.postValue(Resource.error(e))
-        }
+        override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
     // endregion
