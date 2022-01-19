@@ -32,7 +32,7 @@ class TvSwitchToLivePlaybackUseCase @Inject constructor(
         if (directory !is TvDirectoryRepository || session !is TvSessionRepository)
             return Single.error(Throwable("The TV Directory Repository is N/A!"))
 
-        return directory.channels.findChannelByNumber(params.playback.channelNumber).flatMap {
+        return directory.channels.findChannelById(params.playback.channelId).flatMap {
             channel = it; directory.streams.getVideoStream(channel, null)
         }.map { stream ->
             mapper.from(channel, stream)

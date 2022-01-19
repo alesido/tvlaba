@@ -32,7 +32,7 @@ class TvRegetLiveStreamUseCase @Inject constructor(
         if (directory !is TvDirectoryRepository || session !is TvSessionRepository)
             return Single.error(Throwable("The TV Directory Repository is N/A!"))
 
-        return directory.channels.findChannelByNumber(params.playback.channelNumber).flatMap {
+        return directory.channels.findChannelById(params.playback.channelId).flatMap {
             directory.streams.getVideoStream(it, session.parentalControlPassword)
         }
     }

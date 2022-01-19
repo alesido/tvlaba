@@ -37,11 +37,11 @@ class TvUpdateStreamUseCase @Inject constructor(
             return Single.error(Throwable("The TV Directory Repository is N/A!"))
 
         return if (params.playback.isLive) {
-            directory.channels.findChannelByNumber(params.playback.channelNumber).flatMap {
+            directory.channels.findChannelById(params.playback.channelId).flatMap {
                 directory.streams.getVideoStream(it, session.parentalControlPassword)
             }
         } else {
-            directory.channels.findChannelByNumber(params.playback.channelNumber).flatMap {
+            directory.channels.findChannelById(params.playback.channelId).flatMap {
                 channel = it
                 directory.programs.getArchiveProgram(params.playback.channelId,
                     params.playback.time.startDateTime.toLocalDateTime())
