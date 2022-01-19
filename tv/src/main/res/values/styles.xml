@@ -11,6 +11,10 @@
         <item name="android:scrollbars">none</item><!-- Leanback Preferences NPE fix! -->
     </style>
 
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
     <style name="AppTheme.FullScreenDialog" parent="AppTheme">
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>

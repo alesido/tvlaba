@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item android:drawable="@color/appWindowBackground"/>
+    <item android:drawable="@drawable/telecola_launch_screen_portrait_bottom"
+        android:gravity="bottom|center"/>
+    <item android:drawable="@drawable/telecola_launch_screen_portrait_top"
+        android:gravity="top|center"/>
+</layer-list>
