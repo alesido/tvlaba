@@ -93,10 +93,25 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
             if (item is TvChannel) {
                 if (parentalViewModel.isAccessAllowed(item)) {
                     // navigate to program details or playback fragment
-                    browseViewModel.onChannelAction(item) { navigateOnChannelAction(item) }
+                    browseViewModel.onChannelAction(item) { isAllowed ->
+                        if (isAllowed)
+                            navigateOnChannelAction(item)
+                        else
+                            errorHandler.run(this, Throwable(getString(
+                                R.string.error_message_no_program_data_available)))
+                    }
                 }
                 else {
                     openParentalAuthorization()
+                }
+            }
+            else if (item is TvProgramPromotion) {
+                browseViewModel.onProgramPromotionAction(item) { isAllowed ->
+                    if (isAllowed)
+                        navigateOnProgramPromotionAction()
+                    else
+                        errorHandler.run(this, Throwable(getString(
+                            R.string.error_message_no_program_data_available)))
                 }
             }
             else if (item is CardMenuItem) {
@@ -155,6 +170,13 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
                 .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
             else TvChannelDirectoryFragmentDirections
                 .actionTvChannelDirectoryFragmentToTvPlaybackAndScheduleFragment()
+        )
+    }
+
+    private fun navigateOnProgramPromotionAction() {
+        NavHostFragment.findNavController(this).navigate(
+            TvChannelDirectoryFragmentDirections
+                .actionTvChannelDirectoryFragmentToTvProgramDetailsFragment()
         )
     }
 

@@ -27,8 +27,9 @@ import javax.inject.Inject
 open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     directoryObservationUseCase: TvChannelDirectoryObservationUseCase,
     private val getDirectoryUseCase: TvGetChannelDirectoryUseCase,
-    private val getPromotionsUseCase: TvGetPromotionSetUseCase,
     private val directoryViewUpdateUseCase: TvChannelDirectoryViewUpdateUseCase,
+    private val getPromotionsUseCase: TvGetPromotionSetUseCase,
+    private val dayScheduleUseCase: TvDayScheduleUseCase,
     private val newPlaybackUseCase: TvNewPlaybackUseCase,
     private val browseCursorGetUseCase: TvBrowseCursorGetUseCase,
     private val browseCursorMoveUseCase: TvBrowseCursorMoveUseCase,
@@ -95,14 +96,47 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         }
     }
 
-    fun onChannelAction(channel: TvChannel, navigate: () -> Unit) {
+    fun onChannelAction(channel: TvChannel, navigate: (isAllowed: Boolean) -> Unit) {
         // ensure browse cursor in a correct position before navigating to the details fragment
-        val category = directory?.categories?.first { it.id == channel.categoryId }?: return
+        // FIXME Provide actual category ID with the method argument.
+        val category = directory?.categories?.first { it.id == channel.categoryId }?: run {
+            navigate(false)
+            return
+        }
         browseCursorMoveUseCase.execute(BrowseCursorMoveOnActionSubscriber(navigate),
                 TvBrowseCursorMoveUseCase.Params(
                         category = category,
                         channel = channel,
                         page = TvBrowsePage.CHANNELS))
+    }
+
+    fun onProgramPromotionAction(programPromotion: TvProgramPromotion, navigate: (isAllowed: Boolean) -> Unit) {
+        // set browse cursor pointing to correct directory position so as
+        // the details fragment will show the desired program
+        val channel = directory?.channelById?.get(programPromotion.channelId)?: run {
+            navigate(false)
+            return
+        }
+        val category = directory?.categoryById?.get(channel.categoryId)?: run {
+            navigate(false)
+            return
+        }
+        dayScheduleUseCase.execute(object: DisposableSingleObserver<TvDaySchedule>() {
+            override fun onSuccess(schedule: TvDaySchedule) {
+                browseCursorMoveUseCase.execute(BrowseCursorMoveOnActionSubscriber(navigate),
+                    TvBrowseCursorMoveUseCase.Params(
+                        category = category,
+                        channel = channel,
+                        schedule = schedule,
+                        program = schedule.programAtTime(
+                            programPromotion.time!!.startDateTime.toLocalDateTime()),
+                        page = TvBrowsePage.CHANNELS))
+            }
+            override fun onError(e: Throwable) = navigate(false)
+        }, TvDayScheduleUseCase.Params(
+            channelId = channel.id,
+            date = programPromotion.time?.startDateTime?.toLocalDate()
+        ))
     }
 
     fun onPause() {
@@ -153,10 +187,14 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
                 return
             }
             this@TvChannelDirectoryBrowseViewModel.directory = directory
-
             getPromotionsUseCase.execute(object: DisposableSingleObserver<TvPromotionSet>() {
                 override fun onSuccess(t: TvPromotionSet) {
                     promotions = t
+                    promotions!!.sections.forEach { section ->
+                        section.programs.forEach { program ->
+                            program.channel = directory.channelById[program.channelId]
+                        }
+                    }
                     browseCursorGetUseCase.execute(BrowseCursorSubscriber())
                 }
                 override fun onError(e: Throwable) {
@@ -212,7 +250,7 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
         override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }
 
-    inner class BrowseCursorMoveOnActionSubscriber(private val navigate: () -> Unit)
+    inner class BrowseCursorMoveOnActionSubscriber(private val navigate: (isAllowed: Boolean) -> Unit)
         : DisposableSingleObserver<TvBrowseCursor>() {
         override fun onSuccess(t: TvBrowseCursor) {
             val channel =  t.channel?: return
@@ -223,10 +261,10 @@ open class TvChannelDirectoryBrowseViewModel @Inject constructor(
     }
 
 
-    inner class NewPlaybackSubscriber(private val navigate: () -> Unit)
+    inner class NewPlaybackSubscriber(private val navigate: (isAllowed: Boolean) -> Unit)
         : DisposableSingleObserver<TvPlayback>() {
         override fun onSuccess(t: TvPlayback) {
-            navigate()
+            navigate(true)
         }
         override fun onError(e: Throwable) = liveDirectory.postValue(Resource.error(e))
     }

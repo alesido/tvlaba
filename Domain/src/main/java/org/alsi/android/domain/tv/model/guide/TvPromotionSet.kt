@@ -22,4 +22,6 @@ data class TvProgramPromotion (
     val description: String,
     var mainPosterUri: URI? = null,
     var allPosterUris: List<URI>? = null,
-)
+) {
+    var channel: TvChannel? = null
+}
