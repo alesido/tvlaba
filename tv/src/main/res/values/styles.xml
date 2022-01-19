@@ -20,6 +20,11 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="BrandedProgressBar" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/branded_indeterminate_progress</item>
+        <item name="android:minHeight">100dp</item>
+        <item name="android:minWidth">80dp</item>
+    </style>
 
     <!-- Themes for text size modes. -->
 
