@@ -18,6 +18,7 @@ class TvProgramPromotionCardPresenter: Presenter() {
         val cardView = viewHolder.view as TvProgramPromotionCardView
         with(program) {
             cardView.programTimeText = time?.toString()?:""
+            cardView.channelTitleText = channel?.title?:""
             cardView.programTitleText = title
         }
         val context = cardView.vb.tvProgramCardPoster.context

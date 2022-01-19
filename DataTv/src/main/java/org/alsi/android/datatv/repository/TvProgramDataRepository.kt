@@ -3,6 +3,8 @@ package org.alsi.android.datatv.repository
 import io.reactivex.Single
 import org.alsi.android.datatv.store.TvProgramLocalStore
 import org.alsi.android.datatv.store.TvProgramRemoteStore
+import org.alsi.android.domain.exception.model.ClassifiedExceptionFactory
+import org.alsi.android.domain.exception.model.ExceptionMessages
 import org.alsi.android.domain.tv.model.guide.TvDaySchedule
 import org.alsi.android.domain.tv.model.guide.TvProgramIssue
 import org.alsi.android.domain.tv.model.guide.TvWeekDayRange
@@ -14,7 +16,10 @@ import javax.inject.Inject
 open class TvProgramDataRepository @Inject constructor(
 
         protected val local: TvProgramLocalStore,
-        protected val remote: TvProgramRemoteStore
+        protected val remote: TvProgramRemoteStore,
+        private val exceptionFactory: ClassifiedExceptionFactory,
+        private val exceptionMessages: ExceptionMessages
+
 
 ): TvProgramRepository {
 
@@ -40,7 +45,10 @@ open class TvProgramDataRepository @Inject constructor(
         return local.getArchiveProgram(channelId, dateTime).onErrorResumeNext {
             remote.getDaySchedule(channelId, dateTime.toLocalDate()).flatMap {
                 local.putDaySchedule(it)
-                Single.just(it.programAtTime(dateTime))
+                it.programAtTime(dateTime)?.let { program ->
+                    Single.just(program)
+                }?: Single.error(exceptionFactory.processingException(
+                    exceptionMessages.errorGettingTvProgramData()))
             }
         }
     }
