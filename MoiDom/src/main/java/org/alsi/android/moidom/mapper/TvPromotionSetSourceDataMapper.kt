@@ -15,7 +15,9 @@ class TvPromotionSetSourceDataMapper {
         return TvPromotionSet(
             sections = source.promotions.map { section ->
                      TvPromotionSection(
-                         section.id, section.name, section.programs.map {
+                         section.id,
+                         if (section.name == "Анонсы") "Рекомендации" else section.name,
+                         section.programs.map {
                              TvProgramPromotion(
                                  id = it.id,
                                  channelId = it.cid,
