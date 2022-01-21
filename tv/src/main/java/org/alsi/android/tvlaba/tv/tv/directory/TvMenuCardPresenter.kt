@@ -1,9 +1,10 @@
 package org.alsi.android.tvlaba.tv.tv.directory
 
-import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.leanback.widget.Presenter
 import org.alsi.android.domain.streaming.model.service.StreamingServicePresentation
+import org.alsi.android.tvlaba.R
 import org.alsi.android.tvlaba.framework.setImageToView
 import org.alsi.android.tvlaba.tv.model.CardMenuItem
 
@@ -11,7 +12,7 @@ class TvMenuCardPresenter: Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup) = ViewHolder(
             TvMenuCardView(parent.context).apply {
-                setBackgroundColor(Color.DKGRAY)
+                setBackgroundColor(ContextCompat.getColor(parent.context, R.color.appColorPrimaryDark))
             })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {

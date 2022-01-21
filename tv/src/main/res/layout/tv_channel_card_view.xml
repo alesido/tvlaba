@@ -30,12 +30,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="8dp"
-        android:textSize="16sp"
+        android:textSize="?attr/text_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/tvChannelCardFooter"
         android:gravity="bottom"
+        android:fontFamily="sans-serif"
         tools:text="Охотник и рыболов"
         android:maxLines="1"
         android:ellipsize="end"
@@ -64,6 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvChannelCardProgramProgress"
         app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="sans-serif"
         tools:text="12:00 - 15:00 Last news we have at the moment. Come and see!"
         />
     <View

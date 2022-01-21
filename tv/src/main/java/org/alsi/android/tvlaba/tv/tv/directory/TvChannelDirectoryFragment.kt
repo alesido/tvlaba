@@ -548,7 +548,7 @@ class TvChannelDirectoryFragment : BrowseSupportFragment() {
     private fun showMessage(messageRes: Int) {
         val toast = Toast.makeText(requireContext(), getString(messageRes), Toast.LENGTH_SHORT)
         with(toast) {
-            view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.grey))
+            view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.appColorPrimary))
             view.setPadding(24)
         }
         toast.show()

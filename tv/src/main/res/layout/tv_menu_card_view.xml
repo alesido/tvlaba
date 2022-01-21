@@ -38,6 +38,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/tvMenuCardFooter"
         app:layout_constraintEnd_toEndOf="parent"
         android:textStyle="bold"
+        android:fontFamily="sans-serif"
         tools:text="Видеотека MEGOGO"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

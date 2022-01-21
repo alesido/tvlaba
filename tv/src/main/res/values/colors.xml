@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="appColorPrimary">#150E41</color>
+    <color name="appColorPrimary">#2E2C67</color>
     <color name="appColorPrimaryDark">#150E41</color>
     <color name="appColorAccent">#9694B8</color>
-    <color name="appWindowBackground">#150E41</color>
+    <color name="appWindowBackground">#3C5CAA</color>
 
-    <color name="background_gradient_start">#000000</color>
-    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="background_gradient_start">@color/appColorPrimary</color>
+    <color name="background_gradient_end">@color/appColorPrimaryDark</color>
 
     <color name="red">#d23131</color>
     <color name="darker_red">#a21111</color>
@@ -21,5 +21,16 @@
     <color name="grey">#808080</color>
     <color name="lite_grey">#e0e0e0</color>
     <color name="darker_grey">#202020</color>
+
+    <!--
+            Leanback Colors
+    -->
+
+    <color name="lb_default_brand_color">@color/appColorPrimaryDark</color>
+    <color name="lb_basic_card_bg_color">@color/appColorPrimaryDark</color>
+
+    <color name="lb_guidedactions_background">@color/appColorPrimary</color>
+    <color name="lb_guidedactions_background_dark">@color/appColorPrimaryDark</color>
+
 
 </resources>

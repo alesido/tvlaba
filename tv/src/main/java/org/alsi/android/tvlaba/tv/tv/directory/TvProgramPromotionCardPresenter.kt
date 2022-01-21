@@ -1,16 +1,17 @@
 package org.alsi.android.tvlaba.tv.tv.directory
 
-import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.leanback.widget.Presenter
 import com.bumptech.glide.Glide
 import org.alsi.android.domain.tv.model.guide.TvProgramPromotion
+import org.alsi.android.tvlaba.R
 
 class TvProgramPromotionCardPresenter: Presenter() {
 
     override fun onCreateViewHolder(parent: ViewGroup) = ViewHolder(
             TvProgramPromotionCardView(parent.context).apply {
-                setBackgroundColor(Color.DKGRAY)
+                setBackgroundColor(ContextCompat.getColor(parent.context, R.color.appColorPrimaryDark))
             })
 
     override fun onBindViewHolder(viewHolder: ViewHolder, item: Any) {

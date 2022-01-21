@@ -4,16 +4,22 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.43425925925925923" />
+        <entry key="../../.gradle/caches/transforms-3/689f78fe4b03e330ce149884d76ac5ca/transformed/leanback-preference-1.1.0-beta01/res/layout/leanback_preference_fragment.xml" value="0.2222222222222222" />
         <entry key="leanback/src/main/res/drawable/lb_control_button_primary.xml" value="0.2713541666666667" />
         <entry key="leanback/src/main/res/drawable/lb_control_button_secondary.xml" value="0.27239583333333334" />
+        <entry key="leanback/src/main/res/font/pfdindisplaypro.xml" value="0.3541666666666667" />
         <entry key="leanback/src/main/res/layout/lb_action_1_line.xml" value="0.44047619047619047" />
         <entry key="leanback/src/main/res/layout/lb_action_2_lines.xml" value="0.44047619047619047" />
+        <entry key="leanback/src/main/res/layout/lb_browse_fragment.xml" value="0.43738977072310403" />
         <entry key="leanback/src/main/res/layout/lb_control_button_primary.xml" value="0.1644620811287478" />
         <entry key="leanback/src/main/res/layout/lb_control_button_secondary.xml" value="0.44047619047619047" />
+        <entry key="leanback/src/main/res/layout/lb_details_fragment.xml" value="0.43738977072310403" />
         <entry key="leanback/src/main/res/layout/lb_details_overview.xml" value="0.1" />
         <entry key="leanback/src/main/res/layout/lb_guidedactions_item.xml" value="0.1437389770723104" />
+        <entry key="leanback/src/main/res/layout/lb_guidedstep_background.xml" value="0.1" />
         <entry key="leanback/src/main/res/layout/lb_guidedstep_fragment.xml" value="0.16225749559082892" />
         <entry key="leanback/src/main/res/layout/lb_header.xml" value="0.1644620811287478" />
+        <entry key="leanback/src/main/res/layout/lb_headers_fragment.xml" value="0.23500881834215168" />
         <entry key="leanback/src/main/res/layout/lb_playback_controls.xml" value="0.17945326278659612" />
         <entry key="leanback/src/main/res/layout/lb_row_header.xml" value="0.37864583333333335" />
         <entry key="leanback/src/main/res/layout/lb_section_header.xml" value="0.1644620811287478" />
@@ -35,8 +41,10 @@
         <entry key="tv/src/main/res/drawable/telecola_launch_screen_portrait_bottom.xml" value="0.5489583333333333" />
         <entry key="tv/src/main/res/drawable/tv_control_button_primary.xml" value="0.2713541666666667" />
         <entry key="tv/src/main/res/drawable/tv_control_button_secondary.xml" value="0.19583333333333333" />
+        <entry key="tv/src/main/res/font/pfdindisplaypro.xml" value="0.2552083333333333" />
         <entry key="tv/src/main/res/layout/app_start_fragment.xml" value="0.42857142857142855" />
         <entry key="tv/src/main/res/layout/general_settings_dialog_fragment.xml" value="0.44047619047619047" />
+        <entry key="tv/src/main/res/layout/lb_guidedstep_background.xml" value="0.43738977072310403" />
         <entry key="tv/src/main/res/layout/parental_code_dialog.xml" value="0.21957671957671956" />
         <entry key="tv/src/main/res/layout/progress_view_common.xml" value="0.31614583333333335" />
         <entry key="tv/src/main/res/layout/progress_view_start_screen.xml" value="0.18386243386243387" />

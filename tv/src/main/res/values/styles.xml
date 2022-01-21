@@ -3,6 +3,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Leanback">
+
         <!--item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -24,6 +25,24 @@
         <item name="android:indeterminateDrawable">@drawable/branded_indeterminate_progress</item>
         <item name="android:minHeight">100dp</item>
         <item name="android:minWidth">80dp</item>
+    </style>
+
+    <!-- Leanback styles branding -->
+
+    <style name="BrandedThemeLeanbackGuidedStep" parent="Theme.Leanback.GuidedStep">
+        <item name="guidedStepBackground">@color/appColorPrimaryDark</item>
+    </style>
+
+    <style name="TextAppearance.Leanback.Title" parent="TextAppearance.Leanback">
+        <item name="android:fontFamily">@font/pfdindisplaypro</item>
+        <item name="android:textSize">@dimen/lb_browse_title_text_size</item>
+        <item name="android:textColor">@color/lb_browse_title_color</item>
+    </style>
+
+    <style name="TextAppearance.Leanback.Header" parent="TextAppearance.Leanback">
+        <item name="android:textSize">@dimen/lb_browse_header_text_size</item>
+        <item name="android:textColor">@color/lb_browse_header_color</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Themes for text size modes. -->
