@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">TvLabA</string>
+    <string name="app_name">Telecola 3</string>
     <string name="app_version">Версия %1$s</string>
-    <string name="app_section_tv">TvLabA ТВ</string>
-    <string name="app_section_vod">Видеотека TvLabA</string>
+    <string name="app_section_tv">Telecola ТВ</string>
+    <string name="app_section_vod">Видеотека Prime HD</string>
 
     <string name="label_menu">Меню</string>
 

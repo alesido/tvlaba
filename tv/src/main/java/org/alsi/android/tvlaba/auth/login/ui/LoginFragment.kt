@@ -61,6 +61,8 @@ class LoginFragment : GuidedStepSupportFragment() {
         return view
     }
 
+    override fun onProvideTheme() = R.style.BrandedThemeLeanbackGuidedStep
+
     private fun setupProgressBar(view: ViewGroup, inflater: LayoutInflater) {
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
         view.addView(progressView)
@@ -73,7 +75,7 @@ class LoginFragment : GuidedStepSupportFragment() {
         getString(R.string.description_for_login),
         getString(R.string.app_version, requireActivity().packageManager.getPackageInfo(
             requireActivity().packageName, 0).versionName),
-        ContextCompat.getDrawable(requireContext(), R.drawable.settings_icon_metal)
+        ContextCompat.getDrawable(requireContext(), R.drawable.branded_logo_notext)
     )
 
     override fun onCreateActions(actions: MutableList<GuidedAction>,
@@ -145,19 +147,24 @@ class LoginFragment : GuidedStepSupportFragment() {
     // region Extra Actions
 
     private fun radioButtonEnglish() = GuidedAction.Builder(requireContext())
-        .id(ID_LANG_EN).title(getString(R.string.label_language_english))
+        .id(ID_LANG_EN)
+        //.title(getString(R.string.label_language_english))
         .checkSetId(1)
         .checked(Locale.getDefault().language == "en")
+        .icon(R.drawable.telecola_language_logo_english_4x)
         .build()
 
     private fun radioButtonRussian() = GuidedAction.Builder(requireContext())
-        .id(ID_LANG_RU).title(getString(R.string.label_language_russian))
+        .id(ID_LANG_RU)
+        //.title(getString(R.string.label_language_russian))
         .checkSetId(1)
         .checked(Locale.getDefault().language == "ru")
+        .icon(R.drawable.telecola_language_logo_russian_4x)
         .build()
 
     private fun linkWiFi() = GuidedAction.Builder(requireContext())
-        .id(ID_WIFI).title(getString(R.string.label_wifi))
+        .id(ID_WIFI)
+        .title(getString(R.string.label_wifi))
         .icon(R.drawable.settings_icon_metal)
         .build()
 

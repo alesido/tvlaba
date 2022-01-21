@@ -39,6 +39,7 @@
         <entry key="tv/src/main/res/drawable/shape_circle_gradient_record.xml" value="0.22760416666666666" />
         <entry key="tv/src/main/res/drawable/telecola_launch_screen_landscape.xml" value="0.36036036036036034" />
         <entry key="tv/src/main/res/drawable/telecola_launch_screen_portrait_bottom.xml" value="0.5489583333333333" />
+        <entry key="tv/src/main/res/drawable/telecola_launch_screen_portrait_top.xml" value="0.2328125" />
         <entry key="tv/src/main/res/drawable/tv_control_button_primary.xml" value="0.2713541666666667" />
         <entry key="tv/src/main/res/drawable/tv_control_button_secondary.xml" value="0.19583333333333333" />
         <entry key="tv/src/main/res/font/pfdindisplaypro.xml" value="0.2552083333333333" />

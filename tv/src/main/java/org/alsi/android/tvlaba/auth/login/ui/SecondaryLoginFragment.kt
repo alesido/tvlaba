@@ -60,6 +60,8 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
         return view
     }
 
+    override fun onProvideTheme() = R.style.BrandedThemeLeanbackGuidedStep
+
     private fun setupProgressBar(view: ViewGroup, inflater: LayoutInflater) {
         val progressView = inflater.inflate(R.layout.progress_view_common, view, false)
         view.addView(progressView)
@@ -72,7 +74,7 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
         getString(R.string.description_for_secondary_login),
         getString(R.string.app_version, requireActivity().packageManager.getPackageInfo(
             requireActivity().packageName, 0).versionName),
-        ContextCompat.getDrawable(requireContext(), R.drawable.settings_icon_metal)
+        ContextCompat.getDrawable(requireContext(), R.drawable.branded_logo_notext)
     )
 
     override fun onCreateActions(actions: MutableList<GuidedAction>,
@@ -168,13 +170,17 @@ class SecondaryLoginFragment : GuidedStepSupportFragment() {
         .build()
 
     private fun radioButtonEnglish() = GuidedAction.Builder(requireContext())
-        .id(ID_LANG_EN).title(getString(R.string.label_language_english))
+        .id(ID_LANG_EN)
+        //.title(getString(R.string.label_language_english))
+        .icon(R.drawable.telecola_language_logo_english_4x)
         .checkSetId(1)
         .checked(Locale.getDefault().language == "en")
         .build()
 
     private fun radioButtonRussian() = GuidedAction.Builder(requireContext())
-        .id(ID_LANG_RU).title(getString(R.string.label_language_russian))
+        .id(ID_LANG_RU)
+        //.title(getString(R.string.label_language_russian))
+        .icon(R.drawable.telecola_language_logo_russian_4x)
         .checkSetId(1)
         .checked(Locale.getDefault().language == "ru")
         .build()

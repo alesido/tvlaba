@@ -16,8 +16,8 @@ android {
 
         applicationId = "org.alsi.android.tvlaba.tv"
 
-        versionCode = 7
-        versionName = "1.0.7"
+        versionCode = 309
+        versionName = "3.0.9"
 
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true

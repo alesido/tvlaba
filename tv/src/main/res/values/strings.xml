@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">TvLabA</string>
+    <string name="app_name">Telecola 3</string>
     <string name="app_version">App version %1$s</string>
-    <string name="app_section_tv">TvLabA TV</string>
-    <string name="app_section_vod">TvLabA VOD</string>
+    <string name="app_section_tv">Telecola 3</string>
+    <string name="app_section_vod">Telecola 3</string>
 
     <string name="label_menu">Menu</string>
 
